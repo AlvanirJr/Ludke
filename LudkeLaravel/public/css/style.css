@@ -1,0 +1,31 @@
+/* Cor primária da Ludke : #BF1A2C */
+
+body{
+    padding: 0;
+    margin: 0;
+    background-color: white;
+}
+
+.titulo-pagina{
+    width: 100%;
+    border-bottom: 2px solid #BF1A2C;
+    margin-bottom: 20px ;
+}
+.titulo-pagina-nome{
+    color: #BF1A2C;
+}
+.thead-primary{
+    background-color: #BF1A2C;
+    color: white;
+}
+.btn-primary-ludke{
+    border-radius: 0;
+    background-color: #BF1A2C;
+    color: white;
+    width: 100%;
+}
+
+.input-ludke{
+    border-radius: 0;
+    border-color: #BF1A2C;
+}

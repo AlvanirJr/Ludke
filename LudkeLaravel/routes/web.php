@@ -22,3 +22,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// View Produtos
+Route::get('/produtos','ProdutoController@index');
+
+// View Categorias
+Route::get('/categorias',function(){
+    return 'categorias';
+});
