@@ -24,7 +24,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 // View Produtos
-Route::get('/produtos','ProdutoController@index');
+Route::get('/produtos','ProdutoController@index')->name('produtos');
 
 // View Categorias
 Route::get('/categorias',function(){
