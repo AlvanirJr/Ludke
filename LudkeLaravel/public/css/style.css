@@ -7,6 +7,7 @@ body{
 }
 
 .titulo-pagina{
+    margin-top: 20px;
     width: 100%;
     border-bottom: 2px solid #BF1A2C;
     margin-bottom: 20px ;
@@ -28,4 +29,36 @@ body{
 .input-ludke{
     border-radius: 0;
     border-color: #BF1A2C;
+}
+
+/* NAVBAR */
+
+.navbar{
+    height: 100%;
+    background-color: #BF1A2C;
+    color: white;
+}
+#white{
+    color:white;
+}
+
+.navbar-dark{
+    background-color: #BF1A2C;
+}
+
+#logo{
+    padding: 10px;
+    width:130px;
+}
+
+@media screen and (max-width: 576px) {
+    /* .navbar{
+        height: 100%;
+        background-color: #BF1A2C;
+        color: white;
+    } */
+    #logo{
+        padding: 5px;
+        width:60px;
+    }
 }
