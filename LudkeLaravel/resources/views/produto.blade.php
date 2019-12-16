@@ -9,13 +9,13 @@
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <div class="titulo-pagina-nome">
                             <h2>Produtos</h2>
                         </div>
                     </div>
-                    <div class="col-sm-1">
-                        <a class="btn btn-primary-ludke" href="#" role="button">Novo</a>
+                    <div class="col-sm-2">
+                        <a class="btn btn-primary-ludke" href="#" role="button" onclick="novoProduto()">Novo</a>
                     </div>
                     <div class="col-sm-3"> 
                         <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
@@ -89,15 +89,17 @@
     </div><!-- end row-->
 </div>
 
-<div class="modal" tabindex="-1" role="dialog" id="dlgProdutos">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" tabindex="-1" role="dialog" id="dlgProdutos">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form class="form-horizontal" id="formProduto">
                 <div class="modal-header">
                     <h5 class="modal-title">Novo Produto</h5>
                 </div>
                 <div class="modal-body">
+                    {{-- ID do produto --}}
                     <input type="hidden" id="id" class="form-control">
+
                     {{-- Nome do produto --}}
                     <div class="form-group">
                         <label for="nomeProduto" class="control-label">Nome do Produto</label>
@@ -144,25 +146,41 @@
                     <div class="form-group">
                         <label for="descricaoProduto" class="control-label">Descrição do Produto</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="descricaoProduto" placeholder="Descrição do Produto">
+                            <textarea class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
+                            {{-- <input type="text" class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"> --}}
                         </div>
                     </div>
                 </div><!-- end modal body-->
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Cadastrar</button>
-                    <button type="cancel" class="btn btn-secondary" data-dissmiss="modal">Cancelar</button>
+                    <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+@endsection
 
+@section('javascript')
 
-{{-- <script>
+<script type="text/javascript">
 
     // Usa a biblioteca quicksearch para buscar dados na tabela
-    $('input#inputBusca').quicksearch('table#tabela tbody tr');
+    // $('input#inputBusca').quicksearch('table#tabela tbody tr');
 
-</script> --}}
+    function novoProduto(){
+        // Limpa campos do modal
+        $('#id').val('');
+        $('#nomeProduto').val('');
+        $('#categoriaProduto').val('');
+        $('#validadeProduto').val('');
+        $('#quantidadeProduto').val('');
+        $('#precoProduto').val('');
+        $('#descricaoProduto').val('');
+        // exibe modal cadastrar Produtos
+        $('#dlgProdutos').modal('show');
+    }
+</script>
+    
 @endsection
