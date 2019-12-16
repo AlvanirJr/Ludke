@@ -27,6 +27,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/produtos','ProdutoController@index')->name('produtos');
 
 // View Categorias
-Route::get('/categorias',function(){
-    return 'categorias';
-});
+Route::get('/categorias','CategoriaController@index')->name('categorias');

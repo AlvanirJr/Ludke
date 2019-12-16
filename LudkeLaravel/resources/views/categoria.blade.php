@@ -11,11 +11,11 @@
                 <div class="row">
                     <div class="col-sm-7">
                         <div class="titulo-pagina-nome">
-                            <h2>Produtos</h2>
+                            <h2>Categorias</h2>
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <a class="btn btn-primary-ludke" href="#" role="button" onclick="novoProduto()">Novo</a>
+                        <a class="btn btn-primary-ludke" href="#" role="button" onclick="novoCategoria()">Novo</a>
                     </div>
                     <div class="col-sm-3"> 
                         <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
@@ -33,11 +33,6 @@
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
-                        <th>Categoria</th>
-                        <th>Validade</th>
-                        <th>Quantidade</th>
-                        <th>Preço(R$)</th>
-                        <th>Descrição</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -46,12 +41,7 @@
                     
                     <tr>
                         <th>1</th>
-                        <th>Produto 1</th>
                         <th>Categoria 1</th>
-                        <th>06/06/2022</th>
-                        <th>100</th>
-                        <th>10,00</th>
-                        <th>Produto que faz um monte de coisa bem legal</th>
                         <th>
                             <a href="#">
                                 <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
@@ -64,12 +54,7 @@
                     </tr>
                     <tr>
                         <th>2</th>
-                        <th>Produto 2</th>
                         <th>Categoria 2</th>
-                        <th>15/07/2022</th>
-                        <th>100</th>
-                        <th>10,00</th>
-                        <th>Produto que faz um monte de coisa bem legal</th>
                         <th>
                             <a href="#">
                                 <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
@@ -80,14 +65,10 @@
                             </a>
                         </th>
                     </tr>
+
                     <tr>
                         <th>3</th>
-                        <th>Produto 3</th>
-                        <th>Categoria 2</th>
-                        <th>10/10/2022</th>
-                        <th>100</th>
-                        <th>10,00</th>
-                        <th>Produto que faz um monte de coisa bem legal</th>
+                        <th>Categoria 3</th>
                         <th>
                             <a href="#">
                                 <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
@@ -113,59 +94,18 @@
                     <h5 class="modal-title">Novo Produto</h5>
                 </div>
                 <div class="modal-body">
-                    {{-- ID do produto --}}
+                    {{-- ID da categoria --}}
                     <input type="hidden" id="id" class="form-control">
 
-                    {{-- Nome do produto --}}
+                    {{-- Nome do Categoria --}}
                     <div class="form-group">
-                        <label for="nomeProduto" class="control-label">Nome do Produto</label>
+                        <label for="nomeCategoria" class="control-label">Nome da Categoria</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="nomeProduto" placeholder="Nome do Produto">
+                            <input type="text" class="form-control" id="nomeCategoria" placeholder="Nome da Categoria">
                         </div>
                     </div>
 
-                    {{-- Categoria do produto --}}
-                    <div class="form-group">
-                        <label for="categoriaProduto" class="control-label">Categoria do Produto</label>
-                        <div class="input-group">
-                            <select class="form-control" id="categoriaProduto">
-
-                            </select>
-                        </div>
-                    </div>
-
-                    {{-- Validade do Produto --}}
-                    <div class="form-group">
-                        <label for="validadeProduto" class="control-label">Validade do Produto</label>
-                        <div class="input-group">
-                            <input type="date" class="form-control" id="validadeProduto" placeholder="Validade do Produto">
-                        </div>
-                    </div>
-
-                    {{-- Quantidade do produto --}}
-                    <div class="form-group">
-                        <label for="quantidadeProduto" class="control-label">Quantidade do Produto</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="quantidadeProduto" placeholder="Quantidade do Produto">
-                        </div>
-                    </div>
-
-                    {{-- Preço do produto --}}
-                    <div class="form-group">
-                        <label for="precoProduto" class="control-label">Preço do Produto</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="precoProduto" placeholder="Preço do Produto">
-                        </div>
-                    </div>
-
-                    {{-- Descrição do produto --}}
-                    <div class="form-group">
-                        <label for="descricaoProduto" class="control-label">Descrição do Produto</label>
-                        <div class="input-group">
-                            <textarea class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
-                            {{-- <input type="text" class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"> --}}
-                        </div>
-                    </div>
+                    
                 </div><!-- end modal body-->
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Cadastrar</button>
@@ -185,15 +125,11 @@
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabela tbody tr');
 
-    function novoProduto(){
+    function novoCategoria(){
         // Limpa campos do modal
         $('#id').val('');
-        $('#nomeProduto').val('');
-        $('#categoriaProduto').val('');
-        $('#validadeProduto').val('');
-        $('#quantidadeProduto').val('');
-        $('#precoProduto').val('');
-        $('#descricaoProduto').val('');
+        $('#nomeCategoria').val('');
+        
         // exibe modal cadastrar Produtos
         $('#dlgProdutos').modal('show');
     }
