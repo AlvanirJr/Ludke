@@ -1,0 +1,65 @@
+/* Cor primária da Ludke : #BF1A2C */
+
+body{
+    padding: 0;
+    margin: 0;
+    background-color: white;
+}
+
+.titulo-pagina{
+    margin-top: 20px;
+    width: 100%;
+    border-bottom: 2px solid #BF1A2C;
+    margin-bottom: 20px ;
+}
+.titulo-pagina-nome{
+    color: #BF1A2C;
+}
+.thead-primary{
+    background-color: #BF1A2C;
+    color: white;
+}
+.btn-primary-ludke{
+    border-radius: 0;
+    background-color: #BF1A2C;
+    color: white;
+    width: 100%;
+}
+
+.input-ludke{
+    border-radius: 0;
+    border-color: #BF1A2C;
+}
+
+/* NAVBAR */
+
+.navbar{
+    height: 100%;
+    background-color: #BF1A2C;
+    color: white;
+}
+#white{
+    color:white;
+}
+
+.navbar-dark{
+    background-color: #BF1A2C;
+}
+
+#logo{
+    padding: 10px;
+    width:130px;
+}
+
+
+@media screen and (max-width: 576px) {
+    /* .navbar{
+        height: 100%;
+        background-color: #BF1A2C;
+        color: white;
+    } */
+    #logo{
+        padding: 5px;
+        width:60px;
+    }
+}
