@@ -24,7 +24,9 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 // View Produtos
-Route::get('/produtos','ProdutoController@index')->name('produtos');
+Route::get('produtos','ProdutoController@index')->name('produtos');
+Route::post('produtos','ProdutoController@store')->name('produto.store');
+
 
 // View Categorias
 Route::get('/categorias','CategoriaController@index')->name('categorias');

@@ -125,6 +125,13 @@
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabela tbody tr');
 
+    // Configuração do ajax com token csrf
+    $.ajaxSetup({
+        headers:{
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        }
+    });
+
     function novoCategoria(){
         // Limpa campos do modal
         $('#id').val('');
