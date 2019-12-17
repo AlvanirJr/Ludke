@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Produto;
 
 class ProdutoController extends Controller
 {
@@ -34,7 +35,21 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //    dd($request->input('validade'));
+        // dd($request->input('nome'));
+        $prod = new Produto();
+        $prod->nome = $request->input('nome');
+        $prod->validade = $request->input('validade');
+        $prod->quantidade = $request->input('quantidade');
+        $prod->preco = $request->input('preco');
+        $prod->descricao = $request->input('descricao');
+        $prod->categoria_id = $request->input('categoria_id');
+
+        $prod->save();
+        return view('produto');
+        // return json_encode($prod);
+        
+        // return response()->json(['mensage'=> 'Dados enviados com sucesso'],200);
     }
 
     /**

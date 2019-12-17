@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <a class="btn btn-primary-ludke" href="#" role="button" onclick="novoProduto()">Novo</a>
+                        <a class="btn btn-primary-ludke" role="button" onclick="novoProduto()">Novo</a>
                     </div>
                     <div class="col-sm-3"> 
                         <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
@@ -108,11 +108,13 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="dlgProdutos">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form class="form-horizontal" id="formProduto">
+            <form class="form-horizontal" id="formProduto" method="POST" href="{{ route('produto.store')}}" data-route="{{ route('produto.store')}}">
+                @csrf
                 <div class="modal-header">
                     <h5 class="modal-title">Novo Produto</h5>
                 </div>
                 <div class="modal-body">
+                    
                     {{-- ID do produto --}}
                     <input type="hidden" id="id" class="form-control">
 
@@ -120,7 +122,7 @@
                     <div class="form-group">
                         <label for="nomeProduto" class="control-label">Nome do Produto</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="nomeProduto" placeholder="Nome do Produto">
+                            <input type="text" name="nome" class="form-control" id="nomeProduto" placeholder="Nome do Produto">
                         </div>
                     </div>
 
@@ -128,8 +130,8 @@
                     <div class="form-group">
                         <label for="categoriaProduto" class="control-label">Categoria do Produto</label>
                         <div class="input-group">
-                            <select class="form-control" id="categoriaProduto">
-
+                            <select name="categoria_id" class="form-control" id="categoriaProduto">
+                                <option value="1">1</option>
                             </select>
                         </div>
                     </div>
@@ -138,7 +140,7 @@
                     <div class="form-group">
                         <label for="validadeProduto" class="control-label">Validade do Produto</label>
                         <div class="input-group">
-                            <input type="date" class="form-control" id="validadeProduto" placeholder="Validade do Produto">
+                            <input type="date" name="validade" class="form-control" id="validadeProduto" placeholder="Validade do Produto">
                         </div>
                     </div>
 
@@ -146,7 +148,7 @@
                     <div class="form-group">
                         <label for="quantidadeProduto" class="control-label">Quantidade do Produto</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="quantidadeProduto" placeholder="Quantidade do Produto">
+                            <input type="number" name="quantidade" class="form-control" id="quantidadeProduto" placeholder="Quantidade do Produto">
                         </div>
                     </div>
 
@@ -154,7 +156,7 @@
                     <div class="form-group">
                         <label for="precoProduto" class="control-label">Preço do Produto</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="precoProduto" placeholder="Preço do Produto">
+                            <input type="number" name="preco" class="form-control" id="precoProduto" placeholder="Preço do Produto">
                         </div>
                     </div>
 
@@ -162,7 +164,7 @@
                     <div class="form-group">
                         <label for="descricaoProduto" class="control-label">Descrição do Produto</label>
                         <div class="input-group">
-                            <textarea class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
+                            <textarea class="form-control" name="descricao" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
                             {{-- <input type="text" class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"> --}}
                         </div>
                     </div>
@@ -184,6 +186,57 @@
 
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabela tbody tr');
+
+    $.ajaxSetup({
+        headers:{
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    // $(function(){
+    //     $('#formProduto').submit(function(event){
+    //         var route = $('#formProduto').data('route');
+            
+    //         event.preventDefault();
+    //         $.ajax({
+    //             type: 'POST',
+    //             url: route,
+    //             data: $(this).serialize(),
+    //             success: function (Response) {
+    //             console.log(Response);
+    //             },
+    //             error: function (Response, textStatus, errorThrown) {
+    //                 console.log(Response);
+
+    //             },
+    //         });
+    //     });
+    // });
+
+    // function criarProduto(){
+    //     var route = $('#formProduto').data('route');
+    //     console.log(route);
+    //     prod = {
+    //         nome: $("#nomeProduto").val(),
+    //         categoria_id: $("#categoriaProduto").val(),
+    //         validade: $("#validadeProduto").val(),
+    //         quantidade: $("#quantidadeProduto").val(),
+    //         preco: $("#precoProduto").val(),
+    //         descricao: $("#descricaoProduto").val()
+    //     };
+    //     console.log(prod);
+    //     $.post(route,prod,function(data){
+    //         console.log(data);
+    //     });
+        
+    // }
+    // $(function(){
+    //     $('#formProduto').submit(function(event){
+    //         event.preventDefault();
+    //         criarProduto();
+    //         $('#dlgProdutos').modal('hide');
+            
+    //     });
+    // });
 
     function novoProduto(){
         // Limpa campos do modal
