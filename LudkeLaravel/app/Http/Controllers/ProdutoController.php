@@ -12,8 +12,11 @@ class ProdutoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $produto = new \LudkeLaravel\Produto();
+        $produto->fill($request->all());
+        $produto->save();
         return view('produto');
     }
 
@@ -24,7 +27,10 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        //
+        $produtos = \LudkeLaravel\Produto::all();
+        $categoria = \LudkeLaravel\Produto::all();
+        return view('produto',['produtos' => $produtos, 'categoria' => $categoria]);
+
     }
 
     /**
@@ -48,8 +54,9 @@ class ProdutoController extends Controller
         $prod->save();
         return view('produto');
         // return json_encode($prod);
-        
+
         // return response()->json(['mensage'=> 'Dados enviados com sucesso'],200);
+
     }
 
     /**

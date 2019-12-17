@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Categoria;
 
 class CategoriaController extends Controller
 {
@@ -11,9 +12,9 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('categoria');
+
     }
 
     /**
@@ -21,9 +22,21 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function adicionar(Request $request)
+    {
+
+        $categoria = new \LudkeLaravel\Categoria();
+        $categoria->fill($request->all());
+        $categoria->save();
+        return view('categoria');
+    }
+
     public function create()
     {
-        //
+        $categorias = Categoria::all();
+        return view("categoria", ['categorias' => $categorias]);
+
+
     }
 
     /**

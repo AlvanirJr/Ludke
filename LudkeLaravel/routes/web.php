@@ -30,3 +30,5 @@ Route::post('produtos','ProdutoController@store')->name('produto.store');
 
 // View Categorias
 Route::get('/categorias','CategoriaController@index')->name('categorias');
+Route::get('/categorias','CategoriaController@create')->name('categorias');
+Route::post('/categorias','CategoriaController@adicionar')->name('categorias');
