@@ -12,12 +12,11 @@ class ProdutoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $produto = new \LudkeLaravel\Produto();
-        $produto->fill($request->all());
-        $produto->save();
-        return view('produto');
+        $produtos = Produto::all();
+// dd($produtos);
+        return view('produto',compact('produtos'));
     }
 
     /**
@@ -27,22 +26,19 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        $produtos = \LudkeLaravel\Produto::all();
-        $categoria = \LudkeLaravel\Produto::all();
-        return view('produto',['produtos' => $produtos, 'categoria' => $categoria]);
-
+//
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //    dd($request->input('validade'));
-        // dd($request->input('nome'));
+// dd($request->input('validade'));
+// dd($request->input('nome'));
         $prod = new Produto();
         $prod->nome = $request->input('nome');
         $prod->validade = $request->input('validade');
@@ -53,54 +49,52 @@ class ProdutoController extends Controller
 
         $prod->save();
         return view('produto');
-        // return json_encode($prod);
-
-        // return response()->json(['mensage'=> 'Dados enviados com sucesso'],200);
-
+// return json_encode($prod);
+// return response()->json(['mensage'=> 'Dados enviados com sucesso'],200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+//
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+//
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+//
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+//
     }
 }
