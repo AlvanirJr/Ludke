@@ -182,36 +182,51 @@
                         "<td>"+p.descricao+"</td>"+
                         "<td>"+
                             "<a href="+"#"+" onclick="+"editarProduto("+p.id+")"+">"+
-                                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px; margin-right:20px;"+">"+
+                                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
                             "</a>"+                            
                             "<a href="+"#"+" onclick="+"removerProduto("+p.id+")"+">"+
-                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:20px"+">"+
+                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
                             "</a>"+
                         "</td>"+
                     "</tr>";
         return linha;
     }
-    function editarProduto(){
+    function editarProduto(id){
         console.log("Editar");
+        // getJSON já faz o parser do dado recebido para json
+        $.getJSON('/api/produtos/'+id, function(data){
+            console.log(data);
+            $('#id').val(data.id);
+            $('#nomeProduto').val(data.nome);
+            $('#categoriaProduto').val(data.categoria_id);
+            $('#validadeProduto').val(data.validade);
+            $('#quantidadeProduto').val(data.quantidade);
+            $('#precoProduto').val(data.preco);
+            $('#descricaoProduto').val(data.descricao);
+            // exibe modal cadastrar Produtos
+            $('#dlgProdutos').modal('show');
+        });
     }
     function removerProduto(id){
         
+        // exibe alerta de confirmação
         confirma = confirm("Você tem certeza que deseja remover o produto com ID = "+id+"?");
+        // se o usuário confirmar 
         if(confirma){
+            // faz requisição DELETE para /api/produtos passando o id do produto que deseja apagar
             $.ajax({
                 type: "DELETE",
                 url: "/api/produtos/"+id,
                 context: this,
                 success: function(){
                     console.log("Deletou");
-                    linhas = $("#tabelaProdutos>tbody>tr");
+                    linhas = $("#tabelaProdutos>tbody>tr");//pega linha da tabela
                     e = linhas.filter(function(i,elemento){
-                        return elemento.cells[0].textContent == id;
+                        return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
                     });
                     if(e){
-                        e.remove();
+                        e.remove();// remove a linha
                     }
-
                 },
                 error: function(error){
                     console.log(error);
@@ -252,12 +267,60 @@
 
     }
     
+    function salvarProduto(){
+        // cria um objeto com os dados do form
+        prod = {
+            id: $('#id').val(),
+            nome: $('#nomeProduto').val(), 
+            validade: $('#validadeProduto').val(), 
+            quantidade: $('#quantidadeProduto').val(), 
+            preco: $('#precoProduto').val(), 
+            descricao: $('#descricaoProduto').val(), 
+            categoria_id: $('#categoriaProduto').val()            
+        };
+
+        // faz requisição PUT para /api/produtos passando o id do produto que deseja editar
+        $.ajax({
+                type: "PUT",
+                url: "/api/produtos/"+prod.id,
+                context: this,
+                data: prod,
+                success: function(data){
+                    prod = JSON.parse(data); //converte a string data para um objeto json
+                    console.log("Salvou OK");
+                    linhas = $('#tabelaProdutos>tbody>tr'); //pega todas as linhas da tabela
+                    e = linhas.filter(function(i,elemento){//faz uma filtragem e retorna a linha que contem o id do produto atualizado
+                        return (elemento.cells[0].textContent == prod.id);
+                    });
+                    console.log(e);
+                    // se encontrou a linha, atualiza cada coluna
+                    if(e){
+                        e[0].cells[0].textContent = prod.id;
+                        e[0].cells[1].textContent = prod.nome;
+                        e[0].cells[2].textContent = prod.categoria_id;
+                        e[0].cells[3].textContent = prod.validade;
+                        e[0].cells[4].textContent = prod.quantidade;
+                        e[0].cells[5].textContent = prod.preco;
+                        e[0].cells[6].textContent = prod.descricao;
+                    }
+
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+    }
+
     // função chamada sempre que a tela é atualizada
     $(function(){
         // função chamada sempre que clica no botão submit do formulário
         $('#formProduto').submit(function(event){
             event.preventDefault(); // não deixa fechar o modal quando clica no submit
-            criarProduto();// função que faz a requisição para o controller
+            
+            if($('#id').val()!= '')
+                salvarProduto();// função chamada para editar produto
+            else
+                criarProduto();// função que faz a requisição para o controller
             $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
         });
     });

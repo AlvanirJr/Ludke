@@ -50,15 +50,16 @@ class ProdutoController extends Controller
         
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //Exibe um determinado produto
     public function show($id)
     {
-        //
+        $prod = Produto::find($id);
+        if(isset($prod)){
+            return json_encode($prod);// retorna um objeto json
+        }
+        else{
+            return response('Produto não encontrado',404);
+        }
     }
 
     /**
@@ -69,7 +70,7 @@ class ProdutoController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -81,7 +82,24 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $prod = Produto::find($id);
+        
+        if(isset($prod)){
+            $prod->nome = $request->input('nome');
+            $prod->validade = $request->input('validade');
+            $prod->quantidade = $request->input('quantidade');
+            $prod->preco = $request->input('preco');
+            $prod->descricao = $request->input('descricao');
+            $prod->categoria_id = $request->input('categoria_id');
+            
+            
+            $prod->save();
+            // retorna o objeto para exibir na tabela
+            return json_encode($prod);
+        }
+        else{
+            return response('Produto não encontrado',404);
+        }
     }
 
     /**
