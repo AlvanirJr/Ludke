@@ -10,7 +10,9 @@ class ProdutoController extends Controller
     // Retorna a view dos produtos
     public function indexView()
     {
-        return view('produto');
+        $produtos = Produto::all();
+// dd($produtos);
+        return view('produto',compact('produtos'));
     }
 
     //usado pela api para retornar os produtos
@@ -27,13 +29,15 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        //
+//
     }
+
 
     // Recebe o request do ajax
     public function store(Request $request)
     {
         // salva produtos no banco
+
         $prod = new Produto();
         $prod->nome = $request->input('nome');
         $prod->validade = $request->input('validade');
@@ -44,6 +48,7 @@ class ProdutoController extends Controller
         
         
         $prod->save();
+
         // retorna o objeto para exibir na tabela
         return json_encode($prod);
         
@@ -60,24 +65,25 @@ class ProdutoController extends Controller
         else{
             return response('Produto não encontrado',404);
         }
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -105,7 +111,7 @@ class ProdutoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
