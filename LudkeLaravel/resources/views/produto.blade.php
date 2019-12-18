@@ -128,10 +128,10 @@
 <script type="text/javascript">
 
     // Usa a biblioteca quicksearch para buscar dados na tabela
-    // $('input#inputBusca').quicksearch('table#tabela tbody tr');
-
+    // $('input#inputBusca').quicksearch('table#tabelaProdutos tbody tr');
+4
     //essa função é chamada sempre que atualiza a pagina
-    $(function(){
+    $(function(){        
         // Configura o ajax para todas as requisições ir com token csrf
         $.ajaxSetup({
             headers:{
@@ -181,17 +181,46 @@
                         "<td>"+p.preco+"</td>"+
                         "<td>"+p.descricao+"</td>"+
                         "<td>"+
-                            "<a href="+"#"+">"+
+                            "<a href="+"#"+" onclick="+"editarProduto("+p.id+")"+">"+
                                 "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px; margin-right:20px;"+">"+
                             "</a>"+                            
-                            "<a href="+"#"+">"+
+                            "<a href="+"#"+" onclick="+"removerProduto("+p.id+")"+">"+
                                 "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:20px"+">"+
                             "</a>"+
                         "</td>"+
                     "</tr>";
         return linha;
     }
+    function editarProduto(){
+        console.log("Editar");
+    }
+    function removerProduto(id){
+        
+        confirma = confirm("Você tem certeza que deseja remover o produto com ID = "+id+"?");
+        if(confirma){
+            $.ajax({
+                type: "DELETE",
+                url: "/api/produtos/"+id,
+                context: this,
+                success: function(){
+                    console.log("Deletou");
+                    linhas = $("#tabelaProdutos>tbody>tr");
+                    e = linhas.filter(function(i,elemento){
+                        return elemento.cells[0].textContent == id;
+                    });
+                    if(e){
+                        e.remove();
+                    }
 
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        
+    }
     // carrega produtos do banco através da api e chama a função montarLinha para colocar na tabela
     function carregarProdutos(){
         $.getJSON('/api/produtos',function(produtos){
