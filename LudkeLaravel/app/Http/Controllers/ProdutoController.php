@@ -7,14 +7,17 @@ use App\Produto;
 
 class ProdutoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    // Retorna a view dos produtos
+    public function indexView()
     {
         return view('produto');
+    }
+
+    //usado pela api para retornar os produtos
+    public function index()
+    {
+        $produtos = Produto::all();
+        return $produtos->toJson();
     }
 
     /**
@@ -27,16 +30,10 @@ class ProdutoController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    // Recebe o request do ajax
     public function store(Request $request)
     {
-        //    dd($request->input('validade'));
-        // dd($request->input('nome'));
+        // salva produtos no banco
         $prod = new Produto();
         $prod->nome = $request->input('nome');
         $prod->validade = $request->input('validade');
@@ -44,12 +41,13 @@ class ProdutoController extends Controller
         $prod->preco = $request->input('preco');
         $prod->descricao = $request->input('descricao');
         $prod->categoria_id = $request->input('categoria_id');
-
-        $prod->save();
-        return view('produto');
-        // return json_encode($prod);
         
-        // return response()->json(['mensage'=> 'Dados enviados com sucesso'],200);
+        
+        $prod->save();
+        // retorna o objeto para exibir na tabela
+        return json_encode($prod);
+        
+        
     }
 
     /**

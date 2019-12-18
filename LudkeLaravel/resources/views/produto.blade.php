@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <a class="btn btn-primary-ludke" role="button" onclick="novoProduto()">Novo</a>
+                        <button class="btn btn-primary-ludke" role="button" onclick="novoProduto()">Novo</button>
                     </div>
                     <div class="col-sm-3"> 
                         <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
@@ -28,7 +28,7 @@
 
     <div class="row justify-content-center">
         <div class="col-sm-12">
-            <table id="tabela" class="table table-hover table-responsive-sm">
+            <table id="tabelaProdutos" class="table table-hover table-responsive-sm">
                 <thead class="thead-primary">
                     <tr>
                         <th>ID</th>
@@ -41,64 +41,8 @@
                         <th>Ações</th>
                     </tr>
                 </thead>
-                <tbody>
 
-                    
-                    <tr>
-                        <th>1</th>
-                        <th>Produto 1</th>
-                        <th>Categoria 1</th>
-                        <th>06/06/2022</th>
-                        <th>100</th>
-                        <th>10,00</th>
-                        <th>Produto que faz um monte de coisa bem legal</th>
-                        <th>
-                            <a href="#">
-                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
-                            </a>
-                            
-                            <a href="#">
-                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="width:20px">
-                            </a>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>2</th>
-                        <th>Produto 2</th>
-                        <th>Categoria 2</th>
-                        <th>15/07/2022</th>
-                        <th>100</th>
-                        <th>10,00</th>
-                        <th>Produto que faz um monte de coisa bem legal</th>
-                        <th>
-                            <a href="#">
-                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
-                            </a>
-                            
-                            <a href="#">
-                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="width:20px">
-                            </a>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>3</th>
-                        <th>Produto 3</th>
-                        <th>Categoria 2</th>
-                        <th>10/10/2022</th>
-                        <th>100</th>
-                        <th>10,00</th>
-                        <th>Produto que faz um monte de coisa bem legal</th>
-                        <th>
-                            <a href="#">
-                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
-                            </a>
-                            
-                            <a href="#">
-                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="width:20px">
-                            </a>
-                        </th>
-                    </tr>
-                    
+                <tbody>
                 </tbody>
             </table> <!-- end table -->
         </div><!-- end col-->
@@ -108,7 +52,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="dlgProdutos">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form class="form-horizontal" id="formProduto" method="POST" href="{{ route('produto.store')}}" data-route="{{ route('produto.store')}}">
+            <form class="form-horizontal" id="formProduto">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title">Novo Produto</h5>
@@ -122,7 +66,7 @@
                     <div class="form-group">
                         <label for="nomeProduto" class="control-label">Nome do Produto</label>
                         <div class="input-group">
-                            <input type="text" name="nome" class="form-control" id="nomeProduto" placeholder="Nome do Produto">
+                            <input type="text" class="form-control" id="nomeProduto" placeholder="Nome do Produto">
                         </div>
                     </div>
 
@@ -130,8 +74,7 @@
                     <div class="form-group">
                         <label for="categoriaProduto" class="control-label">Categoria do Produto</label>
                         <div class="input-group">
-                            <select name="categoria_id" class="form-control" id="categoriaProduto">
-                                <option value="1">1</option>
+                            <select class="form-control" id="categoriaProduto">
                             </select>
                         </div>
                     </div>
@@ -140,7 +83,7 @@
                     <div class="form-group">
                         <label for="validadeProduto" class="control-label">Validade do Produto</label>
                         <div class="input-group">
-                            <input type="date" name="validade" class="form-control" id="validadeProduto" placeholder="Validade do Produto">
+                            <input type="date" class="form-control" id="validadeProduto" placeholder="Validade do Produto">
                         </div>
                     </div>
 
@@ -148,7 +91,7 @@
                     <div class="form-group">
                         <label for="quantidadeProduto" class="control-label">Quantidade do Produto</label>
                         <div class="input-group">
-                            <input type="number" name="quantidade" class="form-control" id="quantidadeProduto" placeholder="Quantidade do Produto">
+                            <input type="number" class="form-control" id="quantidadeProduto" placeholder="Quantidade do Produto">
                         </div>
                     </div>
 
@@ -156,7 +99,7 @@
                     <div class="form-group">
                         <label for="precoProduto" class="control-label">Preço do Produto</label>
                         <div class="input-group">
-                            <input type="number" name="preco" class="form-control" id="precoProduto" placeholder="Preço do Produto">
+                            <input type="number" class="form-control" id="precoProduto" placeholder="Preço do Produto">
                         </div>
                     </div>
 
@@ -164,7 +107,7 @@
                     <div class="form-group">
                         <label for="descricaoProduto" class="control-label">Descrição do Produto</label>
                         <div class="input-group">
-                            <textarea class="form-control" name="descricao" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
+                            <textarea class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
                             {{-- <input type="text" class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"> --}}
                         </div>
                     </div>
@@ -187,57 +130,20 @@
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabela tbody tr');
 
-    $.ajaxSetup({
-        headers:{
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+    //essa função é chamada sempre que atualiza a pagina
+    $(function(){
+        // Configura o ajax para todas as requisições ir com token csrf
+        $.ajaxSetup({
+            headers:{
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        carregarCategorias();
+        carregarProdutos();        
     });
-    // $(function(){
-    //     $('#formProduto').submit(function(event){
-    //         var route = $('#formProduto').data('route');
-            
-    //         event.preventDefault();
-    //         $.ajax({
-    //             type: 'POST',
-    //             url: route,
-    //             data: $(this).serialize(),
-    //             success: function (Response) {
-    //             console.log(Response);
-    //             },
-    //             error: function (Response, textStatus, errorThrown) {
-    //                 console.log(Response);
-
-    //             },
-    //         });
-    //     });
-    // });
-
-    // function criarProduto(){
-    //     var route = $('#formProduto').data('route');
-    //     console.log(route);
-    //     prod = {
-    //         nome: $("#nomeProduto").val(),
-    //         categoria_id: $("#categoriaProduto").val(),
-    //         validade: $("#validadeProduto").val(),
-    //         quantidade: $("#quantidadeProduto").val(),
-    //         preco: $("#precoProduto").val(),
-    //         descricao: $("#descricaoProduto").val()
-    //     };
-    //     console.log(prod);
-    //     $.post(route,prod,function(data){
-    //         console.log(data);
-    //     });
-        
-    // }
-    // $(function(){
-    //     $('#formProduto').submit(function(event){
-    //         event.preventDefault();
-    //         criarProduto();
-    //         $('#dlgProdutos').modal('hide');
-            
-    //     });
-    // });
-
+    
+    // Sempre que clica no botão novo, limpa os campos do modal
     function novoProduto(){
         // Limpa campos do modal
         $('#id').val('');
@@ -250,6 +156,84 @@
         // exibe modal cadastrar Produtos
         $('#dlgProdutos').modal('show');
     }
+
+    // carrega categorias da api e coloca no select
+    function carregarCategorias(){
+        $.getJSON('/api/categorias',function(data){
+            // console.log(data);
+
+            for(i=0 ; i<data.length; i++){
+                // adiciona cada categoria no select do formulário
+                opcao = '<option value="'+data[i].id+'">'+data[i].nome+'</option>';
+                $('#categoriaProduto').append(opcao);
+            }
+        });
+    }
+
+    // cria um html da linha da tabela
+    function montarLinha(p){
+        var linha = "<tr>"+
+                        "<td>"+p.id+"</td>"+
+                        "<td>"+p.nome+"</td>"+
+                        "<td>"+p.categoria_id+"</td>"+
+                        "<td>"+p.validade+"</td>"+
+                        "<td>"+p.quantidade+"</td>"+
+                        "<td>"+p.preco+"</td>"+
+                        "<td>"+p.descricao+"</td>"+
+                        "<td>"+
+                            "<a href="+"#"+">"+
+                                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px; margin-right:20px;"+">"+
+                            "</a>"+                            
+                            "<a href="+"#"+">"+
+                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:20px"+">"+
+                            "</a>"+
+                        "</td>"+
+                    "</tr>";
+        return linha;
+    }
+
+    // carrega produtos do banco através da api e chama a função montarLinha para colocar na tabela
+    function carregarProdutos(){
+        $.getJSON('/api/produtos',function(produtos){
+            for(i=0;i<produtos.length;i++){
+                linha = montarLinha(produtos[i]);
+                $('#tabelaProdutos>tbody').append(linha);
+            }
+        });
+    }
+
+    // função para fazer requisição post para o controller
+    function criarProduto(){
+        // cria um objeto com os dados do form
+        prod = {
+            nome: $('#nomeProduto').val(), 
+            validade: $('#validadeProduto').val(), 
+            quantidade: $('#quantidadeProduto').val(), 
+            preco: $('#precoProduto').val(), 
+            descricao: $('#descricaoProduto').val(), 
+            categoria_id: $('#categoriaProduto').val()            
+        };
+
+        // faz uma requisição post para a rota /api/produtos
+        $.post('/api/produtos',prod,function(data){
+            produto = JSON.parse(data);//converte para json o objeto retornado do controller
+            linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
+            $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
+        });
+
+    }
+    
+    // função chamada sempre que a tela é atualizada
+    $(function(){
+        // função chamada sempre que clica no botão submit do formulário
+        $('#formProduto').submit(function(event){
+            event.preventDefault(); // não deixa fechar o modal quando clica no submit
+            criarProduto();// função que faz a requisição para o controller
+            $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
+        });
+    });
+
+    
 </script>
     
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Categoria;
 
 class CategoriaController extends Controller
 {
@@ -81,4 +82,11 @@ class CategoriaController extends Controller
     {
         //
     }
+
+    // Essa função é usada para retornar as categorias para exibir na tela de produtos
+    public function indexJson(){
+        $cats = Categoria::all();
+        return json_encode($cats);
+    }
+
 }
