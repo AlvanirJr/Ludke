@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Produto extends Model
+class   Produto extends Model
 {
     //
     protected $fillable = ['nome', 'validade', 'quantidade', 'preco', 'descricao'];
@@ -12,4 +12,12 @@ class Produto extends Model
     public function categorias(){
         return $this->belongsTo('App\Categoria', 'categoria_id');
     }
+
+    public static  $rules =[
+        'nome' => 'required|',
+        'validade' => 'required|',
+        'quantidade' => 'required|min:1|',
+        'preco' => 'required|',
+        'descricao' => 'required',
+    ];
 }

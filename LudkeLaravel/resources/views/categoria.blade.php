@@ -5,7 +5,7 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        
+
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
@@ -17,7 +17,7 @@
                     <div class="col-sm-2">
                         <a class="btn btn-primary-ludke" href="#" role="button" onclick="novoCategoria()">Novo</a>
                     </div>
-                    <div class="col-sm-3"> 
+                    <div class="col-sm-3">
                         <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                 </thead>
                 <tbody>
 
-                    
+
                     <tr>
                         <th>1</th>
                         <th>Categoria 1</th>
@@ -46,7 +46,7 @@
                             <a href="#">
                                 <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
                             </a>
-                            
+
                             <a href="#">
                                 <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="width:20px">
                             </a>
@@ -59,7 +59,7 @@
                             <a href="#">
                                 <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
                             </a>
-                            
+
                             <a href="#">
                                 <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="width:20px">
                             </a>
@@ -73,13 +73,13 @@
                             <a href="#">
                                 <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
                             </a>
-                            
+
                             <a href="#">
                                 <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="width:20px">
                             </a>
                         </th>
                     </tr>
-                    
+
                 </tbody>
             </table> <!-- end table -->
         </div><!-- end col-->
@@ -89,7 +89,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="dlgProdutos">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form class="form-horizontal" id="formProduto">
+            <form class="form-horizontal" id="formProduto" name="formCategoria">
                 <div class="modal-header">
                     <h5 class="modal-title">Novo Produto</h5>
                 </div>
@@ -105,7 +105,7 @@
                         </div>
                     </div>
 
-                    
+
                 </div><!-- end modal body-->
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Cadastrar</button>
@@ -120,7 +120,7 @@
 
 @section('javascript')
 
-<script type="text/javascript">
+<script>
 
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabela tbody tr');
@@ -132,14 +132,20 @@
         }
     });
 
-    function novoCategoria(){
-        // Limpa campos do modal
-        $('#id').val('');
-        $('#nomeCategoria').val('');
-        
-        // exibe modal cadastrar Produtos
-        $('#dlgProdutos').modal('show');
-    }
+    //function novoCategoria(){
+
+
+   $(function () {
+       $('form[name="formCategoria"]').submit(function (event) {
+           event.preventDefault();
+           alert("teste");
+
+       })
+
+  // })
+
+
+
 </script>
-    
+
 @endsection
