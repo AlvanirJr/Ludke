@@ -10,9 +10,7 @@ class ProdutoController extends Controller
     // Retorna a view dos produtos
     public function indexView()
     {
-        $produtos = Produto::all();
-// dd($produtos);
-        return view('produto',compact('produtos'));
+        return view('produto');
     }
 
     //usado pela api para retornar os produtos
@@ -37,7 +35,6 @@ class ProdutoController extends Controller
     public function store(Request $request)
     {
         // salva produtos no banco
-
         $prod = new Produto();
         $prod->nome = $request->input('nome');
         $prod->validade = $request->input('validade');
@@ -46,7 +43,7 @@ class ProdutoController extends Controller
         $prod->descricao = $request->input('descricao');
         $prod->categoria_id = $request->input('categoria_id');
         
-        
+      
         $prod->save();
 
         // retorna o objeto para exibir na tabela
