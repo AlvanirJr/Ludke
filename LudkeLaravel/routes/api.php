@@ -16,3 +16,9 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Rota chamada pelo ajax para pegar categorias
+Route::get('/categorias','CategoriaController@indexJson');//para retornar o json com as categorias
+
+// cria todas as rotas de produto. verificar com " php artisan route:list "
+Route::resource('/produtos', 'ProdutoController'); //cria todas as rotas para produto

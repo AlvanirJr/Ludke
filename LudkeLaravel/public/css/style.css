@@ -52,6 +52,15 @@ body{
 }
 
 
+
+#iconeEdit{
+    width:25px; 
+    margin-right:20px;
+}
+
+#iconeDelete{
+    width:20px;
+}
 @media screen and (max-width: 576px) {
     /* .navbar{
         height: 100%;
