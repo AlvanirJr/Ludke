@@ -47,7 +47,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="dlgCategorias">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form class="form-horizontal" id="formProduto" name="formCategoria">
+            <form class="form-horizontal" id="formCategoria" name="formCategoria">
                 <div class="modal-header">
                     <h5 class="modal-title">Nova Categoria</h5>
                 </div>
@@ -123,7 +123,7 @@
 
     function carregarCategorias(){
         $.getJSON('/api/categorias', function(categorias){
-            console.log('ok');
+            
             for(i=0; i < categorias.length;i++){
                 linha = montarLinha(categorias[i]);
                 $('#tabelaCategorias>tbody').append(linha);
@@ -131,10 +131,29 @@
         });
     }
 
+    function criarCategoria(){
+        cat = {
+            nome: $('#nomeCategoria').val()
+        };
+
+        $.post('api/categorias',cat,function(data){
+            // console.log('Nova Categoria: '+data);
+            categoria = JSON.parse(data);
+            linha = montarLinha(categoria);
+            $('#tabelaCategorias>tbody').append(linha);
+        });
+    }
+    function salvarCategoria(){
+
+    }
    $(function () {
-       $('form[name="formCategoria"]').submit(function (event) {
+       $('#formCategoria').submit(function (event) {
            event.preventDefault();
-        //    alert("teste");
+           if($('#id').val()!= '')
+                salvarCategoria();
+            else
+                criarCategoria();
+            $("#dlgCategorias").modal('hide');
 
        })
 

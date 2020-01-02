@@ -18,11 +18,7 @@ class CategoriaController extends Controller
         return json_encode($cats);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function adicionar(Request $request)
     {
 
@@ -37,15 +33,15 @@ class CategoriaController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
+        $categoria = new Categoria();
+        $categoria->nome = $request->input('nome');
+        $categoria->save();
+
+        // retorna o objeto para exibir na tabela
+        return json_encode($categoria);
     }
 
     /**
