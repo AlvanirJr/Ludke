@@ -7,14 +7,15 @@ use App\Categoria;
 
 class CategoriaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // Retorna a view dos categoria
+    public function indexView()
+    {
+        return view('categoria');
+    }
     public function index(Request $request)
     {
-
+        $cats = Categoria::all();
+        return json_encode($cats);
     }
 
     /**
@@ -33,9 +34,6 @@ class CategoriaController extends Controller
 
     public function create()
     {
-        $categorias = Categoria::all();
-        return view("categoria", ['categorias' => $categorias]);
-
 
     }
 
@@ -96,9 +94,9 @@ class CategoriaController extends Controller
     }
 
     // Essa função é usada para retornar as categorias para exibir na tela de produtos
-    public function indexJson(){
-        $cats = Categoria::all();
-        return json_encode($cats);
-    }
+    // public function indexJson(){
+    //     $cats = Categoria::all();
+    //     return json_encode($cats);
+    // }
 
 }

@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <a class="btn btn-primary-ludke" href="#" role="button" onclick="novoCategoria()">Novo</a>
+                        <a class="btn btn-primary-ludke" role="button" onclick="novaCategoria()">Novo</a>
                     </div>
                     <div class="col-sm-3">
                         <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
@@ -28,7 +28,7 @@
 
     <div class="row justify-content-center">
         <div class="col-sm-12">
-            <table id="tabela" class="table table-hover table-responsive-sm">
+            <table id="tabelaCategorias" class="table table-hover table-responsive-sm">
                 <thead class="thead-primary">
                     <tr>
                         <th>ID</th>
@@ -37,61 +37,19 @@
                     </tr>
                 </thead>
                 <tbody>
-
-
-                    <tr>
-                        <th>1</th>
-                        <th>Categoria 1</th>
-                        <th>
-                            <a href="#">
-                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
-                            </a>
-
-                            <a href="#">
-                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="width:20px">
-                            </a>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>2</th>
-                        <th>Categoria 2</th>
-                        <th>
-                            <a href="#">
-                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
-                            </a>
-
-                            <a href="#">
-                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="width:20px">
-                            </a>
-                        </th>
-                    </tr>
-
-                    <tr>
-                        <th>3</th>
-                        <th>Categoria 3</th>
-                        <th>
-                            <a href="#">
-                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px; margin-right:20px;">
-                            </a>
-
-                            <a href="#">
-                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="width:20px">
-                            </a>
-                        </th>
-                    </tr>
-
+                    {{-- Linhas da tabela serão adicionadas com javascript --}}
                 </tbody>
             </table> <!-- end table -->
         </div><!-- end col-->
     </div><!-- end row-->
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="dlgProdutos">
+<div class="modal fade" tabindex="-1" role="dialog" id="dlgCategorias">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form class="form-horizontal" id="formProduto" name="formCategoria">
                 <div class="modal-header">
-                    <h5 class="modal-title">Novo Produto</h5>
+                    <h5 class="modal-title">Nova Categoria</h5>
                 </div>
                 <div class="modal-body">
                     {{-- ID da categoria --}}
@@ -120,32 +78,70 @@
 
 @section('javascript')
 
-<script>
+<script type="text/javascript">
 
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabela tbody tr');
 
-    // Configuração do ajax com token csrf
-    $.ajaxSetup({
-        headers:{
-            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-        }
+    
+    $(function(){
+        // Configuração do ajax com token csrf
+        $.ajaxSetup({
+            headers:{
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        carregarCategorias();
     });
 
-    //function novoCategoria(){
+    //function novaCategoria(){
+    function novaCategoria(){
+        $('#id').val('');
+        $('#nomeCategoria').val('');
 
+        // exibe o modal cadastrar categorias
+        $('#dlgCategorias').modal('show');
+    }
+
+    function montarLinha(p){
+        //cria um html da linha da tabela
+        var linha = "<tr>" +
+                        "<td>"+p.id+"</td>"+
+                        "<td>"+p.nome+"</td>"+
+                        "<td>"+
+                            "<a href="+"#"+" onclick="+"editarProduto("+p.id+")"+">"+
+                                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
+                            "</a>"+                            
+                            "<a href="+"#"+" onclick="+"removerProduto("+p.id+")"+">"+
+                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
+                            "</a>"+
+                        "</td>"+
+                    "</tr>";
+        return linha;
+    }
+
+    function carregarCategorias(){
+        $.getJSON('/api/categorias', function(categorias){
+            console.log('ok');
+            for(i=0; i < categorias.length;i++){
+                linha = montarLinha(categorias[i]);
+                $('#tabelaCategorias>tbody').append(linha);
+            }
+        });
+    }
 
    $(function () {
        $('form[name="formCategoria"]').submit(function (event) {
            event.preventDefault();
-           alert("teste");
+        //    alert("teste");
 
        })
 
-  // })
+    });
 
 
 
-</script>
+  </script>
 
 @endsection
