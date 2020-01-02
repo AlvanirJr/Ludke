@@ -52,30 +52,34 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-        //
+        $cat = Categoria::find($id);
+        if(isset($cat)){
+            return json_encode($cat);
+        }
+        else{
+            return response('Categoria não encontrada',404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //
+        $cat = Categoria::find($id);
+        // dd($cat);
+        if(isset($cat)){
+            $cat->nome = $request->input('nome');
+            $cat->save();
+            return json_encode($cat);
+        }
+        else{
+            return response('Categoria não encontrada',404);
+        }
     }
 
     /**
@@ -86,7 +90,12 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cat = Categoria::find($id);
+        if(isset($cat)){
+            $cat->delete();
+            return response('OK',200);
+        }
+        return response('Categoria não encontrada',404);
     }
 
     // Essa função é usada para retornar as categorias para exibir na tela de produtos

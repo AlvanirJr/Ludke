@@ -104,23 +104,60 @@
         $('#dlgCategorias').modal('show');
     }
 
-    function montarLinha(p){
+    function montarLinha(cat){
         //cria um html da linha da tabela
         var linha = "<tr>" +
-                        "<td>"+p.id+"</td>"+
-                        "<td>"+p.nome+"</td>"+
+                        "<td>"+cat.id+"</td>"+
+                        "<td>"+cat.nome+"</td>"+
                         "<td>"+
-                            "<a href="+"#"+" onclick="+"editarProduto("+p.id+")"+">"+
+                            "<a href="+"#"+" onclick="+"editarCategoria("+cat.id+")"+">"+
                                 "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
                             "</a>"+                            
-                            "<a href="+"#"+" onclick="+"removerProduto("+p.id+")"+">"+
+                            "<a href="+"#"+" onclick="+"removerCategoria("+cat.id+")"+">"+
                                 "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
                             "</a>"+
                         "</td>"+
                     "</tr>";
         return linha;
     }
+    function editarCategoria(id){
+        console.log('Editar Categoria');
+        $.getJSON('/api/categorias/'+id, function(data){
+            // console.log(data);
+            $('#id').val(data.id);
+            $('#nomeCategoria').val(data.nome);
 
+            //exibe Modal Cadastrar Categoria
+            $('#dlgCategorias').modal('show');
+        });
+    }
+    
+    function removerCategoria(id){
+        confirma = confirm("Você tem certeza que deseja remover a categoria?");
+        if(confirma){
+            $.ajax({
+                type: "DELETE",
+                url: "/api/categorias/"+id,
+                context: this,
+                success: function(){
+                    console.log("deletou");
+                    linhas = $("#tabelaCategorias>tbody>tr");
+                    e = linhas.filter(function(i,elemento){
+                        return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
+
+                    });
+                    if(e){
+                        e.remove();
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                }
+
+            });
+        }
+        
+    }
     function carregarCategorias(){
         $.getJSON('/api/categorias', function(categorias){
             
@@ -144,7 +181,36 @@
         });
     }
     function salvarCategoria(){
+        cat = {
+            id: $('#id').val(),
+            nome: $('#nomeCategoria').val()
+        };
+        console.log(cat);
+        // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
+        $.ajax({
+            type: "PUT",
+            url: "/api/categorias/"+cat.id,
+            context: this,
+            data: cat,
+            success: function(data){
+                cat = JSON.parse(data);
+                console.log("salvou OK");
+                linhas = $('#tabelaCategorias>tbody>tr');
+                e = linhas.filter(function(i,elemento){
+                    return (elemento.cells[0].textContent == cat.id);
+                });
+                console.log(e);
 
+                if(e){
+                    e[0].cells[0].textContent = cat.id;
+                    e[0].cells[1].textContent = cat.nome;
+                }
+
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
     }
    $(function () {
        $('#formCategoria').submit(function (event) {
