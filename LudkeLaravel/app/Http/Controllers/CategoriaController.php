@@ -7,21 +7,18 @@ use App\Categoria;
 
 class CategoriaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // Retorna a view dos categoria
+    public function indexView()
+    {
+        return view('categoria');
+    }
     public function index(Request $request)
     {
-
+        $cats = Categoria::all();
+        return json_encode($cats);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function adicionar(Request $request)
     {
 
@@ -33,21 +30,18 @@ class CategoriaController extends Controller
 
     public function create()
     {
-        $categorias = Categoria::all();
-        return view("categoria", ['categorias' => $categorias]);
-
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
+        $categoria = new Categoria();
+        $categoria->nome = $request->input('nome');
+        $categoria->save();
+
+        // retorna o objeto para exibir na tabela
+        return json_encode($categoria);
     }
 
     /**
@@ -58,30 +52,34 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-        //
+        $cat = Categoria::find($id);
+        if(isset($cat)){
+            return json_encode($cat);
+        }
+        else{
+            return response('Categoria não encontrada',404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //
+        $cat = Categoria::find($id);
+        // dd($cat);
+        if(isset($cat)){
+            $cat->nome = $request->input('nome');
+            $cat->save();
+            return json_encode($cat);
+        }
+        else{
+            return response('Categoria não encontrada',404);
+        }
     }
 
     /**
@@ -92,13 +90,18 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cat = Categoria::find($id);
+        if(isset($cat)){
+            $cat->delete();
+            return response('OK',200);
+        }
+        return response('Categoria não encontrada',404);
     }
 
     // Essa função é usada para retornar as categorias para exibir na tela de produtos
-    public function indexJson(){
-        $cats = Categoria::all();
-        return json_encode($cats);
-    }
+    // public function indexJson(){
+    //     $cats = Categoria::all();
+    //     return json_encode($cats);
+    // }
 
 }

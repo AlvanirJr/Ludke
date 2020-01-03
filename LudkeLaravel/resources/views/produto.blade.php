@@ -129,7 +129,7 @@
 
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabelaProdutos tbody tr');
-4
+
     //essa função é chamada sempre que atualiza a pagina
     $(function(){        
         // Configura o ajax para todas as requisições ir com token csrf
