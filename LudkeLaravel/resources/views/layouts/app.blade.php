@@ -13,6 +13,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('css/styleLoginCadastro.css')}}">
 
     <!-- Scripts -->
     
@@ -24,9 +25,10 @@
 <body>
     <div id="app">
         
-        @component('component.navbar')
-        @endcomponent
-
+        @if(Auth::check())
+            @component('component.navbar')
+            @endcomponent
+        @endif
         <main class="">
             
             @yield('content')

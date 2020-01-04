@@ -1,9 +1,90 @@
 @extends('layouts.app')
 
 @section('content')
+{{-- Estilo CSS --}}
+
+
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+
+        <div id="conteudo-login" class="col-sm-7">
+            <div class="row">
+                <div id="esquerda-login" class="col-sm-7">
+                    <div class="row justify-content-center">
+                        <img id="logo-login" src="{{asset('img/logo_ludke_branca.png')}}" style="">
+                    </div>
+                </div>
+                <div id="direita-login" class="col-sm-5">
+                    
+                    <div class="row justify-content-center">
+                        <div id="titulo-login">Login</div>
+                    </div>
+
+
+                    <form method="POST" action="{{ route('login') }}">
+                        @csrf
+
+                        <div class="form-group row justify-content-center">
+                            
+                            <div class="col-md-10">
+                                <label for="email" class="col-form-label text-md-right">{{ __('E-Mail') }}</label>
+                                <input id="email" type="email" class="input-ludke form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row justify-content-center">
+                            <div class="col-md-10">
+                                <label for="password" class="col-form-label text-md-right">{{ __('Senha') }}</label>
+                                <input id="password" type="password" class="input-ludke form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- <div class="form-group row">
+                            <div class="col-md-6 offset-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+
+                                    <label class="form-check-label" for="remember">
+                                        {{ __('Remember Me') }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <div class="form-group row justify-content-center">
+                            <div class="col-md-10">
+                                <button type="submit" class="btn btn-primary-ludke">
+                                    {{ __('Login') }}
+                                </button>
+
+                                {{-- @if (Route::has('password.request'))
+                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                        {{ __('Forgot Your Password?') }}
+                                    </a>
+                                @endif --}}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        
+
+
+        {{-- <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
 
@@ -67,7 +148,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 @endsection
