@@ -163,10 +163,10 @@
             $("#background").fadeIn(800);
             
             // animação Fade
-            // $("#conteudo-login").delay(800).fadeIn(1200);
+            $("#conteudo-login").delay(800).fadeIn(1200);
             
             //animação top-meio
-            $("#conteudo-login").delay("slow").show(1000).fadeIn(1000);
+            // $("#conteudo-login").delay("slow").show(1000).fadeIn(1000);
 
         });
         
