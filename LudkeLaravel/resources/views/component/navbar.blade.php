@@ -23,6 +23,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
                                     <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
+                                    <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
                                 </div>
                         </li>
                         <li class="nav-item">

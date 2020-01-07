@@ -54,10 +54,10 @@
         {{-- Linha 2 --}}
         <div class="row justify-content-center">
             {{-- Card 1 --}}
-            {{-- Desabilitado --}}
+            {{-- Funcionários --}}
             <div class="col-sm-4">
-                <div id="card" style="background-color:#aaa; box-shadow: none" onclick="alerta()">
-                    <a id="link-card" href="">
+                <div id="card">
+                    <a id="link-card" href="{{ route("funcionarios")}}">
                         <div class="row justify-content-center">
                             <img id="card-image" src="{{ asset("img/funcionarios.png")  }}" alt="">
                         </div>
