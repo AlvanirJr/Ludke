@@ -19,6 +19,13 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
+
+    public function endereco(){
+        return $this->hasOne('App\Endereco');
+    }
+    public function telefone(){
+        return $this->hasMany('App\Telefone');
+    }
     /**
      * The attributes that should be hidden for arrays.
      *
