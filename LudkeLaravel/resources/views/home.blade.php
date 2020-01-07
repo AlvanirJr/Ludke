@@ -23,7 +23,7 @@
             {{-- Card Categorias --}}
             <div class="col-sm-4">
                 <div id="card">
-                    <a id="link-card" href="{{ route("produtos")}}">
+                    <a id="link-card" href="{{ route("categorias")}}">
                         <div class="row justify-content-center">
                             <img id="card-image-categorias" src="{{ asset("img/categorias.png")  }}" alt="">
                         </div>

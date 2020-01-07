@@ -4,10 +4,12 @@
 {{-- Estilo CSS --}}
 
 {{-- background --}}
-<img class="background" src="{{asset('img/mountains.jpg')}}" style="">
+<img id="background" src="{{asset('img/mountains.jpg')}}" style="">
 
 <div class="container">
     <div class="row justify-content-center">
+
+        
         
         <div id="conteudo-login" class="col-sm-7">
             <div class="row">
@@ -153,4 +155,22 @@
         </div> --}}
     </div>
 </div>
+@endsection
+
+@section('javascript')
+    <script>
+        $(function(){
+            $("#background").fadeIn(800);
+            
+            // animação Fade
+            // $("#conteudo-login").delay(800).fadeIn(1200);
+            
+            //animação top-meio
+            $("#conteudo-login").delay("slow").show(1000).fadeIn(1000);
+
+        });
+        
+        // document.getElementById("background").style.display = "block";
+        // document.getElementById("conteudo-login").style.display = "block";
+    </script>
 @endsection
