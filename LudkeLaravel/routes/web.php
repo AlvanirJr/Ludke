@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -30,3 +30,6 @@ Route::get('/produtos','ProdutoController@indexView')->name('produtos');
 
 // View Categorias
 Route::get('/categorias','CategoriaController@indexView')->name('categorias');
+
+// View Funcionários
+Route::get('/funcionarios','FuncionarioController@indexView')->name('funcionarios');

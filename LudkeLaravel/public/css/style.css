@@ -5,6 +5,39 @@ body{
     margin: 0;
     background-color: white;
 }
+/* --------- Cards ---------------*/
+#card{
+    width: 250px;
+    height: 250px;
+    background-color: #BF1A2C;
+    margin-top: 100px;
+    margin-left: 50px;
+    margin-right: 50px;
+    transition: all 0.1s linear;
+}
+#card:hover{
+    box-shadow: 0 5px 9px 0 #bbbbbb, 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: all 0.1s linear;
+}
+#card-image{
+    margin-top: 50px;
+    margin-bottom: 20px;
+    width: 100px;
+}
+
+#card-image-categorias{
+    margin-top: 0;
+    margin-bottom: -30px;
+    width: 200px;
+}
+#card-text{
+    font-size: 30px;
+    
+}
+#link-card{
+    text-decoration: none;
+    color: white;
+}
 
 .titulo-pagina{
     margin-top: 20px;

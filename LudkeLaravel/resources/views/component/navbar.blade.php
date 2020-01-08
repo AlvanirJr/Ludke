@@ -11,7 +11,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             
-            @if(Auth::check())
+            {{-- @if(Auth::check()) --}}
                 <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('home')}}">Início</a>
@@ -23,6 +23,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
                                     <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
+                                    <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
                                 </div>
                         </li>
                         <li class="nav-item">
@@ -35,7 +36,7 @@
                             <a class="nav-link" href="#">Ajuda</a>
                         </li>
                 </ul>
-            @endif
+            {{-- @endif --}}
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
