@@ -13,7 +13,8 @@ class TelefoneSeeder extends Seeder
     {
         $user_id = User::where('name','Admin')->pluck('id');
         DB::table('telefones')->insert([
-            'numero'=>'(54)3281-9189',
+            'residencial'=>'(54)3281-9189',
+            'celular'=>'(54)99999-9999',
             'user_id'=> $user_id[0]
             
         ]);

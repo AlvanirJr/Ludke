@@ -22,6 +22,7 @@ class EnderecoSeeder extends Seeder
             'cidade'=>str::random(10),
             'uf'=>str::random(2),
             'cep'=>str::random(10),
+            'complemento'=>str::random(10),
             'user_id'=> $user_id[0]
         ]);
     }

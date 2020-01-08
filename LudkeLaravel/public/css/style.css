@@ -94,6 +94,12 @@ body{
 #iconeDelete{
     width:20px;
 }
+
+/* FORMULÁRIO */
+#categoriaForm{
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
 @media screen and (max-width: 576px) {
     /* .navbar{
         height: 100%;

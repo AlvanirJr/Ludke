@@ -15,7 +15,10 @@ class CreateTelefonesTable extends Migration
     {
         Schema::create('telefones', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('numero');
+
+            $table->string('residencial')->nullable();
+            $table->string('celular')->nullable();
+            
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
