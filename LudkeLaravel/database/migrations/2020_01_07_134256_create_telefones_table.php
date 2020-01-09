@@ -20,8 +20,8 @@ class CreateTelefonesTable extends Migration
             $table->string('celular')->nullable();
             
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->unsignedBigInteger('user_id');
+            // $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });
@@ -36,7 +36,7 @@ class CreateTelefonesTable extends Migration
     {
         Schema::dropIfExists('telefones');
 
-        $table->dropForeign('telefones_user_id_foreign');
-        $table->dropColumn('user_id');
+        // $table->dropForeign('telefones_user_id_foreign');
+        // $table->dropColumn('user_id');
     }
 }

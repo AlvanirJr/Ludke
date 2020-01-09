@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <button class="btn btn-primary-ludke" role="button" onclick="novoCargo()">Novo</button>
+                        <button class="btn btn-primary-ludke" role="button" onclick="novoFuncionario()">Novo</button>
                     </div>
                     <div class="col-sm-3"> 
                         <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
@@ -72,15 +72,27 @@
                         </div>
                     </div>
 
+                    <div class="row justify-content-center">
+                        {{-- Nome do funcionário --}}
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="nomeFuncionario" class="control-label">Nome do Funcionario</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="nomeFuncionario" placeholder="Nome do Funcionário">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- row nome + cargo --}}
                     <div class="row justify-content-center">
                         
                         {{-- Nome do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="nomeFuncionario" class="control-label">Nome do Funcionario</label>
+                                <label for="emailFuncionario" class="control-label">E-mail do Funcionario</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="nomeFuncionario" placeholder="Nome do Funcionário">
+                                    <input type="text" class="form-control" id="emailFuncionario" placeholder="E-mail do Funcionário">
                                 </div>
                             </div>
                         </div>
@@ -113,7 +125,7 @@
                         <div class="col-sm-6">
                             {{-- Nome do funcionário --}}
                             <div class="form-group">
-                                <label for="celular" class="control-label">Telefone Celular 1</label>
+                                <label for="celular" class="control-label">Telefone Celular</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="celular" placeholder="Telefone Celular 1">
                                 </div>
@@ -241,6 +253,8 @@
         carregarCargos(); 
         carregarEstados();     
     });
+
+    // lista de estados para o select UF
     function carregarEstados(){
         let estados = [
             'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
@@ -264,9 +278,10 @@
         });
     }
 
-    function novoCargo(){
+    function novoFuncionario(){
         // Limpa campos do modal
         $('#id').val('');
+        $('#emailFuncionario').val('');
         $('#nomeFuncionario').val('');
         $('#cargoFuncionario').val('');
 
@@ -283,5 +298,47 @@
         // exibe modal cadastrar Produtos
         $('#dlgFuncionarios').modal('show');
     }
+
+    function salvarFuncionario(){
+        console.log('SalvarFuncionario');
+    }
+
+    function criarFuncionario(){
+        console.log('criarFuncionario');
+        funcionario = {
+            email: $('#emailFuncionario').val(),
+            nome: $('#nomeFuncionario').val(),
+            cargo: $('#cargoFuncionario').val(),
+            residencial: $('#residencial').val(),
+            celular: $('#celular').val(),
+            cep: $('#cep').val(),
+            rua: $('#rua').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            uf: $('#uf').val(),
+            numero: $('#numero').val(),
+            complemento: $('#complemento').val()
+        }
+        // console.log(funcionario);
+        $.post('/api/funcionarios',funcionario,function(data){
+            console.log('Requisição para /api/funcionarios');
+            // console.log(funcionario);
+            console.log(data);
+        });
+        
+    }
+    $(function(){
+        $('#formFuncionario').submit(function(event){
+            event.preventDefault();// não deixa fechar o modal quando clica no submit
+
+            if($('#id').val()!= ''){
+                salvarFuncionario();
+            }
+            else{
+                criarFuncionario();
+            }
+            $('#dlgFuncionarios').modal('hide');
+        });
+    });
 </script>
 @endsection

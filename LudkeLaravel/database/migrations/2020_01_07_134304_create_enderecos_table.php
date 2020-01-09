@@ -23,8 +23,8 @@ class CreateEnderecosTable extends Migration
             $table->string('cep')->nullable();
             $table->string('complemento')->nullable();
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->unsignedBigInteger('user_id');
+            // $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });
@@ -39,7 +39,7 @@ class CreateEnderecosTable extends Migration
     {
         Schema::dropIfExists('enderecos');
         
-        $table->dropForeign('enderecos_user_id_foreign');
-        $table->dropColumn('user_id');
+        // $table->dropForeign('enderecos_user_id_foreign');
+        // $table->dropColumn('user_id');
     }
 }

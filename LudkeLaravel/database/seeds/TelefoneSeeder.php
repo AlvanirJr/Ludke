@@ -11,11 +11,11 @@ class TelefoneSeeder extends Seeder
      */
     public function run()
     {
-        $user_id = User::where('name','Admin')->pluck('id');
+        // $user_id = User::where('name','Admin')->pluck('id');
         DB::table('telefones')->insert([
             'residencial'=>'(54)3281-9189',
             'celular'=>'(54)99999-9999',
-            'user_id'=> $user_id[0]
+            // 'user_id'=> $user_id[0]
             
         ]);
     }

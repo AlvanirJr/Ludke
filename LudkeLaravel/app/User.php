@@ -26,6 +26,9 @@ class User extends Authenticatable
     public function telefone(){
         return $this->hasMany('App\Telefone');
     }
+    public function funcionario(){
+        return $this->hasOne('App\Funcionario','user_id');
+    }
     /**
      * The attributes that should be hidden for arrays.
      *
