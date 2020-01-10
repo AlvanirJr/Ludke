@@ -303,6 +303,38 @@
         console.log('SalvarFuncionario');
     }
 
+     // cria um html da linha da tabela
+     function montarLinha(f){
+        var linha = "<tr>"+
+                        "<td>"+f.id+"</td>"+
+                        "<td>"+f.nome+"</td>"+
+                        "<td>"+f.cargo+"</td>"+
+                        "<td>"+f.residencial+"</td>"+
+                        "<td>"+f.celular+"</td>"+
+                        "<td>"+f.cep+"</td>"+
+                        "<td>"+f.rua+"</td>"+
+                        "<td>"+f.numero+"</td>"+
+                        "<td>"+f.bairro+"</td>"+
+                        "<td>"+f.cidade+"</td>"+
+                        "<td>"+f.uf+"</td>"+
+                        "<td>"+f.complemento+"</td>"+
+                        "<td>"+
+                            "<a href="+"#"+" onclick="+"editarFuncionario("+f.id+")"+">"+
+                                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
+                            "</a>"+                            
+                            "<a href="+"#"+" onclick="+"removerFuncionario("+f.id+")"+">"+
+                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
+                            "</a>"+
+                        "</td>"+
+                    "</tr>";
+        return linha;
+    }
+    function editarFuncionario(){
+        console.log("editar Funcionario");
+    }
+    function removerFuncionario(){
+        console.log("Remover Funcionario");
+    }
     function criarFuncionario(){
         console.log('criarFuncionario');
         funcionario = {
@@ -321,9 +353,10 @@
         }
         // console.log(funcionario);
         $.post('/api/funcionarios',funcionario,function(data){
-            console.log('Requisição para /api/funcionarios');
-            // console.log(funcionario);
-            console.log(data);
+            // console.log('Requisição para /api/funcionarios');
+            funcionario = JSON.parse(data);
+            linha = montarLinha(funcionario);
+            $('#tabelaFuncionarios>tbody').append(linha);
         });
         
     }

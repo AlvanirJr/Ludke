@@ -70,10 +70,28 @@ class FuncionarioController extends Controller
         $funcionario->save();
 
 
-        $user = $user->toArray();
-        $endereco = $endereco->toArray();
-        $telefone = $telefone->toArray();
-        // return json_encode(compact($user,$endereco,$telefone));
+        // $user = $user->toArray();
+        // $endereco = $endereco->toArray();
+        // $telefone = $telefone->toArray();
+
+        $fun = [
+            'id' => $funcionario->id,
+            'email' => $user->email,
+            'nome' => $user->name,
+            'cargo' => $funcionario->cargo_id,
+            'residencial' => $telefone->residencial,
+            'celular' => $telefone->celular,
+            'cep' => $endereco->cep,
+            'rua' => $endereco->rua,
+            'bairro' => $endereco->bairro,
+            'cidade' => $endereco->cidade,
+            'uf' => $endereco->uf,
+            'numero' => $endereco->numero,
+            'complemento' => $endereco->complemento,
+        ];
+        // dd($fun);
+        // var_dump($fun);
+        return json_encode($fun);
         // Response::json(array('user'=>$user, 'endereco'=> $endereco, 'telefone'=>$telefone));
         
     }
