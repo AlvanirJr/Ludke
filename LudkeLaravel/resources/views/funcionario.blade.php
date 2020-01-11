@@ -251,8 +251,22 @@
         });
 
         carregarCargos(); 
+        carregarFuncionarios();
         carregarEstados();     
     });
+
+    function carregarFuncionarios(){
+        // alert('funcionarios');
+        console.log('funcionarios');
+        $.getJSON('/api/funcionarios',function(funcionarios){
+            // console.log(funcionarios);
+            for(i=0; i<funcionarios.length;i++){
+                console.log(funcionarios[i])
+                linha = montarLinha(funcionarios[i]);
+                $('#tabelaFuncionarios>tbody').append(linha);
+            }
+        });
+    }
 
     // lista de estados para o select UF
     function carregarEstados(){

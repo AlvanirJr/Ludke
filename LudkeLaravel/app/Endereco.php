@@ -10,6 +10,6 @@ class Endereco extends Model
     protected $fillable = ['rua','numero','bairro','cidade','uf','cep'];
 
     public function users(){
-        return $this->belongsTo('App\User','user_id');
+        return $this->belongsTo('App\User');
     }
 }

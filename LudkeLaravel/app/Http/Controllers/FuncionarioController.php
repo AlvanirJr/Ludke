@@ -19,7 +19,34 @@ class FuncionarioController extends Controller
 
     public function index()
     {
-        //
+        
+
+        $funcionarios = Funcionario::all();
+        $arrayFuncionarios = Array();
+        foreach($funcionarios as $f){
+            $user = User::where('id',$f->user_id)->first();
+            $endereco = Endereco::where('id',$user->endereco_id)->first();
+            $telefone = Telefone::where('id',$user->telefone_id)->first();
+            $fun = [
+                    'id' => $f->id,
+                    'email' => $user->email,
+                    'nome' => $user->name,
+                    'cargo' => $f->cargo_id,
+                    'residencial' => $telefone->residencial,
+                    'celular' => $telefone->celular,
+                    'cep' => $endereco->cep,
+                    'rua' => $endereco->rua,
+                    'bairro' => $endereco->bairro,
+                    'cidade' => $endereco->cidade,
+                    'uf' => $endereco->uf,
+                    'numero' => $endereco->numero,
+                    'complemento' => $endereco->complemento,
+                    ];
+            array_push($arrayFuncionarios,$fun);                
+        }
+        return json_encode($arrayFuncionarios);
+        // $funcionario = Funcionario::find(1)->user;
+        // return json_encode($funcionario);
     }
 
     /**
