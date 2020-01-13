@@ -346,8 +346,31 @@
     function editarFuncionario(){
         console.log("editar Funcionario");
     }
-    function removerFuncionario(){
+    function removerFuncionario(id){
         console.log("Remover Funcionario");
+        confirma = confirm("Você tem certeza que deseja remover este funcionário?");
+        if(confirma){
+            $.ajax({
+                type: "DELETE",
+                url: "/api/funcionarios/"+id,
+                context: this,
+                success: function(){
+                    console.log("Deletou Funcionario");
+                    linhas = $("#tabelaFuncionarios>tbody>tr");
+                    e = linhas.filter(function(i,elemento){
+                        return elemento.cells[0].textContent == id;
+                    });
+                    if(e){
+                        e.remove();
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        
     }
     function criarFuncionario(){
         console.log('criarFuncionario');

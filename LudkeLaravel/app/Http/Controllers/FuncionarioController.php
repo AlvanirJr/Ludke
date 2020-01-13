@@ -144,6 +144,17 @@ class FuncionarioController extends Controller
     
     public function destroy($id)
     {
-        //
+        $funcionario = Funcionario::find($id);
+        $user = User::find($funcionario->user_id);
+        $telefone = Telefone::find($user->telefone_id);
+        $endereco = Endereco::find($user->endereco_id);
+        if(isset($funcionario)){
+            $funcionario->delete();
+            $user->delete();
+            $telefone->delete();
+            $endereco->delete();
+            return response('OK',200);
+        }
+        return response('Funcionario não encontrado',404);
     }
 }
