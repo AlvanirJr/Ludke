@@ -126,7 +126,38 @@ class FuncionarioController extends Controller
     
     public function show($id)
     {
-        //
+        $funcionario = Funcionario::find($id);
+        $user = User::find($funcionario->user_id);
+        $telefone = Telefone::find($user->telefone_id);
+        $endereco = Endereco::find($user->endereco_id);
+
+        if(isset($funcionario) && isset($user)
+        && isset($telefone) && isset($endereco)){
+
+            $fun = [
+                'id' => $funcionario->id,
+                'email' => $user->email,
+                'nome' => $user->name,
+                'cargo' => $funcionario->cargo_id,
+                'residencial' => $telefone->residencial,
+                'celular' => $telefone->celular,
+                'cep' => $endereco->cep,
+                'rua' => $endereco->rua,
+                'bairro' => $endereco->bairro,
+                'cidade' => $endereco->cidade,
+                'uf' => $endereco->uf,
+                'numero' => $endereco->numero,
+                'complemento' => $endereco->complemento,
+            ];
+            
+            return json_encode($fun);
+    
+        }
+        else{
+            return response('Funcionário não encontrado',404);
+        }
+
+
     }
 
     
@@ -138,7 +169,57 @@ class FuncionarioController extends Controller
     
     public function update(Request $request, $id)
     {
-        //
+        $funcionario = Funcionario::find($id);
+        $user = User::find($funcionario->user_id);
+        $telefone = Telefone::find($user->telefone_id);
+        $endereco = Endereco::find($user->endereco_id);
+
+        if(isset($funcionario) && isset($user)
+        && isset($telefone) && isset($endereco)){
+            // ENDERECO
+            $endereco->rua = $request->input('rua');
+            $endereco->numero = $request->input('numero');
+            $endereco->bairro = $request->input('bairro');
+            $endereco->cidade = $request->input('cidade');
+            $endereco->uf = $request->input('uf');
+            $endereco->cep = $request->input('cep');
+            $endereco->complemento = $request->input('complemento');
+            $endereco->save();
+
+            // TELEFONE
+            $telefone->residencial = $request->input('residencial');
+            $telefone->celular = $request->input('celular');
+            $telefone->save();
+
+            // USER
+            $user->name = $request->input('nome');
+            $user->email= $request->input('email');
+            $user->save();
+
+
+
+        $fun = [
+            'id' => $funcionario->id,
+            'email' => $user->email,
+            'nome' => $user->name,
+            'cargo' => $funcionario->cargo_id,
+            'residencial' => $telefone->residencial,
+            'celular' => $telefone->celular,
+            'cep' => $endereco->cep,
+            'rua' => $endereco->rua,
+            'bairro' => $endereco->bairro,
+            'cidade' => $endereco->cidade,
+            'uf' => $endereco->uf,
+            'numero' => $endereco->numero,
+            'complemento' => $endereco->complemento,
+        ];
+        
+            return json_encode($fun);
+
+        }
+        else{
+            return response('Funcionário não encontrado',404);
+        }
     }
 
     

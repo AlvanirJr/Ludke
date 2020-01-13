@@ -315,6 +315,54 @@
 
     function salvarFuncionario(){
         console.log('SalvarFuncionario');
+
+        funcionario = {
+            id: $('#id').val(),
+            email: $('#emailFuncionario').val(),
+            nome: $('#nomeFuncionario').val(),
+            cargo: $('#cargoFuncionario').val(),
+            residencial: $('#residencial').val(),
+            celular: $('#celular').val(),
+            cep: $('#cep').val(),
+            rua: $('#rua').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            uf: $('#uf').val(),
+            numero: $('#numero').val(),
+            complemento: $('#complemento').val()
+        }
+
+        $.ajax({
+            type: "PUT",
+            url: "/api/funcionarios/"+funcionario.id,
+            context: this,
+            data: funcionario,
+            success: function(data){
+                func = JSON.parse(data);
+                linhas = $('#tabelaFuncionarios>tbody>tr');
+                e = linhas.filter(function(i,elemento){
+                    return (elemento.cells[0].textContent == funcionario.id);
+                });
+                if(e){
+                    e[0].cells[0].textContent = funcionario.id;
+                    e[0].cells[1].textContent = funcionario.nome;
+                    e[0].cells[2].textContent = funcionario.cargo;
+                    e[0].cells[3].textContent = funcionario.residencial;
+                    e[0].cells[4].textContent = funcionario.celular;
+                    e[0].cells[5].textContent = funcionario.cep;
+                    e[0].cells[6].textContent = funcionario.rua;
+                    e[0].cells[7].textContent = funcionario.numero;
+                    e[0].cells[8].textContent = funcionario.bairro;
+                    e[0].cells[9].textContent = funcionario.cidade;
+                    e[0].cells[10].textContent = funcionario.uf;
+                    e[0].cells[11].textContent = funcionario.complemento;
+
+                }
+            },
+            error: function(error){
+                    console.log(error);
+                }
+        });
     }
 
      // cria um html da linha da tabela
@@ -343,8 +391,26 @@
                     "</tr>";
         return linha;
     }
-    function editarFuncionario(){
+    function editarFuncionario(id){
         console.log("editar Funcionario");
+        $.getJSON("/api/funcionarios/"+id, function(data){
+            console.log(data);
+            $('#id').val(data.id);
+            $('#emailFuncionario').val(data.email),
+            $('#nomeFuncionario').val(data.nome),
+            $('#cargoFuncionario').val(data.cargo),
+            $('#residencial').val(data.residencial),
+            $('#celular').val(data.celular),
+            $('#cep').val(data.cep),
+            $('#rua').val(data.rua),
+            $('#bairro').val(data.bairro),
+            $('#cidade').val(data.cidade),
+            $('#uf').val(data.uf),
+            $('#numero').val(data.numero),
+            $('#complemento').val(data.complemento)
+            // exibe modal cadastrar Produtos
+            $('#dlgFuncionarios').modal('show');
+        });
     }
     function removerFuncionario(id){
         console.log("Remover Funcionario");
@@ -402,9 +468,11 @@
             event.preventDefault();// não deixa fechar o modal quando clica no submit
 
             if($('#id').val()!= ''){
+                console.log('Salvar Funcionário');
                 salvarFuncionario();
             }
             else{
+                console.log('Criar Funcionário');
                 criarFuncionario();
             }
             $('#dlgFuncionarios').modal('hide');
