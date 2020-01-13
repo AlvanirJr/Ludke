@@ -38,7 +38,7 @@ class ProdutoController extends Controller
         $prod = new Produto();
         $prod->nome = $request->input('nome');
         $prod->validade = $request->input('validade');
-        $prod->quantidade = $request->input('quantidade');
+        // $prod->quantidade = $request->input('quantidade');
         $prod->preco = $request->input('preco');
         $prod->descricao = $request->input('descricao');
         $prod->categoria_id = $request->input('categoria_id');
@@ -90,7 +90,7 @@ class ProdutoController extends Controller
         if(isset($prod)){
             $prod->nome = $request->input('nome');
             $prod->validade = $request->input('validade');
-            $prod->quantidade = $request->input('quantidade');
+            // $prod->quantidade = $request->input('quantidade');
             $prod->preco = $request->input('preco');
             $prod->descricao = $request->input('descricao');
             $prod->categoria_id = $request->input('categoria_id');

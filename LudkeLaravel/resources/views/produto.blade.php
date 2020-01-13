@@ -35,7 +35,7 @@
                         <th>Nome</th>
                         <th>Categoria</th>
                         <th>Validade</th>
-                        <th>Quantidade</th>
+                        {{-- <th>Quantidade</th> --}}
                         <th>Preço(R$)</th>
                         <th>Descrição</th>
                         <th>Ações</th>
@@ -88,16 +88,16 @@
                     </div>
 
                     {{-- Quantidade do produto --}}
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="quantidadeProduto" class="control-label">Quantidade do Produto</label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="quantidadeProduto" placeholder="Quantidade do Produto">
                         </div>
-                    </div>
+                    </div> --}}
 
                     {{-- Preço do produto --}}
                     <div class="form-group">
-                        <label for="precoProduto" class="control-label">Preço do Produto</label>
+                        <label for="precoProduto" class="control-label">Preço do Produto (por Kg)</label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="precoProduto" placeholder="Preço do Produto">
                         </div>
@@ -150,7 +150,7 @@
         $('#nomeProduto').val('');
         $('#categoriaProduto').val('');
         $('#validadeProduto').val('');
-        $('#quantidadeProduto').val('');
+        // $('#quantidadeProduto').val('');
         $('#precoProduto').val('');
         $('#descricaoProduto').val('');
         // exibe modal cadastrar Produtos
@@ -177,7 +177,7 @@
                         "<td>"+p.nome+"</td>"+
                         "<td>"+p.categoria_id+"</td>"+
                         "<td>"+p.validade+"</td>"+
-                        "<td>"+p.quantidade+"</td>"+
+                        // "<td>"+p.quantidade+"</td>"+
                         "<td>"+p.preco+"</td>"+
                         "<td>"+p.descricao+"</td>"+
                         "<td>"+
@@ -200,7 +200,7 @@
             $('#nomeProduto').val(data.nome);
             $('#categoriaProduto').val(data.categoria_id);
             $('#validadeProduto').val(data.validade);
-            $('#quantidadeProduto').val(data.quantidade);
+            // $('#quantidadeProduto').val(data.quantidade);
             $('#precoProduto').val(data.preco);
             $('#descricaoProduto').val(data.descricao);
             // exibe modal cadastrar Produtos
@@ -252,7 +252,7 @@
         prod = {
             nome: $('#nomeProduto').val(), 
             validade: $('#validadeProduto').val(), 
-            quantidade: $('#quantidadeProduto').val(), 
+            // quantidade: $('#quantidadeProduto').val(), 
             preco: $('#precoProduto').val(), 
             descricao: $('#descricaoProduto').val(), 
             categoria_id: $('#categoriaProduto').val()            
@@ -273,7 +273,7 @@
             id: $('#id').val(),
             nome: $('#nomeProduto').val(), 
             validade: $('#validadeProduto').val(), 
-            quantidade: $('#quantidadeProduto').val(), 
+            // quantidade: $('#quantidadeProduto').val(), 
             preco: $('#precoProduto').val(), 
             descricao: $('#descricaoProduto').val(), 
             categoria_id: $('#categoriaProduto').val()            
@@ -299,9 +299,9 @@
                         e[0].cells[1].textContent = prod.nome;
                         e[0].cells[2].textContent = prod.categoria_id;
                         e[0].cells[3].textContent = prod.validade;
-                        e[0].cells[4].textContent = prod.quantidade;
-                        e[0].cells[5].textContent = prod.preco;
-                        e[0].cells[6].textContent = prod.descricao;
+                        // e[0].cells[4].textContent = prod.quantidade;
+                        e[0].cells[4].textContent = prod.preco;
+                        e[0].cells[5].textContent = prod.descricao;
                     }
 
                 },
