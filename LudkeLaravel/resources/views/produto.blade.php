@@ -87,14 +87,6 @@
                         </div>
                     </div>
 
-                    {{-- Quantidade do produto --}}
-                    {{-- <div class="form-group">
-                        <label for="quantidadeProduto" class="control-label">Quantidade do Produto</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="quantidadeProduto" placeholder="Quantidade do Produto">
-                        </div>
-                    </div> --}}
-
                     {{-- Preço do produto --}}
                     <div class="form-group">
                         <label for="precoProduto" class="control-label">Preço do Produto (por Kg)</label>
@@ -103,6 +95,28 @@
                         </div>
                     </div>
 
+                    {{-- Preço do produto --}}
+                    <div class="form-group">
+                        <label for="imagensProduto" class="control-label">Selecionar Imagens</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control-file" id="imagensProduto" placeholder="Preço do Produto" multiple>
+                        </div>
+                    </div>
+
+                    {{-- foto --}}
+                    <div class="row">
+                        <div class="fotos col-sm-12">
+                            <ul class="none">
+                                @for($i=0;$i<=5;$i++)
+                                <li>
+                                    <div id="{{$i}}" class="fotoProduto">
+                                        <div class="excluirFoto" onclick="excluirFoto({{$i}})"></div>
+                                    </div>
+                                </li>
+                                @endfor
+                            </ul>
+                        </div>
+                    </div>
                     {{-- Descrição do produto --}}
                     <div class="form-group">
                         <label for="descricaoProduto" class="control-label">Descrição do Produto</label>
@@ -141,8 +155,27 @@
 
         carregarCategorias();
         carregarProdutos();        
+
+        // Função para aparecer icone de excluir foto
+        exibirBotaoExcluirFoto();
+
     });
     
+    function exibirBotaoExcluirFoto(){
+        $('.fotoProduto').mouseover(function(){
+            var idElemento = $(this).attr("id");
+            $(this).children().css("display","block");
+        });
+        $('.fotoProduto').mouseout(function(){
+            var idElemento = $(this).attr("id");
+            $(this).children().css("display","none");
+        });
+    }
+    
+    function excluirFoto(id){
+        console.log("Excluir Foto com id: "+id);
+    }
+
     // Sempre que clica no botão novo, limpa os campos do modal
     function novoProduto(){
         // Limpa campos do modal
@@ -150,7 +183,7 @@
         $('#nomeProduto').val('');
         $('#categoriaProduto').val('');
         $('#validadeProduto').val('');
-        // $('#quantidadeProduto').val('');
+        $('#imagensProduto').val('');
         $('#precoProduto').val('');
         $('#descricaoProduto').val('');
         // exibe modal cadastrar Produtos

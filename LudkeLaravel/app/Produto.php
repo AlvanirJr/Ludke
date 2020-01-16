@@ -13,6 +13,10 @@ class   Produto extends Model
         return $this->belongsTo('App\Categoria', 'categoria_id');
     }
 
+    public function fotosProduto(){
+        return $this->hasMany('App\FotosProduto');
+    }
+
     public static  $rules =[
         'nome' => 'required|',
         'validade' => 'required|',

@@ -100,6 +100,34 @@ body{
     margin-top: 20px;
     margin-bottom: 40px;
 }
+
+.fotos{
+    /* display: inline; */
+    float: left;
+}
+ul.none{
+    list-style-type: none;
+}
+.fotoProduto{
+    
+    width: 100px;
+    height: 100px;
+    margin-top: 10px;
+    margin-right: 10px;
+    float:left;
+    background-color: darkgray;
+}
+.excluirFoto{
+    width: 30px;
+    height: 30px;
+    /* border-radius: 50%; */
+    background-image: url("/img/window-close-solid.svg");
+    top: 0;
+    float: right;
+    display: none;
+    
+}
+
 @media screen and (max-width: 576px) {
     /* .navbar{
         height: 100%;
