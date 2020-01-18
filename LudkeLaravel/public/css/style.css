@@ -105,24 +105,32 @@ body{
     /* display: inline; */
     float: left;
 }
-ul.none{
+ul.listaImagem{
     list-style-type: none;
 }
 .fotoProduto{
     
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    /* height: 100px; */
     margin-top: 10px;
     margin-right: 10px;
     float:left;
-    background-color: darkgray;
+    z-index: 1;
+    /* background-color: darkgray; */
+}
+.itemFoto{
+    width: 120px;
+    /* z-index: 2; */
+    
 }
 .excluirFoto{
     width: 30px;
     height: 30px;
-    /* border-radius: 50%; */
+    position: absolute;
+    z-index: 5;
     background-image: url("/img/window-close-solid.svg");
     top: 0;
+    margin-left: 90px;
     float: right;
     display: none;
     

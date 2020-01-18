@@ -104,21 +104,21 @@
                     </div>
 
                     {{-- foto --}}
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="fotos col-sm-12">
-                            <ul class="none">
-                                @for($i=0;$i<=5;$i++)
+                            <ul class="listaImagem">
+                                {{-- @for($i=0;$i<=5;$i++)
                                 <li>
                                     <div id="{{$i}}" class="fotoProduto">
                                         <div class="excluirFoto" onclick="excluirFoto({{$i}})"></div>
                                     </div>
                                 </li>
-                                @endfor
+                                @endfor --}}
                             </ul>
                         </div>
                     </div>
                     {{-- Descrição do produto --}}
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top:20px">
                         <label for="descricaoProduto" class="control-label">Descrição do Produto</label>
                         <div class="input-group">
                             <textarea class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
@@ -158,21 +158,12 @@
 
         // Função para aparecer icone de excluir foto
         exibirBotaoExcluirFoto();
+        carregarImagens();
+
 
     });
     
-    function exibirBotaoExcluirFoto(){
-        $('.fotoProduto').mouseover(function(){
-            var idElemento = $(this).attr("id");
-            $(this).children().css("display","block");
-            // $(this).children().fadeIn(80);
-        });
-        $('.fotoProduto').mouseout(function(){
-            var idElemento = $(this).attr("id");
-            $(this).children().css("display","none");
-            // $(this).children().fadeOut(80);
-        });
-    }
+    
     
     function excluirFoto(id){
         console.log("Excluir Foto com id: "+id);
@@ -187,6 +178,7 @@
         $('#validadeProduto').val('');
         $('#imagensProduto').val('');
         $('#precoProduto').val('');
+        $(".listaImagem").html("");
         $('#descricaoProduto').val('');
         // exibe modal cadastrar Produtos
         $('#dlgProdutos').modal('show');
@@ -282,7 +274,38 @@
             }
         });
     }
+    // exibe botão de excluir na foto
+    function exibirBotaoExcluirFoto(){
+        $('.fotoProduto').mouseover(function(){
+            var idElemento = $(this).attr("id");
+            $(this).children().css("display","block");
+            // $(this).children().fadeIn(80);
+        });
+        $('.fotoProduto').mouseout(function(){
+            var idElemento = $(this).attr("id");
+            $(this).children().first().css("display","none");
+            // $(this).children().fadeOut(80);
+        });
+    }
 
+    // Exibe imagens que foram carregadas na tela
+    function carregarImagens(){
+        $("#imagensProduto").change(function(){
+            console.log('carregou imagem');
+            $(".listaImagem").html("");
+            var totalImagens = document.getElementById("imagensProduto").files.length; // número de fotos carregadas no input
+            for(i=0;i<totalImagens;i++){
+                linha = "<div id="+i+" class="+"fotoProduto"+">"+
+                                        "<div class="+"excluirFoto"+" onclick="+"excluirFoto("+i+")"+"></div>"+
+                                        "<img class="+"itemFoto"+" src='"+URL.createObjectURL(event.target.files[i])+"'>"+
+                                    "</div>"
+                $(".listaImagem").append(linha);
+                
+                // exibe botão de excluir na foto
+                exibirBotaoExcluirFoto(); 
+            }
+        });
+    }
     // função para fazer requisição post para o controller
     function criarProduto(){
         // cria um objeto com os dados do form
@@ -300,13 +323,7 @@
         };
         console.log(prod);
 
-        // // faz uma requisição post para a rota /api/produtos
-        // $.post('/api/produtos',prod,function(data){
-        //     produto = JSON.parse(data);//converte para json o objeto retornado do controller
-        //     linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
-        //     $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
-        // });
-
+        // cria um FormData para ser enviado ao controller com os dados da requisição presentes no formulário
         let form = document.getElementById('formProduto');
         let formData = new FormData(form);
         formData.append('nome',prod.nome);
@@ -316,7 +333,7 @@
         formData.append('categoria_id',prod.categoria_id);
         // formData.append('fotosProduto',prod.imagensProduto);
         
-        console.log(formData);
+        // console.log(formData);
         $.ajax({
             url:'/api/produtos',
             method:"POST",
@@ -326,7 +343,7 @@
             cache: false,
             processData: false,
             success:function(produto){
-                // produto = JSON.parse(data);//converte para json o objeto retornado do controller
+                // produto = JSON.parse(data);//converter o dado retornado para JSON ocorrerá um erro, pois o dado retornado é um object
                 linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
                 $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
             }
