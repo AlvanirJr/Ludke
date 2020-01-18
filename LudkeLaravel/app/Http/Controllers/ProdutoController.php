@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Produto;
+use App\FotosProduto;
 
 class ProdutoController extends Controller
 {
@@ -34,6 +36,12 @@ class ProdutoController extends Controller
     // Recebe o request do ajax
     public function store(Request $request)
     {
+
+        // dd($request->all());
+        // dd($request->file('imagensProduto'));
+        
+
+
         // salva produtos no banco
         $prod = new Produto();
         $prod->nome = $request->input('nome');
@@ -45,6 +53,18 @@ class ProdutoController extends Controller
         
       
         $prod->save();
+
+        $fotosProduto = $request->file('imagensProduto');
+        if(isset($fotosProduto)){
+            foreach($fotosProduto as $f){
+                $path = $f->store('images','public');
+                // dd($path);
+                $foto = new FotosProduto();
+                $foto->path = $path; 
+                $foto->produto_id = $prod->id;
+                $foto->save();
+            }
+        }
 
         // retorna o objeto para exibir na tabela
         return json_encode($prod);
@@ -115,6 +135,13 @@ class ProdutoController extends Controller
     {
         $prod = Produto::find($id);
         if(isset($prod)){
+            $fotosProduto = FotosProduto::where('produto_id',$prod->id);
+            if(isset($fotosProduto)){
+                foreach($fotosProduto as $foto){
+                    Storage::delete($foto->path);
+                }
+                $fotosProduto->delete();
+            }
             $prod->delete();
             return response('OK',200);
         }

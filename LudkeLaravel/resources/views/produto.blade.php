@@ -95,11 +95,11 @@
                         </div>
                     </div>
 
-                    {{-- Preço do produto --}}
+                    {{-- Input Fotos Produto --}}
                     <div class="form-group">
                         <label for="imagensProduto" class="control-label">Selecionar Imagens</label>
                         <div class="input-group">
-                            <input type="file" class="form-control-file" id="imagensProduto" placeholder="Preço do Produto" multiple>
+                            <input type="file" name="imagensProduto[]" class="form-control-file" id="imagensProduto" placeholder="Preço do Produto" multiple>
                         </div>
                     </div>
 
@@ -165,10 +165,12 @@
         $('.fotoProduto').mouseover(function(){
             var idElemento = $(this).attr("id");
             $(this).children().css("display","block");
+            // $(this).children().fadeIn(80);
         });
         $('.fotoProduto').mouseout(function(){
             var idElemento = $(this).attr("id");
             $(this).children().css("display","none");
+            // $(this).children().fadeOut(80);
         });
     }
     
@@ -236,6 +238,8 @@
             // $('#quantidadeProduto').val(data.quantidade);
             $('#precoProduto').val(data.preco);
             $('#descricaoProduto').val(data.descricao);
+
+
             // exibe modal cadastrar Produtos
             $('#dlgProdutos').modal('show');
         });
@@ -282,21 +286,52 @@
     // função para fazer requisição post para o controller
     function criarProduto(){
         // cria um objeto com os dados do form
+        var imagensProduto = document.getElementById("imagensProduto").files;
+        var imagensProduto = document.getElementById("imagensProduto").files;
+        // console.log(imagensProduto);
+
         prod = {
             nome: $('#nomeProduto').val(), 
             validade: $('#validadeProduto').val(), 
-            // quantidade: $('#quantidadeProduto').val(), 
             preco: $('#precoProduto').val(), 
             descricao: $('#descricaoProduto').val(), 
-            categoria_id: $('#categoriaProduto').val()            
+            categoria_id: $('#categoriaProduto').val(),
+            // fotosProduto: imagensProduto
         };
+        console.log(prod);
 
-        // faz uma requisição post para a rota /api/produtos
-        $.post('/api/produtos',prod,function(data){
-            produto = JSON.parse(data);//converte para json o objeto retornado do controller
-            linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
-            $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
-        });
+        // // faz uma requisição post para a rota /api/produtos
+        // $.post('/api/produtos',prod,function(data){
+        //     produto = JSON.parse(data);//converte para json o objeto retornado do controller
+        //     linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
+        //     $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
+        // });
+
+        let form = document.getElementById('formProduto');
+        let formData = new FormData(form);
+        formData.append('nome',prod.nome);
+        formData.append('validade',prod.validade);
+        formData.append('preco',prod.preco);
+        formData.append('descricao',prod.descricao);
+        formData.append('categoria_id',prod.categoria_id);
+        // formData.append('fotosProduto',prod.imagensProduto);
+        
+        console.log(formData);
+        $.ajax({
+            url:'/api/produtos',
+            method:"POST",
+            data:formData,
+            dataType:'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(produto){
+                // produto = JSON.parse(data);//converte para json o objeto retornado do controller
+                linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
+                $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
+            }
+        })
+        
 
     }
     
