@@ -75,6 +75,7 @@
                         <label for="categoriaProduto" class="control-label">Categoria do Produto</label>
                         <div class="input-group">
                             <select class="form-control" id="categoriaProduto">
+                                <option value="" disabled selected hidden>-- Selecionar Categoria --</option>
                             </select>
                         </div>
                     </div>
