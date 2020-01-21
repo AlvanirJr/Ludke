@@ -14,7 +14,7 @@ class EnderecoSeeder extends Seeder
     public function run()
     {
         //
-        $user_id = User::where('name','Admin')->pluck('id');
+        // $user_id = User::where('name','Admin')->pluck('id');
         DB::table('enderecos')->insert([
             'rua'=>str::random(10),
             'numero'=>'123',
@@ -22,7 +22,8 @@ class EnderecoSeeder extends Seeder
             'cidade'=>str::random(10),
             'uf'=>str::random(2),
             'cep'=>str::random(10),
-            'user_id'=> $user_id[0]
+            'complemento'=>str::random(10),
+            // 'user_id'=> $user_id[0]
         ]);
     }
 }

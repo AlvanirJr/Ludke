@@ -35,7 +35,7 @@
                         <th>Nome</th>
                         <th>Categoria</th>
                         <th>Validade</th>
-                        <th>Quantidade</th>
+                        {{-- <th>Quantidade</th> --}}
                         <th>Preço(R$)</th>
                         <th>Descrição</th>
                         <th>Ações</th>
@@ -75,6 +75,7 @@
                         <label for="categoriaProduto" class="control-label">Categoria do Produto</label>
                         <div class="input-group">
                             <select class="form-control" id="categoriaProduto">
+                                <option value="" disabled selected hidden>-- Selecionar Categoria --</option>
                             </select>
                         </div>
                     </div>
@@ -87,24 +88,38 @@
                         </div>
                     </div>
 
-                    {{-- Quantidade do produto --}}
-                    <div class="form-group">
-                        <label for="quantidadeProduto" class="control-label">Quantidade do Produto</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="quantidadeProduto" placeholder="Quantidade do Produto">
-                        </div>
-                    </div>
-
                     {{-- Preço do produto --}}
                     <div class="form-group">
-                        <label for="precoProduto" class="control-label">Preço do Produto</label>
+                        <label for="precoProduto" class="control-label">Preço do Produto (por Kg)</label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="precoProduto" placeholder="Preço do Produto">
                         </div>
                     </div>
 
-                    {{-- Descrição do produto --}}
+                    {{-- Input Fotos Produto --}}
                     <div class="form-group">
+                        <label for="imagensProduto" class="control-label">Selecionar Imagens</label>
+                        <div class="input-group">
+                            <input type="file" name="imagensProduto[]" class="form-control-file" id="imagensProduto" placeholder="Preço do Produto" multiple>
+                        </div>
+                    </div>
+
+                    {{-- foto --}}
+                    <div class="row justify-content-center">
+                        <div class="fotos col-sm-12">
+                            <ul class="listaImagem">
+                                {{-- @for($i=0;$i<=5;$i++)
+                                <li>
+                                    <div id="{{$i}}" class="fotoProduto">
+                                        <div class="excluirFoto" onclick="excluirFoto({{$i}})"></div>
+                                    </div>
+                                </li>
+                                @endfor --}}
+                            </ul>
+                        </div>
+                    </div>
+                    {{-- Descrição do produto --}}
+                    <div class="form-group" style="margin-top:20px">
                         <label for="descricaoProduto" class="control-label">Descrição do Produto</label>
                         <div class="input-group">
                             <textarea class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
@@ -141,8 +156,20 @@
 
         carregarCategorias();
         carregarProdutos();        
+
+        // Função para aparecer icone de excluir foto
+        exibirBotaoExcluirFoto();
+        carregarImagens();
+
+
     });
     
+    
+    
+    function excluirFoto(id){
+        console.log("Excluir Foto com id: "+id);
+    }
+
     // Sempre que clica no botão novo, limpa os campos do modal
     function novoProduto(){
         // Limpa campos do modal
@@ -150,8 +177,9 @@
         $('#nomeProduto').val('');
         $('#categoriaProduto').val('');
         $('#validadeProduto').val('');
-        $('#quantidadeProduto').val('');
+        $('#imagensProduto').val('');
         $('#precoProduto').val('');
+        $(".listaImagem").html("");
         $('#descricaoProduto').val('');
         // exibe modal cadastrar Produtos
         $('#dlgProdutos').modal('show');
@@ -177,7 +205,7 @@
                         "<td>"+p.nome+"</td>"+
                         "<td>"+p.categoria_id+"</td>"+
                         "<td>"+p.validade+"</td>"+
-                        "<td>"+p.quantidade+"</td>"+
+                        // "<td>"+p.quantidade+"</td>"+
                         "<td>"+p.preco+"</td>"+
                         "<td>"+p.descricao+"</td>"+
                         "<td>"+
@@ -200,9 +228,11 @@
             $('#nomeProduto').val(data.nome);
             $('#categoriaProduto').val(data.categoria_id);
             $('#validadeProduto').val(data.validade);
-            $('#quantidadeProduto').val(data.quantidade);
+            // $('#quantidadeProduto').val(data.quantidade);
             $('#precoProduto').val(data.preco);
             $('#descricaoProduto').val(data.descricao);
+
+
             // exibe modal cadastrar Produtos
             $('#dlgProdutos').modal('show');
         });
@@ -245,25 +275,81 @@
             }
         });
     }
+    // exibe botão de excluir na foto
+    function exibirBotaoExcluirFoto(){
+        $('.fotoProduto').mouseover(function(){
+            var idElemento = $(this).attr("id");
+            $(this).children().css("display","block");
+            // $(this).children().fadeIn(80);
+        });
+        $('.fotoProduto').mouseout(function(){
+            var idElemento = $(this).attr("id");
+            $(this).children().first().css("display","none");
+            // $(this).children().fadeOut(80);
+        });
+    }
 
+    // Exibe imagens que foram carregadas na tela
+    function carregarImagens(){
+        $("#imagensProduto").change(function(){
+            console.log('carregou imagem');
+            $(".listaImagem").html("");
+            var totalImagens = document.getElementById("imagensProduto").files.length; // número de fotos carregadas no input
+            for(i=0;i<totalImagens;i++){
+                linha = "<div id="+i+" class="+"fotoProduto"+">"+
+                                        "<div class="+"excluirFoto"+" onclick="+"excluirFoto("+i+")"+"></div>"+
+                                        "<img class="+"itemFoto"+" src='"+URL.createObjectURL(event.target.files[i])+"'>"+
+                                    "</div>"
+                $(".listaImagem").append(linha);
+                
+                // exibe botão de excluir na foto
+                exibirBotaoExcluirFoto(); 
+            }
+        });
+    }
     // função para fazer requisição post para o controller
     function criarProduto(){
         // cria um objeto com os dados do form
+        var imagensProduto = document.getElementById("imagensProduto").files;
+        var imagensProduto = document.getElementById("imagensProduto").files;
+        // console.log(imagensProduto);
+
         prod = {
             nome: $('#nomeProduto').val(), 
             validade: $('#validadeProduto').val(), 
-            quantidade: $('#quantidadeProduto').val(), 
             preco: $('#precoProduto').val(), 
             descricao: $('#descricaoProduto').val(), 
-            categoria_id: $('#categoriaProduto').val()            
+            categoria_id: $('#categoriaProduto').val(),
+            // fotosProduto: imagensProduto
         };
+        console.log(prod);
 
-        // faz uma requisição post para a rota /api/produtos
-        $.post('/api/produtos',prod,function(data){
-            produto = JSON.parse(data);//converte para json o objeto retornado do controller
-            linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
-            $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
-        });
+        // cria um FormData para ser enviado ao controller com os dados da requisição presentes no formulário
+        let form = document.getElementById('formProduto');
+        let formData = new FormData(form);
+        formData.append('nome',prod.nome);
+        formData.append('validade',prod.validade);
+        formData.append('preco',prod.preco);
+        formData.append('descricao',prod.descricao);
+        formData.append('categoria_id',prod.categoria_id);
+        // formData.append('fotosProduto',prod.imagensProduto);
+        
+        // console.log(formData);
+        $.ajax({
+            url:'/api/produtos',
+            method:"POST",
+            data:formData,
+            dataType:'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(produto){
+                // produto = JSON.parse(data);//converter o dado retornado para JSON ocorrerá um erro, pois o dado retornado é um object
+                linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
+                $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
+            }
+        })
+        
 
     }
     
@@ -273,7 +359,7 @@
             id: $('#id').val(),
             nome: $('#nomeProduto').val(), 
             validade: $('#validadeProduto').val(), 
-            quantidade: $('#quantidadeProduto').val(), 
+            // quantidade: $('#quantidadeProduto').val(), 
             preco: $('#precoProduto').val(), 
             descricao: $('#descricaoProduto').val(), 
             categoria_id: $('#categoriaProduto').val()            
@@ -299,9 +385,9 @@
                         e[0].cells[1].textContent = prod.nome;
                         e[0].cells[2].textContent = prod.categoria_id;
                         e[0].cells[3].textContent = prod.validade;
-                        e[0].cells[4].textContent = prod.quantidade;
-                        e[0].cells[5].textContent = prod.preco;
-                        e[0].cells[6].textContent = prod.descricao;
+                        // e[0].cells[4].textContent = prod.quantidade;
+                        e[0].cells[4].textContent = prod.preco;
+                        e[0].cells[5].textContent = prod.descricao;
                     }
 
                 },

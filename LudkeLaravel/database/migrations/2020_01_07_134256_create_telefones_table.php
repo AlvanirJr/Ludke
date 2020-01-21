@@ -15,10 +15,13 @@ class CreateTelefonesTable extends Migration
     {
         Schema::create('telefones', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('numero');
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('residencial')->nullable();
+            $table->string('celular')->nullable();
+            
+
+            // $table->unsignedBigInteger('user_id');
+            // $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });
@@ -33,7 +36,7 @@ class CreateTelefonesTable extends Migration
     {
         Schema::dropIfExists('telefones');
 
-        $table->dropForeign('telefones_user_id_foreign');
-        $table->dropColumn('user_id');
+        // $table->dropForeign('telefones_user_id_foreign');
+        // $table->dropColumn('user_id');
     }
 }

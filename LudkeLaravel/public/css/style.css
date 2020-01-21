@@ -94,6 +94,48 @@ body{
 #iconeDelete{
     width:20px;
 }
+
+/* FORMULÁRIO */
+#categoriaForm{
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.fotos{
+    /* display: inline; */
+    float: left;
+}
+ul.listaImagem{
+    list-style-type: none;
+}
+.fotoProduto{
+    
+    width: 120px;
+    /* height: 100px; */
+    margin-top: 10px;
+    margin-right: 10px;
+    float:left;
+    z-index: 1;
+    /* background-color: darkgray; */
+}
+.itemFoto{
+    width: 120px;
+    /* z-index: 2; */
+    
+}
+.excluirFoto{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    z-index: 5;
+    background-image: url("/img/window-close-solid.svg");
+    top: 0;
+    margin-left: 90px;
+    float: right;
+    display: none;
+    
+}
+
 @media screen and (max-width: 576px) {
     /* .navbar{
         height: 100%;

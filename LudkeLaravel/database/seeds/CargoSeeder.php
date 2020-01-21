@@ -12,7 +12,17 @@ class CargoSeeder extends Seeder
     public function run()
     {
         //
-        $cargos = ['Gerente Administrativo', 'Vendedor(a)', 'Secretário(a)','Atendente','Açougueiro(a)'];
+        $cargos = [
+            'Gerente Administrativo', 
+            'Gerente Geral',
+            'Vendedor(a)', 
+            'Secretário(a)',
+            'Atendente',
+            'Açougueiro(a)',
+            'Salsicheiro(a)',
+            'Desossador(a)',
+            'Balconista',
+        ];
         for($i = 0; $i < count($cargos); $i++){
             DB::table('cargos')->insert([
                 'nome'=>$cargos[$i]

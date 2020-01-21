@@ -81,10 +81,10 @@
 <script type="text/javascript">
 
     // Usa a biblioteca quicksearch para buscar dados na tabela
-    // $('input#inputBusca').quicksearch('table#tabela tbody tr');
-
+    // $('input#inputBusca').quicksearch('table#tabelaCategorias tbody tr');
     
     $(function(){
+
         // Configuração do ajax com token csrf
         $.ajaxSetup({
             headers:{
