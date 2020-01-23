@@ -219,6 +219,18 @@
                     "</tr>";
         return linha;
     }
+    function montarLinhaImagem(fotosProduto){
+        $(".listaImagem").empty();
+        for(i=0;i<fotosProduto.length;i++){
+            let nomeFoto = fotosProduto[i].path;
+            linha = "<div id="+i+" class="+"fotoProduto"+">"+
+                                        "<div class="+"excluirFoto"+" onclick="+"excluirFoto("+fotosProduto[i].id+")"+"></div>"+
+                                        "<img id="+""+fotosProduto[i].id+""+" class="+"itemFoto"+" src="+"storage/"+nomeFoto+">"+
+                                    "</div>"
+            $(".listaImagem").append(linha);
+
+            }
+    }
     function editarProduto(id){
         console.log("Editar");
         // getJSON já faz o parser do dado recebido para json
@@ -232,6 +244,9 @@
             $('#precoProduto').val(data.preco);
             $('#descricaoProduto').val(data.descricao);
 
+            let fotosProduto = data.fotosProduto;
+            montarLinhaImagem(fotosProduto);
+            exibirBotaoExcluirFoto();
 
             // exibe modal cadastrar Produtos
             $('#dlgProdutos').modal('show');
