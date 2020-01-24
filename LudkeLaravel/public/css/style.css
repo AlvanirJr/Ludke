@@ -108,6 +108,9 @@ body{
 ul.listaImagem{
     list-style-type: none;
 }
+ul.listaImagem li{
+    float: left;
+}
 .fotoProduto{
     
     width: 120px;

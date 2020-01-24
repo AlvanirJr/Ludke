@@ -135,6 +135,7 @@ class ProdutoController extends Controller
     public function update(Request $request, $id)
     {
         $prod = Produto::find($id);
+        // dd($request->input('nome'));
         
         if(isset($prod)){
             $prod->nome = $request->input('nome');
@@ -143,7 +144,27 @@ class ProdutoController extends Controller
             $prod->preco = $request->input('preco');
             $prod->descricao = $request->input('descricao');
             $prod->categoria_id = $request->input('categoria_id');
-            
+
+            $fotosProduto = $request->file('imagensProduto');
+            if(isset($fotosProduto)){
+                foreach($fotosProduto as $f){
+                    $path = $f->store('public');
+                    $nomeFoto = str_replace('public/','',$path);
+                    // $path = $f->store('fotosProduto');
+                    // dd($path);
+                    $foto = new FotosProduto();
+                    $foto->path = $nomeFoto; 
+                    $foto->produto_id = $prod->id;
+                    $foto->save();
+                }
+            }
+
+            if(isset($request->arrayIdsDeletarFotos)){
+                foreach($request->arrayIdsDeletarFotos as $id){
+                    $foto = FotosProduto::find($id);
+                    $foto->delete();
+                }
+            }
             
             $prod->save();
             // retorna o objeto para exibir na tabela
