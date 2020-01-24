@@ -123,8 +123,7 @@ ul.listaImagem li{
 }
 .itemFoto{
     width: 120px;
-    /* z-index: 2; */
-    
+    z-index: 2;
 }
 .excluirFoto{
     width: 30px;
@@ -133,7 +132,7 @@ ul.listaImagem li{
     z-index: 5;
     background-image: url("/img/window-close-solid.svg");
     top: 0;
-    margin-left: 90px;
+    margin-left: 20%;
     float: right;
     display: none;
     

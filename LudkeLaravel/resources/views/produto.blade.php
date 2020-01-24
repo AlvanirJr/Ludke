@@ -240,6 +240,12 @@
     }
     function editarProduto(id){
         console.log("Editar");
+
+        // Limpa o input de imagens, caso alguma imagem tenha sido carregada anteriormente
+        $("#imagensProduto").val('');
+
+
+        console.log(imagensProduto);
         // getJSON já faz o parser do dado recebido para json
         $.getJSON('/api/produtos/'+id, function(data){
             console.log(data);
@@ -325,7 +331,7 @@
                 $(".listaImagem").append(linha);
                 
                 // exibe botão de excluir na foto
-                exibirBotaoExcluirFoto(); 
+                // exibirBotaoExcluirFoto(); 
             }
         });
     }
