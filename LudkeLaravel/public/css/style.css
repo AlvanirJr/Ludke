@@ -119,6 +119,7 @@ ul.listaImagem li{
     margin-right: 10px;
     float:left;
     z-index: 1;
+    position:relative;
     /* background-color: darkgray; */
 }
 .itemFoto{
@@ -132,7 +133,8 @@ ul.listaImagem li{
     z-index: 5;
     background-image: url("/img/window-close-solid.svg");
     top: 0;
-    margin-left: 20%;
+    margin-top:-10px;
+    margin-left: 95px;
     float: right;
     display: none;
     
