@@ -24,6 +24,8 @@ Route::resource('/categorias','CategoriaController');
 
 // cria todas as rotas de produto. verificar com " php artisan route:list "
 Route::resource('/produtos', 'ProdutoController'); //cria todas as rotas para produto
+Route::post('/produtos/{id}','ProdutoController@updateProdWithImage');
+
 
 // cria todas as rotas de cargos. verificar com " php artisan route:list "
 Route::resource('/cargos', 'CargoController'); //cria todas as rotas para cargos
