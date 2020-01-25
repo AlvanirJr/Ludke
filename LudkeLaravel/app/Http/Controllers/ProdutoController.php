@@ -160,11 +160,17 @@ class ProdutoController extends Controller
                 }
             }
 
+
             if(isset($request->arrayIdsDeletarFotos)){
-                foreach($request->arrayIdsDeletarFotos as $id){
-                    $foto = FotosProduto::find($id);
+                
+                // array contendo o id das imagens para deletar
+                $arrayIdsDeletarFoto = explode(',',$request->arrayIdsDeletarFotos);
+                // dd(gettype($arrayIdsDeletarFoto));
+                for($i = 0; $i < count($arrayIdsDeletarFoto);$i++){
+                    $foto = FotosProduto::find($arrayIdsDeletarFoto[$i]);
                     $foto->delete();
                 }
+                
             }
             
             $prod->save();

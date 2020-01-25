@@ -387,25 +387,21 @@
        
 
         var imagensProduto = document.getElementById("imagensProduto").files;
-        files = [];
-        for(i = 0; i< imagensProduto.length; i++){
-            // console.log(imagensProduto.item(i));
-            files.push(imagensProduto.item(i));
-
-        }
-        // console.log(files);
+        
+        
         // cria um objeto com os dados do form
         prod = {
             id: $('#id').val(),
             nome: $('#nomeProduto').val(), 
             validade: $('#validadeProduto').val(), 
-            // quantidade: $('#quantidadeProduto').val(), 
             preco: $('#precoProduto').val(), 
             descricao: $('#descricaoProduto').val(), 
             categoria_id: $('#categoriaProduto').val(),
             arrayIdsDeletarFotos: arrayIdsDeletarFotos,
             // imagensProduto: imagensProduto
         };
+
+        console.log(prod.arrayIdsDeletarFotos);
 
         // console.log(prod.imagensProduto);
         let form = document.getElementById('formProduto');
@@ -426,7 +422,7 @@
         
         console.log("valores do FormData");
         for(value of formData.values())
-            console.log(value);
+            console.log(value + typeof(value));
         // for(var value of formData.entries())
         //     console.log(value);
 
@@ -462,6 +458,7 @@
                     }
                     // limpa o array contendo o id das imagens para deletar
                     arrayIdsDeletarFotos.length = 0;
+                    console.log(arrayIdsDeletarFotos);
                 },
                 error: function(error){
                     console.log(error);
