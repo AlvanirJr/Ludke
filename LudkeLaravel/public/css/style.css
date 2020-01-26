@@ -114,13 +114,13 @@ ul.listaImagem li{
 .fotoProduto{
     
     width: 120px;
-    /* height: 100px; */
-    margin-top: 10px;
-    margin-right: 10px;
+    /* height: 70px; */
+    margin-top: 20px;
+    margin-right: 20px;
     float:left;
     z-index: 1;
     position:relative;
-    /* background-color: darkgray; */
+    /* background-color: #eee; */
 }
 .itemFoto{
     width: 120px;

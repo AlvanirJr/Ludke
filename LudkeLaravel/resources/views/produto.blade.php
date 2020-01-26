@@ -172,6 +172,7 @@
     function excluirFoto(id){
         arrayIdsDeletarFotos.push(id);
         foto = document.getElementById(id).style.display="none";
+        
         console.log("Excluir Foto com id: "+id);
         console.log(arrayIdsDeletarFotos);
     }
@@ -263,6 +264,9 @@
 
             // exibe modal cadastrar Produtos
             $('#dlgProdutos').modal('show');
+
+            // limpa o array contendo o id das imagens para deletar
+            arrayIdsDeletarFotos.length = 0;
         });
     }
     function removerProduto(id){
@@ -461,6 +465,8 @@
                     console.log(arrayIdsDeletarFotos);
                 },
                 error: function(error){
+                    // limpa o array contendo o id das imagens para deletar
+                    arrayIdsDeletarFotos.length = 0;
                     console.log(error);
                 }
             });
