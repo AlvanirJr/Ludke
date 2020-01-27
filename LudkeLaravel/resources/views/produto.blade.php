@@ -229,11 +229,12 @@
     }
     function montarLinhaImagem(fotosProduto){
         $(".listaImagem").empty();
+        console.log($(".listaImagem").empty());
         for(i=0;i<fotosProduto.length;i++){
             let nomeFoto = fotosProduto[i].path;
             linha = "<li id="+i+" class="+"fotoProduto"+">"+
                                         "<div class="+"excluirFoto"+" onclick="+"excluirFoto("+fotosProduto[i].id+")"+"></div>"+
-                                        "<img id="+""+fotosProduto[i].id+""+" class="+"itemFoto"+" src="+"storage/"+nomeFoto+">"+
+                                        "<img id="+""+fotosProduto[i].id+""+" class="+"itemFoto"+" src="+"storage/public/"+nomeFoto+">"+
                                     "</li>"
             $(".listaImagem").append(linha);
 

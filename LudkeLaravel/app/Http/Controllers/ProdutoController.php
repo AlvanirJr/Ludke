@@ -60,8 +60,8 @@ class ProdutoController extends Controller
             foreach($fotosProduto as $f){
                 $path = $f->store('public');
                 $nomeFoto = str_replace('public/','',$path);
-                // $path = $f->store('fotosProduto');
-                // dd($path);
+                
+
                 $foto = new FotosProduto();
                 $foto->path = $nomeFoto; 
                 $foto->produto_id = $prod->id;
@@ -209,7 +209,11 @@ class ProdutoController extends Controller
             if(isset($request->arrayIdsDeletarFotos)){
                 foreach($request->arrayIdsDeletarFotos as $id){
                     $foto = FotosProduto::find($id);
-                    $foto->delete();
+                    // File::delete("public/".$foto->path);
+                    // $foto->delete();
+                    
+                    Storage::delete("public/{$foto->path}");
+                    FotosProduto::destroy($foto->id);
                 }
             }
             
@@ -232,22 +236,17 @@ class ProdutoController extends Controller
     {
         $prod = Produto::find($id);
         if(isset($prod)){
-            $fotosProduto = FotosProduto::where('produto_id',$prod->id);
+            $fotosProduto = FotosProduto::where('produto_id',$prod->id)->get();
+            // $fotos = $fotosProduto;
             if(isset($fotosProduto)){
                 foreach($fotosProduto as $foto){
-                    File::delete($foto->path);
-                    // $nomeFoto = str_replace('images/','',$foto->path);
-                    // Storage::delete($nomeFoto);
-                    // Storage::disk('public')->delete($nomeFoto);
-                    // $nomeFoto = str_replace('fotosProduto/','',$foto->path);
-                    // Storage::disk('public')->delete($foto->path);
-                    
-                    // Storage::disk('fotosProduto')->delete($nomeFoto);
+                    Storage::delete("public/{$foto->path}");
+                    FotosProduto::destroy($foto->id);
+                       
                 }
-                $fotosProduto->delete();
             }
             $prod->delete();
-            return response('OK',200);
+            return response('Produto deletado com sucesso',200);
         }
         return response('Produto não encontrado',404);
     }

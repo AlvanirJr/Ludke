@@ -105,6 +105,9 @@ body{
     /* display: inline; */
     float: left;
 }
+ul.listaImagemUpload{
+    list-style-type: none;
+}
 ul.listaImagem{
     list-style-type: none;
 }
