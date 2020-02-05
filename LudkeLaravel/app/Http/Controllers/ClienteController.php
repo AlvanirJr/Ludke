@@ -113,7 +113,7 @@ class ClienteController extends Controller
             'email' => $user->email,
             'nomeReduzido' => $cliente->nomeReduzido,
             'nomeResponsavel' => $cliente->nomeResponsavel,
-            'cpfCnpj' => $cliente->cpf_cnpj,
+            'cpfCnpj' => $cliente->cpfCnpj,
             'tipo' => $cliente->tipo,
             'inscricaoEstadual' => $cliente->inscricaoEstadual,
             'residencial' => $telefone->residencial,
@@ -138,7 +138,38 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
-        //
+        $cliente = Cliente::find($id);
+        $user = User::find($cliente->user_id);
+        $telefone = Telefone::find($user->telefone_id);
+        $endereco = Endereco::find($user->endereco_id);
+
+        if(isset($cliente) && isset($user)
+        && isset($telefone) && isset($endereco)){
+            $cli = [
+                'id' => $cliente->id,
+                'nome'=> $user->name,
+                'email' => $user->email,
+                'nomeReduzido' => $cliente->nomeReduzido,
+                'nomeResponsavel' => $cliente->nomeResponsavel,
+                'cpfCnpj' => $cliente->cpfCnpj,
+                'tipo' => $cliente->tipo,
+                'inscricaoEstadual' => $cliente->inscricaoEstadual,
+                'residencial' => $telefone->residencial,
+                'celular' => $telefone->celular,
+                'cep' => $endereco->cep,
+                'rua' => $endereco->rua,
+                'bairro' => $endereco->bairro,
+                'cidade' => $endereco->cidade,
+                'uf' => $endereco->uf,
+                'numero' => $endereco->numero,
+                'complemento' => $endereco->complemento,
+            ];
+
+            return json_encode($cli);
+        }
+        else{
+            return response('Cliente não encontrado',404);
+        }
     }
 
     /**
@@ -162,6 +193,65 @@ class ClienteController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $cliente = Cliente::find($id);
+        $user = User::find($cliente->user_id);
+        $telefone = Telefone::find($user->telefone_id);
+        $endereco = Endereco::find($user->endereco_id);
+
+        if(isset($cliente) && isset($user)
+        && isset($telefone) && isset($endereco)){
+            // ENDERECO
+            $endereco->rua = $request->input('rua');
+            $endereco->numero = $request->input('numero');
+            $endereco->bairro = $request->input('bairro');
+            $endereco->cidade = $request->input('cidade');
+            $endereco->uf = $request->input('uf');
+            $endereco->cep = $request->input('cep');
+            $endereco->complemento = $request->input('complemento');
+            $endereco->save();
+
+            // TELEFONE
+            $telefone->residencial = $request->input('residencial');
+            $telefone->celular = $request->input('celular');
+            $telefone->save();
+
+            // USER
+            $user->name = $request->input('nome');
+            $user->email= $request->input('email');
+            $user->save();
+
+            // CLIENTE
+            $cliente->nomeReduzido = $request->input('nomeReduzido');
+            $cliente->nomeResponsavel = $request->input('nomeResponsavel');
+            $cliente->cpfCnpj = $request->input('cpfCnpj');
+            $cliente->tipo = $request->input('tipo');
+            $cliente->inscricaoEstadual = $request->input('inscricaoEstadual');
+            $cliente->save();
+
+            $cli = [
+                'id' => $cliente->id,
+                'nome'=> $user->name,
+                'email' => $user->email,
+                'nomeReduzido' => $cliente->nomeReduzido,
+                'nomeResponsavel' => $cliente->nomeResponsavel,
+                'cpfCnpj' => $cliente->cpfCnpj,
+                'tipo' => $cliente->tipo,
+                'inscricaoEstadual' => $cliente->inscricaoEstadual,
+                'residencial' => $telefone->residencial,
+                'celular' => $telefone->celular,
+                'cep' => $endereco->cep,
+                'rua' => $endereco->rua,
+                'bairro' => $endereco->bairro,
+                'cidade' => $endereco->cidade,
+                'uf' => $endereco->uf,
+                'numero' => $endereco->numero,
+                'complemento' => $endereco->complemento,
+            ];
+
+            return json_encode($cli);
+        }else{
+            return response('Cliente não encontrado',404);
+        }
     }
 
     /**

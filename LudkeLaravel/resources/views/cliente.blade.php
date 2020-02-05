@@ -293,10 +293,10 @@
     });
 
     function carregarClientes(){
-        console.log('clientes');
+        // console.log('clientes');
         $.getJSON('/api/clientes',function(clientes){
             for(i=0; i<clientes.length;i++){
-                console.log(clientes[i]);
+                // console.log(clientes[i]);
                 linha = montarLinha(clientes[i]);
                 $('#tabelaClientes>tbody').append(linha);
 
@@ -323,6 +323,32 @@
         return linha;
     }
 
+    function editarCliente(id){
+        $.getJSON("/api/clientes/"+id, function(data){
+            console.log(data);
+            $('#id').val(data.id);
+            $('#nomeCliente').val(data.nome);
+            $('#emailCliente').val(data.email);
+            $('#nomeReduzido').val(data.nomeReduzido);
+            $('#nomeResponsavel').val(data.nomeResponsavel);
+            $('#cpfCnpj').val(data.cpfCnpj);
+            $('#tipo').val(data.tipo);
+            $('#inscricaoEstadual').val(data.inscricaoEstadual);
+            
+            $('#residencial').val(data.residencial);
+            $('#celular').val(data.celular);
+            $('#cep').val(data.cep);
+            $('#rua').val(data.rua);
+            $('#bairro').val(data.bairro);
+            $('#cidade').val(data.cidade);
+            $('#uf').val(data.uf);
+            $('#numero').val(data.numero);
+            $('#complemento').val(data.complemento);
+
+            // exibe modal cadastrar Produtos
+            $('#dlgClientes').modal('show');
+        });
+    }
     function removerCliente(id){
         confirma = confirm("Você tem certeza que deseja remover este cliente?");
         if(confirma){
@@ -387,6 +413,51 @@
     }
     function salvarCliente(){
         console.log('Salvar Cliente');
+
+        cliente = {
+            id: $('#id').val(),
+            nome: $('#nomeCliente').val(),
+            email: $('#emailCliente').val(),
+            nomeReduzido: $('#nomeReduzido').val(),
+            nomeResponsavel: $('#nomeResponsavel').val(),
+            cpfCnpj: $('#cpfCnpj').val(),
+            tipo: $('#tipo').val(),
+            inscricaoEstadual: $('#inscricaoEstadual').val(),
+            
+            residencial: $('#residencial').val(),
+            celular: $('#celular').val(),
+            cep: $('#cep').val(),
+            rua: $('#rua').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            uf: $('#uf').val(),
+            numero: $('#numero').val(),
+            complemento: $('#complemento').val()
+        }
+
+        $.ajax({
+            type: "PUT",
+            url: "/api/clientes/"+cliente.id,
+            context: this,
+            data: cliente,
+            success: function(data){
+                
+                cli = JSON.parse(data);
+                linhas = $('#tabelaClientes>tbody>tr');
+                e = linhas.filter(function(i,elemento){
+                    return (elemento.cells[0].textContent == cliente.id);
+                });
+                if(e){
+                    e[0].cells[0].textContent = cliente.id;
+                    e[0].cells[1].textContent = cliente.nome;
+                    e[0].cells[2].textContent = cliente.cpfCnpj;
+                    e[0].cells[3].textContent = cliente.residencial;
+                    e[0].cells[4].textContent = cliente.celular;
+
+                }
+            },
+        });
+
     }
 
     function criarCliente(){
@@ -414,6 +485,9 @@
 
         $.post('/api/clientes',cliente,function(data){
             console.log(data);
+            cliente = JSON.parse(data);
+            linha = montarLinha(cliente);
+            $('#tabelaClientes>tbody').append(linha);
         });
     }
 
