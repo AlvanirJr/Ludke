@@ -52,7 +52,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="dlgProdutos">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form class="form-horizontal" id="formProduto">
+            <form class="form-horizontal" id="formProduto" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title">Novo Produto</h5>
@@ -164,10 +164,17 @@
 
     });
     
+    //Array contendo os ids das fotos para ser deletado do banco
+    arrayIdsDeletarFotos = [];
     
     
+    //Tira a exibição das fotos e retorna um array com os ids para serem excluidos do banco
     function excluirFoto(id){
+        arrayIdsDeletarFotos.push(id);
+        foto = document.getElementById(id).style.display="none";
+        
         console.log("Excluir Foto com id: "+id);
+        console.log(arrayIdsDeletarFotos);
     }
 
     // Sempre que clica no botão novo, limpa os campos do modal
@@ -183,6 +190,7 @@
         $('#descricaoProduto').val('');
         // exibe modal cadastrar Produtos
         $('#dlgProdutos').modal('show');
+        
     }
 
     // carrega categorias da api e coloca no select
@@ -219,8 +227,27 @@
                     "</tr>";
         return linha;
     }
+    function montarLinhaImagem(fotosProduto){
+        $(".listaImagem").empty();
+        console.log($(".listaImagem").empty());
+        for(i=0;i<fotosProduto.length;i++){
+            let nomeFoto = fotosProduto[i].path;
+            linha = "<li id="+i+" class="+"fotoProduto"+">"+
+                                        "<div class="+"excluirFoto"+" onclick="+"excluirFoto("+fotosProduto[i].id+")"+"></div>"+
+                                        "<img id="+""+fotosProduto[i].id+""+" class="+"itemFoto"+" src="+"storage/public/"+nomeFoto+">"+
+                                    "</li>"
+            $(".listaImagem").append(linha);
+
+            }
+    }
     function editarProduto(id){
         console.log("Editar");
+
+        // Limpa o input de imagens, caso alguma imagem tenha sido carregada anteriormente
+        $("#imagensProduto").val('');
+
+
+        console.log(imagensProduto);
         // getJSON já faz o parser do dado recebido para json
         $.getJSON('/api/produtos/'+id, function(data){
             console.log(data);
@@ -232,9 +259,15 @@
             $('#precoProduto').val(data.preco);
             $('#descricaoProduto').val(data.descricao);
 
+            let fotosProduto = data.fotosProduto;
+            montarLinhaImagem(fotosProduto);
+            exibirBotaoExcluirFoto();
 
             // exibe modal cadastrar Produtos
             $('#dlgProdutos').modal('show');
+
+            // limpa o array contendo o id das imagens para deletar
+            arrayIdsDeletarFotos.length = 0;
         });
     }
     function removerProduto(id){
@@ -303,15 +336,14 @@
                 $(".listaImagem").append(linha);
                 
                 // exibe botão de excluir na foto
-                exibirBotaoExcluirFoto(); 
+                // exibirBotaoExcluirFoto(); 
             }
         });
     }
     // função para fazer requisição post para o controller
     function criarProduto(){
         // cria um objeto com os dados do form
-        var imagensProduto = document.getElementById("imagensProduto").files;
-        var imagensProduto = document.getElementById("imagensProduto").files;
+        // var imagensProduto = document.getElementById("imagensProduto").files;
         // console.log(imagensProduto);
 
         prod = {
@@ -347,6 +379,8 @@
                 // produto = JSON.parse(data);//converter o dado retornado para JSON ocorrerá um erro, pois o dado retornado é um object
                 linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
                 $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
+                
+
             }
         })
         
@@ -354,31 +388,69 @@
     }
     
     function salvarProduto(){
+        
+       
+
+        var imagensProduto = document.getElementById("imagensProduto").files;
+        
+        
         // cria um objeto com os dados do form
         prod = {
             id: $('#id').val(),
             nome: $('#nomeProduto').val(), 
             validade: $('#validadeProduto').val(), 
-            // quantidade: $('#quantidadeProduto').val(), 
             preco: $('#precoProduto').val(), 
             descricao: $('#descricaoProduto').val(), 
-            categoria_id: $('#categoriaProduto').val()            
+            categoria_id: $('#categoriaProduto').val(),
+            arrayIdsDeletarFotos: arrayIdsDeletarFotos,
+            // imagensProduto: imagensProduto
         };
 
-        // faz requisição PUT para /api/produtos passando o id do produto que deseja editar
+        console.log(prod.arrayIdsDeletarFotos);
+
+        // console.log(prod.imagensProduto);
+        let form = document.getElementById('formProduto');
+        let formData = new FormData(form);
+        
+        console.log("valores do FormData");
+        for(value of formData.values())
+            console.log(value);
+        
+        formData.append('id',prod.id);
+        formData.append('nome',prod.nome);
+        formData.append('validade',prod.validade);
+        formData.append('preco',prod.preco);
+        formData.append('descricao',prod.descricao);
+        formData.append('categoria_id',prod.categoria_id);
+        formData.append('arrayIdsDeletarFotos',prod.arrayIdsDeletarFotos);
+        
+        
+        console.log("valores do FormData");
+        for(value of formData.values())
+            console.log(value + typeof(value));
+        // for(var value of formData.entries())
+        //     console.log(value);
+
+        // formData = formData.serializeArray();
+
+        
         $.ajax({
-                type: "PUT",
-                url: "/api/produtos/"+prod.id,
-                context: this,
-                data: prod,
-                success: function(data){
-                    prod = JSON.parse(data); //converte a string data para um objeto json
+            url:'/api/produtos/'+prod.id,
+            method:"POST",
+            data:formData,
+            dataType:'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(prod){
+                    // console.log(JSON.parse(data));
+                    // prod = JSON.parse(data); //converte a string data para um objeto json
                     console.log("Salvou OK");
                     linhas = $('#tabelaProdutos>tbody>tr'); //pega todas as linhas da tabela
                     e = linhas.filter(function(i,elemento){//faz uma filtragem e retorna a linha que contem o id do produto atualizado
                         return (elemento.cells[0].textContent == prod.id);
                     });
-                    console.log(e);
+                    // console.log(e);
                     // se encontrou a linha, atualiza cada coluna
                     if(e){
                         e[0].cells[0].textContent = prod.id;
@@ -389,12 +461,55 @@
                         e[0].cells[4].textContent = prod.preco;
                         e[0].cells[5].textContent = prod.descricao;
                     }
-
+                    // limpa o array contendo o id das imagens para deletar
+                    arrayIdsDeletarFotos.length = 0;
+                    console.log(arrayIdsDeletarFotos);
                 },
                 error: function(error){
+                    // limpa o array contendo o id das imagens para deletar
+                    arrayIdsDeletarFotos.length = 0;
                     console.log(error);
                 }
             });
+
+
+
+
+        // faz requisição PUT para /api/produtos passando o id do produto que deseja editar
+        // $.ajax({
+        //         type: "PUT",
+        //         url: "/api/produtos/"+prod.id,
+        //         context: this,
+        //         data: prod,
+        //         // contentType: false,
+        //         // cache: false,
+        //         // processData: false,
+        //         success: function(data){
+        //             // console.log(JSON.parse(data));
+        //             prod = JSON.parse(data); //converte a string data para um objeto json
+        //             console.log("Salvou OK");
+        //             linhas = $('#tabelaProdutos>tbody>tr'); //pega todas as linhas da tabela
+        //             e = linhas.filter(function(i,elemento){//faz uma filtragem e retorna a linha que contem o id do produto atualizado
+        //                 return (elemento.cells[0].textContent == prod.id);
+        //             });
+        //             // console.log(e);
+        //             // se encontrou a linha, atualiza cada coluna
+        //             if(e){
+        //                 e[0].cells[0].textContent = prod.id;
+        //                 e[0].cells[1].textContent = prod.nome;
+        //                 e[0].cells[2].textContent = prod.categoria_id;
+        //                 e[0].cells[3].textContent = prod.validade;
+        //                 // e[0].cells[4].textContent = prod.quantidade;
+        //                 e[0].cells[4].textContent = prod.preco;
+        //                 e[0].cells[5].textContent = prod.descricao;
+        //             }
+        //             // limpa o array contendo o id das imagens para deletar
+        //             arrayIdsDeletarFotos.length = 0;
+        //         },
+        //         error: function(error){
+        //             console.log(error);
+        //         }
+        //     });
     }
 
     // função chamada sempre que a tela é atualizada
@@ -403,10 +518,14 @@
         $('#formProduto').submit(function(event){
             event.preventDefault(); // não deixa fechar o modal quando clica no submit
             
-            if($('#id').val()!= '')
+            if($('#id').val()!= ''){
+                // limparArrayIdsFotos();
                 salvarProduto();// função chamada para editar produto
-            else
+            }
+            else{
+                // limparArrayIdsFotos();
                 criarProduto();// função que faz a requisição para o controller
+            }
             $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
         });
     });

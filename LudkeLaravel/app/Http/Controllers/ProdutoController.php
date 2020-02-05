@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Produto;
 use App\FotosProduto;
+use File;
 
 class ProdutoController extends Controller
 {
@@ -33,15 +34,9 @@ class ProdutoController extends Controller
     }
 
 
-    // Recebe o request do ajax
+    // Recebe o request do ajax e salva produto com as fotos
     public function store(Request $request)
     {
-
-        // dd($request->all());
-        // dd($request->file('imagensProduto'));
-        
-
-
         // salva produtos no banco
         $prod = new Produto();
         $prod->nome = $request->input('nome');
@@ -57,15 +52,18 @@ class ProdutoController extends Controller
         $fotosProduto = $request->file('imagensProduto');
         if(isset($fotosProduto)){
             foreach($fotosProduto as $f){
-                $path = $f->store('images','public');
-                // dd($path);
+                $path = $f->store('public');
+                $nomeFoto = str_replace('public/','',$path);
+                
+
                 $foto = new FotosProduto();
-                $foto->path = $path; 
+                $foto->path = $nomeFoto; 
                 $foto->produto_id = $prod->id;
                 $foto->save();
             }
         }
-
+        
+        
         // retorna o objeto para exibir na tabela
         return json_encode($prod);
         
@@ -75,7 +73,21 @@ class ProdutoController extends Controller
     //Exibe um determinado produto
     public function show($id)
     {
-        $prod = Produto::find($id);
+        $produto = Produto::find($id);
+        $fotosProduto = FotosProduto::where('produto_id',$id)->get();
+        // dd($fotosProduto);
+        // dd($produto);
+        $prod = [
+            'id' => $produto->id,
+            'nome' => $produto->nome,
+            'validade' => $produto->validade,
+            'preco' => $produto->preco,
+            'descricao' => $produto->descricao,
+            'categoria_id' => $produto->categoria_id,
+            'created_at' => $produto->created_at,
+            'updated_at' => $produto->updated_at,
+            'fotosProduto' => $fotosProduto,
+        ];
         if(isset($prod)){
             return json_encode($prod);// retorna um objeto json
         }
@@ -96,16 +108,12 @@ class ProdutoController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
+
+    // Nova Função para atualizar o produto e foto
+    public function updateProdWithImage(Request $request, $id){
+        // dd($request->all());
         $prod = Produto::find($id);
+        // dd($request->input('nome'));
         
         if(isset($prod)){
             $prod->nome = $request->input('nome');
@@ -114,36 +122,110 @@ class ProdutoController extends Controller
             $prod->preco = $request->input('preco');
             $prod->descricao = $request->input('descricao');
             $prod->categoria_id = $request->input('categoria_id');
-            
+
+            $fotosProduto = $request->file('imagensProduto');
+            if(isset($fotosProduto)){
+                foreach($fotosProduto as $f){
+                    $path = $f->store('public');
+                    $nomeFoto = str_replace('public/','',$path);
+                    // $path = $f->store('fotosProduto');
+                    // dd($path);
+                    $foto = new FotosProduto();
+                    $foto->path = $nomeFoto; 
+                    $foto->produto_id = $prod->id;
+                    $foto->save();
+                }
+            }
+
+
+            if(isset($request->arrayIdsDeletarFotos)){
+                
+                // array contendo o id das imagens para deletar
+                $arrayIdsDeletarFoto = explode(',',$request->arrayIdsDeletarFotos);
+                // dd(gettype($arrayIdsDeletarFoto));
+                for($i = 0; $i < count($arrayIdsDeletarFoto);$i++){
+                    $foto = FotosProduto::find($arrayIdsDeletarFoto[$i]);
+                    // $foto->delete();
+
+                    Storage::delete("public/{$foto->path}");
+                    FotosProduto::destroy($foto->id);
+                }
+                
+            }
             
             $prod->save();
             // retorna o objeto para exibir na tabela
             return json_encode($prod);
         }
-        else{
-            return response('Produto não encontrado',404);
-        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+    // public function update(Request $request, $id)
+    // {
+    //     $prod = Produto::find($id);
+    //     // dd($request->input('nome'));
+        
+    //     if(isset($prod)){
+    //         $prod->nome = $request->input('nome');
+    //         $prod->validade = $request->input('validade');
+    //         // $prod->quantidade = $request->input('quantidade');
+    //         $prod->preco = $request->input('preco');
+    //         $prod->descricao = $request->input('descricao');
+    //         $prod->categoria_id = $request->input('categoria_id');
+
+    //         $fotosProduto = $request->file('imagensProduto');
+    //         if(isset($fotosProduto)){
+    //             foreach($fotosProduto as $f){
+    //                 $path = $f->store('public');
+    //                 $nomeFoto = str_replace('public/','',$path);
+    //                 // $path = $f->store('fotosProduto');
+    //                 // dd($path);
+    //                 $foto = new FotosProduto();
+    //                 $foto->path = $nomeFoto; 
+    //                 $foto->produto_id = $prod->id;
+    //                 $foto->save();
+    //             }
+    //         }
+
+    //         if(isset($request->arrayIdsDeletarFotos)){
+    //             foreach($request->arrayIdsDeletarFotos as $id){
+    //                 $foto = FotosProduto::find($id);
+    //                 if(isset($foto)){
+
+    //                     // File::delete("public/".$foto->path);
+    //                     // $foto->delete();
+                        
+    //                     Storage::delete("public/{$foto->path}");
+    //                     FotosProduto::destroy($foto->id);
+    //                 }
+    //             }
+    //         }
+            
+    //         $prod->save();
+    //         // retorna o objeto para exibir na tabela
+    //         return json_encode($prod);
+    //     }
+    //     else{
+    //         return response('Produto não encontrado',404);
+    //     }
+    // }
+
+    
+    // Função para deletar produto e foto
     public function destroy($id)
     {
         $prod = Produto::find($id);
         if(isset($prod)){
-            $fotosProduto = FotosProduto::where('produto_id',$prod->id);
+            $fotosProduto = FotosProduto::where('produto_id',$prod->id)->get();
+            // $fotos = $fotosProduto;
             if(isset($fotosProduto)){
                 foreach($fotosProduto as $foto){
-                    Storage::delete($foto->path);
+                    Storage::delete("public/{$foto->path}");
+                    FotosProduto::destroy($foto->id);
+                       
                 }
-                $fotosProduto->delete();
             }
             $prod->delete();
-            return response('OK',200);
+            return response('Produto deletado com sucesso',200);
         }
         return response('Produto não encontrado',404);
     }

@@ -105,23 +105,29 @@ body{
     /* display: inline; */
     float: left;
 }
+ul.listaImagemUpload{
+    list-style-type: none;
+}
 ul.listaImagem{
     list-style-type: none;
+}
+ul.listaImagem li{
+    float: left;
 }
 .fotoProduto{
     
     width: 120px;
-    /* height: 100px; */
-    margin-top: 10px;
-    margin-right: 10px;
+    /* height: 70px; */
+    margin-top: 20px;
+    margin-right: 20px;
     float:left;
     z-index: 1;
-    /* background-color: darkgray; */
+    position:relative;
+    /* background-color: #eee; */
 }
 .itemFoto{
     width: 120px;
-    /* z-index: 2; */
-    
+    z-index: 2;
 }
 .excluirFoto{
     width: 30px;
@@ -130,7 +136,8 @@ ul.listaImagem{
     z-index: 5;
     background-image: url("/img/window-close-solid.svg");
     top: 0;
-    margin-left: 90px;
+    margin-top:-10px;
+    margin-left: 95px;
     float: right;
     display: none;
     
