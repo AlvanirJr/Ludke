@@ -173,5 +173,17 @@ class ClienteController extends Controller
     public function destroy($id)
     {
         //
+        $cliente = Cliente::find($id);
+        $user = User::find($cliente->user_id);
+        $telefone = Telefone::find($user->telefone_id);
+        $endereco = Endereco::find($user->endereco_id);
+        if(isset($cliente)){
+            $cliente->delete();
+            $user->delete();
+            $telefone->delete();
+            $endereco->delete();
+            return response('OK',200);
+        }
+        return resonse('Cliente não encontrado', 404);
     }
 }

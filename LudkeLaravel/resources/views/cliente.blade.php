@@ -323,6 +323,31 @@
         return linha;
     }
 
+    function removerCliente(id){
+        confirma = confirm("Você tem certeza que deseja remover este cliente?");
+        if(confirma){
+            $.ajax({
+                type: "DELETE",
+                url: "/api/clientes/"+id,
+                context: this,
+                success: function(){
+                    console.log("Deletou Cliente");
+                    linhas = $("#tabelaClientes>tbody>tr");
+                    e = linhas.filter(function(i,elemento){
+                        return elemento.cells[0].textContent== id;
+                    });
+                    if(e){
+                        e.remove();
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                }
+
+            });
+        }
+    }
+
     // lista de estados para o select UF
     function carregarEstados(){
         let estados = [
