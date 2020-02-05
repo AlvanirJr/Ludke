@@ -26,7 +26,7 @@
 
     <div class="row justify-content-center">
         <div class="col-sm-12">
-            <table id="tabelaFuncionarios" class="table table-hover table-responsive-xl">
+            <table id="tabelaClientes" class="table table-hover table-responsive-xl">
                 <thead class="thead-primary">
                     <tr>
                         <th>ID</th>
@@ -67,7 +67,7 @@
 
                     <div class="row justify-content-center">
                         {{-- Nome do funcionário --}}
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="nomeCliente" class="control-label">Nome do Cliente</label>
                                 <div class="input-group">
@@ -75,16 +75,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        {{-- email do funcionário --}}
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="emailCliente" class="control-label">E-mail do Cliente</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="emailCliente" placeholder="E-mail do Cliente">
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
 
                     {{-- Nome reduzido + nome responsável --}}
@@ -128,10 +119,10 @@
                             <div class="form-group">
                                 <label for="cargoFuncionario" class="control-label">Tipo</label>
                                 <div class="input-group">
-                                    <select class="form-control" id="cargoFuncionario">
+                                    <select class="form-control" id="tipo">
                                         <option value="" disabled selected hidden>-- Tipo --</option>
-                                        <option value="Pessoa Física">Pessoa Física</option>
-                                        <option value="Pessoa Física">Pessoa Jurídica</option>
+                                        <option value="pessoaFisica">Pessoa Física</option>
+                                        <option value="pessoaJuridica">Pessoa Jurídica</option>
                                     </select>
                                 </div>
                             </div>
@@ -160,6 +151,28 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    <div class="row justify-content-center">
+                        {{-- inscricao estadual --}}
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="inscricaoEstadual" class="control-label">Inscrição Estadual</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="inscricaoEstadual" placeholder="Inscrição Estadual">
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- email do funcionário --}}
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="emailCliente" class="control-label">E-mail do Cliente</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="emailCliente" placeholder="E-mail do Cliente">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     {{-- row Endereço --}}
@@ -276,7 +289,39 @@
         });
 
         carregarEstados();
+        carregarClientes();
     });
+
+    function carregarClientes(){
+        console.log('clientes');
+        $.getJSON('/api/clientes',function(clientes){
+            for(i=0; i<clientes.length;i++){
+                console.log(clientes[i]);
+                linha = montarLinha(clientes[i]);
+                $('#tabelaClientes>tbody').append(linha);
+
+            }
+        });
+    }
+
+    function montarLinha(c){
+        var linha = "<tr>"+
+                        "<td>"+c.id+"</td>"+
+                        "<td>"+c.nome+"</td>"+
+                        "<td>"+c.cpfCnpj+"</td>"+
+                        "<td>"+c.residencial+"</td>"+
+                        "<td>"+c.celular+"</td>"+
+                        "<td>"+
+                            "<a href="+"#"+" onclick="+"editarCliente("+c.id+")"+">"+
+                                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
+                            "</a>"+                            
+                            "<a href="+"#"+" onclick="+"removerCliente("+c.id+")"+">"+
+                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
+                            "</a>"+
+                        "</td>"+
+                    "</tr>";
+        return linha;
+    }
 
     // lista de estados para o select UF
     function carregarEstados(){
@@ -292,6 +337,26 @@
             }
     }
     function novoCliente(){
+
+        $('#id').val('');
+        $('#nomeCliente').val('');
+        $('#emailCliente').val('');
+        $('#nomeReduzido').val('');
+        $('#nomeResponsavel').val('');
+        $('#cpfCnpj').val('');
+        $('#tipo').val('');
+        $('#inscricaoEstadual').val('');
+        
+        $('#residencial').val('');
+        $('#celular').val('');
+        $('#cep').val('');
+        $('#rua').val('');
+        $('#bairro').val('');
+        $('#cidade').val('');
+        $('#uf').val('');
+        $('#numero').val('');
+        $('#complemento').val('');
+
         // exibe modal cadastrar Produtos
         $('#dlgClientes').modal('show');
     }
@@ -301,6 +366,30 @@
 
     function criarCliente(){
         console.log('Criar Cliente');
+
+        cliente = {
+            nome: $('#nomeCliente').val(),
+            email: $('#emailCliente').val(),
+            nomeReduzido: $('#nomeReduzido').val(),
+            nomeResponsavel: $('#nomeResponsavel').val(),
+            cpfCnpj: $('#cpfCnpj').val(),
+            tipo: $('#tipo').val(),
+            inscricaoEstadual: $('#inscricaoEstadual').val(),
+            
+            residencial: $('#residencial').val(),
+            celular: $('#celular').val(),
+            cep: $('#cep').val(),
+            rua: $('#rua').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            uf: $('#uf').val(),
+            numero: $('#numero').val(),
+            complemento: $('#complemento').val()
+        }
+
+        $.post('/api/clientes',cliente,function(data){
+            console.log(data);
+        });
     }
 
     $(function(){
