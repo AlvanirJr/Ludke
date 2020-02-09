@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Categoria;
 
 class CategoriaController extends Controller
@@ -36,12 +37,18 @@ class CategoriaController extends Controller
 
     public function store(Request $request)
     {
+        $validator = $this->validate($request,[
+            'nome' => 'required',
+        ]);
+        
+
         $categoria = new Categoria();
         $categoria->nome = $request->input('nome');
         $categoria->save();
-
+        
         // retorna o objeto para exibir na tabela
         return json_encode($categoria);
+        
     }
 
     /**

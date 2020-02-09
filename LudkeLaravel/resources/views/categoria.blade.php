@@ -57,10 +57,13 @@
 
                     {{-- Nome do Categoria --}}
                     <div class="form-group">
+                        {{-- Div para validação --}}
                         <label for="nomeCategoria" class="control-label">Nome da Categoria</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="nomeCategoria" placeholder="Nome da Categoria">
+                            
                         </div>
+                        <div class="validationCategoria"></div>
                     </div>
 
 
@@ -100,6 +103,7 @@
         $('#id').val('');
         $('#nomeCategoria').val('');
 
+        $("#span").remove(); //remove a linha do span
         // exibe o modal cadastrar categorias
         $('#dlgCategorias').modal('show');
     }
@@ -127,6 +131,7 @@
             $('#id').val(data.id);
             $('#nomeCategoria').val(data.nome);
 
+            $("#span").remove(); //remove a linha do span
             //exibe Modal Cadastrar Categoria
             $('#dlgCategorias').modal('show');
         });
@@ -173,14 +178,44 @@
             nome: $('#nomeCategoria').val()
         };
 
-        $.post('api/categorias',cat,function(data){
-            // console.log('Nova Categoria: '+data);
-            categoria = JSON.parse(data);
-            linha = montarLinha(categoria);
-            $('#tabelaCategorias>tbody').append(linha);
+        // $.post('api/categorias',cat,function(data){
+        //     // console.log('Nova Categoria: '+data);
+        //     categoria = JSON.parse(data);
+        //     linha = montarLinha(categoria);
+        //     $('#tabelaCategorias>tbody').append(linha);
+        // });
+        $.ajax({
+            type: "POST",
+            url: "/api/categorias",
+            context:this,
+            data:cat,
+            success: function(data){
+                console.log('Nova Categoria: '+data);
+                categoria = JSON.parse(data);
+                linha = montarLinha(categoria);
+                $('#tabelaCategorias>tbody').append(linha);
+                $('#dlgCategorias').modal('hide');
+            },
+            error:function(error){
+                retorno = JSON.parse(error.responseText);
+                exibirErros(retorno.errors);
+
+            }
         });
     }
+    function exibirErros(error){
+        if(error){
+            linha = "<span id="+"span"+" style="+"color:red"+">"+error.nome[0]+"</span>";
+            $('.validationCategoria').append(linha);                                    
+            console.log(error.nome[0]);
+
+        }
+        // for(i=0;i<error.length;i++){
+        //     console.log(error[i]);
+        // }
+    }
     function salvarCategoria(){
+        $("#span").remove(); //remove a linha do span
         cat = {
             id: $('#id').val(),
             nome: $('#nomeCategoria').val()
@@ -195,6 +230,7 @@
             success: function(data){
                 cat = JSON.parse(data);
                 console.log("salvou OK");
+                $('#dlgCategorias').modal('hide');
                 linhas = $('#tabelaCategorias>tbody>tr');
                 e = linhas.filter(function(i,elemento){
                     return (elemento.cells[0].textContent == cat.id);
@@ -205,7 +241,6 @@
                     e[0].cells[0].textContent = cat.id;
                     e[0].cells[1].textContent = cat.nome;
                 }
-
             },
             error: function(error){
                 console.log(error);
@@ -219,7 +254,7 @@
                 salvarCategoria();
             else
                 criarCategoria();
-            $("#dlgCategorias").modal('hide');
+            // $("#dlgCategorias").modal('hide');
 
        })
 
