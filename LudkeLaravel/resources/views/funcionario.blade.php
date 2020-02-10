@@ -80,6 +80,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="nomeFuncionario" placeholder="Nome do Funcionário">
                                 </div>
+                                <div id="validationNome"></div>
                             </div>
                         </div>
                     </div>
@@ -94,6 +95,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="emailFuncionario" placeholder="E-mail do Funcionário">
                                 </div>
+                                <div id="validationEmail"></div>
                             </div>
                         </div>
                         
@@ -106,6 +108,7 @@
                                         <option value="" disabled selected hidden>-- Cargo --</option>
                                     </select>
                                 </div>
+                                <div id="validationCargo"></div>
                             </div>
                         </div>
                     </div>
@@ -120,6 +123,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="residencial" placeholder="Telefone Residêncial">
                                 </div>
+                                <div id="validationResidencial"></div>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -129,6 +133,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="celular" placeholder="Telefone Celular 1">
                                 </div>
+                                <div id="validationCelular"></div>
                             </div>
                         </div>
 
@@ -151,6 +156,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="cep" placeholder="CEP">
                                 </div>
+                                <div id="validationCep"></div>
                             </div>
                         </div>
 
@@ -161,6 +167,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="rua" placeholder="Rua">
                                 </div>
+                                <div id="validationRua"></div>
                             </div>
                         </div>
 
@@ -176,6 +183,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="bairro" placeholder="Bairro">
                                 </div>
+                                <div id="validationBairro"></div>
                             </div>
                         </div>
 
@@ -186,6 +194,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="cidade" placeholder="Cidade">
                                 </div>
+                                <div id="validationCidade"></div>
                             </div>
                         </div>
 
@@ -202,6 +211,7 @@
                                         <option value="" disabled selected hidden>-- UF --</option>
                                     </select>
                                 </div>
+                                <div id="validationUf"></div>
                             </div>
                         </div>
 
@@ -212,6 +222,7 @@
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="numero" placeholder="Número">
                                 </div>
+                                <div id="validationNumero"></div>
                             </div>
                         </div>
                     </div>
@@ -224,6 +235,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="complemento" placeholder="Complemento">
                                 </div>
+                                <div id="validationComplemento"></div>
                             </div>
                         </div>
                     </div>
@@ -309,6 +321,8 @@
         $('#numero').val('');
         $('#complemento').val('');
         
+        $(".span").remove(); //limpa os span de erro
+
         // exibe modal cadastrar Produtos
         $('#dlgFuncionarios').modal('show');
     }
@@ -358,9 +372,12 @@
                     e[0].cells[11].textContent = funcionario.complemento;
 
                 }
+                $('#dlgFuncionarios').modal('hide');
             },
             error: function(error){
                     console.log(error);
+                    retorno = JSON.parse(error.responseText);
+                    exibirErros(retorno.errors);
                 }
         });
     }
@@ -408,6 +425,9 @@
             $('#uf').val(data.uf),
             $('#numero').val(data.numero),
             $('#complemento').val(data.complemento)
+            
+            $(".span").remove(); //limpa os span de erro
+            
             // exibe modal cadastrar Produtos
             $('#dlgFuncionarios').modal('show');
         });
@@ -455,18 +475,117 @@
             complemento: $('#complemento').val()
         }
         // console.log(funcionario);
-        $.post('/api/funcionarios',funcionario,function(data){
-            // console.log('Requisição para /api/funcionarios');
-            funcionario = JSON.parse(data);
-            linha = montarLinha(funcionario);
+        // $.post('/api/funcionarios',funcionario,function(data){
+        //     // console.log('Requisição para /api/funcionarios');
+        //     funcionario = JSON.parse(data);
+        //     linha = montarLinha(funcionario);
+        //     $('#tabelaFuncionarios>tbody').append(linha);
+        // });
+
+        $.ajax({
+            type: "POST",
+            url: "/api/funcionarios",
+            context:this,
+            data:funcionario,
+            success: function(data){
+                console.log('Nova Categoria: '+data);
+                funcionario = JSON.parse(data);
+                linha = montarLinha(funcionario);
+                $('#dlgFuncionarios').modal('hide');
             $('#tabelaFuncionarios>tbody').append(linha);
+            },
+            error:function(error){
+                retorno = JSON.parse(error.responseText);
+                // 
+                exibirErros(retorno.errors);
+                console.log(error);
+
+            }
         });
         
+    }
+
+    function exibirErros(error){
+        $(".span").remove(); //limpa os span de erro
+        if(error){
+            if(error.nome){
+                for(i=0;i<error.nome.length;i++){
+                    console.log(error.nome[i]);
+                    $("#validationNome").append("<span class="+"span"+" style="+"color:red"+">"+error.nome[i]+"</span>")
+                }
+            }
+            if(error.email){
+                for(i=0;i<error.email.length;i++){
+                    console.log(error.email[i]);
+                    $("#validationEmail").append("<span class="+"span"+" style="+"color:red"+">"+error.email[i]+"</span>")
+                }
+            }
+            if(error.cargo){
+                for(i=0;i<error.cargo.length;i++){
+                    console.log(error.cargo[i]);
+                    $("#validationCargo").append("<span class="+"span"+" style="+"color:red"+">"+error.cargo[i]+"</span>")
+                }
+            }
+            if(error.residencial){
+                for(i=0;i<error.residencial.length;i++){
+                    console.log(error.residencial[i]);
+                    $("#validationResidencial").append("<span class="+"span"+" style="+"color:red"+">"+error.residencial[i]+"</span>")
+                }
+            }
+            if(error.celular){
+                for(i=0;i<error.celular.length;i++){
+                    console.log(error.celular[i]);
+                    $("#validationCelular").append("<span class="+"span"+" style="+"color:red"+">"+error.celular[i]+"</span>")
+                }
+            }
+            if(error.cep){
+                for(i=0;i<error.cep.length;i++){
+                    console.log(error.cep[i]);
+                    $("#validationCep").append("<span style="+"color:red"+">"+error.cep[i]+"</span>")
+                }
+            }
+            if(error.rua){
+                for(i=0;i<error.rua.length;i++){
+                    console.log(error.rua[i]);
+                    $("#validationRua").append("<span class="+"span"+" style="+"color:red"+">"+error.rua[i]+"</span>")
+                }
+            }
+            if(error.bairro){
+                for(i=0;i<error.bairro.length;i++){
+                    console.log(error.bairro[i]);
+                    $("#validationBairro").append("<span class="+"span"+" style="+"color:red"+">"+error.bairro[i]+"</span>")
+                }
+            }
+            if(error.cidade){
+                for(i=0;i<error.cidade.length;i++){
+                    console.log(error.cidade[i]);
+                    $("#validationCidade").append("<span class="+"span"+" style="+"color:red"+">"+error.cidade[i]+"</span>")
+                }
+            }
+            if(error.uf){
+                for(i=0;i<error.uf.length;i++){
+                    console.log(error.uf[i]);
+                    $("#validationUf").append("<span class="+"span"+" style="+"color:red"+">"+error.uf[i]+"</span>")
+                }
+            }
+            if(error.numero){
+                for(i=0;i<error.numero.length;i++){
+                    console.log(error.numero[i]);
+                    $("#validationNumero").append("<span class="+"span"+" style="+"color:red"+">"+error.numero[i]+"</span>")
+                }
+            }
+            if(error.complemento){
+                for(i=0;i<error.complemento.length;i++){
+                    console.log(error.complemento[i]);
+                    $("#validationComplemento").append("<span class="+"span"+" style="+"color:red"+">"+error.complemento[i]+"</span>")
+                }
+            }
+
+        }
     }
     $(function(){
         $('#formFuncionario').submit(function(event){
             event.preventDefault();// não deixa fechar o modal quando clica no submit
-
             if($('#id').val()!= ''){
                 console.log('Salvar Funcionário');
                 salvarFuncionario();
@@ -475,7 +594,7 @@
                 console.log('Criar Funcionário');
                 criarFuncionario();
             }
-            $('#dlgFuncionarios').modal('hide');
+            // $('#dlgFuncionarios').modal('hide');
         });
     });
 </script>
