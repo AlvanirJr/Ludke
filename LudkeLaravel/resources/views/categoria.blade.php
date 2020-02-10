@@ -245,6 +245,8 @@
             },
             error: function(error){
                 console.log(error);
+                retorno = JSON.parse(error.responseText);
+                exibirErros(retorno.errors);
             }
         });
     }

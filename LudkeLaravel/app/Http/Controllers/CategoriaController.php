@@ -76,7 +76,10 @@ class CategoriaController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        $validator = $this->validate($request,[
+            'nome' => 'required',
+        ]);
+        
         $cat = Categoria::find($id);
         // dd($cat);
         if(isset($cat)){
