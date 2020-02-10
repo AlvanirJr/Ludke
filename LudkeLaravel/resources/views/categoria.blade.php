@@ -204,6 +204,7 @@
         });
     }
     function exibirErros(error){
+        $("#span").remove(); //remove a linha do span
         if(error){
             linha = "<span id="+"span"+" style="+"color:red"+">"+error.nome[0]+"</span>";
             $('.validationCategoria').append(linha);                                    
