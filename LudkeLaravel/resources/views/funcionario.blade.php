@@ -474,13 +474,6 @@
             numero: $('#numero').val(),
             complemento: $('#complemento').val()
         }
-        // console.log(funcionario);
-        // $.post('/api/funcionarios',funcionario,function(data){
-        //     // console.log('Requisição para /api/funcionarios');
-        //     funcionario = JSON.parse(data);
-        //     linha = montarLinha(funcionario);
-        //     $('#tabelaFuncionarios>tbody').append(linha);
-        // });
 
         $.ajax({
             type: "POST",

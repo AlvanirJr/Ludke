@@ -16,11 +16,11 @@ class CreateClientesTable extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('nomeReduzido');
-            $table->string('nomeResponsavel');
-            $table->string('cpfCnpj');
+            $table->string('nomeReduzido')->nullable();
+            $table->string('nomeResponsavel')->nullable();
+            $table->integer('cpfCnpj');
             $table->string('tipo'); //física ou juridica
-            $table->string('inscricaoEstadual');
+            $table->string('inscricaoEstadual')->nullable();
 
             // fk_user
             $table->unsignedBigInteger('user_id');

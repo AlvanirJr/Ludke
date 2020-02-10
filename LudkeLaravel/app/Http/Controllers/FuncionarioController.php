@@ -76,7 +76,7 @@ class FuncionarioController extends Controller
             'cidade' => 'required',
             'uf' => 'required',
             'numero' => 'required|integer',
-            'complemento' => 'nullable|string',
+            'complemento' => 'nullable|string|max:255',
         ]);
 
         // ENDERECO
@@ -198,9 +198,9 @@ class FuncionarioController extends Controller
             'cidade' => 'required',
             'uf' => 'required',
             'numero' => 'required|integer',
-            'complemento' => 'nullable|string',
+            'complemento' => 'nullable|string|max:255',
         ]);
-        
+
         $funcionario = Funcionario::find($id);
         $user = User::find($funcionario->user_id);
         $telefone = Telefone::find($user->telefone_id);
