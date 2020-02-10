@@ -489,7 +489,6 @@
             },
             error:function(error){
                 retorno = JSON.parse(error.responseText);
-                // 
                 exibirErros(retorno.errors);
                 console.log(error);
 
