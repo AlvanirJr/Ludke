@@ -81,7 +81,17 @@ class CargoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $cargo = Cargo::find($id);
+        if(isset($cargo)){
+            $cargo->nome = $request->input(nome);
+            $cargo->save();
+            return  json_encode($cargo);
+
+        }
+        else{
+            return response('Cargo não encontrada',404);
+        }
     }
 
     /**
@@ -91,7 +101,14 @@ class CargoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {        $cargo = Cargo::find($id);
+        if(isset($cargo)){
+            $cargo->delete();
+            return  response("OK",200);
+
+        }
+        else{
+            return response('Cargo não encontrada',404);
+        }
     }
 }

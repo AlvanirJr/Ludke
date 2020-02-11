@@ -15,7 +15,7 @@
                             </div>
                         </div>
                         <div class="col-sm-2">
-                            <button class="btn btn-primary-ludke" role="button" onclick="novoCargo()">Novo</button>
+                            <a class="btn btn-primary-ludke" role="button" onclick="novoCargo()">Novo</a>
                         </div>
                         <div class="col-sm-3">
                             <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
@@ -33,10 +33,11 @@
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
+                        <th>Ações</th>
                     </tr>
                     </thead>
-
                     <tbody>
+                    {{-- Linhas da tabela serão adicionadas com javascript --}}
                     </tbody>
                 </table> <!-- end table -->
             </div><!-- end col-->
@@ -46,14 +47,12 @@
     <div class="modal fade" tabindex="-1" role="dialog" id="dlgCargos">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form class="form-horizontal" id="formCargos" enctype="multipart/form-data">
-                    @csrf
+                <form class="form-horizontal" id="formCargo" name="formCargo">
                     <div class="modal-header">
-                        <h5 class="modal-title">Novo Cargo</h5>
+                        <h5 class="modal-title">Novo Cargo </h5>
                     </div>
                     <div class="modal-body">
-
-                        {{-- ID do CArgo --}}
+                        {{-- ID da cargo --}}
                         <input type="hidden" id="id" class="form-control">
 
                         {{-- Nome do Cargo --}}
@@ -63,6 +62,7 @@
                                 <input type="text" class="form-control" id="nomeCargo" placeholder="Nome do Cargo">
                             </div>
                         </div>
+
 
                     </div><!-- end modal body-->
                     <div class="modal-footer">
@@ -81,11 +81,11 @@
     <script type="text/javascript">
 
         // Usa a biblioteca quicksearch para buscar dados na tabela
-        // $('input#inputBusca').quicksearch('table#tabelaProdutos tbody tr');
+        // $('input#inputBusca').quicksearch('table#tabelaCategorias tbody tr');
 
-        //essa função é chamada sempre que atualiza a pagina
         $(function(){
-            // Configura o ajax para todas as requisições ir com token csrf
+
+            // Configuração do ajax com token csrf
             $.ajaxSetup({
                 headers:{
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -93,208 +93,138 @@
             });
 
             carregarCargos();
-
-            // Função para aparecer icone de excluir foto
-
-
-
         });
 
-
-        // Sempre que clica no botão novo, limpa os campos do modal
+        //function novaCategoria(){
         function novoCargo(){
-            // Limpa campos do modal
             $('#id').val('');
             $('#nomeCargo').val('');
-            // exibe modal cadastrar Produtos
-            $('#dlgCargos').modal('show');
-            console.log(#nomeCargo);
 
+            // exibe o modal cadastrar categorias
+            $('#dlgCargos').modal('show');
         }
 
-        // carrega categorias da api e coloca no select
-        // cria um html da linha da tabela
-        function montarLinha(p){
-            var linha = "<tr>"+
-                "<td>"+p.id+"</td>"+
-                "<td>"+p.nome+"</td>"+
+        function montarLinha(cat){
+            //cria um html da linha da tabela
+            var linha = "<tr>" +
+                "<td>"+cat.id+"</td>"+
+                "<td>"+cat.nome+"</td>"+
+                "<td>"+
+                "<a href="+"#"+" onclick="+"editarCargos("+cat.id+")"+">"+
+                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
+                "</a>"+
+                "<a href="+"#"+" onclick="+"removerCargo("+cat.id+")"+">"+
+                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
+                "</a>"+
+                "</td>"+
                 "</tr>";
             return linha;
         }
-
         function editarCargos(id){
-            console.log("Editar");
-
-            // Limpa o input de imagens, caso alguma imagem tenha sido carregada anteriormente
-
-
-            // getJSON já faz o parser do dado recebido para json
+            console.log(id);
             $.getJSON('/api/cargos/'+id, function(data){
-                console.log(data);
+                // console.log(data);
                 $('#id').val(data.id);
                 $('#nomeCargo').val(data.nome);
-                // exibe modal cadastrar Produtos
-                $('#dlgCargos').modal('show');
 
-                // limpa o array contendo o id das imagens para deletar
+                //exibe Modal Cadastrar Categoria
+                $('#dlgCargos').modal('show');
             });
         }
-        function removerCargo(id){
 
-            // exibe alerta de confirmação
-            confirma = confirm("Você tem certeza que deseja remover o produto com ID = "+id+"?");
-            // se o usuário confirmar
+        function removerCargo(id){
+            confirma = confirm("Você tem certeza que deseja remover a categoria?");
             if(confirma){
-                // faz requisição DELETE para /api/produtos passando o id do produto que deseja apagar
                 $.ajax({
                     type: "DELETE",
                     url: "/api/cargos/"+id,
                     context: this,
                     success: function(){
-                        console.log("Deletou");
-                        linhas = $("#tabelaCargos>tbody>tr");//pega linha da tabela
+                        console.log("deletou");
+                        linhas = $("#tabelaCargos>tbody>tr");
                         e = linhas.filter(function(i,elemento){
                             return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
+
                         });
                         if(e){
-                            e.remove();// remove a linha
+                            e.remove();
                         }
                     },
                     error: function(error){
                         console.log(error);
                     }
+
                 });
             }
 
-
         }
-        // carrega produtos do banco através da api e chama a função montarLinha para colocar na tabela
         function carregarCargos(){
-            $.getJSON('/api/cargos',function(cargos){
-                for(i=0;i<cargos.length;i++){
-                    linha = montarLinha(produtos[i]);
+            $.getJSON('/api/cargos', function(cargos){
+
+                for(i=0; i < cargos.length;i++){
+                    linha = montarLinha(cargos[i]);
                     $('#tabelaCargos>tbody').append(linha);
                 }
             });
         }
 
-
-        // função para fazer requisição post para o controller
         function criarCargo(){
-
-
-            cargo = {
-                nome: $('#nomeCargo').val(),
-                // fotosProduto: imagensProduto
+            cat = {
+                nome: $('#nomeCargo').val()
             };
-            console.log(prod);
 
-            // cria um FormData para ser enviado ao controller com os dados da requisição presentes no formulário
-            let form = document.getElementById('formCargo');
-            let formData = new FormData(form);
-            formData.append('nome',cargo.nome);
-
-            // formData.append('fotosProduto',prod.imagensProduto);
-
-            // console.log(formData);
-            $.ajax({
-                url:'/api/cargos',
-                method:"POST",
-                data:formData,
-                dataType:'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success:function(cargo){
-                    // produto = JSON.parse(data);//converter o dado retornado para JSON ocorrerá um erro, pois o dado retornado é um object
-                    linha = montarLinha(cargo); //monta a linha html para exibir o novo produto adicionado
-                    $('#tabelaCargos>tbody').append(linha);//injeta a linha na tabela
-
-
-                }
-            })
-
-
+            $.post('api/cargos',cat,function(data){
+                // console.log('Nova Categoria: '+data);
+                categoria = JSON.parse(data);
+                linha = montarLinha(categoria);
+                $('#tabelaCargos>tbody').append(linha);
+            });
         }
-
-        function salvarCargos(){
-
-            cargo = {
+        function salvarCargo(){
+            cat = {
                 id: $('#id').val(),
-                nome: $('#nomeCargo').val(),
+                nome: $('#nomeCargo').val()
             };
-
-
-            // console.log(prod.imagensProduto);
-            let form = document.getElementById('formCargos');
-            let formData = new FormData(form);
-
-            console.log("valores do FormData");
-            for(value of formData.values())
-                console.log(value);
-
-            formData.append('id',cargo.id);
-            formData.append('nome',cargo.nome);
-
-
-            console.log("valores do FormData");
-            for(value of formData.values())
-                console.log(value + typeof(value));
-            // for(var value of formData.entries())
-            //     console.log(value);
-
-            // formData = formData.serializeArray();
-
-
+            console.log(cat);
+            // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
             $.ajax({
-                url:'/api/cargos/'+cargo.id,
-                method:"POST",
-                data:formData,
-                dataType:'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function(cargos){
-                    // console.log(JSON.parse(data));
-                    // prod = JSON.parse(data); //converte a string data para um objeto json
-                    console.log("Salvou OK");
-                    linhas = $('#tabelaCargos>tbody>tr'); //pega todas as linhas da tabela
-                    e = linhas.filter(function(i,elemento){//faz uma filtragem e retorna a linha que contem o id do produto atualizado
-                        return (elemento.cells[0].textContent == cargos.id);
+                type: "PUT",
+                url: "/api/cargos/"+cat.id,
+                context: this,
+                data: cat,
+                success: function(data){
+                    cat = JSON.parse(data);
+                    console.log("salvou OK");
+                    linhas = $('#tabelaCargos>tbody>tr');
+                    e = linhas.filter(function(i,elemento){
+                        return (elemento.cells[0].textContent == cat.id);
                     });
-                    // console.log(e);
-                    // se encontrou a linha, atualiza cada coluna
+                    console.log(e);
+
                     if(e){
-                        e[0].cells[0].textContent = cargo.id;
-                        e[0].cells[1].textContent = cargo.nome;
+                        e[0].cells[0].textContent = cat.id;
+                        e[0].cells[1].textContent = cat.nome;
                     }
+
                 },
                 error: function(error){
-                    // limpa o array contendo o id das imagens para deletar
-                    arrayIdsDeletarFotos.length = 0;
                     console.log(error);
                 }
             });
-
         }
+        $(function () {
+            $('#formCargo').submit(function (event) {
+                event.preventDefault();
+                if($('#id').val()!= '')
+                    salvarCargo();
+                else
+                    criarCargo();
+                $("#dlgCargos").modal('hide');
 
-        // função chamada sempre que a tela é atualizada
-        $(function(){
-            // função chamada sempre que clica no botão submit do formulário
-            $('#formCargos').submit(function(event){
-                event.preventDefault(); // não deixa fechar o modal quando clica no submit
+            })
 
-                if($('#id').val()!= ''){
-                    // limparArrayIdsFotos();
-                    salvarCargos();// função chamada para editar produto
-                }
-                else{
-                    // limparArrayIdsFotos();
-                    criarCargo();// função que faz a requisição para o controller
-                }
-                $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
-            });
         });
+
 
 
     </script>
