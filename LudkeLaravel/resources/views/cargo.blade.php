@@ -181,29 +181,29 @@
             });
         }
         function salvarCargo(){
-            cat = {
+            cargo = {
                 id: $('#id').val(),
                 nome: $('#nomeCargo').val()
             };
-            console.log(cat);
+            console.log(cargo);
             // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
             $.ajax({
                 type: "PUT",
-                url: "/api/cargos/"+cat.id,
+                url: "/api/cargos/"+cargo.id,
                 context: this,
-                data: cat,
+                data: cargo,
                 success: function(data){
-                    cat = JSON.parse(data);
+                    cargo = JSON.parse(data);
                     console.log("salvou OK");
                     linhas = $('#tabelaCargos>tbody>tr');
                     e = linhas.filter(function(i,elemento){
-                        return (elemento.cells[0].textContent == cat.id);
+                        return (elemento.cells[0].textContent == cargo.id);
                     });
                     console.log(e);
 
                     if(e){
-                        e[0].cells[0].textContent = cat.id;
-                        e[0].cells[1].textContent = cat.nome;
+                        e[0].cells[0].textContent = cargo.id;
+                        e[0].cells[1].textContent = cargo.nome;
                     }
 
                 },

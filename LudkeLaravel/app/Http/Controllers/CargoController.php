@@ -59,6 +59,15 @@ class CargoController extends Controller
     public function show($id)
     {
         //
+        $cargo = Cargo::find($id);
+        if(isset($cargo)){
+            return json_encode($cargo);
+
+        }
+        else{
+            return response('Cargo não encontrada',404);
+        }
+
     }
 
     /**
@@ -83,6 +92,7 @@ class CargoController extends Controller
     {
 
         $cargo = Cargo::find($id);
+        dd($cargo);
         if(isset($cargo)){
             $cargo->nome = $request->input(nome);
             $cargo->save();
