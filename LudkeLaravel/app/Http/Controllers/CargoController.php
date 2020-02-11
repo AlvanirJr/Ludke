@@ -7,6 +7,12 @@ use App\Cargo;
 
 class CargoController extends Controller
 {
+
+    public function indexView()
+    {
+        return view('cargo');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,6 +43,11 @@ class CargoController extends Controller
     public function store(Request $request)
     {
         //
+        $cargo = new Cargo();
+        $cargo->nome = $request->input('nome');
+        $cargo->save();
+
+        return json_encode($cargo);
     }
 
     /**
