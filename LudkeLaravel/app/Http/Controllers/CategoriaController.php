@@ -38,7 +38,7 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         $validator = $this->validate($request,[
-            'nome' => 'required',
+            'nome' => 'required|string|min:5',
         ]);
         
 
@@ -77,7 +77,7 @@ class CategoriaController extends Controller
     public function update(Request $request, $id)
     {
         $validator = $this->validate($request,[
-            'nome' => 'required',
+            'nome' => 'required|string|min:5',
         ]);
         
         $cat = Categoria::find($id);
