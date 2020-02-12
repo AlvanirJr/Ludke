@@ -93,7 +93,7 @@ class CargoController extends Controller
 
         $cargo = Cargo::find($id);
         if(isset($cargo)){
-            $cargo->nome = $request->input(nome);
+            $cargo->nome = $request->input('nome');
             $cargo->save();
             return  json_encode($cargo);
 
