@@ -125,7 +125,6 @@ class ProdutoController extends Controller
             'validade' => 'required|string',
             'preco' => 'required',
             'descricao' => 'nullable|string|min:5|max:255',
-            'imagensProduto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         // dd($request->all());
         $prod = Produto::find($id);
