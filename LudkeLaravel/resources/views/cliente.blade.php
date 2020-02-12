@@ -475,6 +475,7 @@
                     e[0].cells[4].textContent = cliente.celular;
 
                 }
+                $('#dlgClientes').modal('hide');
             },
             error: function(error){
                     console.log(error);
@@ -518,6 +519,7 @@
                     cliente = JSON.parse(data);
                     linha = montarLinha(cliente);
                     $('#tabelaClientes>tbody').append(linha);
+                    $('#dlgClientes').modal('hide');
                 },
                 error: function(error){
                     retorno = JSON.parse(error.responseText);

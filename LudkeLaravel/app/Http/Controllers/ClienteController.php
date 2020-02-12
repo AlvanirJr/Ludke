@@ -74,7 +74,7 @@ class ClienteController extends Controller
                 'email' => 'required|email',
                 'nomeReduzido' => 'nullable|string|max:255',
                 'nomeResponsavel' => 'nullable|string|max:255',
-                'cpfCnpj' => 'required|unique',
+                'cpfCnpj' => 'required|unique:clientes',
                 'tipo' => 'required',
                 'inscricaoEstadual' => 'nullable|string|max:255',
                 'residencial' => 'required|string',
