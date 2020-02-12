@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Cargo;
 
 class CargoController extends Controller
@@ -42,7 +43,11 @@ class CargoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $validator = $this->validate($request,[
+            'nome' => 'required|string|min:5',
+        ]);
+
         $cargo = new Cargo();
         $cargo->nome = $request->input('nome');
         $cargo->save();
@@ -91,6 +96,10 @@ class CargoController extends Controller
     public function update(Request $request, $id)
     {
 
+        $validator = $this->validate($request,[
+            'nome' => 'required|string|min:5',
+        ]);
+        
         $cargo = Cargo::find($id);
         if(isset($cargo)){
             $cargo->nome = $request->input('nome');

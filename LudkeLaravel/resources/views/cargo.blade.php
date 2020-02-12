@@ -61,6 +61,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control" id="nomeCargo" placeholder="Nome do Cargo">
                             </div>
+                            <div class="validationCargo"></div>
                         </div>
 
 
@@ -100,6 +101,7 @@
             $('#id').val('');
             $('#nomeCargo').val('');
 
+            $("#span").remove(); //remove a linha do span
             // exibe o modal cadastrar categorias
             $('#dlgCargos').modal('show');
         }
@@ -127,6 +129,7 @@
                 $('#id').val(data.id);
                 $('#nomeCargo').val(data.nome);
 
+                $("#span").remove(); //remove a linha do span
                 //exibe Modal Cadastrar Categoria
                 $('#dlgCargos').modal('show');
             });
@@ -169,18 +172,45 @@
         }
 
         function criarCargo(){
-            cat = {
+            cargo = {
                 nome: $('#nomeCargo').val()
             };
 
-            $.post('api/cargos',cat,function(data){
-                // console.log('Nova Categoria: '+data);
+            // $.post('api/cargos',cat,function(data){
+            //     // console.log('Nova Categoria: '+data);
+            //     categoria = JSON.parse(data);
+            //     linha = montarLinha(categoria);
+            //     $('#tabelaCargos>tbody').append(linha);
+            // });
+            $.ajax({
+            type: "POST",
+            url: "/api/cargos",
+            context:this,
+            data:cargo,
+            success: function(data){
                 categoria = JSON.parse(data);
                 linha = montarLinha(categoria);
                 $('#tabelaCargos>tbody').append(linha);
+                $('#dlgCargos').modal('hide');
+                },
+            error:function(error){
+                retorno = JSON.parse(error.responseText);
+                exibirErros(retorno.errors);
+
+                }
             });
         }
+
+        function exibirErros(error){
+            $("#span").remove(); //remove a linha do span
+            if(error){
+                linha = "<span id="+"span"+" style="+"color:red"+">"+error.nome[0]+"</span>";
+                $('.validationCargo').append(linha);                                    
+                console.log(error.nome[0]);
+            }
+        }
         function salvarCargo(){
+            $("#span").remove(); //remove a linha do span
             cargo = {
                 id: $('#id').val(),
                 nome: $('#nomeCargo').val()
@@ -196,6 +226,7 @@
                     cargo = JSON.parse(data);
                     console.log("salvou OK");
                     linhas = $('#tabelaCargos>tbody>tr');
+                    $("#dlgCargos").modal('hide');
                     e = linhas.filter(function(i,elemento){
                         return (elemento.cells[0].textContent == cargo.id);
                     });
@@ -209,6 +240,8 @@
                 },
                 error: function(error){
                     console.log(error);
+                    retorno = JSON.parse(error.responseText);
+                    exibirErros(retorno.errors);
                 }
             });
         }
@@ -219,7 +252,7 @@
                     salvarCargo();
                 else
                     criarCargo();
-                $("#dlgCargos").modal('hide');
+                // $("#dlgCargos").modal('hide');
 
             })
 
