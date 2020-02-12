@@ -185,7 +185,6 @@
                 id: $('#id').val(),
                 nome: $('#nomeCargo').val()
             };
-            console.log(cargo);
             // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
             $.ajax({
                 type: "PUT",
@@ -193,6 +192,7 @@
                 context: this,
                 data: cargo,
                 success: function(data){
+                    console.log(cargo);
                     cargo = JSON.parse(data);
                     console.log("salvou OK");
                     linhas = $('#tabelaCargos>tbody>tr');

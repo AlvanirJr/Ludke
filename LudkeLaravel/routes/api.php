@@ -29,7 +29,6 @@ Route::post('/produtos/{id}','ProdutoController@updateProdWithImage');
 
 // cria todas as rotas de cargos. verificar com " php artisan route:list "
 Route::resource('/cargos', 'CargoController'); //cria todas as rotas para cargos
-
 // cria todas as rotas de funcionarios. verificar com " php artisan route:list "
 Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
 

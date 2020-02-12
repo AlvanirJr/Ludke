@@ -92,7 +92,6 @@ class CargoController extends Controller
     {
 
         $cargo = Cargo::find($id);
-        dd($cargo);
         if(isset($cargo)){
             $cargo->nome = $request->input(nome);
             $cargo->save();
