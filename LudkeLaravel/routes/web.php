@@ -35,3 +35,5 @@ Route::get('/categorias','CategoriaController@indexView')->name('categorias');
 Route::get('/funcionarios','FuncionarioController@indexView')->name('funcionarios');
 
 Route::get('/clientes','ClienteController@indexView')->name('clientes');
+
+Route::get('/cargos', 'CargoController@indexView')->name('cargos');

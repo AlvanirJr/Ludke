@@ -19,7 +19,7 @@
                     </a>
                 </div>
             </div>
-            
+
             {{-- Card Categorias --}}
             <div class="col-sm-4">
                 <div id="card">
@@ -33,7 +33,7 @@
                     </a>
                 </div>
             </div>
-            
+
             {{-- Card 3 --}}
             {{-- Desabilitado --}}
             <div class="col-sm-4">
@@ -48,9 +48,9 @@
                     </a>
                 </div>
             </div>
-            
+
         </div>
-        
+
         {{-- Linha 2 --}}
         <div class="row justify-content-center">
             {{-- Card 1 --}}
@@ -67,12 +67,12 @@
                     </a>
                 </div>
             </div>
-            
+
             {{-- Card 2 --}}
             {{-- Desabilitado --}}
             <div class="col-sm-4">
-                <div id="card" style="background-color:#aaa; box-shadow: none" onclick="alerta()">
-                    <a id="link-card" href="">
+                <div id="card">
+                    <a id="link-card" href="{{route("cargos")}}">
                         <div class="row justify-content-center">
                             <img id="card-image" src="{{ asset("img/cargos.png")  }}" alt="">
                         </div>
@@ -82,7 +82,7 @@
                     </a>
                 </div>
             </div>
-            
+
             {{-- Card 3 --}}
             {{-- Desabilitado --}}
             <div class="col-sm-4">
@@ -97,7 +97,7 @@
                     </a>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </div>
