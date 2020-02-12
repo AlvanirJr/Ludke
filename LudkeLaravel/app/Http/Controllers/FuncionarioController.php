@@ -63,6 +63,22 @@ class FuncionarioController extends Controller
     public function store(Request $request)
     {
         
+        // Validação
+        $validator = $this->validate($request,[
+            'email' => 'required|email',
+            'nome' => 'required|string|min:5',
+            'cargo' => 'required',
+            'residencial' => 'required',
+            'celular' => 'required',
+            'cep' => 'nullable|string',
+            'rua' => 'required',
+            'bairro' => 'required',
+            'cidade' => 'required',
+            'uf' => 'required',
+            'numero' => 'required|integer',
+            'complemento' => 'nullable|string|max:255',
+        ]);
+
         // ENDERECO
         $endereco = new Endereco();
         $endereco->rua = $request->input('rua');
@@ -169,6 +185,22 @@ class FuncionarioController extends Controller
     
     public function update(Request $request, $id)
     {
+        // Validação
+        $validator = $this->validate($request,[
+            'email' => 'required|email',
+            'nome' => 'required|string|min:5',
+            'cargo' => 'required',
+            'residencial' => 'required',
+            'celular' => 'required',
+            'cep' => 'nullable|string',
+            'rua' => 'required',
+            'bairro' => 'required',
+            'cidade' => 'required',
+            'uf' => 'required',
+            'numero' => 'required|integer',
+            'complemento' => 'nullable|string|max:255',
+        ]);
+
         $funcionario = Funcionario::find($id);
         $user = User::find($funcionario->user_id);
         $telefone = Telefone::find($user->telefone_id);

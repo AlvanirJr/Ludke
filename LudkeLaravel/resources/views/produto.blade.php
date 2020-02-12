@@ -68,6 +68,7 @@
                         <div class="input-group">
                             <input type="text" class="form-control" id="nomeProduto" placeholder="Nome do Produto">
                         </div>
+                        <div id="validationNome"></div>
                     </div>
 
                     {{-- Categoria do produto --}}
@@ -78,6 +79,7 @@
                                 <option value="" disabled selected hidden>-- Selecionar Categoria --</option>
                             </select>
                         </div>
+                        <div id="validationCategoria"></div>
                     </div>
 
                     {{-- Validade do Produto --}}
@@ -86,6 +88,7 @@
                         <div class="input-group">
                             <input type="date" class="form-control" id="validadeProduto" placeholder="Validade do Produto">
                         </div>
+                        <div id="validationValidade"></div>
                     </div>
 
                     {{-- Preço do produto --}}
@@ -94,6 +97,7 @@
                         <div class="input-group">
                             <input type="number" class="form-control" id="precoProduto" placeholder="Preço do Produto">
                         </div>
+                        <div id="validationPreco"></div>
                     </div>
 
                     {{-- Input Fotos Produto --}}
@@ -102,6 +106,7 @@
                         <div class="input-group">
                             <input type="file" name="imagensProduto[]" class="form-control-file" id="imagensProduto" placeholder="Preço do Produto" multiple>
                         </div>
+                        <div id="validationImagensProduto"></div>
                     </div>
 
                     {{-- foto --}}
@@ -125,6 +130,7 @@
                             <textarea class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
                             {{-- <input type="text" class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"> --}}
                         </div>
+                        <div id="validationDescricao"></div>
                     </div>
                 </div><!-- end modal body-->
                 <div class="modal-footer">
@@ -188,6 +194,9 @@
         $('#precoProduto').val('');
         $(".listaImagem").html("");
         $('#descricaoProduto').val('');
+
+        $(".span").remove(); //limpa os span de erro
+
         // exibe modal cadastrar Produtos
         $('#dlgProdutos').modal('show');
         
@@ -263,6 +272,7 @@
             montarLinhaImagem(fotosProduto);
             exibirBotaoExcluirFoto();
 
+            $(".span").remove(); //limpa os span de erro
             // exibe modal cadastrar Produtos
             $('#dlgProdutos').modal('show');
 
@@ -379,12 +389,52 @@
                 // produto = JSON.parse(data);//converter o dado retornado para JSON ocorrerá um erro, pois o dado retornado é um object
                 linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
                 $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
-                
 
+                $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
+            },
+            error: function(error){
+                retorno = JSON.parse(error.responseText);
+                exibirErros(retorno.errors);
+                console.log(error);
             }
-        })
-        
+        });
+    }
 
+    function exibirErros(error){
+        $(".span").remove(); //limpa os span de erro
+        if(error){
+            if(error.nome){
+                for(i=0;i<error.nome.length;i++){
+                    console.log(error.nome[i]);
+                    $("#validationNome").append("<span class="+"span"+" style="+"color:red"+">"+error.nome[i]+"</span>")
+                }
+            }
+            if(error.validade){
+                for(i=0;i<error.validade.length;i++){
+                    console.log(error.validade[i]);
+                    $("#validationValidade").append("<span class="+"span"+" style="+"color:red"+">"+error.validade[i]+"</span>")
+                }
+            }
+            if(error.preco){
+                for(i=0;i<error.preco.length;i++){
+                    console.log(error.preco[i]);
+                    $("#validationPreco").append("<span class="+"span"+" style="+"color:red"+">"+error.preco[i]+"</span>")
+                }
+            }
+            if(error.imagensProduto){
+                for(i=0;i<error.imagensProduto.length;i++){
+                    console.log(error.imagensProduto[i]);
+                    $("#validationImagensProduto").append("<span class="+"span"+" style="+"color:red"+">"+error.imagensProduto[i]+"</span>")
+                }
+            }
+            if(error.descricao){
+                for(i=0;i<error.descricao.length;i++){
+                    console.log(error.descricao[i]);
+                    $("#validationDescricao").append("<span class="+"span"+" style="+"color:red"+">"+error.descricao[i]+"</span>")
+                }
+            }
+            
+        }
     }
     
     function salvarProduto(){
@@ -464,52 +514,17 @@
                     // limpa o array contendo o id das imagens para deletar
                     arrayIdsDeletarFotos.length = 0;
                     console.log(arrayIdsDeletarFotos);
+
+                    $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
                 },
                 error: function(error){
                     // limpa o array contendo o id das imagens para deletar
                     arrayIdsDeletarFotos.length = 0;
+                    retorno = JSON.parse(error.responseText);
+                    exibirErros(retorno.errors);
                     console.log(error);
                 }
             });
-
-
-
-
-        // faz requisição PUT para /api/produtos passando o id do produto que deseja editar
-        // $.ajax({
-        //         type: "PUT",
-        //         url: "/api/produtos/"+prod.id,
-        //         context: this,
-        //         data: prod,
-        //         // contentType: false,
-        //         // cache: false,
-        //         // processData: false,
-        //         success: function(data){
-        //             // console.log(JSON.parse(data));
-        //             prod = JSON.parse(data); //converte a string data para um objeto json
-        //             console.log("Salvou OK");
-        //             linhas = $('#tabelaProdutos>tbody>tr'); //pega todas as linhas da tabela
-        //             e = linhas.filter(function(i,elemento){//faz uma filtragem e retorna a linha que contem o id do produto atualizado
-        //                 return (elemento.cells[0].textContent == prod.id);
-        //             });
-        //             // console.log(e);
-        //             // se encontrou a linha, atualiza cada coluna
-        //             if(e){
-        //                 e[0].cells[0].textContent = prod.id;
-        //                 e[0].cells[1].textContent = prod.nome;
-        //                 e[0].cells[2].textContent = prod.categoria_id;
-        //                 e[0].cells[3].textContent = prod.validade;
-        //                 // e[0].cells[4].textContent = prod.quantidade;
-        //                 e[0].cells[4].textContent = prod.preco;
-        //                 e[0].cells[5].textContent = prod.descricao;
-        //             }
-        //             // limpa o array contendo o id das imagens para deletar
-        //             arrayIdsDeletarFotos.length = 0;
-        //         },
-        //         error: function(error){
-        //             console.log(error);
-        //         }
-        //     });
     }
 
     // função chamada sempre que a tela é atualizada
@@ -526,7 +541,7 @@
                 // limparArrayIdsFotos();
                 criarProduto();// função que faz a requisição para o controller
             }
-            $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
+            // $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
         });
     });
 

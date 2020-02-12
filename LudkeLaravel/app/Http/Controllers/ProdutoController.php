@@ -37,6 +37,15 @@ class ProdutoController extends Controller
     // Recebe o request do ajax e salva produto com as fotos
     public function store(Request $request)
     {
+
+        $validator = $this->validate($request,[
+            'nome' => 'required|string|min:3|max:255',
+            'validade' => 'required|string',
+            'preco' => 'required',
+            'descricao' => 'nullable|string|min:5|max:255',
+            'imagensProduto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
         // salva produtos no banco
         $prod = new Produto();
         $prod->nome = $request->input('nome');
@@ -111,6 +120,14 @@ class ProdutoController extends Controller
 
     // Nova Função para atualizar o produto e foto
     public function updateProdWithImage(Request $request, $id){
+
+        $validator = $this->validate($request,[
+            'nome' => 'required|string|min:3|max:255',
+            'validade' => 'required|string',
+            'preco' => 'required',
+            'descricao' => 'nullable|string|min:5|max:255',
+            'imagensProduto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
         // dd($request->all());
         $prod = Produto::find($id);
         // dd($request->input('nome'));

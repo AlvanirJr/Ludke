@@ -73,6 +73,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="nomeCliente" placeholder="Nome do Cliente">
                                 </div>
+                                <div id="validationNome"></div>
                             </div>
                         </div>
                         
@@ -87,6 +88,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="nomeReduzido" placeholder="Nome Reduzido">
                                 </div>
+                                <div id="validationNomeReduzido"></div>
                             </div>
                         </div>
 
@@ -97,6 +99,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="nomeResponsavel" placeholder="Nome do Responsável">
                                 </div>
+                                <div id="validationNomeResponsavel"></div>
                             </div>
                         </div>
                     </div>
@@ -109,8 +112,9 @@
                             <div class="form-group">
                                 <label for="cpfCnpj" class="control-label">CPF/CNPJ</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="cpfCnpj" placeholder="CPF/CNPJ">
+                                    <input type="number" class="form-control" id="cpfCnpj" placeholder="CPF/CNPJ">
                                 </div>
+                                <div id="validationCpfCnpj"></div>
                             </div>
                         </div>
                         
@@ -125,6 +129,7 @@
                                         <option value="pessoaJuridica">Pessoa Jurídica</option>
                                     </select>
                                 </div>
+                                <div id="validationTipo"></div>
                             </div>
                         </div>
                     </div>
@@ -139,6 +144,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="residencial" placeholder="Telefone Residêncial">
                                 </div>
+                                <div id="validationResidencial"></div>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -148,6 +154,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="celular" placeholder="Telefone Celular">
                                 </div>
+                                <div id="validationCelular"></div>
                             </div>
                         </div>
 
@@ -161,6 +168,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="inscricaoEstadual" placeholder="Inscrição Estadual">
                                 </div>
+                                <div id="validationInscricaoEstadual"></div>
                             </div>
                         </div>
 
@@ -171,6 +179,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="emailCliente" placeholder="E-mail do Cliente">
                                 </div>
+                                <div id="validationEmail"></div>
                             </div>
                         </div>
                     </div>
@@ -192,6 +201,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="cep" placeholder="CEP">
                                 </div>
+                                <div id="validationCep"></div>
                             </div>
                         </div>
 
@@ -202,6 +212,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="rua" placeholder="Rua">
                                 </div>
+                                <div id="validationRua"></div>
                             </div>
                         </div>
 
@@ -217,6 +228,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="bairro" placeholder="Bairro">
                                 </div>
+                                <div id="validationBairro"></div>
                             </div>
                         </div>
 
@@ -227,6 +239,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="cidade" placeholder="Cidade">
                                 </div>
+                                <div id="validationCidade"></div>
                             </div>
                         </div>
 
@@ -243,6 +256,7 @@
                                         <option value="" disabled selected hidden>-- UF --</option>
                                     </select>
                                 </div>
+                                <div id="validationUf"></div>
                             </div>
                         </div>
 
@@ -253,6 +267,7 @@
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="numero" placeholder="Número">
                                 </div>
+                                <div id="validationNumero"></div>
                             </div>
                         </div>
                     </div>
@@ -265,6 +280,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="complemento" placeholder="Complemento">
                                 </div>
+                                <div id="validationComplemento"></div>
                             </div>
                         </div>
                     </div>
@@ -345,6 +361,8 @@
             $('#numero').val(data.numero);
             $('#complemento').val(data.complemento);
 
+            $(".span").remove(); //limpa os span de erro
+
             // exibe modal cadastrar Produtos
             $('#dlgClientes').modal('show');
         });
@@ -408,6 +426,8 @@
         $('#numero').val('');
         $('#complemento').val('');
 
+        $(".span").remove(); //limpa os span de erro
+
         // exibe modal cadastrar Produtos
         $('#dlgClientes').modal('show');
     }
@@ -456,6 +476,11 @@
 
                 }
             },
+            error: function(error){
+                    console.log(error);
+                    retorno = JSON.parse(error.responseText);
+                    exibirErros(retorno.errors);
+                }
         });
 
     }
@@ -483,14 +508,103 @@
             complemento: $('#complemento').val()
         }
 
-        $.post('/api/clientes',cliente,function(data){
-            console.log(data);
-            cliente = JSON.parse(data);
-            linha = montarLinha(cliente);
-            $('#tabelaClientes>tbody').append(linha);
-        });
-    }
+        $.ajax({
+                type: "POST",
+                url: "/api/clientes",
+                context: this,
+                data: cliente,
+                success: function(data){
+                    console.log(data);
+                    cliente = JSON.parse(data);
+                    linha = montarLinha(cliente);
+                    $('#tabelaClientes>tbody').append(linha);
+                },
+                error: function(error){
+                    retorno = JSON.parse(error.responseText);
+                    exibirErros(retorno.errors);
+                    // console.log(error);
+                }
 
+            });
+    }
+    function exibirErros(error){
+        console.log(error);
+        $(".span").remove(); //limpa os span de erro
+        if(error){
+            if(error.nome){
+                for(i=0;i<error.nome.length;i++){
+                    console.log(error.nome[i]);
+                    $("#validationNome").append("<span class="+"span"+" style="+"color:red"+">"+error.nome[i]+"</span>");
+                }
+            }
+            if(error.cpfCnpj){
+                for(i=0;i<error.cpfCnpj.length;i++){
+                    console.log(error.cpfCnpj[i]);
+                    $("#validationCpfCnpj").append("<span class="+"span"+" style="+"color:red"+">"+error.cpfCnpj[i]+"</span>");
+                }
+            }
+            if(error.tipo){
+                for(i=0;i<error.tipo.length;i++){
+                    console.log(error.tipo[i]);
+                    $("#validationTipo").append("<span class="+"span"+" style="+"color:red"+">"+error.tipo[i]+"</span>");
+                }
+            }
+            if(error.residencial){
+                for(i=0;i<error.residencial.length;i++){
+                    console.log(error.residencial[i]);
+                    $("#validationResidencial").append("<span class="+"span"+" style="+"color:red"+">"+error.residencial[i]+"</span>");
+                }
+            }
+            if(error.celular){
+                for(i=0;i<error.celular.length;i++){
+                    console.log(error.celular[i]);
+                    $("#validationCelular").append("<span class="+"span"+" style="+"color:red"+">"+error.celular[i]+"</span>");
+                }
+            }
+            if(error.cep){
+                for(i=0;i<error.cep.length;i++){
+                    console.log(error.cep[i]);
+                    $("#validationCep").append("<span style="+"color:red"+">"+error.cep[i]+"</span>")
+                }
+            }
+            if(error.rua){
+                for(i=0;i<error.rua.length;i++){
+                    console.log(error.rua[i]);
+                    $("#validationRua").append("<span class="+"span"+" style="+"color:red"+">"+error.rua[i]+"</span>")
+                }
+            }
+            if(error.bairro){
+                for(i=0;i<error.bairro.length;i++){
+                    console.log(error.bairro[i]);
+                    $("#validationBairro").append("<span class="+"span"+" style="+"color:red"+">"+error.bairro[i]+"</span>")
+                }
+            }
+            if(error.cidade){
+                for(i=0;i<error.cidade.length;i++){
+                    console.log(error.cidade[i]);
+                    $("#validationCidade").append("<span class="+"span"+" style="+"color:red"+">"+error.cidade[i]+"</span>")
+                }
+            }
+            if(error.uf){
+                for(i=0;i<error.uf.length;i++){
+                    console.log(error.uf[i]);
+                    $("#validationUf").append("<span class="+"span"+" style="+"color:red"+">"+error.uf[i]+"</span>")
+                }
+            }
+            if(error.numero){
+                for(i=0;i<error.numero.length;i++){
+                    console.log(error.numero[i]);
+                    $("#validationNumero").append("<span class="+"span"+" style="+"color:red"+">"+error.numero[i]+"</span>")
+                }
+            }
+            if(error.complemento){
+                for(i=0;i<error.complemento.length;i++){
+                    console.log(error.complemento[i]);
+                    $("#validationComplemento").append("<span class="+"span"+" style="+"color:red"+">"+error.complemento[i]+"</span>")
+                }
+            }
+        }
+    }
     $(function(){
         $('#formCliente').submit(function(event){
             event.preventDefault();// não deixa fechar o modal quando clica no submit
@@ -503,7 +617,7 @@
                 
                 criarCliente();
             }
-            $('#dlgClientes').modal('hide');
+            // $('#dlgClientes').modal('hide');
         });
     });
 </script>
