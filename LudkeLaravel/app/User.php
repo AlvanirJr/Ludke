@@ -21,13 +21,16 @@ class User extends Authenticatable
 
 
     public function endereco(){
-        return $this->hasOne('App\Endereco','endereco_id');
+        return $this->belongsTo('App\Endereco');
     }
     public function telefone(){
-        return $this->hasOne('App\Telefone','telefone_id');
+        return $this->belongsTo('App\Telefone');
     }
     public function funcionario(){
-        return $this->hasOne('App\Funcionario','funcionario_id');
+        return $this->hasOne('App\Funcionario','user_id');
+    }
+    public function cliente(){
+        return $this->hasOne('App\Cliente','user_id');
     }
     /**
      * The attributes that should be hidden for arrays.

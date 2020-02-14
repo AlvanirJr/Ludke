@@ -10,6 +10,6 @@ class Cargo extends Model
     protected $fillable = ['nome'];
 
     public function funcionario(){
-        return $this->hasOne('App\Cargo','cargo_id');
+        return $this->hasMany('App\Funcionario','cargo_id');
     }
 }
