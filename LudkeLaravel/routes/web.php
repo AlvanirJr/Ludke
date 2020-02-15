@@ -38,14 +38,20 @@ Route::get('/clientes','ClienteController@indexView')->name('clientes');
 
 Route::get('/cargos', 'CargoController@indexView')->name('cargos');
 
+Route::get('/pedidos','PedidoController@index')->name('pedidos');
+
+// ROTAS PARA O PEDIDO
+Route::post('/pedidos/getCliente/{cpfCnpj}','PedidoController@getCliente');
 
 // Rotas para testar banco
 use App\Produto;
 use App\Categoria;
-
+use App\Cliente;
+use App\User;
 Route::get('/teste',function(){
+    $users = User::with('cliente')->get();
     $produtos = Produto::with('categoria')->get();
     $categoria = Categoria::with('produtos')->get();
 
-    return $produtos[0]->categoria;
+    return $users[1]->cliente->nomeReduzido;
 });
