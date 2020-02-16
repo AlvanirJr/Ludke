@@ -13,30 +13,27 @@
                     <div id="cardCliente" class="card card-pedidos">
                         <div class="card-header">Cliente</div>
                         <div class="card-body">
-                            <form id="formCliente">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-sm-8">
-                                                    <input type="hidden" id="cliente_id">
-                                                    <input id="cpfCnpj" type="text" class="form-control" placeholder="CPF / CNPJ">
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <button type="submit" class="btn btn-primary-ludke">Adicionar</button>
-                                                </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <input type="hidden" id="cliente_id">
+                                                <input id="buscaCliente" type="text" class="form-control" placeholder="Nome do Cliente">
+                                                {{-- lista de produtos retornados da busca--}}
+                                                <ul id="resultadoBuscaCliente" class="list-group"></ul>
                                             </div>
-                                          </div>
-                                    </div>
+                                            
+                                        </div>
+                                        </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label>Nome</label>
-                                        <h4 id="nomeCliente"></h4>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Nome</label>
+                                    <h4 id="nomeCliente"></h4>
                                 </div>
-                            </form> {{-- Form cliente--}}
-
+                            </div>
                         </div>
                         
                     </div>{{-- end Card Cliente --}}
@@ -49,27 +46,25 @@
                     <div id="cardProduto" class="card card-pedidos">
                         <div class="card-header">Produto</div>
                         <div class="card-body">
-                            <form id="formProduto">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <input id="buscaProduto" type="text" class="form-control" placeholder="Nome do Produto">
-                                                    {{-- lista de produtos retornados da busca--}}
-                                                    <ul id="resultadoBuscaProduto" class="list-group"></ul>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <input id="pesoProduto" type="number" class="form-control" placeholder="Peso">
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <button type="submit" class="btn btn-primary-ludke">Adicionar</button>
-                                                </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <input id="buscaProduto" type="text" class="form-control" placeholder="Nome do Produto">
+                                                {{-- lista de produtos retornados da busca--}}
+                                                <ul id="resultadoBuscaProduto" class="list-group"></ul>
                                             </div>
-                                          </div>
-                                    </div>
+                                            <div class="col-sm-2">
+                                                <input id="pesoProduto" type="number" class="form-control" placeholder="Peso">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <a href="#" class="btn btn-primary-ludke">Adicionar</a>
+                                            </div>
+                                        </div>
+                                        </div>
                                 </div>
-                            </form> {{-- Form cliente--}}
+                            </div>
 
                             {{-- informações do produto --}}
                             <div class="row">
@@ -77,6 +72,7 @@
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <label>Nome</label>
+                                            <input type="hidden" id="idProduto">
                                             <h4 id="nomeProduto"></h4>
                                         </div>
                                         <div class="col-sm-4">
@@ -140,7 +136,7 @@
                                 </thead>
                                 <tbody >
 
-                                    @for ($i = 0; $i < 20; $i++)
+                                    {{-- @for ($i = 0; $i < 20; $i++)
                                         
                                     <tr>
                                         <td>Cod</td>
@@ -150,7 +146,7 @@
                                         <td>Valor Total</td>
                                         <td>Ações</td>
                                     </tr>
-                                    @endfor
+                                    @endfor --}}
                                 </tbody>
                             </table>
                         </div>
@@ -213,9 +209,17 @@
         });
         
         // Busca de Cliente
-        $('#formCliente').submit(function(event){
-            event.preventDefault();
-            getCliente($("#cpfCnpj").val());
+        $("#buscaCliente").keyup(function(){
+            var buscaCliente = $(this).val();
+            if(buscaCliente.length >= 3){
+                getCliente(buscaCliente);
+            }
+        });
+
+        // Clicar no link dos clientes
+        $('body').on('click', "#resultadoBuscaCliente a", function(){
+            idCliente = $(this).children().val(); //id do produto
+            buscaCliente(idCliente);
         });
 
         // Busca do Produto
@@ -236,23 +240,51 @@
 
         // Digitar o valor do produto
         $('#pesoProduto').keyup(function(){
-            calcularPrecoProduto($(this).val());
+            $("#precoEstimado").html(calcularPrecoProduto($(this).val()));
         });
     });
 
-    function getCliente(cpfCnpj){
+    function getCliente(nomeCliente){
         $.ajax({
             type: "POST",
-            url: "/pedidos/getCliente/"+cpfCnpj,
+            url: "/pedidos/getCliente",
             context: this,
+            data: {nome: nomeCliente},
             success: function(data){
                 cliente = JSON.parse(data)
                 console.log(cliente);
                 
-                $('#cliente_id').val(cliente[0].id);
-                $('#nomeCliente').append(cliente[0].user.name);
-                console.log(cliente[0].user.name);
+                // limpa os links da lista com os produtos retornados em tempo real
+                $('#resultadoBuscaCliente').children().remove();
+                for(let i = 0; i < cliente.length; i++){
+
+                    let linha = "<a "+"href="+"#"+">"+
+                                    "<li value="+cliente[i].cliente.id+" class="+"list-group-item itemLista"+">"+cliente[i].name+"</li>"+
+                                "</a>";
+                    $('#resultadoBuscaCliente').append(linha);
+                }
+                // $('#cliente_id').val(cliente[0].id);
+                // $('#nomeCliente').append(cliente[0].user.name);
+                // console.log(cliente[0].user.name);
                 
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    }
+    function buscaCliente(id){
+        $.ajax({
+            url:'/api/clientes/'+id,
+            method:"GET",
+            success: function(data){
+                cliente = JSON.parse(data);
+                console.log(cliente);
+                // $("#cliente_id").val(cliente.id);
+                $("#nomeCliente").html(cliente.nome);
+                $("#buscaCliente").val(cliente.nome);
+                // limpa os links da lista com os produtos retornados em tempo real
+                $('#resultadoBuscaCliente').children().remove();
             },
             error: function(error){
                 console.log(error);
@@ -299,6 +331,7 @@
                 console.log(produto.nome);
                 console.log(produto.preco);
                 $("#nomeProduto").html(produto.nome);
+                $("#buscaProduto").val(produto.nome);
                 $("#textoPrecoProduto").html(produto.preco);
                 $("#precoProduto").val(produto.preco);
                 $("#descricaoProduto").html(produto.descricao);
@@ -314,9 +347,11 @@
     }
 
     function calcularPrecoProduto(peso){
-        preco = $("#precoProduto").val();
-        resultado = preco * peso;
-        $("#precoEstimado").html(resultado);
+        if(peso>0){
+            preco = $("#precoProduto").val();
+            resultado = preco * peso;
+            return resultado
+        }
         
     }
 </script>

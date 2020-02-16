@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Cliente;
 use App\Produto;
+use App\User;
 class PedidoController extends Controller
 {
     /**
@@ -84,8 +85,8 @@ class PedidoController extends Controller
     }
 
     // retorna o cliente através do cpj ou cnpj
-    public function getCliente($cpfCnpj){
-        $cliente = Cliente::where('cpfCnpj',$cpfCnpj)->with('user')->get();
+    public function getCliente(Request $request){
+        $cliente = User::where('name','like','%'.$request->input('nome').'%')->with('cliente')->get();
         if(isset($cliente)){
             // dd($cliente);
             return json_encode($cliente);
@@ -102,7 +103,7 @@ class PedidoController extends Controller
             return json_encode($produtos);
         }
         else{
-            return response('Cliente não encontrado', 404);
+            return response('Produto não encontrado', 404);
         }
     }
 }

@@ -41,7 +41,7 @@ Route::get('/cargos', 'CargoController@indexView')->name('cargos');
 Route::get('/pedidos','PedidoController@index')->name('pedidos');
 
 // ROTAS PARA O PEDIDO
-Route::post('/pedidos/getCliente/{cpfCnpj}','PedidoController@getCliente');
+Route::post('/pedidos/getCliente','PedidoController@getCliente');
 Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
 
 // Rotas para testar banco
@@ -54,5 +54,5 @@ Route::get('/teste',function(){
     $produtos = Produto::with('categoria')->find(1);
     $categoria = Categoria::with('produtos')->get();
 
-    return $produtos;
+    return $users;
 });
