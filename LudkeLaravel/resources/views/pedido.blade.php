@@ -56,7 +56,7 @@
                                                 <ul id="resultadoBuscaProduto" class="list-group"></ul>
                                             </div>
                                             <div class="col-sm-2">
-                                                <input id="pesoProduto" type="number" class="form-control" placeholder="Peso">
+                                                <input id="pesoProduto" step="0.01" type="number" class="form-control" placeholder="Peso">
                                             </div>
                                             <div class="col-sm-4">
                                                 <a href="#" id="adicionarProduto" class="btn btn-primary-ludke">Adicionar</a>
@@ -135,18 +135,7 @@
                                     </tr>
                                 </thead>
                                 <tbody >
-
-                                    {{-- @for ($i = 0; $i < 20; $i++)
-                                        
-                                    <tr>
-                                        <td>Cod</td>
-                                        <td>Nome</td>
-                                        <td>Peso</td>
-                                        <td>Valor/Peso</td>
-                                        <td>Valor Total</td>
-                                        <td>Ações</td>
-                                    </tr>
-                                    @endfor --}}
+                                    {{-- VALORES DA TABELA SÃO DINAMICOS --}}
                                 </tbody>
                             </table>
                         </div>
@@ -169,20 +158,26 @@
                                     <div class="row justify-content-between">
                                         <div class="col-sm-3">
                                             <label for="">Número de Itens</label>
-                                            <h4>2</h4>
+                                            <h4 id="qtdItens"></h4>
                                             
                                             <label>Desconto</label>
                                             <div class="input-group">
-                                                <input type="number" value="0" class="form-control" placeholder="Desconto" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                <input id="inputDesconto" step="0.01" type="number" class="form-control" placeholder="Desconto" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                                 <div class="input-group-append">
                                                   <span class="input-group-text" id="basic-addon2">%</span>
                                                 </div>
                                               </div>
                                         </div>
-                                       
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-3">
+                                            <label for="">Subtotal</label>
+                                            <h4 id="subtotal"></h4>
+
+                                            <label for="">Valor Desconto</label>
+                                            <h4 id="ValorDesconto"></h4>
+                                        </div>
+                                        <div class="col-sm-6">
                                             <label for="">Total</label>
-                                            <p id="valorTotal">R$ 20,00</p>
+                                            <p id="valorTotal" value=""></p>
                                         </div>
                                     </div>                                     
                                 </div>
@@ -208,6 +203,12 @@
             }
         });
         
+        // Valor Total e num itens
+        $("#valorTotal").html(0);
+        $("#subtotal").html(0);
+        $("#ValorDesconto").html(0);
+        $("#qtdItens").html(0);
+
         // Busca de Cliente
         $("#buscaCliente").keyup(function(){
             var buscaCliente = $(this).val();
@@ -229,7 +230,11 @@
             var buscaProduto = $(this).val();
             if(buscaProduto.length >= 3){
                 getProdutos(buscaProduto);
-            }else{
+            }
+            if(buscaProduto.length == 0){
+                limparCamposProduto();
+            }
+            else{
                 $('#resultadoBuscaProduto').children().remove();
             }
         });
@@ -248,6 +253,14 @@
         // Adicionar Produto à lista
         $("#adicionarProduto").click(function(){
             adicionarProduto($("#idProduto").val());
+        });
+
+        //Digitar desconto
+        $("#inputDesconto").keyup(function(){
+            calcularDesconto();
+            total = calcularTotal();
+            $("#valorTotal").html(total);
+            $("#valorTotal").val(total);
         });
     });
 
@@ -362,9 +375,25 @@
             if(produto){
                 if(peso && peso>0){
                     linha = montarLinha(produto,peso);
+                    // Adiciona linha à tabela
                     $("#tabelaPedidos>tbody").append(linha);
-                    
+                    // Atualiza o numero de itens
+                    $("#qtdItens").html($("#tabelaPedidos>tbody>tr").length);
+                    // Atualiza o valor total estimado do pedido
+                    subtotal = calcularSubtotal();
+                    $("#subtotal").html(subtotal);
+                    desconto = calcularDesconto();
+                    console.log(desconto);
+                    $("#ValorDesconto").html(desconto);
+
+                    total = calcularTotal();
+                    $("#valorTotal").html(total);
+                    $("#valorTotal").val(total);
+
+
+                    // console.log()
                     limparCamposProduto();
+
                 }else{
                     alert("Digite o peso do produto!");
                 }
@@ -377,7 +406,7 @@
                     "<td>"+produto.nome+"</td>"+
                     "<td>"+peso+"</td>"+
                     "<td>"+produto.preco+"</td>"+
-                    "<td>"+calcularPrecoProduto(produto.preco)+"</td>"+
+                    "<td class="+"precoCalculado"+">"+calcularPrecoProduto(peso)+"</td>"+
                     "<td>Ações</td>"+
                 "</tr>";
         return linha;
@@ -395,11 +424,40 @@
         $("#descricaoProduto").html('');
         $("#categoriaProduto").html('');
     }
+    function calcularSubtotal(){
+        let precoCalculado = parseFloat(0);
+        $(".precoCalculado").each(function(){
+            console.log($(this).text());
+            precoCalculado += parseFloat($(this).text());
+        });
+        console.log(precoCalculado);
+        return precoCalculado;
+    }
+    function calcularDesconto(){
+        desconto = $("#inputDesconto").val()
+        
+        subtotal = calcularSubtotal();
+        console.log('Subtotal: ',subtotal);
+
+        resultado = (subtotal * (desconto/100)).toPrecision();
+        
+        console.log('Total Desconto', resultado);
+        $("#ValorDesconto").html(resultado);
+        
+        return resultado;
+    }
+    function calcularTotal(){
+        subtotal = calcularSubtotal();
+        desconto = calcularDesconto();
+
+        resultado = subtotal - desconto;
+        return resultado;
+    }
     function calcularPrecoProduto(peso){
         if(peso>0){
             preco = $("#precoProduto").val();
             resultado = preco * peso;
-            return resultado
+            return resultado;
         }
         
     }
