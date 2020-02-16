@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Cliente;
+use App\Produto;
 class PedidoController extends Controller
 {
     /**
@@ -91,6 +92,17 @@ class PedidoController extends Controller
         }
         else{
             return resonse('Cliente não encontrado', 404);
+        }
+    }
+
+    public function getProdutos(Request $request){
+        $produtos = Produto::where('nome','like','%'.$request->input('nome').'%')->get();
+        // dd($produtos);
+        if(isset($produtos)){
+            return json_encode($produtos);
+        }
+        else{
+            return response('Cliente não encontrado', 404);
         }
     }
 }

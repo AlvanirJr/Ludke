@@ -181,6 +181,17 @@ ul.listaImagem li{
 #card-venda #valorTotal{
     font-size: 50px;
 }
+#resultadoBuscaProduto{
+    position: absolute;
+    z-index: 50;
+}
+#resultadoBuscaProduto a{
+    text-decoration: none;
+    color: black;
+}
+#resultadoBuscaProduto a :hover{
+    background-color: #ccc;
+}
 @media screen and (max-width: 576px) {
     /* .navbar{
         height: 100%;

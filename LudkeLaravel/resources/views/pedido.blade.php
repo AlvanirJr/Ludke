@@ -54,10 +54,12 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <div class="row">
-                                                <div class="col-sm-4">
-                                                    <input type="text" class="form-control" placeholder="Nome do Produto">
+                                                <div class="col-sm-6">
+                                                    <input id="buscaProduto" type="text" class="form-control" placeholder="Nome do Produto">
+                                                    {{-- lista de produtos retornados da busca--}}
+                                                    <ul id="resultadoBuscaProduto" class="list-group"></ul>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <input type="number" class="form-control" placeholder="Peso">
                                                 </div>
                                                 <div class="col-sm-4">
@@ -210,6 +212,18 @@
             event.preventDefault();
             getCliente($("#cpfCnpj").val());
         });
+
+        // Busca do Produto
+        $('#buscaProduto').keyup(function(){
+            var buscaProduto = $(this).val();
+            if(buscaProduto.length >= 3){
+                getProdutos(buscaProduto);
+            }else{
+                $('#resultadoBuscaProduto').children().remove();
+            }
+        });
+
+        //
     });
 
     function getCliente(cpfCnpj){
@@ -219,15 +233,47 @@
             context: this,
             success: function(data){
                 cliente = JSON.parse(data)
+                console.log(cliente);
+                
                 $('#cliente_id').val(cliente[0].id);
                 $('#nomeCliente').append(cliente[0].user.name);
                 console.log(cliente[0].user.name);
+                
             },
             error: function(error){
                 console.log(error);
             }
         });
     }
+
+    function getProdutos(buscaProduto){
+
+        $.ajax({
+            type: "POST",
+            url: "/pedidos/getProdutos",
+            data: {nome: buscaProduto},
+            context: this,
+            success: function(data){
+                produtos = JSON.parse(data)
+                console.log(produtos)
+
+                // limpa os links da lista com os produtos retornados em tempo real
+                $('#resultadoBuscaProduto').children().remove();
+                for(let i = 0; i < produtos.length; i++){
+
+                    let linha = "<a "+"href="+"#"+">"+
+                                    "<li class="+"list-group-item itemLista"+">"+produtos[i].nome+"</li>"+
+                                "</a>";
+                    $('#resultadoBuscaProduto').append(linha);
+                }
+                
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    }
+
 
 </script>
 @endsection

@@ -42,6 +42,7 @@ Route::get('/pedidos','PedidoController@index')->name('pedidos');
 
 // ROTAS PARA O PEDIDO
 Route::post('/pedidos/getCliente/{cpfCnpj}','PedidoController@getCliente');
+Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
 
 // Rotas para testar banco
 use App\Produto;
