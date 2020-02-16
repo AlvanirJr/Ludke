@@ -59,7 +59,7 @@
                                                 <input id="pesoProduto" type="number" class="form-control" placeholder="Peso">
                                             </div>
                                             <div class="col-sm-4">
-                                                <a href="#" class="btn btn-primary-ludke">Adicionar</a>
+                                                <a href="#" id="adicionarProduto" class="btn btn-primary-ludke">Adicionar</a>
                                             </div>
                                         </div>
                                         </div>
@@ -122,7 +122,7 @@
                     <div class="card card-pedidos">
                         <div class="card-header">Pedido</div>
                         <div id="listaPedidos" class="card-body">
-                            <table class="table table-responsive-lg table-sm table-hover">
+                            <table id="tabelaPedidos" class="table table-responsive-lg table-sm table-hover">
                                 <thead>
                                     <tr>
                                         <th>COD</th>
@@ -213,6 +213,8 @@
             var buscaCliente = $(this).val();
             if(buscaCliente.length >= 3){
                 getCliente(buscaCliente);
+            }else{
+                $('#resultadoBuscaCliente').children().remove();
             }
         });
 
@@ -241,6 +243,11 @@
         // Digitar o valor do produto
         $('#pesoProduto').keyup(function(){
             $("#precoEstimado").html(calcularPrecoProduto($(this).val()));
+        });
+
+        // Adicionar Produto à lista
+        $("#adicionarProduto").click(function(){
+            adicionarProduto($("#idProduto").val());
         });
     });
 
@@ -330,6 +337,7 @@
                 console.log(produto);
                 console.log(produto.nome);
                 console.log(produto.preco);
+                $("#idProduto").val(produto.id);
                 $("#nomeProduto").html(produto.nome);
                 $("#buscaProduto").val(produto.nome);
                 $("#textoPrecoProduto").html(produto.preco);
@@ -346,6 +354,47 @@
         });
     }
 
+    function adicionarProduto(id){
+        console.log(id);
+        $.getJSON('/api/produtos/'+id,function(data){
+            produto = data;
+            peso = $("#pesoProduto").val();
+            if(produto){
+                if(peso && peso>0){
+                    linha = montarLinha(produto,peso);
+                    $("#tabelaPedidos>tbody").append(linha);
+                    
+                    limparCamposProduto();
+                }else{
+                    alert("Digite o peso do produto!");
+                }
+            }
+        });
+    }
+    function montarLinha(produto,peso){
+        linha = "<tr>"+
+                    "<td>"+produto.id+"</td>"+
+                    "<td>"+produto.nome+"</td>"+
+                    "<td>"+peso+"</td>"+
+                    "<td>"+produto.preco+"</td>"+
+                    "<td>"+calcularPrecoProduto(produto.preco)+"</td>"+
+                    "<td>Ações</td>"+
+                "</tr>";
+        return linha;
+    }
+
+    function limparCamposProduto(){
+
+        $("#idProduto").val('');
+        $("#buscaProduto").val('');
+        $("#pesoProduto").val('');
+
+        $("#nomeProduto").html('');
+        $("#textoPrecoProduto").html('');
+        $("#precoEstimado").html('');
+        $("#descricaoProduto").html('');
+        $("#categoriaProduto").html('');
+    }
     function calcularPrecoProduto(peso){
         if(peso>0){
             preco = $("#precoProduto").val();
