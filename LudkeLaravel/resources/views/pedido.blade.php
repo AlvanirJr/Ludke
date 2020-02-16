@@ -60,7 +60,7 @@
                                                     <ul id="resultadoBuscaProduto" class="list-group"></ul>
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <input type="number" class="form-control" placeholder="Peso">
+                                                    <input id="pesoProduto" type="number" class="form-control" placeholder="Peso">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <button type="submit" class="btn btn-primary-ludke">Adicionar</button>
@@ -77,21 +77,26 @@
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <label>Nome</label>
-                                            <h4> 2 itens</h4>
+                                            <h4 id="nomeProduto"></h4>
                                         </div>
                                         <div class="col-sm-4">
-                                            <label for="">Preço/Kg</label>
-                                            <h4>R$ 12,00</h4>
+                                            <input type="hidden" id="precoProduto">
+                                            <label for="">Preço/Kg (R$)</label>
+                                            <h4 id="textoPrecoProduto"></h4>
                                         </div>
                                         <div class="col-sm-4">
-                                            <label for="">Preço</label>
-                                            <h4>R$ 12,00</h4>
+                                            <label for="">Preço Estimado (R$)</label>
+                                            <h4 id="precoEstimado"></h4>
                                         </div>
                                     </div>  
                                     <div class="row">
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-6">
                                             <label>Descrição</label>
-                                            <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </h4>
+                                            <h5 id="descricaoProduto"></h5>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Categoria</label>
+                                            <h5 id="categoriaProduto"></h5>
                                         </div>
                                     </div>                                   
                                 </div>
@@ -223,7 +228,16 @@
             }
         });
 
-        //
+        // Clicar no link dos produtos
+        $('body').on('click', "#resultadoBuscaProduto a", function(){
+            idProduto = $(this).children().val(); //id do produto
+            buscaProduto(idProduto);
+        });
+
+        // Digitar o valor do produto
+        $('#pesoProduto').keyup(function(){
+            calcularPrecoProduto($(this).val());
+        });
     });
 
     function getCliente(cpfCnpj){
@@ -262,7 +276,7 @@
                 for(let i = 0; i < produtos.length; i++){
 
                     let linha = "<a "+"href="+"#"+">"+
-                                    "<li class="+"list-group-item itemLista"+">"+produtos[i].nome+"</li>"+
+                                    "<li value="+produtos[i].id+" class="+"list-group-item itemLista"+">"+produtos[i].nome+"</li>"+
                                 "</a>";
                     $('#resultadoBuscaProduto').append(linha);
                 }
@@ -274,6 +288,36 @@
         });
     }
 
+    // Busca Produto selecionado no banco
+    function buscaProduto(id){
+        $.ajax({
+            url:'/api/produtos/'+id,
+            method:"GET",
+            success: function(data){
+                produto = JSON.parse(data);
+                console.log(produto);
+                console.log(produto.nome);
+                console.log(produto.preco);
+                $("#nomeProduto").html(produto.nome);
+                $("#textoPrecoProduto").html(produto.preco);
+                $("#precoProduto").val(produto.preco);
+                $("#descricaoProduto").html(produto.descricao);
+                $("#categoriaProduto").html(produto.categoria.nome);
 
+                // limpa os links da lista com os produtos retornados em tempo real
+                $('#resultadoBuscaProduto').children().remove();
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    }
+
+    function calcularPrecoProduto(peso){
+        preco = $("#precoProduto").val();
+        resultado = preco * peso;
+        $("#precoEstimado").html(resultado);
+        
+    }
 </script>
 @endsection

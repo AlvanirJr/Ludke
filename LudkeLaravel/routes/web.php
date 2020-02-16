@@ -51,8 +51,8 @@ use App\Cliente;
 use App\User;
 Route::get('/teste',function(){
     $users = User::with('cliente')->get();
-    $produtos = Produto::with('categoria')->get();
+    $produtos = Produto::with('categoria')->find(1);
     $categoria = Categoria::with('produtos')->get();
 
-    return $users[1]->cliente->nomeReduzido;
+    return $produtos;
 });
