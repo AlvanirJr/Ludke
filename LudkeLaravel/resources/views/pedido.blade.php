@@ -3,6 +3,9 @@
 @section('content')
 
 <div id="conteudo-pedidos" class="container-fluid">
+    <div class="row">
+        <div id="success" class="col-sm-12"></div>
+    </div>
     
     <div class="row justify-content-center">
         {{-- Coluna 1 --}}
@@ -104,10 +107,10 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <a href="" class="btn btn-secondary-ludke btn-pedido">Cancelar Pedido</a>
+                    <a href="#" class="btn btn-secondary-ludke btn-pedido">Cancelar Pedido</a>
                 </div>
                 <div class="col-sm-6">
-                    <a href="" class="btn btn-primary-ludke btn-pedido">Finalizar Pedido</a>
+                    <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Finalizar Pedido</a>
                 </div>
             </div>
 
@@ -156,7 +159,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="row justify-content-between">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <label for="">Número de Itens</label>
                                             <h4 id="qtdItens"></h4>
                                             
@@ -167,6 +170,12 @@
                                                   <span class="input-group-text" id="basic-addon2">%</span>
                                                 </div>
                                               </div>
+
+                                              <label>Data de Entrega</label>
+                                            <div class="input-group">
+                                                <input id="inputDataEntrega" type="date" class="form-control">
+                                                
+                                              </div>
                                         </div>
                                         <div class="col-sm-3">
                                             <label for="">Subtotal</label>
@@ -175,9 +184,9 @@
                                             <label for="">Valor Desconto</label>
                                             <h4 id="ValorDesconto"></h4>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-5">
                                             <label for="">Total</label>
-                                            <p id="valorTotal" value=""></p>
+                                            <h1 id="valorTotal" value=""></h1>
                                         </div>
                                     </div>                                     
                                 </div>
@@ -262,6 +271,14 @@
             $("#valorTotal").html(total);
             $("#valorTotal").val(total);
         });
+        // Finalizar Pedido
+        $("#btnFinalizarPedido").click(function(){
+            confirma = confirm("Você deseja finalizar o pedido?");
+            if(confirma){
+                                
+                montarPedido();
+            }
+        });
     });
 
     function getCliente(nomeCliente){
@@ -283,7 +300,7 @@
                                 "</a>";
                     $('#resultadoBuscaCliente').append(linha);
                 }
-                // $('#cliente_id').val(cliente[0].id);
+                $('#cliente_id').val(cliente[0].id);
                 // $('#nomeCliente').append(cliente[0].user.name);
                 // console.log(cliente[0].user.name);
                 
@@ -402,11 +419,11 @@
     }
     function montarLinha(produto,peso){
         linha = "<tr>"+
-                    "<td>"+produto.id+"</td>"+
+                    "<td value="+produto.id+">"+produto.id+"</td>"+
                     "<td>"+produto.nome+"</td>"+
-                    "<td>"+peso+"</td>"+
+                    "<td value="+peso+">"+peso+"</td>"+
                     "<td>"+produto.preco+"</td>"+
-                    "<td class="+"precoCalculado"+">"+calcularPrecoProduto(peso)+"</td>"+
+                    "<td value="+calcularPrecoProduto(peso)+" class="+"precoCalculado"+">"+calcularPrecoProduto(peso)+"</td>"+
                     "<td>Ações</td>"+
                 "</tr>";
         return linha;
@@ -460,6 +477,66 @@
             return resultado;
         }
         
+    }
+
+    function montarPedido(){
+        
+        listaProdutos = [];
+        
+        
+        let tabela = $("#tabelaPedidos");
+        tabela.find('tr').each(function(linha){
+            linhaPedido = [];
+            $(this).find('td').each(function(coluna){
+                linhaPedido.push($(this).text());
+            });
+            if(linhaPedido[0] != undefined && linhaPedido[2] != undefined){
+                listaProdutos.push({produto_id: parseInt(linhaPedido[0]), peso: parseFloat(linhaPedido[2])});
+            }
+        });
+// return redirect()->view('pedido');
+        
+        pedido = {
+            cliente_id: parseInt($("#cliente_id").val()),
+            desconto: parseFloat(calcularDesconto()),
+            total: calcularTotal(),
+            dataEntrega: $("#inputDataEntrega").val(),
+            listaProdutos: listaProdutos,
+        };
+
+        if(!pedido.cliente_id){
+            alert("Selecione o cliente para concluir o pedido!");
+            return;
+        }
+        if(listaProdutos.length == 0 && pedido.total == 0){
+            alert("Selecione um ou mais produtos para concluir o pedido!");
+            return;
+        }
+        if($("#inputDataEntrega").val().length == 0){
+            alert("Selecione uma data de entrega para concluir o pedido!");
+            return;
+        }
+        else{
+            // console.log(pedido)
+            $.ajax({
+                url: '/pedidos/finalizar',
+                method: "POST",
+                data: pedido,
+                context: this,
+                success: function(data){
+                    msg = JSON.parse(data);
+                    if(msg.success == true){
+                        // recarrega a página
+                        location.reload();  //Refresh page    
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+
+            
+        }
     }
 </script>
 @endsection

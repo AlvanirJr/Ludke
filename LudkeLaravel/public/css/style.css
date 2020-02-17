@@ -174,7 +174,7 @@ ul.listaImagem li{
 }
 
 #listaPedidos{
-    height: 43vh;
+    height: 35vh;
     overflow-y:scroll;
 }
 .card-pedidos{
@@ -192,9 +192,9 @@ ul.listaImagem li{
 /* #card-venda{
     height: 27vh;
 } */
-#card-venda #valorTotal{
+/* #card-venda #valorTotal{
     font-size: 40px;
-}
+} */
 #resultadoBuscaProduto{
     position: absolute;
     z-index: 50;

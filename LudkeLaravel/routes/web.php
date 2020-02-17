@@ -43,7 +43,7 @@ Route::get('/pedidos','PedidoController@index')->name('pedidos');
 // ROTAS PARA O PEDIDO
 Route::post('/pedidos/getCliente','PedidoController@getCliente');
 Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
-
+Route::post('/pedidos/finalizar','PedidoController@finalizarPedido');
 // Rotas para testar banco
 use App\Produto;
 use App\Categoria;

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Cliente;
 use App\Produto;
 use App\User;
+use App\ItensPedido;
+use App\Pedido;
 class PedidoController extends Controller
 {
     /**
@@ -105,5 +108,40 @@ class PedidoController extends Controller
         else{
             return response('Produto não encontrado', 404);
         }
+    }
+
+    public function finalizarPedido(Request $request){
+        // dd($request);
+        $user = User::find($request->input('cliente_id'));
+
+        
+
+
+        $pedido = new Pedido();
+        $pedido->formaPagamento = "";
+        $pedido->desconto = $request->input('desconto');
+        $pedido->dataEntrega = $request->input('dataEntrega');
+        $pedido->valorTotal = $request->input('total');
+        $pedido->cliente_id = $user->cliente->id;
+        $pedido->funcionario_id = Auth::user()->id; //salvando o user_id do funcionario
+        
+        $pedido->save();
+
+        foreach($request->input('listaProdutos') as $item){
+            
+            $itemPedido = new ItensPedido();
+            $produto = Produto::find($item['produto_id']);
+            if(isset($produto)){
+                $itemPedido->pesoSolicitado = $item['peso'];
+                $itemPedido->pesoFinal = $item['peso'];
+                $itemPedido->valorReal = $produto->preco * $item['peso'];
+                $itemPedido->produto_id = $produto->id;
+                $itemPedido->pedido_id = $pedido->id;
+
+                $itemPedido->save();
+            }
+        }
+
+        return json_encode(['success'=> true,'msg'=>'Pedido cadastrado com sucesso']);
     }
 }
