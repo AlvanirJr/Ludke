@@ -12,4 +12,12 @@ class Cliente extends Model
                         'cpfCnpj',
                         'tipo',
                         'inscricaoEstadual'];
+
+
+    function user(){
+        return $this->belongsTo('App\User');
+    }
+    function pedidos(){
+        return $this->hasMany('App\Pedido','cliente_id');
+    }
 }

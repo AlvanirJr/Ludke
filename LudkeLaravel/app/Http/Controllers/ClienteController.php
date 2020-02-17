@@ -314,4 +314,5 @@ class ClienteController extends Controller
         }
         return resonse('Cliente não encontrado', 404);
     }
+
 }

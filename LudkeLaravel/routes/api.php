@@ -33,3 +33,5 @@ Route::resource('/cargos', 'CargoController'); //cria todas as rotas para cargos
 Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
 
 Route::resource('/clientes', 'ClienteController');
+
+// Route::resource('/pedidos', 'PedidoController');

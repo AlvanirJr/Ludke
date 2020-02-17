@@ -95,7 +95,7 @@
                     <div class="form-group">
                         <label for="precoProduto" class="control-label">Preço do Produto (por Kg)</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="precoProduto" placeholder="Preço do Produto">
+                            <input type="number" step="0.01" class="form-control" id="precoProduto" placeholder="Preço do Produto">
                         </div>
                         <div id="validationPreco"></div>
                     </div>

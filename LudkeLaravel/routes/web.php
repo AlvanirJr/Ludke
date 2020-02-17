@@ -37,3 +37,22 @@ Route::get('/funcionarios','FuncionarioController@indexView')->name('funcionario
 Route::get('/clientes','ClienteController@indexView')->name('clientes');
 
 Route::get('/cargos', 'CargoController@indexView')->name('cargos');
+
+Route::get('/pedidos','PedidoController@index')->name('pedidos');
+
+// ROTAS PARA O PEDIDO
+Route::post('/pedidos/getCliente','PedidoController@getCliente');
+Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
+Route::post('/pedidos/finalizar','PedidoController@finalizarPedido');
+// Rotas para testar banco
+use App\Produto;
+use App\Categoria;
+use App\Cliente;
+use App\User;
+Route::get('/teste',function(){
+    $users = User::with('cliente')->get();
+    $produtos = Produto::with('categoria')->find(1);
+    $categoria = Categoria::with('produtos')->get();
+
+    return $users;
+});
