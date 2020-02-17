@@ -122,6 +122,7 @@ class PedidoController extends Controller
         $pedido->desconto = $request->input('desconto');
         $pedido->dataEntrega = $request->input('dataEntrega');
         $pedido->valorTotal = $request->input('total');
+        $pedido->status = "Aberto";
         $pedido->cliente_id = $user->cliente->id;
         $pedido->funcionario_id = Auth::user()->id; //salvando o user_id do funcionario
         
