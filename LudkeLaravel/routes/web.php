@@ -44,15 +44,22 @@ Route::get('/pedidos','PedidoController@index')->name('pedidos');
 Route::post('/pedidos/getCliente','PedidoController@getCliente');
 Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
 Route::post('/pedidos/finalizar','PedidoController@finalizarPedido');
+
+Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("listarPedidos");
+Route::get('/getPedidos','PedidoController@getPedidos');
 // Rotas para testar banco
 use App\Produto;
 use App\Categoria;
 use App\Cliente;
 use App\User;
+use App\Pedido;
 Route::get('/teste',function(){
     $users = User::with('cliente')->get();
     $produtos = Produto::with('categoria')->find(1);
     $categoria = Categoria::with('produtos')->get();
+    $pedidos = Pedido::with(['itensPedidos'])->get();
 
-    return $users;
+    return json_encode($pedidos);
+
+    // return $pedidos;
 });

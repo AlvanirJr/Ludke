@@ -17,7 +17,7 @@
                             <a class="nav-link" href="{{route('home')}}">Início</a>
                         </li>
                         <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Gerenciar
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -27,9 +27,15 @@
                                     <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
                                 </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('pedidos')}}">Pedidos</a>
-                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Pedidos
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{route('pedidos')}}">Novo Pedido</a>
+                                        <a class="dropdown-item" href="{{route('listarPedidos')}}">Listar Pedidos</a>
+                                    </div>
+                            </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Relatórios</a>
                         </li>
