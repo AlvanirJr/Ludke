@@ -88,7 +88,7 @@
         limpaTabela();
         $.getJSON('/getPedidos',function(pedidos){
             for(var i=0; i < pedidos.length; i++){
-                console.log(pedidos);
+                // console.log(pedidos);
                 linha = montarLinha(pedidos[i]);
                 $('#tabelaPedidos>tbody').append(linha);
             }

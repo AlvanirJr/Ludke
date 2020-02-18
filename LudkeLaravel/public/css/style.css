@@ -195,6 +195,10 @@ ul.listaImagem li{
 /* #card-venda #valorTotal{
     font-size: 40px;
 } */
+
+#alert{
+    display: none;
+}
 #resultadoBuscaProduto{
     position: absolute;
     z-index: 50;
