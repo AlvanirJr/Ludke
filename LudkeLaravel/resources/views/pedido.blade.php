@@ -528,6 +528,7 @@
                     if(msg.success == true){
                         // recarrega a página
                         location.reload();  //Refresh page    
+                        localStorage.setItem("texto","Enviou!");
                     }
                 },
                 error: function(error){

@@ -21,6 +21,9 @@ class PedidoController extends Controller
         return view('pedido');
     }
 
+    public function indexListarPedidos(){
+        return view('listarPedido');
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -136,6 +139,7 @@ class PedidoController extends Controller
                 $itemPedido->pesoSolicitado = $item['peso'];
                 $itemPedido->pesoFinal = $item['peso'];
                 $itemPedido->valorReal = $produto->preco * $item['peso'];
+                $itemPedido->nomeProduto = $produto->nome;
                 $itemPedido->produto_id = $produto->id;
                 $itemPedido->pedido_id = $pedido->id;
 
@@ -144,5 +148,12 @@ class PedidoController extends Controller
         }
 
         return json_encode(['success'=> true,'msg'=>'Pedido cadastrado com sucesso']);
+    }
+
+    public function getPedidos(){
+        $pedidos = Pedido::with(['itensPedidos'])->get();
+
+        return json_encode($pedidos);
+
     }
 }
