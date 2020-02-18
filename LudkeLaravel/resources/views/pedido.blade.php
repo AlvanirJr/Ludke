@@ -125,6 +125,7 @@
                             <table id="tabelaPedidos" class="table table-responsive-lg table-sm table-hover">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>COD</th>
                                         <th>NOME</th>
                                         <th>PESO</th>
@@ -206,6 +207,7 @@
     var pedido = {
         listaProdutos : [],
     }
+    var cont = 1;
 
     $(function(){
         // Configuração do ajax com token csrf
@@ -334,7 +336,7 @@
                 pedido.cliente_id = cliente.id;
                 $("#nomeCliente").html(cliente.nome);
                 $("#buscaCliente").val(cliente.nome);
-                console.log("buscaCliente()",pedido)
+                // console.log("buscaCliente()",pedido)
                 // limpa os links da lista com os produtos retornados em tempo real
                 $('#resultadoBuscaCliente').children().remove();
             },
@@ -419,12 +421,13 @@
                             valorTotalItem: calcularTotalItem(produto.preco,peso)
                             });
                         pedido.listaProdutos.push(itemPedido);
-                        console.log("adicionarProduto()",pedido)
+                        // console.log("adicionarProduto()",pedido)
                         
                         
                         // Adiciona linha à tabela
                         linha = montarLinha(produto,peso);
                         $("#tabelaPedidos>tbody").append(linha);
+                        cont += 1;
 
                         // Atualiza o numero de itens
                         $("#qtdItens").html(pedido.listaProdutos.length);
@@ -441,7 +444,7 @@
                         // Calcula o total
                         total = calcularTotal();
                         pedido.total = total;
-                        console.log(pedido);
+                        // console.log(pedido);
                         $("#valorTotal").html(total);
                         $("#valorTotal").val(total);
 
@@ -456,15 +459,61 @@
         }
     }
     function montarLinha(produto,peso){
+        
         linha = "<tr>"+
+                    "<td><strong>"+(cont)+"</strong></td>"+
                     "<td value="+produto.id+">"+produto.id+"</td>"+
                     "<td>"+produto.nome+"</td>"+
                     "<td value="+peso+">"+peso+"</td>"+
                     "<td>"+produto.preco+"</td>"+
                     "<td value="+calcularTotalItem(produto.preco,peso)+" class="+"precoCalculado"+">"+calcularTotalItem(produto.preco,peso)+"</td>"+
-                    "<td>Ações</td>"+
+                    "<td><a href="+"#"+" onclick="+"removerProduto("+cont+")"+">"+
+                        "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:18px"+">"+
+                    "</a></td>"+
                 "</tr>";
         return linha;
+    }
+    function removerProduto(idLinha){
+        // console.log("Remover Produto: ",idLinha);
+        linhas = $("#tabelaPedidos>tbody>tr");
+        e = linhas.filter(function(i,elemento){            
+            return elemento.cells[0].textContent == idLinha;
+        });
+        if(e){
+            // console.log(e.length)
+            idProduto = parseInt(e[0].cells[1].textContent);
+            peso = parseFloat(e[0].cells[3].textContent);
+            valorTotal = parseFloat(e[0].cells[5].textContent);
+            // console.log("e: ",idProduto,peso,valorTotal)
+            for(var i = 0; i < pedido.listaProdutos.length; i++){
+                // console.log(i,pedido.listaProdutos[i][0])
+                if( pedido.listaProdutos[i][0].produto_id == idProduto && pedido.listaProdutos[i][0].peso == peso && pedido.listaProdutos[i][0].valorTotalItem == valorTotal
+                ){
+                    var indice = pedido.listaProdutos.indexOf(pedido.listaProdutos[i]);
+                    pedido.listaProdutos.splice(indice,1)
+                    e.remove();
+
+                    // Atualiza o numero de itens
+                    $("#qtdItens").html(pedido.listaProdutos.length);
+                        
+                    // Atualiza o valor total estimado do pedido
+                    subtotal = calcularSubtotal();
+                    $("#subtotal").html(subtotal);
+
+                    // Calcula o desconto
+                    desconto = calcularDesconto();
+                    $("#ValorDesconto").html(desconto);
+                    
+                    // Calcula o total
+                    total = calcularTotal();
+                    pedido.total = total;
+                    // console.log(pedido);
+                    $("#valorTotal").html(total);
+                    $("#valorTotal").val(total);
+                }
+            }
+            // console.log(pedido)
+        }
     }
 
     function limparCamposProduto(){
@@ -494,7 +543,7 @@
         let desconto = 0;
         desconto = $("#inputDesconto").val()
         
-        console.log("calcularDesconto()",desconto)
+        // console.log("calcularDesconto()",desconto)
         
         subtotal = calcularSubtotal();
 
@@ -547,7 +596,7 @@
         pedido.valorDesconto = parseFloat(calcularDesconto());
         pedido.dataEntrega = $("#inputDataEntrega").val();
         
-        console.log("montarPedido()",pedido)
+        // console.log("montarPedido()",pedido)
 
 
         
@@ -565,7 +614,7 @@
         }
         else{
             
-            console.log(pedido)
+            // console.log(pedido)
             $.ajax({
                 url: '/pedidos/finalizar',
                 method: "POST",
