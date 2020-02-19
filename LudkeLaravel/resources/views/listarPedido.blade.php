@@ -31,6 +31,7 @@
                 <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
                     <thead class="thead-primary">
                     <tr>
+                        <th>#</th>
                         <th>Data do Pedido</th>
                         <th>Pedido</th>
                         <th>Status</th>
@@ -99,23 +100,63 @@
     }
     function montarLinha(pedido){
         var linha = "<tr id="+pedido.id+">" +
+                        "<td><h4>"+pedido.id+"</h4></td>"+
                         "<td><h4>"+pedido.created_at+"</h4></td>"+
                         "<td><ul><h4>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
                         "<td><h4>"+pedido.status+"</h4></td>"+
                         "<td><h4>"+pedido.dataEntrega+"</h4></td>"+
                         "<td><h4>"+pedido.valorTotal+"</h4></td>"+
                         "<td><h4>"+
-                            "<a href="+"#"+" onclick="+"editarCategoria("+pedido.id+")"+">"+
-                                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
+                            "<a href="+"#"+" onclick="+"concluirPedido("+pedido.id+")"+">"+
+                                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/clipboard-check-solid.svg')}}"+" style="+"width:20px"+">"+
                             "</a>"+                            
-                            "<a href="+"#"+" onclick="+"removerCategoria("+pedido.id+")"+">"+
-                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
+                            "<a href="+"#"+" onclick="+"editarPedido("+pedido.id+")"+">"+
+                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px"+">"+
+                            "</a>"+
+                            "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
+                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"margin-left:15px"+">"+
                             "</a>"+
                         "</h4></td>"+
                     "</tr>";
         return linha;
         
     }
+
+    function concluirPedido(id){
+        confirma = confirm("Você deseja cocluir o pedido?");
+        if(confirma){
+            console.log("Pedido Concluído");
+        }
+    }
+
+    function editarPedido(id){
+        confirma = confirm("Você deseja cocluir o pedido?");
+        if(confirma){
+            console.log("Pedido Concluído");
+        }
+    }
+    function excluirPedido(id){
+        confirma = confirm("Você deseja excluir o pedido?");
+        if(confirma){
+            $.ajax({
+                type:"DELETE",
+                url: "/pedidos/excluir/"+id,
+                context:this,
+                success: function(){
+                    console.log("deletou");
+                    linhas = $("#tabelaPedidos>tbody>tr");
+                    e = linhas.filter(function(i,elemento){
+                        return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
+
+                    });
+                    if(e){
+                        e.remove();
+                    }
+                }
+            });
+        }
+    }
+
 
     function retornaLinhaItensPedido(itens_pedidos){
         linhaPedido = "";

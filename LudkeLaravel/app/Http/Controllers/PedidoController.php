@@ -87,7 +87,14 @@ class PedidoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // dd($id);
+        $pedido = Pedido::find($id);
+        
+        if(isset($pedido)){
+            $itensPedido = ItensPedido::where("pedido_id",$id)->delete();
+            $pedido->delete();
+
+        }
     }
 
     // retorna o cliente através do cpj ou cnpj
