@@ -32,10 +32,11 @@
                     <thead class="thead-primary">
                     <tr>
                         <th>#</th>
-                        <th>Data do Pedido</th>
+                        <th>Cliente</th>
+                        <th>Funcionário</th>
+                        <th>Data da Entrega</th>
                         <th>Pedido</th>
                         <th>Status</th>
-                        <th>Data da Entrega</th>
                         <th>Valor Total</th>
                         <th>Ações</th>
                     </tr>
@@ -88,8 +89,9 @@
     function carregarPedidos(){
         limpaTabela();
         $.getJSON('/getPedidos',function(pedidos){
+            console.log(pedidos)
             for(var i=0; i < pedidos.length; i++){
-                // console.log(pedidos);
+                
                 linha = montarLinha(pedidos[i]);
                 $('#tabelaPedidos>tbody').append(linha);
             }
@@ -101,10 +103,11 @@
     function montarLinha(pedido){
         var linha = "<tr id="+pedido.id+">" +
                         "<td>"+pedido.id+"</td>"+
-                        "<td>"+pedido.created_at+"</td>"+
+                        "<td>"+pedido.nomeCLiente+"</td>"+
+                        "<td>"+pedido.nomeFuncionario+"</td>"+
+                        "<td>"+pedido.dataEntrega+"</td>"+
                         "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
                         "<td>"+pedido.status+"</td>"+
-                        "<td>"+pedido.dataEntrega+"</td>"+
                         "<td>"+pedido.valorTotal+"</td>"+
                         "<td>"+
                             "<a href="+"#"+" onclick="+"concluirPedido("+pedido.id+")"+">"+
@@ -118,25 +121,6 @@
                             "</a>"+
                         "</td>"+
                     "</tr>";
-        // var linha = "<tr id="+pedido.id+">" +
-        //     "<td><h4>"+pedido.id+"</h4></td>"+
-        //     "<td><h4>"+pedido.created_at+"</h4></td>"+
-        //     "<td><ul><h4>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
-        //     "<td><h4>"+pedido.status+"</h4></td>"+
-        //     "<td><h4>"+pedido.dataEntrega+"</h4></td>"+
-        //     "<td><h4>"+pedido.valorTotal+"</h4></td>"+
-        //     "<td><h4>"+
-        //         "<a href="+"#"+" onclick="+"concluirPedido("+pedido.id+")"+">"+
-        //             "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/clipboard-check-solid.svg')}}"+" style="+"width:20px"+">"+
-        //         "</a>"+                            
-        //         "<a href="+"#"+" onclick="+"editarPedido("+pedido.id+")"+">"+
-        //             "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px;margin-right:15px"+">"+
-        //         "</a>"+
-        //         "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
-        //             "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
-        //         "</a>"+
-        //     "</h4></td>"+
-        // "</tr>";
         return linha;
         
     }
@@ -166,7 +150,7 @@
     function editarPedido(id){
         confirma = confirm("Você deseja cocluir o pedido?");
         if(confirma){
-            console.log("Pedido Concluído");
+            console.log("Editar pedido "+ id);
         }
     }
     function excluirPedido(id){

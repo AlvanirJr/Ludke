@@ -9,6 +9,7 @@ use App\Produto;
 use App\User;
 use App\ItensPedido;
 use App\Pedido;
+use App\Funcionario;
 class PedidoController extends Controller
 {
     /**
@@ -192,8 +193,15 @@ class PedidoController extends Controller
     }
 
     public function getPedidos(){
-        $pedidos = Pedido::with(['itensPedidos'])->orderBy('dataEntrega')->get();
-
+        $pedidos = Pedido::with(['itensPedidos','cliente','funcionario'])->orderBy('dataEntrega')->get();
+        $size = sizeof($pedidos);
+        for($i = 0; $i < $size; $i++){
+            $cliente = Cliente::with('user')->find($pedidos[$i]->cliente_id);
+            $funcionario = Funcionario::with('user')->find($pedidos[$i]->funcionario_id);
+            
+            $pedidos[$i]["nomeCliente"] = $cliente->user->name;
+            $pedidos[$i]["nomeFuncionario"] = $funcionario->user->name;
+        }
         return json_encode($pedidos);
 
     }
