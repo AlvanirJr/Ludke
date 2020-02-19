@@ -10,8 +10,9 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
-            
+
             {{-- @if(Auth::check()) --}}
+            @can('view_admin', Auth::user())
                 <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('home')}}">Início</a>
@@ -37,6 +38,108 @@
                             <a class="nav-link" href="#">Ajuda</a>
                         </li>
                 </ul>
+            @endcan
+
+
+            @can('view_gerenteAdmin', Auth::user())
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('home')}}">Início</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Gerenciar
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
+                            <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
+                            <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
+                            <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pedidos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Relatórios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Ajuda</a>
+                    </li>
+                </ul>
+        @endcan
+
+
+            @can('view_vendedor', Auth::user())
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('home')}}">Início</a>
+                    </li>
+                    <li class="nav-item dropdown">
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
+                            <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
+                            <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pedidos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Relatórios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Ajuda</a>
+                    </li>
+                </ul>
+        @endcan
+
+            @can('view_salsicheiro', Auth::user())
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('home')}}">Início</a>
+                    </li>
+                    <li class="nav-item dropdown">
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
+
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pedidos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Ajuda</a>
+                    </li>
+                </ul>
+        @endcan
+
+            @can('view_gerenteGeral', Auth::user())
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('home')}}">Início</a>
+                    </li>
+                    <li class="nav-item dropdown">
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
+                            <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
+                            <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pedidos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Relatórios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Ajuda</a>
+                    </li>
+                </ul>
+        @endcan
             {{-- @endif --}}
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
@@ -51,7 +154,7 @@
                         </li>
                     @endif
                 @else
-                    
+
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }} <span class="caret"></span>

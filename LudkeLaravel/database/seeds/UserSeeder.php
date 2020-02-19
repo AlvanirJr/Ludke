@@ -25,5 +25,38 @@ class UserSeeder extends Seeder
             'endereco_id'=>$endereco_id[0],
             'telefone_id'=>$telefone_id[0],
         ]);
+        DB::table('users')->insert([
+            'name'=> 'Gerente',
+            'email'=>'gerente@gmail.com',
+            'tipo'=>'gerenteAdmin',
+            'password'=> bcrypt('123456'),
+            'endereco_id'=>$endereco_id[0],
+            'telefone_id'=>$telefone_id[0],
+        ]);
+        DB::table('users')->insert([
+            'name'=> 'Vendedor',
+            'email'=>'vendedor@gmail.com',
+            'tipo'=>'vendedor',
+            'password'=> bcrypt('123456'),
+            'endereco_id'=>$endereco_id[0],
+            'telefone_id'=>$telefone_id[0],
+        ]);
+        DB::table('users')->insert([
+            'name'=> 'GerenteGeral',
+            'email'=>'gerenteGeral@gmail.com',
+            'tipo'=>'gerenteGeral',
+            'password'=> bcrypt('123456'),
+            'endereco_id'=>$endereco_id[0],
+            'telefone_id'=>$telefone_id[0],
+        ]);
+
+        DB::table('users')->insert([
+            'name'=> 'Salsicheiro',
+            'email'=>'salsicheiro@gmail.com',
+            'tipo'=>'salsicheiro',
+            'password'=> bcrypt('123456'),
+            'endereco_id'=>$endereco_id[0],
+            'telefone_id'=>$telefone_id[0],
+        ]);
     }
 }

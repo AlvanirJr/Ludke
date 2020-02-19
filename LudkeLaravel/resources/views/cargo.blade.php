@@ -83,7 +83,8 @@
 
         // Usa a biblioteca quicksearch para buscar dados na tabela
         // $('input#inputBusca').quicksearch('table#tabelaCategorias tbody tr');
-
+        var token = <?php json_encode(Auth::user()->api_token); ?>
+        console.log(token);
         $(function(){
 
             // Configuração do ajax com token csrf
@@ -205,7 +206,7 @@
             $("#span").remove(); //remove a linha do span
             if(error){
                 linha = "<span id="+"span"+" style="+"color:red"+">"+error.nome[0]+"</span>";
-                $('.validationCargo').append(linha);                                    
+                $('.validationCargo').append(linha);
                 console.log(error.nome[0]);
             }
         }
