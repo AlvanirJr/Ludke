@@ -192,7 +192,7 @@ class PedidoController extends Controller
     }
 
     public function getPedidos(){
-        $pedidos = Pedido::with(['itensPedidos'])->get();
+        $pedidos = Pedido::with(['itensPedidos'])->orderBy('dataEntrega')->get();
 
         return json_encode($pedidos);
 
