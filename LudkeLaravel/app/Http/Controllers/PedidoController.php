@@ -93,10 +93,25 @@ class PedidoController extends Controller
         if(isset($pedido)){
             $itensPedido = ItensPedido::where("pedido_id",$id)->delete();
             $pedido->delete();
+            return response("Pedido Excluído",200);
 
+        }else{
+            return response('Pedido não encontrado',404);
         }
     }
-
+    // Concluir pedido
+    public function concluirPedido($id){
+        // dd($id);
+        $pedido = Pedido::with(['itensPedidos'])->find($id);
+        // dd($pedido);
+        if(isset($pedido)){
+            $pedido->status = "Finalizado";
+            $pedido->save();
+            return json_encode($pedido);
+        }else{
+            return response('Produto não encontrado',404);
+        }
+    }
     // retorna o cliente através do cpj ou cnpj
     public function getCliente(Request $request){
         $cliente = User::where('name','like','%'.$request->input('nome').'%')->with('cliente')->get();

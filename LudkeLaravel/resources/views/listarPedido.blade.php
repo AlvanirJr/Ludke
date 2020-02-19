@@ -100,32 +100,66 @@
     }
     function montarLinha(pedido){
         var linha = "<tr id="+pedido.id+">" +
-                        "<td><h4>"+pedido.id+"</h4></td>"+
-                        "<td><h4>"+pedido.created_at+"</h4></td>"+
-                        "<td><ul><h4>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
-                        "<td><h4>"+pedido.status+"</h4></td>"+
-                        "<td><h4>"+pedido.dataEntrega+"</h4></td>"+
-                        "<td><h4>"+pedido.valorTotal+"</h4></td>"+
-                        "<td><h4>"+
+                        "<td>"+pedido.id+"</td>"+
+                        "<td>"+pedido.created_at+"</td>"+
+                        "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
+                        "<td>"+pedido.status+"</td>"+
+                        "<td>"+pedido.dataEntrega+"</td>"+
+                        "<td>"+pedido.valorTotal+"</td>"+
+                        "<td>"+
                             "<a href="+"#"+" onclick="+"concluirPedido("+pedido.id+")"+">"+
                                 "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/clipboard-check-solid.svg')}}"+" style="+"width:20px"+">"+
                             "</a>"+                            
                             "<a href="+"#"+" onclick="+"editarPedido("+pedido.id+")"+">"+
-                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px"+">"+
+                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px;margin-right:15px"+">"+
                             "</a>"+
                             "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
-                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"margin-left:15px"+">"+
+                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
                             "</a>"+
-                        "</h4></td>"+
+                        "</td>"+
                     "</tr>";
+        // var linha = "<tr id="+pedido.id+">" +
+        //     "<td><h4>"+pedido.id+"</h4></td>"+
+        //     "<td><h4>"+pedido.created_at+"</h4></td>"+
+        //     "<td><ul><h4>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
+        //     "<td><h4>"+pedido.status+"</h4></td>"+
+        //     "<td><h4>"+pedido.dataEntrega+"</h4></td>"+
+        //     "<td><h4>"+pedido.valorTotal+"</h4></td>"+
+        //     "<td><h4>"+
+        //         "<a href="+"#"+" onclick="+"concluirPedido("+pedido.id+")"+">"+
+        //             "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/clipboard-check-solid.svg')}}"+" style="+"width:20px"+">"+
+        //         "</a>"+                            
+        //         "<a href="+"#"+" onclick="+"editarPedido("+pedido.id+")"+">"+
+        //             "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px;margin-right:15px"+">"+
+        //         "</a>"+
+        //         "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
+        //             "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
+        //         "</a>"+
+        //     "</h4></td>"+
+        // "</tr>";
         return linha;
         
     }
 
     function concluirPedido(id){
-        confirma = confirm("Você deseja cocluir o pedido?");
+        confirma = confirm("Você deseja fechar o pedido?");
         if(confirma){
-            console.log("Pedido Concluído");
+            $.ajax({
+                type:"POST",
+                url: "/pedidos/concluir/"+id,
+                context:this,
+                success: function(data){
+                    var pedido = JSON.parse(data);
+                    console.log("Concluído");
+                    linhas = $("#tabelaPedidos>tbody>tr");
+                    e = linhas.filter(function(i,elemento){
+                        if (elemento.cells[0].textContent == id){
+                            elemento.cells[3].textContent = pedido.status;
+                        }
+                    });
+                    
+                }
+            });
         }
     }
 

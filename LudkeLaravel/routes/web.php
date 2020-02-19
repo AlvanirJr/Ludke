@@ -45,6 +45,7 @@ Route::post('/pedidos/getCliente','PedidoController@getCliente');
 Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
 Route::post('/pedidos/finalizar','PedidoController@finalizarPedido');
 Route::delete('/pedidos/excluir/{id}','PedidoController@destroy');// Deletar um pedido
+Route::post('/pedidos/concluir/{id}','PedidoController@concluirPedido');// Deletar um pedido
 
 Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("listarPedidos");
 Route::get('/getPedidos','PedidoController@getPedidos');

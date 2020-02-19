@@ -19,7 +19,9 @@ input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
 
-
+#tabelaPedidos td{
+    font-size: 22px;
+}
 /* --------- Cards ---------------*/
 #card{
     width: 250px;
