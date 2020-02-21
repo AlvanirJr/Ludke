@@ -223,12 +223,12 @@
         // console.log(pedido.itens_pedidos.length);
                             
         // Atualiza o valor total estimado do pedido
-        subtotal = calcularSubtotal();
-        $("#subtotal").html(subtotal);
+        // subtotal = calcularSubtotal();
+        // $("#subtotal").html(subtotal);
 
         // Calcula o desconto
-        desconto = calcularDesconto();
-        $("#ValorDesconto").html(desconto);
+        // desconto = calcularDesconto();
+        // $("#ValorDesconto").html(desconto);
         
         // Calcula o total
         total = calcularTotal();
@@ -378,7 +378,7 @@
                 // console.log("adicionarProduto()",produto)
                 if(produto){
                         // Adiciona as informações do produto à lista de pedidos
-                        let itemPedido  = [];
+                        // let itemPedido  = [];
                         // itemPedido.push({
                         //     produto_id: produto.id, 
                         //     peso:peso, 
@@ -405,14 +405,14 @@
                         total = calcularTotal();
                         console.log(total);
                         pedido.total = total;
-                        // console.log(pedido);
+                        console.log(pedido);
                         $("#valorTotal").html(total);
                         $("#valorTotal").val(total);
 
 
                         // console.log()
                         limparCamposProduto();
-
+                        
                 }
             });
         }else{
@@ -447,12 +447,12 @@
             
             // Remove Pedidos vindo do banco
             for(var i = 0; i < pedido.itens_pedidos.length; i++){
-                // console.log(i,pedido.itens_pedidos[i].id)
-                // console.log(pedido.itens_pedidos[i])
-                // console.log(pedido.itens_pedidos[i].id )
+                
                 if( pedido.itens_pedidos[i].id == idProduto && pedido.itens_pedidos[i].pesoSolicitado == peso && pedido.itens_pedidos[i].valorReal == valorTotal){
                     var indice = pedido.itens_pedidos.indexOf(pedido.itens_pedidos[i]);
-                    pedido.deletar.push(parseInt(pedido.itens_pedidos[i].id));
+                    // Debita Valor do Pedido
+                    pedido.valorTotal = debitarValor(pedido.itens_pedidos[i].valorReal);
+                    pedido.deletar.push({id:parseInt(pedido.itens_pedidos[i].id),peso:parseFloat(pedido.itens_pedidos[i].pesoSolicitado),valorReal:parseFloat(pedido.itens_pedidos[i].valorReal)});
                     console.log(parseInt(pedido.itens_pedidos[i].id));
                     pedido.itens_pedidos.splice(indice,1)
                     e.remove();
@@ -473,8 +473,8 @@
                 if( pedido.listaProdutos[i].produto_id == idProduto && pedido.listaProdutos[i].peso == peso && pedido.listaProdutos[i].valorTotalItem == valorTotal){
                     console.log(pedido.listaProdutos[i].produto_id, pedido.listaProdutos[i].peso, pedido.listaProdutos[i].valorTotalItem)
                     var indice = pedido.listaProdutos.indexOf(pedido.listaProdutos[i]);
-                    // var push = pedido.listaProdutos[0].push({produto_id:pedido.listaProdutos[i][0].produto_id ,peso:pedido.listaProdutos[i][0].peso,valorTotalItem:pedido.listaProdutos[i][0].valorTotalItem});
-                    // var push = pedido.listaProdutos.push({produto_id:pedido.listaProdutos[i].produto_id ,peso:pedido.listaProdutos[i].peso,valorTotalItem:pedido.listaProdutos[i].valorTotalItem});
+                    // Debita Valor do Pedido
+                    pedido.valorTotal = debitarValor(pedido.listaProdutos[i].valorTotalItem);
                     console.log("INDICE",indice)
                     pedido.listaProdutos.splice(indice,1)
                     e.remove();
@@ -506,9 +506,8 @@
         $("#descricaoProduto").html('');
         $("#categoriaProduto").html('');
     }
-    function calcularSubtotal(){
-        
-        
+    function debitarValor(preco){
+        return parseFloat(pedido.valorTotal) - preco;
     }
     function calcularDesconto(){
         // valor do desconto
@@ -517,9 +516,9 @@
         
         // console.log("calcularDesconto()",desconto)
         
-        subtotal = calcularSubtotal();
+        // subtotal = calcularSubtotal();
 
-        resultado = (subtotal * (desconto/100)).toPrecision();
+        // resultado = (subtotal * (desconto/100)).toPrecision();
         
         $("#ValorDesconto").html(resultado);
         return resultado;
@@ -573,7 +572,7 @@
         }
         else{
             
-            // console.log(pedido)
+            console.log(pedido)
             $.ajax({
                 url: '/pedidos/update/'+pedido.id,
                 method: "PUT",

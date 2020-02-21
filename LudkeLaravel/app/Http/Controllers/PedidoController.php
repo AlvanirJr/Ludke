@@ -94,12 +94,9 @@ class PedidoController extends Controller
     public function update(Request $request, $id)
     {
         
-        // valor total sem desconto
-        $valorTotal = 0;
-        $desconto = 0;
         $pedido = Pedido::find($request->input('id'));
+        $valorTotal = floatval($pedido->valorTotal);
         
-
         // Lista com novos pedidos Adicionados
         $listaProdutos = $request->input('listaProdutos');
         if(isset($listaProdutos)){
@@ -107,16 +104,16 @@ class PedidoController extends Controller
                 $itemPedido = new ItensPedido();
                 $produto = Produto::find($item['produto_id']);
                 if(isset($produto)){
-                    $itemPedido->pesoSolicitado = $item['peso'];
-                    $itemPedido->pesoFinal = $item['peso'];
-                    $itemPedido->valorReal = $produto->preco * $item['peso'];
+                    $itemPedido->pesoSolicitado = floatval($item['peso']);
+                    $itemPedido->pesoFinal = floatval($item['peso']);
+                    $itemPedido->valorReal = floatval($produto->preco * $item['peso']);
                     $itemPedido->nomeProduto = $produto->nome;
                     $itemPedido->produto_id = $produto->id;
                     $itemPedido->pedido_id = $pedido->id;
     
                     $itemPedido->save();
     
-                    $valorTotal += $produto->preco * $item['peso']; //soma ao valor total
+                    $valorTotal += $produto->preco * floatval($item['peso']); //soma ao valor total
                 }
             }
 
@@ -134,8 +131,11 @@ class PedidoController extends Controller
         // dd($deletar);
         if(isset($deletar)){
             for($i = 0; $i < sizeof($deletar); $i++){
-                $itemDeletado = ItensPedido::find(intval($deletar[$i]));
+                $itemDeletado = ItensPedido::find(intval($deletar[$i]['id']));
                 if(isset($itemDeletado)){
+                    
+                    $valorTotal -= floatval($itemDeletado['valorReal']);
+                    // dd($valorTotal);
                     $itemDeletado->delete();
                 }
             }
@@ -146,12 +146,14 @@ class PedidoController extends Controller
                 $itemPedido = ItensPedido::find($item['id']);
                 
                 $produto = Produto::find($item['produto_id']);
-    
+                
                 if(isset($produto)){
-                    $valorTotal += $produto->preco * $item['pesoSolicitado']; 
-                    $itemPedido->pesoSolicitado = $item['pesoSolicitado'];
+                    // dd(floatVal($item['pesoSolicitado']));
+                    // $valorTotal += $produto->preco * floatVal($item['pesoSolicitado']); 
+                    // dd($valorTotal);
+                    $itemPedido->pesoSolicitado = floatval($item['pesoSolicitado']);
                     
-                    $itemPedido->valorReal = $produto->preco * $item['pesoSolicitado'];
+                    $itemPedido->valorReal = $produto->preco * floatVal($item['pesoSolicitado']);
     
                     $itemPedido->save();
                 }
@@ -159,7 +161,10 @@ class PedidoController extends Controller
         }
         
         // Salva o valor total
+
+        
         $pedido->valorTotal = $valorTotal;
+        // dd($valorTotal);
         $pedido->save(); // salva o pedido
         return route('listarPedidos');
     }
