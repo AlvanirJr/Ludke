@@ -255,7 +255,7 @@
 
         // Busca do Produto
         $('#buscaProduto').keyup(function(){
-            var buscaProduto = $(this).val();
+            var buscaProduto = $(this).val().toUpperCase();
             if(buscaProduto.length >= 3){
                 getProdutos(buscaProduto);
             }
@@ -371,25 +371,30 @@
     }
     function adicionarProduto(id){
         
-        peso = parseFloat($("#pesoProduto").val());
-        if(peso && peso>0){
+        pesoProduto = parseFloat($("#pesoProduto").val());
+        if(pesoProduto && pesoProduto>0){
             $.getJSON('/api/produtos/'+id,function(data){
                 produto = data;
                 // console.log("adicionarProduto()",produto)
                 if(produto){
                         // Adiciona as informações do produto à lista de pedidos
                         let itemPedido  = [];
-                        itemPedido.push({
+                        // itemPedido.push({
+                        //     produto_id: produto.id, 
+                        //     peso:peso, 
+                        //     valorTotalItem: calcularTotalItem(produto.preco,peso)
+                        //     });
+                        pedido.listaProdutos.push({
                             produto_id: produto.id, 
-                            peso:peso, 
-                            valorTotalItem: calcularTotalItem(produto.preco,peso)
+                            peso:pesoProduto, 
+                            valorTotalItem: calcularTotalItem(produto.preco,pesoProduto)
                             });
-                        pedido.listaProdutos.push(itemPedido);
+                        console.log("LISTA PRODUTOS",pedido.listaProdutos)
                         // console.log("adicionarProduto()",pedido)
                         
                         
                         // Adiciona linha à tabela
-                        linha = montarLinha(produto,peso);
+                        linha = montarLinha(produto,pesoProduto);
                         $("#tabelaPedidos>tbody").append(linha);
                         cont += 1;
 
@@ -429,7 +434,7 @@
         return linha;
     }
     function removerProduto(idLinha){
-        // console.log("Remover Produto: ",idLinha);
+        console.log("Remover Produto: ",idLinha);
         linhas = $("#tabelaPedidos>tbody>tr");
         e = linhas.filter(function(i,elemento){            
             return elemento.cells[0].textContent == idLinha;
@@ -439,10 +444,12 @@
             idProduto = parseInt(e[0].cells[1].textContent);
             peso = parseFloat(e[0].cells[3].textContent);
             valorTotal = parseFloat(e[0].cells[5].textContent);
-            // console.log("e: ",idProduto,peso,valorTotal)
+            
+            // Remove Pedidos vindo do banco
             for(var i = 0; i < pedido.itens_pedidos.length; i++){
                 // console.log(i,pedido.itens_pedidos[i].id)
                 // console.log(pedido.itens_pedidos[i])
+                // console.log(pedido.itens_pedidos[i].id )
                 if( pedido.itens_pedidos[i].id == idProduto && pedido.itens_pedidos[i].pesoSolicitado == peso && pedido.itens_pedidos[i].valorReal == valorTotal){
                     var indice = pedido.itens_pedidos.indexOf(pedido.itens_pedidos[i]);
                     pedido.deletar.push(parseInt(pedido.itens_pedidos[i].id));
@@ -452,6 +459,28 @@
 
                     // Atualiza o numero de itens
                     $("#qtdItens").html(pedido.itens_pedidos.length);
+                    
+                    // Calcula o total
+                    total = calcularTotal();
+                    pedido.total = total;
+                    // console.log(pedido);
+                    $("#valorTotal").html(total);
+                    $("#valorTotal").val(total);
+                }
+            }
+            // Remove pedidos adicionados durante a edição
+            for(var i = 0; i < pedido.listaProdutos.length; i++){
+                if( pedido.listaProdutos[i].produto_id == idProduto && pedido.listaProdutos[i].peso == peso && pedido.listaProdutos[i].valorTotalItem == valorTotal){
+                    console.log(pedido.listaProdutos[i].produto_id, pedido.listaProdutos[i].peso, pedido.listaProdutos[i].valorTotalItem)
+                    var indice = pedido.listaProdutos.indexOf(pedido.listaProdutos[i]);
+                    // var push = pedido.listaProdutos[0].push({produto_id:pedido.listaProdutos[i][0].produto_id ,peso:pedido.listaProdutos[i][0].peso,valorTotalItem:pedido.listaProdutos[i][0].valorTotalItem});
+                    // var push = pedido.listaProdutos.push({produto_id:pedido.listaProdutos[i].produto_id ,peso:pedido.listaProdutos[i].peso,valorTotalItem:pedido.listaProdutos[i].valorTotalItem});
+                    console.log("INDICE",indice)
+                    pedido.listaProdutos.splice(indice,1)
+                    e.remove();
+
+                    // Atualiza o numero de itens
+                    $("#qtdItens").html(pedido.listaProdutos.length);
                     
                     // Calcula o total
                     total = calcularTotal();
@@ -505,7 +534,7 @@
         }
         console.log("TOTAL: ",total)
         for(i = 0; i < pedido.listaProdutos.length; i++){
-            total += parseFloat(pedido.listaProdutos[i][0].valorTotalItem)
+            total += parseFloat(pedido.listaProdutos[i].valorTotalItem)
         }
         
         return total;

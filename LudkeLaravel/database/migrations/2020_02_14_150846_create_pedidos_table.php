@@ -17,7 +17,6 @@ class CreatePedidosTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('formaPagamento')->nullable();
-            $table->float('desconto');
             $table->date('dataEntrega');
             $table->float('valorTotal');
             $table->string('status');

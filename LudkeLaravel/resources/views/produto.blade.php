@@ -357,11 +357,11 @@
         // console.log(imagensProduto);
 
         prod = {
-            nome: $('#nomeProduto').val(), 
+            nome: $('#nomeProduto').val().toUpperCase(), 
             validade: $('#validadeProduto').val(), 
             preco: $('#precoProduto').val(), 
-            descricao: $('#descricaoProduto').val(), 
-            categoria_id: $('#categoriaProduto').val(),
+            descricao: $('#descricaoProduto').val().toUpperCase(), 
+            categoria_id: $('#categoriaProduto').val().toUpperCase(),
             // fotosProduto: imagensProduto
         };
         console.log(prod);
@@ -447,11 +447,11 @@
         // cria um objeto com os dados do form
         prod = {
             id: $('#id').val(),
-            nome: $('#nomeProduto').val(), 
+            nome: $('#nomeProduto').val().toUpperCase(), 
             validade: $('#validadeProduto').val(), 
             preco: $('#precoProduto').val(), 
-            descricao: $('#descricaoProduto').val(), 
-            categoria_id: $('#categoriaProduto').val(),
+            descricao: $('#descricaoProduto').val().toUpperCase(), 
+            categoria_id: $('#categoriaProduto').val().toUpperCase(),
             arrayIdsDeletarFotos: arrayIdsDeletarFotos,
             // imagensProduto: imagensProduto
         };

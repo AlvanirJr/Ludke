@@ -42,6 +42,7 @@ Route::get('/pedidos','PedidoController@index')->name('pedidos');
 
 // ROTAS PARA O PEDIDO
 Route::post('/pedidos/getCliente','PedidoController@getCliente');
+Route::post('/pedidos/buscaCliente/{id}','PedidoController@buscaCliente');
 Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
 Route::post('/pedidos/finalizar','PedidoController@finalizarPedido');
 Route::delete('/pedidos/excluir/{id}','PedidoController@destroy');// Deletar um pedido
@@ -60,11 +61,12 @@ use App\User;
 use App\Pedido;
 Route::get('/teste',function(){
     $users = User::with('cliente')->get();
+    $cliente = Cliente::with('user')->get();
     $produtos = Produto::with('categoria')->find(1);
     $categoria = Categoria::with('produtos')->get();
     $pedidos = Pedido::with(['itensPedidos'])->get();
 
-    return json_encode($pedidos);
+    return json_encode($users[2]->cliente);
 
     // return $pedidos;
 });

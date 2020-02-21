@@ -105,18 +105,18 @@ class PedidoController extends Controller
         if(isset($listaProdutos)){
             foreach($request->input('listaProdutos') as $item){
                 $itemPedido = new ItensPedido();
-                $produto = Produto::find($item[0]['produto_id']);
+                $produto = Produto::find($item['produto_id']);
                 if(isset($produto)){
-                    $itemPedido->pesoSolicitado = $item[0]['peso'];
-                    $itemPedido->pesoFinal = $item[0]['peso'];
-                    $itemPedido->valorReal = $produto->preco * $item[0]['peso'];
+                    $itemPedido->pesoSolicitado = $item['peso'];
+                    $itemPedido->pesoFinal = $item['peso'];
+                    $itemPedido->valorReal = $produto->preco * $item['peso'];
                     $itemPedido->nomeProduto = $produto->nome;
                     $itemPedido->produto_id = $produto->id;
                     $itemPedido->pedido_id = $pedido->id;
     
                     $itemPedido->save();
     
-                    $valorTotal += $produto->preco * $item[0]['peso']; //soma ao valor total
+                    $valorTotal += $produto->preco * $item['peso']; //soma ao valor total
                 }
             }
 
@@ -140,21 +140,24 @@ class PedidoController extends Controller
                 }
             }
         }
-
-        foreach($request->input('itens_pedidos') as $item){
-            $itemPedido = ItensPedido::find($item['id']);
-            
-            $produto = Produto::find($item['produto_id']);
-
-            if(isset($produto)){
-                $valorTotal += $produto->preco * $item['pesoSolicitado']; 
-                $itemPedido->pesoSolicitado = $item['pesoSolicitado'];
+        $itens_pedidos = $request->input('itens_pedidos');
+        if(isset($itens_pedidos)){
+            foreach($request->input('itens_pedidos') as $item){
+                $itemPedido = ItensPedido::find($item['id']);
                 
-                $itemPedido->valorReal = $produto->preco * $item['pesoSolicitado'];
-
-                $itemPedido->save();
+                $produto = Produto::find($item['produto_id']);
+    
+                if(isset($produto)){
+                    $valorTotal += $produto->preco * $item['pesoSolicitado']; 
+                    $itemPedido->pesoSolicitado = $item['pesoSolicitado'];
+                    
+                    $itemPedido->valorReal = $produto->preco * $item['pesoSolicitado'];
+    
+                    $itemPedido->save();
+                }
             }
         }
+        
         // Salva o valor total
         $pedido->valorTotal = $valorTotal;
         $pedido->save(); // salva o pedido
@@ -196,7 +199,15 @@ class PedidoController extends Controller
     }
     // retorna o cliente através do cpj ou cnpj
     public function getCliente(Request $request){
-        $cliente = User::where('name','like','%'.$request->input('nome').'%')->with('cliente')->get();
+        $user = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')->get();
+        $cliente = [];
+        for($i = 0; $i < count($user); $i++){
+            if($user[$i]->cliente != null){
+                array_push($cliente,[
+                    "name"=>$user[$i]->name,"cliente_id"=>$user[$i]->cliente->id
+                    ]);
+            }
+        }        
         if(isset($cliente)){
             // dd($cliente);
             return json_encode($cliente);
@@ -205,7 +216,15 @@ class PedidoController extends Controller
             return resonse('Cliente não encontrado', 404);
         }
     }
-
+    
+    public function buscaCliente($id){
+        // dd($id);
+        $c = Cliente::with(['user'])->find($id);
+        // dd($cliente);
+        $cliente['id'] = $c->id;
+        $cliente['nome'] = $c->user->name;
+        return json_encode($cliente);
+    }
     public function getProdutos(Request $request){
         $produtos = Produto::where('nome','like','%'.$request->input('nome').'%')->get();
         // dd($produtos);
@@ -241,11 +260,10 @@ class PedidoController extends Controller
         }
         $pedido = new Pedido();
         // valcula o desconto no valor total
-        $valorTotal = $valorTotal - floatval($request->input('valorDesconto'));
         $pedido->valorTotal = $valorTotal;
         
         $pedido->formaPagamento = "";
-        $pedido->desconto = floatval($request->input('valorDesconto'));
+        // $pedido->desconto = floatval($request->input('valorDesconto'));
         $pedido->dataEntrega = $request->input('dataEntrega');
         $pedido->status = "Aberto";
         $pedido->cliente_id = $cliente->id;

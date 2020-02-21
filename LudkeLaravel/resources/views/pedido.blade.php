@@ -160,14 +160,6 @@
                                         <div class="col-sm-4">
                                             <label for="">Número de Itens</label>
                                             <h4 id="qtdItens"></h4>
-                                            
-                                            <label>Desconto</label>
-                                            <div class="input-group">
-                                                <input id="inputDesconto" step="0.01" value=0 type="number" class="form-control" placeholder="Desconto">
-                                                <div class="input-group-append">
-                                                  <span class="input-group-text" id="basic-addon2">%</span>
-                                                </div>
-                                              </div>
 
                                               <label>Data de Entrega</label>
                                             <div class="input-group">
@@ -175,13 +167,7 @@
                                                 
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
-                                            <label for="">Subtotal</label>
-                                            <h4 id="subtotal"></h4>
-
-                                            <label for="">Valor Desconto</label>
-                                            <h4 id="ValorDesconto"></h4>
-                                        </div>
+                                        
                                         <div class="col-sm-5">
                                             <label for="">Total</label>
                                             <h1 id="valorTotal" value=""></h1>
@@ -225,7 +211,7 @@
 
         // Busca de Cliente
         $("#buscaCliente").keyup(function(){
-            var buscaCliente = $(this).val();
+            var buscaCliente = $(this).val().toUpperCase();
             if(buscaCliente.length >= 3){
                 getCliente(buscaCliente);
             }else{
@@ -236,12 +222,13 @@
         // Clicar no link dos clientes
         $('body').on('click', "#resultadoBuscaCliente a", function(){
             idCliente = $(this).children().val(); //id do produto
+            // console.log(idCliente)
             buscaCliente(idCliente);
         });
 
         // Busca do Produto
         $('#buscaProduto').keyup(function(){
-            var buscaProduto = $(this).val();
+            var buscaProduto = $(this).val().toUpperCase();
             if(buscaProduto.length >= 3){
                 getProdutos(buscaProduto);
             }
@@ -304,14 +291,14 @@
             data: {nome: nomeCliente},
             success: function(data){
                 cliente = JSON.parse(data)
-                // console.log(cliente);
                 
                 // limpa os links da lista com os produtos retornados em tempo real
                 $('#resultadoBuscaCliente').children().remove();
                 for(let i = 0; i < cliente.length; i++){
 
+                    console.log(cliente[i]);
                     let linha = "<a "+"href="+"#"+">"+
-                                    "<li value="+cliente[i].cliente.id+" class="+"list-group-item itemLista"+">"+cliente[i].name+"</li>"+
+                                    "<li value="+cliente[i].cliente_id+" class="+"list-group-item itemLista"+">"+cliente[i].name+"</li>"+
                                 "</a>";
                     $('#resultadoBuscaCliente').append(linha);
                 }
@@ -328,10 +315,11 @@
     }
     function buscaCliente(id){
         $.ajax({
-            url:'/api/clientes/'+id,
-            method:"GET",
+            url:'/pedidos/buscaCliente/'+id,
+            method:"POST",
             success: function(data){
                 cliente = JSON.parse(data);
+                console.log(cliente);
                 // Adiciona ao objeto Pedido o id do cliente
                 pedido.cliente_id = cliente.id;
                 $("#nomeCliente").html(cliente.nome);
@@ -432,14 +420,6 @@
                         // Atualiza o numero de itens
                         $("#qtdItens").html(pedido.listaProdutos.length);
                         
-                        
-                        // Atualiza o valor total estimado do pedido
-                        subtotal = calcularSubtotal();
-                        $("#subtotal").html(subtotal);
-
-                        // Calcula o desconto
-                        desconto = calcularDesconto();
-                        $("#ValorDesconto").html(desconto);
                         
                         // Calcula o total
                         total = calcularTotal();
@@ -554,11 +534,12 @@
         
     }
     function calcularTotal(){
-        subtotal = calcularSubtotal();
-        desconto = calcularDesconto();
-
-        resultado = subtotal - desconto;
-        return resultado;
+        var total = 0;
+        var listaProdutos = pedido.listaProdutos;
+        for(i = 0; i < listaProdutos.length; i++){
+            total += listaProdutos[i][0].valorTotalItem;
+        }
+        return total;
     }
     function calcularPrecoProduto(peso){
         if(peso>0){
@@ -576,8 +557,6 @@
         $("#inputDesconto").val(0);
         $("#inputDataEntrega").val('');
         $("#valorTotal").html(0);
-        $("#subtotal").html(0);
-        $("#ValorDesconto").html(0);
         $("#qtdItens").html(0);
         $("#valorTotal").val(0);
 
