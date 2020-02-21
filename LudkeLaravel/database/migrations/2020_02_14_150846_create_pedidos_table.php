@@ -16,7 +16,7 @@ class CreatePedidosTable extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('formaPagamento');
+            $table->string('formaPagamento')->nullable();
             $table->float('desconto');
             $table->date('dataEntrega');
             $table->float('valorTotal');

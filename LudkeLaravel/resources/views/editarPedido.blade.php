@@ -11,27 +11,28 @@
                 <div class="col-sm-12">
                     {{-- Card Cliente --}}
                     <div id="cardCliente" class="card card-pedidos">
-                        <div class="card-header">Cliente</div>
+                        {{-- <div class="card-header">Cliente</div> --}}
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <input type="hidden" id="cliente_id">
-                                                <input id="buscaCliente" type="text" class="form-control" placeholder="Nome do Cliente" autofocus>
-                                                {{-- lista de clientes retornados da busca--}}
-                                                <ul id="resultadoBuscaCliente" class="list-group"></ul>
-                                            </div>
-                                            
-                                        </div>
-                                        </div>
+                                    <label>Cliente</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label>Nome</label>
-                                    <h4 id="nomeCliente"></h4>
+                                    <h3>{{$pedido->nomeCliente}}</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Funcionário Responsável</label>
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3>{{$pedido->nomeFuncionario}}</h3>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -104,10 +105,10 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Pedido</a>
+                    <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Edição</a>
                 </div>
                 <div class="col-sm-6">
-                    <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Concluir Pedido</a>
+                    <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Finalizar Edição</a>
                 </div>
             </div>
 
@@ -161,27 +162,15 @@
                                             <label for="">Número de Itens</label>
                                             <h4 id="qtdItens"></h4>
                                             
-                                            <label>Desconto</label>
-                                            <div class="input-group">
-                                                <input id="inputDesconto" step="0.01" value=0 type="number" class="form-control" placeholder="Desconto">
-                                                <div class="input-group-append">
-                                                  <span class="input-group-text" id="basic-addon2">%</span>
-                                                </div>
-                                              </div>
+                                            
 
                                               <label>Data de Entrega</label>
                                             <div class="input-group">
-                                                <input id="inputDataEntrega" type="date" class="form-control">
+                                                <input id="inputDataEntrega" value="{{$pedido->dataEntrega}}" type="date" class="form-control">
                                                 
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
-                                            <label for="">Subtotal</label>
-                                            <h4 id="subtotal"></h4>
-
-                                            <label for="">Valor Desconto</label>
-                                            <h4 id="ValorDesconto"></h4>
-                                        </div>
+                                        
                                         <div class="col-sm-5">
                                             <label for="">Total</label>
                                             <h1 id="valorTotal" value=""></h1>
@@ -204,10 +193,51 @@
 <script>
     
     // Objeto contendo as informações do pedido 
-    var pedido = {
-        listaProdutos : [],
-    }
+    var pedido = <?php echo $pedido ?>;
+    pedido.deletar = [];
+    pedido.listaProdutos = [];
+    console.log(pedido);
     var cont = 1;
+
+    function carregaProdutos(){
+        // Carrega os produtos na tela
+        for(let i = 0; i < pedido.itens_pedidos.length; i++){
+            linha = "<tr>"+
+                        "<td><strong>"+(cont)+"</strong></td>"+
+                        "<td value="+pedido.itens_pedidos[i].id+">"+pedido.itens_pedidos[i].id+"</td>"+
+                        "<td>"+pedido.itens_pedidos[i].nomeProduto+"</td>"+
+                        "<td value="+pedido.itens_pedidos[i].pesoSolicitado+">"+pedido.itens_pedidos[i].pesoSolicitado+"</td>"+
+                        "<td>"+pedido.itens_pedidos[i].precoProduto+"</td>"+
+                        "<td value="+pedido.itens_pedidos[i].valorReal+" class="+"precoCalculado"+">"+pedido.itens_pedidos[i].valorReal+"</td>"+
+                        "<td><a href="+"#"+" onclick="+"removerProduto("+cont+")"+">"+
+                            "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:18px"+">"+
+                        "</a></td>"+
+                    "</tr>";
+            
+            // montarLinha(pedido.itens_pedidos[i],pedido.itens_pedidos[i].pesoSolicitado)
+            $("#tabelaPedidos>tbody").append(linha);
+            cont += 1;
+        }
+        // Atualiza o numero de itens
+        $("#qtdItens").html(pedido.itens_pedidos.length);
+        // console.log(pedido.itens_pedidos.length);
+                            
+        // Atualiza o valor total estimado do pedido
+        subtotal = calcularSubtotal();
+        $("#subtotal").html(subtotal);
+
+        // Calcula o desconto
+        desconto = calcularDesconto();
+        $("#ValorDesconto").html(desconto);
+        
+        // Calcula o total
+        total = calcularTotal();
+        pedido.total = total;
+        // console.log(pedido);
+        $("#valorTotal").html(total);
+        $("#valorTotal").val(total);
+    }
+    
 
     $(function(){
         // Configuração do ajax com token csrf
@@ -216,28 +246,12 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        
+        carregaProdutos();
         // Valor Total e num itens
-        $("#valorTotal").html(0);
+        // $("#valorTotal").html(0);
         $("#subtotal").html(0);
         $("#ValorDesconto").html(0);
-        $("#qtdItens").html(0);
-
-        // Busca de Cliente
-        $("#buscaCliente").keyup(function(){
-            var buscaCliente = $(this).val();
-            if(buscaCliente.length >= 3){
-                getCliente(buscaCliente);
-            }else{
-                $('#resultadoBuscaCliente').children().remove();
-            }
-        });
-
-        // Clicar no link dos clientes
-        $('body').on('click', "#resultadoBuscaCliente a", function(){
-            idCliente = $(this).children().val(); //id do produto
-            buscaCliente(idCliente);
-        });
+        // $("#qtdItens").html(0);
 
         // Busca do Produto
         $('#buscaProduto').keyup(function(){
@@ -289,62 +303,12 @@
         });
         // Finalizar Pedido
         $("#btnFinalizarPedido").click(function(){
-            confirma = confirm("Você deseja finalizar o pedido?");
+            confirma = confirm("Você deseja finalizar a edição do pedido?");
             if(confirma){      
                 montarPedido();
             }
         });
     });
-    
-    function getCliente(nomeCliente){
-        $.ajax({
-            type: "POST",
-            url: "/pedidos/getCliente",
-            context: this,
-            data: {nome: nomeCliente},
-            success: function(data){
-                cliente = JSON.parse(data)
-                // console.log(cliente);
-                
-                // limpa os links da lista com os produtos retornados em tempo real
-                $('#resultadoBuscaCliente').children().remove();
-                for(let i = 0; i < cliente.length; i++){
-
-                    let linha = "<a "+"href="+"#"+">"+
-                                    "<li value="+cliente[i].cliente.id+" class="+"list-group-item itemLista"+">"+cliente[i].name+"</li>"+
-                                "</a>";
-                    $('#resultadoBuscaCliente').append(linha);
-                }
-                
-                // console.log("getCliente()",pedido);
-                // $('#cliente_id').val(cliente[0].id);
-                
-                
-            },
-            error: function(error){
-                console.log(error);
-            }
-        });
-    }
-    function buscaCliente(id){
-        $.ajax({
-            url:'/api/clientes/'+id,
-            method:"GET",
-            success: function(data){
-                cliente = JSON.parse(data);
-                // Adiciona ao objeto Pedido o id do cliente
-                pedido.cliente_id = cliente.id;
-                $("#nomeCliente").html(cliente.nome);
-                $("#buscaCliente").val(cliente.nome);
-                // console.log("buscaCliente()",pedido)
-                // limpa os links da lista com os produtos retornados em tempo real
-                $('#resultadoBuscaCliente').children().remove();
-            },
-            error: function(error){
-                console.log(error);
-            }
-        });
-    }
 
     function getProdutos(buscaProduto){
 
@@ -431,18 +395,10 @@
 
                         // Atualiza o numero de itens
                         $("#qtdItens").html(pedido.listaProdutos.length);
-                        
-                        
-                        // Atualiza o valor total estimado do pedido
-                        subtotal = calcularSubtotal();
-                        $("#subtotal").html(subtotal);
-
-                        // Calcula o desconto
-                        desconto = calcularDesconto();
-                        $("#ValorDesconto").html(desconto);
-                        
+                   
                         // Calcula o total
                         total = calcularTotal();
+                        console.log(total);
                         pedido.total = total;
                         // console.log(pedido);
                         $("#valorTotal").html(total);
@@ -459,7 +415,6 @@
         }
     }
     function montarLinha(produto,peso){
-        
         linha = "<tr>"+
                     "<td><strong>"+(cont)+"</strong></td>"+
                     "<td value="+produto.id+">"+produto.id+"</td>"+
@@ -485,24 +440,18 @@
             peso = parseFloat(e[0].cells[3].textContent);
             valorTotal = parseFloat(e[0].cells[5].textContent);
             // console.log("e: ",idProduto,peso,valorTotal)
-            for(var i = 0; i < pedido.listaProdutos.length; i++){
-                // console.log(i,pedido.listaProdutos[i][0])
-                if( pedido.listaProdutos[i][0].produto_id == idProduto && pedido.listaProdutos[i][0].peso == peso && pedido.listaProdutos[i][0].valorTotalItem == valorTotal
-                ){
-                    var indice = pedido.listaProdutos.indexOf(pedido.listaProdutos[i]);
-                    pedido.listaProdutos.splice(indice,1)
+            for(var i = 0; i < pedido.itens_pedidos.length; i++){
+                // console.log(i,pedido.itens_pedidos[i].id)
+                // console.log(pedido.itens_pedidos[i])
+                if( pedido.itens_pedidos[i].id == idProduto && pedido.itens_pedidos[i].pesoSolicitado == peso && pedido.itens_pedidos[i].valorReal == valorTotal){
+                    var indice = pedido.itens_pedidos.indexOf(pedido.itens_pedidos[i]);
+                    pedido.deletar.push(parseInt(pedido.itens_pedidos[i].id));
+                    console.log(parseInt(pedido.itens_pedidos[i].id));
+                    pedido.itens_pedidos.splice(indice,1)
                     e.remove();
 
                     // Atualiza o numero de itens
-                    $("#qtdItens").html(pedido.listaProdutos.length);
-                        
-                    // Atualiza o valor total estimado do pedido
-                    subtotal = calcularSubtotal();
-                    $("#subtotal").html(subtotal);
-
-                    // Calcula o desconto
-                    desconto = calcularDesconto();
-                    $("#ValorDesconto").html(desconto);
+                    $("#qtdItens").html(pedido.itens_pedidos.length);
                     
                     // Calcula o total
                     total = calcularTotal();
@@ -512,7 +461,7 @@
                     $("#valorTotal").val(total);
                 }
             }
-            // console.log(pedido)
+            console.log(pedido)
         }
     }
 
@@ -529,13 +478,7 @@
         $("#categoriaProduto").html('');
     }
     function calcularSubtotal(){
-        // percorre a lista de produtos calculando o subtotal
-        var subtotal = 0;
-        var listaProdutos = pedido.listaProdutos;
-        for(i = 0; i < listaProdutos.length; i++){
-            subtotal += listaProdutos[i][0].valorTotalItem;
-        }
-        return subtotal;
+        
         
     }
     function calcularDesconto(){
@@ -554,11 +497,19 @@
         
     }
     function calcularTotal(){
-        subtotal = calcularSubtotal();
-        desconto = calcularDesconto();
-
-        resultado = subtotal - desconto;
-        return resultado;
+        // percorre a lista de produtos calculando o subtotal
+        var total = 0;
+        var listaProdutos = pedido.itens_pedidos;
+        for(i = 0; i < listaProdutos.length; i++){
+            total += parseFloat(listaProdutos[i].valorReal);
+        }
+        console.log("TOTAL: ",total)
+        for(i = 0; i < pedido.listaProdutos.length; i++){
+            total += parseFloat(pedido.listaProdutos[i][0].valorTotalItem)
+        }
+        
+        return total;
+        
     }
     function calcularPrecoProduto(peso){
         if(peso>0){
@@ -569,42 +520,21 @@
         
     }
     function limparTela(){
-        $("#cliente_id").val(0);
-        $('#nomeCliente').html("");
-        $("#buscaCliente").val("");
-        $("#qtdItens").html("");
-        $("#inputDesconto").val(0);
-        $("#inputDataEntrega").val('');
-        $("#valorTotal").html(0);
-        $("#subtotal").html(0);
-        $("#ValorDesconto").html(0);
-        $("#qtdItens").html(0);
-        $("#valorTotal").val(0);
-
-        pedido = {
-            listaProdutos : [],
-        }
-
-        limparCamposProduto();
-        $("#tabelaPedidos>tbody").html('');
+        
     }
     function montarPedido(){
         
         
-        pedido.desconto = parseFloat($("#inputDesconto").val());
+        pedido.desconto = 0;
 
-        pedido.valorDesconto = parseFloat(calcularDesconto());
+        pedido.valorDesconto = 0;
         pedido.dataEntrega = $("#inputDataEntrega").val();
-        
-        // console.log("montarPedido()",pedido)
 
-
-        
         if(!pedido.cliente_id){
             alert("Selecione o cliente para concluir o pedido!");
             return;
         }
-        if(pedido.listaProdutos.length == 0 && pedido.total == 0){
+        if(pedido.itens_pedidos.length == 0 && pedido.total == 0){
             alert("Selecione um ou mais produtos para concluir o pedido!");
             return;
         }
@@ -616,15 +546,13 @@
             
             // console.log(pedido)
             $.ajax({
-                url: '/pedidos/finalizar',
-                method: "POST",
+                url: '/pedidos/update/'+pedido.id,
+                method: "PUT",
                 data: pedido,
                 context: this,
                 success: function(data){
-                    msg = JSON.parse(data);
-                    if(msg.success == true){
-                        limparTela();
-                    }
+                    console.log("Sucesso!!!")
+                    window.location.href = '/pedidos/listar';
                 },
                 error: function(error){
                     console.log(error);

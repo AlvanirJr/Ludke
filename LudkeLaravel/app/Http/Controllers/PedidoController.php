@@ -54,7 +54,7 @@ class PedidoController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -65,7 +65,23 @@ class PedidoController extends Controller
      */
     public function edit($id)
     {
-        //
+        $pedido = Pedido::with(['itensPedidos'])->find($id);
+        if(isset($pedido)){
+            for($i = 0; $i< count($pedido->itensPedidos); $i++){
+                $produto = Produto::find($pedido->itensPedidos[$i]->produto_id);
+                $pedido->itensPedidos[$i]["precoProduto"] = $produto->preco;
+            }
+            $cliente = Cliente::with('user')->find($pedido->cliente_id);
+            $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
+            
+            // $pedido["valorProduto"]= $produto->preco;
+            $pedido["nomeCliente"] = $cliente->user->name;
+            $pedido["nomeFuncionario"] = $funcionario->user->name;
+
+            
+            return view('editarPedido')->with(["pedido"=>$pedido]);
+        }
+        
     }
 
     /**
@@ -77,7 +93,72 @@ class PedidoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+        // valor total sem desconto
+        $valorTotal = 0;
+        $desconto = 0;
+        $pedido = Pedido::find($request->input('id'));
+        
+
+        // Lista com novos pedidos Adicionados
+        $listaProdutos = $request->input('listaProdutos');
+        if(isset($listaProdutos)){
+            foreach($request->input('listaProdutos') as $item){
+                $itemPedido = new ItensPedido();
+                $produto = Produto::find($item[0]['produto_id']);
+                if(isset($produto)){
+                    $itemPedido->pesoSolicitado = $item[0]['peso'];
+                    $itemPedido->pesoFinal = $item[0]['peso'];
+                    $itemPedido->valorReal = $produto->preco * $item[0]['peso'];
+                    $itemPedido->nomeProduto = $produto->nome;
+                    $itemPedido->produto_id = $produto->id;
+                    $itemPedido->pedido_id = $pedido->id;
+    
+                    $itemPedido->save();
+    
+                    $valorTotal += $produto->preco * $item[0]['peso']; //soma ao valor total
+                }
+            }
+
+        }
+
+        // forma de pagamento só é definida na conclusão do pedido
+        
+        $pedido->dataEntrega = $request->input('dataEntrega');
+        $pedido->status = "Aberto";
+        
+        
+        
+        // deleta itens
+        $deletar = $request->input('deletar');
+        // dd($deletar);
+        if(isset($deletar)){
+            for($i = 0; $i < sizeof($deletar); $i++){
+                $itemDeletado = ItensPedido::find(intval($deletar[$i]));
+                if(isset($itemDeletado)){
+                    $itemDeletado->delete();
+                }
+            }
+        }
+
+        foreach($request->input('itens_pedidos') as $item){
+            $itemPedido = ItensPedido::find($item['id']);
+            
+            $produto = Produto::find($item['produto_id']);
+
+            if(isset($produto)){
+                $valorTotal += $produto->preco * $item['pesoSolicitado']; 
+                $itemPedido->pesoSolicitado = $item['pesoSolicitado'];
+                
+                $itemPedido->valorReal = $produto->preco * $item['pesoSolicitado'];
+
+                $itemPedido->save();
+            }
+        }
+        // Salva o valor total
+        $pedido->valorTotal = $valorTotal;
+        $pedido->save(); // salva o pedido
+        return route('listarPedidos');
     }
 
     /**
@@ -193,7 +274,7 @@ class PedidoController extends Controller
     }
 
     public function getPedidos(){
-        $pedidos = Pedido::with(['itensPedidos','cliente','funcionario'])->orderBy('dataEntrega')->get();
+        $pedidos = Pedido::with(['itensPedidos'])->orderBy('dataEntrega')->get();
         $size = sizeof($pedidos);
         for($i = 0; $i < $size; $i++){
             $cliente = Cliente::with('user')->find($pedidos[$i]->cliente_id);

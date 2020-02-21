@@ -49,6 +49,9 @@ Route::post('/pedidos/concluir/{id}','PedidoController@concluirPedido');// Delet
 
 Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("listarPedidos");
 Route::get('/getPedidos','PedidoController@getPedidos');
+Route::get('/pedidos/edit/{id}','PedidoController@edit')->name('pedido.editar'); //Editar Pedido
+Route::put('/pedidos/update/{id}','PedidoController@update');
+
 // Rotas para testar banco
 use App\Produto;
 use App\Categoria;
