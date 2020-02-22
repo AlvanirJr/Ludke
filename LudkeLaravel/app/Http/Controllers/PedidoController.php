@@ -122,7 +122,7 @@ class PedidoController extends Controller
         // forma de pagamento só é definida na conclusão do pedido
         
         $pedido->dataEntrega = $request->input('dataEntrega');
-        $pedido->status = "Aberto";
+        $pedido->status = "ABERTO";
         
         
         
@@ -191,16 +191,23 @@ class PedidoController extends Controller
     }
     // Concluir pedido
     public function concluirPedido($id){
-        // dd($id);
         $pedido = Pedido::with(['itensPedidos'])->find($id);
-        // dd($pedido);
         if(isset($pedido)){
-            $pedido->status = "Finalizado";
-            $pedido->save();
-            return json_encode($pedido);
-        }else{
-            return response('Produto não encontrado',404);
+            for($i = 0; $i< count($pedido->itensPedidos); $i++){
+                $produto = Produto::find($pedido->itensPedidos[$i]->produto_id);
+                $pedido->itensPedidos[$i]["precoProduto"] = $produto->preco;
+            }
+            $cliente = Cliente::with('user')->find($pedido->cliente_id);
+            $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
+            
+            // $pedido["valorProduto"]= $produto->preco;
+            $pedido["nomeCliente"] = $cliente->user->name;
+            $pedido["nomeFuncionario"] = $funcionario->user->name;
+            // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
+            
+            return view('finalizarPedido')->with(["pedido"=>$pedido]);
         }
+        
     }
     // retorna o cliente através do cpj ou cnpj
     public function getCliente(Request $request){
@@ -270,7 +277,7 @@ class PedidoController extends Controller
         $pedido->formaPagamento = "";
         // $pedido->desconto = floatval($request->input('valorDesconto'));
         $pedido->dataEntrega = $request->input('dataEntrega');
-        $pedido->status = "Aberto";
+        $pedido->status = "ABERTO";
         $pedido->cliente_id = $cliente->id;
         $pedido->funcionario_id = Auth::user()->id; //salvando o user_id do funcionario
         
@@ -308,5 +315,26 @@ class PedidoController extends Controller
         }
         return json_encode($pedidos);
 
+    }
+    public function concluirPedidoPesoFinal(Request $request){
+        $pedido = Pedido::with(['itensPedidos'])->find($request->input('pedido_id'));
+        $valorTotal = 0;
+        foreach($pedido->itensPedidos as $item){
+            $validator = $request->validate([
+                'pesoFinal'.$item->id => 'required',
+            ]);
+            
+            $produto = Produto::find($item->produto_id);
+            $item->pesoFinal = floatval($request->input('pesoFinal'.$item->id));
+            $item->valorReal = floatval($item->pesoFinal * $produto->preco);
+            $valorTotal += floatval($item->valorReal);
+            $item->save();
+        }
+        $pedido->valorTotal = $valorTotal;
+        $pedido->status = "FINALIZADO";
+
+        // dd($pedido);
+        $pedido->save();
+        return view('listarPedido');
     }
 }

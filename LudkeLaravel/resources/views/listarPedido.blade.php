@@ -158,73 +158,47 @@
         });
     }
     function montarLinha(pedido){
-        var linha = "<tr id="+pedido.id+">" +
-                        "<td>"+pedido.id+"</td>"+
-                        "<td>"+pedido.nomeCliente+"</td>"+
-                        "<td>"+pedido.nomeFuncionario+"</td>"+
-                        "<td>"+pedido.dataEntrega+"</td>"+
-                        "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
-                        "<td>"+pedido.status+"</td>"+
-                        "<td>"+pedido.valorTotal+"</td>"+
-                        "<td>"+
-                            "<a href="+"#"+" onclick="+"concluirPedido("+pedido.id+")"+">"+
-                                "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/clipboard-check-solid.svg')}}"+" style="+"width:20px"+">"+
-                            "</a>"+                            
-                            "<a href="+"/pedidos/edit/"+pedido.id+">"+
-                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px;margin-right:15px"+">"+
-                            "</a>"+
-                            "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
-                                "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
-                            "</a>"+
-                        "</td>"+
-                    "</tr>";
+        if(pedido.status != "FINALIZADO"){
+            var linha = "<tr id="+pedido.id+">" +
+                            "<td>"+pedido.id+"</td>"+
+                            "<td>"+pedido.nomeCliente+"</td>"+
+                            "<td>"+pedido.nomeFuncionario+"</td>"+
+                            "<td>"+pedido.dataEntrega+"</td>"+
+                            "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
+                            "<td>"+pedido.status+"</td>"+
+                            "<td>R$ "+pedido.valorTotal+"</td>"+
+                            "<td>"+
+                                "<a href="+"/pedidos/concluir/"+pedido.id+">"+
+                                    "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/clipboard-check-solid.svg')}}"+" style="+"width:20px"+">"+
+                                "</a>"+                            
+                                "<a href="+"/pedidos/edit/"+pedido.id+">"+
+                                    "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px;margin-right:15px"+">"+
+                                "</a>"+
+                                "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
+                                    "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
+                                "</a>"+
+                            "</td>"+
+                        "</tr>";
+            }else{
+                var linha = "<tr id="+pedido.id+">" +
+                            "<td>"+pedido.id+"</td>"+
+                            "<td>"+pedido.nomeCliente+"</td>"+
+                            "<td>"+pedido.nomeFuncionario+"</td>"+
+                            "<td>"+pedido.dataEntrega+"</td>"+
+                            "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
+                            "<td>"+pedido.status+"</td>"+
+                            "<td>R$ "+pedido.valorTotal+"</td>"+
+                            "<td>"+                          
+                                "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
+                                    "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
+                                "</a>"+
+                            "</td>"+
+                        "</tr>";
+            }
         return linha;
         
     }
 
-    function concluirPedido(id){
-        confirma = confirm("Você deseja fechar o pedido?");
-        if(confirma){
-            $.ajax({
-                type:"POST",
-                url: "/pedidos/concluir/"+id,
-                context:this,
-                success: function(data){
-                    var pedido = JSON.parse(data);
-                    console.log("Concluído");
-                    linhas = $("#tabelaPedidos>tbody>tr");
-                    e = linhas.filter(function(i,elemento){
-                        if (elemento.cells[0].textContent == id){
-                            elemento.cells[5].textContent = pedido.status;
-                        }
-                    });
-                }
-            });
-        }
-    }
-
-    function editarPedido(id){
-        console.log("editarPedido()");
-        $("#itensPedido").html("");
-        $.ajax({
-            type:"GET",
-            url: "/pedidos/edit/"+id,
-            context:this,
-            success: function(data){
-                // var pedido = JSON.parse(data);
-                // console.log(pedido);
-                // $("#nomeCliente").html(pedido.nomeCliente);
-                // $("#nomeFuncionario").html(pedido.nomeFuncionario);
-                // $("#inputDataEntrega").val(pedido.dataEntrega);
-                // for(let i = 0; i<pedido.itens_pedidos.length;i++){
-                //     $("#itensPedido").append(montarLinhaEditar(pedido.itens_pedidos[0]));
-                // }
-            }
-        });
-        
-        // $("#dlgPedidos").modal('show');
-        
-    }
     function montarLinhaEditar(item){
         console.log(item)
         linha = "<option>"+item.nomeProduto+"</option>";
@@ -257,7 +231,7 @@
     function retornaLinhaItensPedido(itens_pedidos){
         linhaPedido = "";
         for(var i = 0; i < itens_pedidos.length; i++){
-            linhaPedido += String("<li>NOME: "+itens_pedidos[i].nomeProduto+" | PESO SOLICITADO: "+itens_pedidos[i].pesoSolicitado+" KG</li>")
+            linhaPedido += String("<li>NOME: "+itens_pedidos[i].nomeProduto+" | PESO SOLICITADO: "+itens_pedidos[i].pesoFinal+" KG</li>")
         }
         return linhaPedido;
         

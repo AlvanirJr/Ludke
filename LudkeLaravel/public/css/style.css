@@ -12,6 +12,10 @@ input[type=text]{
 textarea{
     text-transform: uppercase;
 }
+.cardFinalizarPedidos{
+    /* box-shadow: 0 5px 9px 0 #ccc; */
+    margin-bottom: 20px;
+}
 /* RETIRA SPIN DO INPUT NUMBER */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
