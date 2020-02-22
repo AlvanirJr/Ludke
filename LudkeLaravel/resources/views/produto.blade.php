@@ -280,10 +280,24 @@
             arrayIdsDeletarFotos.length = 0;
         });
     }
+    function confirmaDeletarProduto(id){
+        
+        linhasTabela = $("#tabelaProdutos>tbody>tr");//pega linha da tabela
+        
+        linha = linhasTabela.filter(function(i,elemento){
+            //faz um filtro na linha e retorna a que tiver o id igual ao informado
+            if(elemento.cells[0].textContent == id){
+                return elemento.cells[1].textContent
+            }
+        });
+        // return nome;
+        
+        return confirm("Você tem certeza que deseja remover o produto "+linha[0].cells[1].textContent+"?");
+    }
     function removerProduto(id){
         
-        // exibe alerta de confirmação
-        confirma = confirm("Você tem certeza que deseja remover o produto com ID = "+id+"?");
+        confirma = confirmaDeletarProduto(id);
+        console.log(confirma)
         // se o usuário confirmar 
         if(confirma){
             // faz requisição DELETE para /api/produtos passando o id do produto que deseja apagar
@@ -503,10 +517,11 @@
                     });
                     // console.log(e);
                     // se encontrou a linha, atualiza cada coluna
+                    console.log(prod)
                     if(e){
                         e[0].cells[0].textContent = prod.id;
                         e[0].cells[1].textContent = prod.nome;
-                        e[0].cells[2].textContent = prod.categoria_id;
+                        e[0].cells[2].textContent = prod.categoria.nome;
                         e[0].cells[3].textContent = prod.validade;
                         // e[0].cells[4].textContent = prod.quantidade;
                         e[0].cells[4].textContent = prod.preco;

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Produto;
 use App\FotosProduto;
-use APP\Categoria;
+use App\Categoria;
 use File;
 
 class ProdutoController extends Controller
@@ -72,7 +72,8 @@ class ProdutoController extends Controller
             }
         }
         
-        
+        $categoria = Categoria::find($prod->categoria_id);
+        $prod['categoria'] = ["nome"=>$categoria->nome];
         // retorna o objeto para exibir na tabela
         return json_encode($prod);
         
@@ -170,8 +171,10 @@ class ProdutoController extends Controller
                 }
                 
             }
-            
             $prod->save();
+            $categoria = Categoria::find($prod->categoria_id);
+            $prod['categoria'] = ["nome"=>$categoria->nome];
+            
             // retorna o objeto para exibir na tabela
             return json_encode($prod);
         }
