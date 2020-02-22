@@ -20,7 +20,7 @@ class ProdutoController extends Controller
     //usado pela api para retornar os produtos
     public function index()
     {
-        $produtos = Produto::all();
+        $produtos = Produto::with(['categoria'])->get();
         return $produtos->toJson();
     }
 

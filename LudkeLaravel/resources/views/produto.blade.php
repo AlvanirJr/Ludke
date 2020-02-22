@@ -220,7 +220,7 @@
         var linha = "<tr>"+
                         "<td>"+p.id+"</td>"+
                         "<td>"+p.nome+"</td>"+
-                        "<td>"+p.categoria_id+"</td>"+
+                        "<td>"+p.categoria.nome+"</td>"+
                         "<td>"+p.validade+"</td>"+
                         // "<td>"+p.quantidade+"</td>"+
                         "<td>"+p.preco+"</td>"+
@@ -312,6 +312,7 @@
     // carrega produtos do banco através da api e chama a função montarLinha para colocar na tabela
     function carregarProdutos(){
         $.getJSON('/api/produtos',function(produtos){
+            console.log(produtos)
             for(i=0;i<produtos.length;i++){
                 linha = montarLinha(produtos[i]);
                 $('#tabelaProdutos>tbody').append(linha);
