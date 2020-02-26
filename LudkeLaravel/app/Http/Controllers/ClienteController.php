@@ -157,6 +157,7 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
+        
         $cliente = Cliente::find($id);
         $user = User::find($cliente->user_id);
         $telefone = Telefone::find($user->telefone_id);

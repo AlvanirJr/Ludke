@@ -173,15 +173,10 @@
 
         function criarCargo(){
             cargo = {
-                nome: $('#nomeCargo').val()
+                nome: $('#nomeCargo').val().toUpperCase()
             };
 
-            // $.post('api/cargos',cat,function(data){
-            //     // console.log('Nova Categoria: '+data);
-            //     categoria = JSON.parse(data);
-            //     linha = montarLinha(categoria);
-            //     $('#tabelaCargos>tbody').append(linha);
-            // });
+           
             $.ajax({
             type: "POST",
             url: "/api/cargos",
@@ -213,7 +208,7 @@
             $("#span").remove(); //remove a linha do span
             cargo = {
                 id: $('#id').val(),
-                nome: $('#nomeCargo').val()
+                nome: $('#nomeCargo').val().toUpperCase()
             };
             // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
             $.ajax({

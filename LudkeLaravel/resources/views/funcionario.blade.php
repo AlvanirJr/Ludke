@@ -93,7 +93,7 @@
                             <div class="form-group">
                                 <label for="emailFuncionario" class="control-label">E-mail do Funcionario</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="emailFuncionario" placeholder="E-mail do Funcionário">
+                                    <input type="email" class="form-control" id="emailFuncionario" placeholder="E-mail do Funcionário">
                                 </div>
                                 <div id="validationEmail"></div>
                             </div>
@@ -333,17 +333,17 @@
         funcionario = {
             id: $('#id').val(),
             email: $('#emailFuncionario').val(),
-            nome: $('#nomeFuncionario').val(),
-            cargo: $('#cargoFuncionario').val(),
+            nome: $('#nomeFuncionario').val().toUpperCase(),
+            cargo: $('#cargoFuncionario').val().toUpperCase(),
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
-            rua: $('#rua').val(),
-            bairro: $('#bairro').val(),
-            cidade: $('#cidade').val(),
-            uf: $('#uf').val(),
+            rua: $('#rua').val().toUpperCase(),
+            bairro: $('#bairro').val().toUpperCase(),
+            cidade: $('#cidade').val().toUpperCase(),
+            uf: $('#uf').val().toUpperCase(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val()
+            complemento: $('#complemento').val().toUpperCase()
         }
 
         $.ajax({
@@ -462,17 +462,17 @@
         console.log('criarFuncionario');
         funcionario = {
             email: $('#emailFuncionario').val(),
-            nome: $('#nomeFuncionario').val(),
-            cargo: $('#cargoFuncionario').val(),
+            nome: $('#nomeFuncionario').val().toUpperCase(),
+            cargo: $('#cargoFuncionario').val().toUpperCase(),
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
-            rua: $('#rua').val(),
-            bairro: $('#bairro').val(),
-            cidade: $('#cidade').val(),
-            uf: $('#uf').val(),
+            rua: $('#rua').val().toUpperCase(),
+            bairro: $('#bairro').val().toUpperCase(),
+            cidade: $('#cidade').val().toUpperCase(),
+            uf: $('#uf').val().toUpperCase(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val()
+            complemento: $('#complemento').val().toUpperCase()
         }
 
         $.ajax({

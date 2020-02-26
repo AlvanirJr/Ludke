@@ -6,7 +6,16 @@ body{
     background-color: white;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-
+input[type=text]{
+    text-transform: uppercase;
+}
+textarea{
+    text-transform: uppercase;
+}
+.cardFinalizarPedidos{
+    /* box-shadow: 0 5px 9px 0 #ccc; */
+    margin-bottom: 20px;
+}
 /* RETIRA SPIN DO INPUT NUMBER */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -19,7 +28,9 @@ input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
 
-
+#tabelaPedidos td{
+    font-size: 22px;
+}
 /* --------- Cards ---------------*/
 #card{
     width: 250px;
