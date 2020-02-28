@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-md navbar-dark shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ route('home')}}">
-            <img id="logo" src="{{asset('img/logo_ludke_branca.png')}}" style="">
+            <img id="logo" src="{{asset('img/logo_navbar.png')}}" style="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
