@@ -62,7 +62,7 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                   <h5 class="card-title">Valor do Pedido</h5>
-                  <p class="card-text"><h3>R$ {{$pedido->valorTotal}}</h3></p>
+                  <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido"></h3></p>
                 </div>
             </div>
         </div>
@@ -78,9 +78,10 @@
                     <div class="card-body">
                     <h5 class="card-title">Itens do Pedido</h5>
                     <p class="card-text">
-                        <table class="table table-responsive-lg">
+                        <table id="tabelaItens" class="table table-responsive-lg">
                             <thead>
                             <tr>
+                                <th scope="col">#</th>
                                 <th scope="col">Produto</th>
                                 <th scope="col">(R$) Preço/Kg</th>
                                 <th scope="col">Peso Solicitado</th>
@@ -91,12 +92,13 @@
                             <tbody>
                             @foreach ($pedido->itensPedidos as $item)
                                 <tr>
+                                    <td>{{$item->id}}</td>
                                     <td>{{$item->nomeProduto}}</td>
                                     <td>{{$item->precoProduto}}</td>
                                     <td>{{$item->pesoFinal}}</td> {{-- Durante o pedido, o peso final é igual ao peso solicitado. Somente na conclusão do pedido que o peso final é atualizado--}}
                                     <td>{{$item->valorReal}}</td>
                                     <td>
-                                        <input id="pesoFinal{{$item->id}}" name="pesoFinal{{$item->id}}" step="0.01" type="number" class="form-control" placeholder="Peso Final">
+                                        <input id="pesoFinal{{$item->id}}" oninput="atualizarValor({{$item->precoProduto}},{{$item->id}})" name="pesoFinal{{$item->id}}" step="0.01" type="number" class="form-control" placeholder="Peso Final" required>
                                         
                                         @error('pesoFinal{{$item->id}}')
                                         <span class="invalid-feedback" role="alert">
@@ -127,4 +129,35 @@
     </form>
 </div>
 
+@endsection
+
+@section('javascript')
+
+<script type="text/javascript">
+    function validar(){
+        alert("Digite o peso do item: ");
+    }
+    // Valor final do pedido
+    var valorDoPedido = 0.0;
+    $("#valorDoPedido").html(valorDoPedido);
+    
+    var valores = {};
+
+    function atualizarValor(precoProduto,id){
+        valor = 0.0;
+        
+        linhas = $('#tabelaItens>tbody>tr'); 
+        linhas.filter(function(i,elemento){
+            
+            valorInput = $('#pesoFinal'+elemento.cells[0].textContent).val();
+            if(valorInput){
+                valor += parseFloat(valorInput) * parseFloat(elemento.cells[2].textContent);
+            }
+            
+        });
+        $("#valorDoPedido").html(valor);
+    }
+
+    // console.log(e[0].cells[1].textContent)
+</script>    
 @endsection
