@@ -5,7 +5,7 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        
+
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
@@ -17,7 +17,7 @@
                     <div class="col-sm-2">
                         <button class="btn btn-primary-ludke" role="button" onclick="novoProduto()">Novo</button>
                     </div>
-                    <div class="col-sm-3"> 
+                    <div class="col-sm-3">
                         <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                     <h5 class="modal-title">Novo Produto</h5>
                 </div>
                 <div class="modal-body">
-                    
+
                     {{-- ID do produto --}}
                     <input type="hidden" id="id" class="form-control">
 
@@ -152,7 +152,7 @@
     // $('input#inputBusca').quicksearch('table#tabelaProdutos tbody tr');
 
     //essa função é chamada sempre que atualiza a pagina
-    $(function(){        
+    $(function(){
         // Configura o ajax para todas as requisições ir com token csrf
         $.ajaxSetup({
             headers:{
@@ -161,7 +161,7 @@
         });
 
         carregarCategorias();
-        carregarProdutos();        
+        carregarProdutos();
 
         // Função para aparecer icone de excluir foto
         exibirBotaoExcluirFoto();
@@ -169,16 +169,16 @@
 
 
     });
-    
+
     //Array contendo os ids das fotos para ser deletado do banco
     arrayIdsDeletarFotos = [];
-    
-    
+
+
     //Tira a exibição das fotos e retorna um array com os ids para serem excluidos do banco
     function excluirFoto(id){
         arrayIdsDeletarFotos.push(id);
         foto = document.getElementById(id).style.display="none";
-        
+
         console.log("Excluir Foto com id: "+id);
         console.log(arrayIdsDeletarFotos);
     }
@@ -199,7 +199,7 @@
 
         // exibe modal cadastrar Produtos
         $('#dlgProdutos').modal('show');
-        
+
     }
 
     // carrega categorias da api e coloca no select
@@ -228,7 +228,7 @@
                         "<td>"+
                             "<a href="+"#"+" onclick="+"editarProduto("+p.id+")"+">"+
                                 "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
-                            "</a>"+                            
+                            "</a>"+
                             "<a href="+"#"+" onclick="+"removerProduto("+p.id+")"+">"+
                                 "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
                             "</a>"+
@@ -281,9 +281,9 @@
         });
     }
     function confirmaDeletarProduto(id){
-        
+
         linhasTabela = $("#tabelaProdutos>tbody>tr");//pega linha da tabela
-        
+
         linha = linhasTabela.filter(function(i,elemento){
             //faz um filtro na linha e retorna a que tiver o id igual ao informado
             if(elemento.cells[0].textContent == id){
@@ -291,14 +291,14 @@
             }
         });
         // return nome;
-        
+
         return confirm("Você tem certeza que deseja remover o produto "+linha[0].cells[1].textContent+"?");
     }
     function removerProduto(id){
-        
+
         confirma = confirmaDeletarProduto(id);
         console.log(confirma)
-        // se o usuário confirmar 
+        // se o usuário confirmar
         if(confirma){
             // faz requisição DELETE para /api/produtos passando o id do produto que deseja apagar
             $.ajax({
@@ -321,7 +321,7 @@
             });
         }
 
-        
+
     }
     // carrega produtos do banco através da api e chama a função montarLinha para colocar na tabela
     function carregarProdutos(){
@@ -359,9 +359,9 @@
                                         "<img class="+"itemFoto"+" src='"+URL.createObjectURL(event.target.files[i])+"'>"+
                                     "</div>"
                 $(".listaImagem").append(linha);
-                
+
                 // exibe botão de excluir na foto
-                // exibirBotaoExcluirFoto(); 
+                // exibirBotaoExcluirFoto();
             }
         });
     }
@@ -372,10 +372,10 @@
         // console.log(imagensProduto);
 
         prod = {
-            nome: $('#nomeProduto').val().toUpperCase(), 
-            validade: $('#validadeProduto').val(), 
-            preco: $('#precoProduto').val(), 
-            descricao: $('#descricaoProduto').val().toUpperCase(), 
+            nome: $('#nomeProduto').val().toUpperCase(),
+            validade: $('#validadeProduto').val(),
+            preco: $('#precoProduto').val(),
+            descricao: $('#descricaoProduto').val().toUpperCase(),
             categoria_id: $('#categoriaProduto').val().toUpperCase(),
             // fotosProduto: imagensProduto
         };
@@ -390,7 +390,7 @@
         formData.append('descricao',prod.descricao);
         formData.append('categoria_id',prod.categoria_id);
         // formData.append('fotosProduto',prod.imagensProduto);
-        
+
         // console.log(formData);
         $.ajax({
             url:'/api/produtos',
@@ -448,24 +448,24 @@
                     $("#validationDescricao").append("<span class="+"span"+" style="+"color:red"+">"+error.descricao[i]+"</span>")
                 }
             }
-            
+
         }
     }
-    
+
     function salvarProduto(){
-        
-       
+
+
 
         var imagensProduto = document.getElementById("imagensProduto").files;
-        
-        
+
+
         // cria um objeto com os dados do form
         prod = {
             id: $('#id').val(),
-            nome: $('#nomeProduto').val().toUpperCase(), 
-            validade: $('#validadeProduto').val(), 
-            preco: $('#precoProduto').val(), 
-            descricao: $('#descricaoProduto').val().toUpperCase(), 
+            nome: $('#nomeProduto').val().toUpperCase(),
+            validade: $('#validadeProduto').val(),
+            preco: $('#precoProduto').val(),
+            descricao: $('#descricaoProduto').val().toUpperCase(),
             categoria_id: $('#categoriaProduto').val().toUpperCase(),
             arrayIdsDeletarFotos: arrayIdsDeletarFotos,
             // imagensProduto: imagensProduto
@@ -476,11 +476,11 @@
         // console.log(prod.imagensProduto);
         let form = document.getElementById('formProduto');
         let formData = new FormData(form);
-        
+
         console.log("valores do FormData");
         for(value of formData.values())
             console.log(value);
-        
+
         formData.append('id',prod.id);
         formData.append('nome',prod.nome);
         formData.append('validade',prod.validade);
@@ -488,8 +488,8 @@
         formData.append('descricao',prod.descricao);
         formData.append('categoria_id',prod.categoria_id);
         formData.append('arrayIdsDeletarFotos',prod.arrayIdsDeletarFotos);
-        
-        
+
+
         console.log("valores do FormData");
         for(value of formData.values())
             console.log(value + typeof(value));
@@ -498,7 +498,7 @@
 
         // formData = formData.serializeArray();
 
-        
+
         $.ajax({
             url:'/api/produtos/'+prod.id,
             method:"POST",
@@ -548,7 +548,7 @@
         // função chamada sempre que clica no botão submit do formulário
         $('#formProduto').submit(function(event){
             event.preventDefault(); // não deixa fechar o modal quando clica no submit
-            
+
             if($('#id').val()!= ''){
                 // limparArrayIdsFotos();
                 salvarProduto();// função chamada para editar produto
@@ -561,7 +561,7 @@
         });
     });
 
-    
+
 </script>
-    
+
 @endsection

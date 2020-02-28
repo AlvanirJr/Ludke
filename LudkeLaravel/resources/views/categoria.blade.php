@@ -61,7 +61,7 @@
                         <label for="nomeCategoria" class="control-label">Nome da Categoria</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="nomeCategoria" placeholder="Nome da Categoria">
-                            
+
                         </div>
                         <div class="validationCategoria"></div>
                     </div>
@@ -85,7 +85,7 @@
 
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabelaCategorias tbody tr');
-    
+
     $(function(){
 
         // Configuração do ajax com token csrf
@@ -116,7 +116,7 @@
                         "<td>"+
                             "<a href="+"#"+" onclick="+"editarCategoria("+cat.id+")"+">"+
                                 "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
-                            "</a>"+                            
+                            "</a>"+
                             "<a href="+"#"+" onclick="+"removerCategoria("+cat.id+")"+">"+
                                 "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
                             "</a>"+
@@ -136,7 +136,7 @@
             $('#dlgCategorias').modal('show');
         });
     }
-    
+
     function removerCategoria(id){
         confirma = confirm("Você tem certeza que deseja remover a categoria?");
         if(confirma){
@@ -161,11 +161,11 @@
 
             });
         }
-        
+
     }
     function carregarCategorias(){
         $.getJSON('/api/categorias', function(categorias){
-            
+
             for(i=0; i < categorias.length;i++){
                 linha = montarLinha(categorias[i]);
                 $('#tabelaCategorias>tbody').append(linha);
@@ -190,8 +190,8 @@
             context:this,
             data:cat,
             success: function(data){
-                console.log('Nova Categoria: '+data);
                 categoria = JSON.parse(data);
+                console.log(categoria);
                 linha = montarLinha(categoria);
                 $('#tabelaCategorias>tbody').append(linha);
                 $('#dlgCategorias').modal('hide');
@@ -207,7 +207,7 @@
         $("#span").remove(); //remove a linha do span
         if(error){
             linha = "<span id="+"span"+" style="+"color:red"+">"+error.nome[0]+"</span>";
-            $('.validationCategoria').append(linha);                                    
+            $('.validationCategoria').append(linha);
             console.log(error.nome[0]);
 
         }
@@ -229,6 +229,7 @@
             context: this,
             data: cat,
             success: function(data){
+                console.log("data")
                 cat = JSON.parse(data);
                 console.log("salvou OK");
                 $('#dlgCategorias').modal('hide');

@@ -177,7 +177,7 @@
                 nome: $('#nomeCargo').val().toUpperCase()
             };
 
-           
+
             $.ajax({
             type: "POST",
             url: "/api/cargos",

@@ -48,14 +48,18 @@ class ProdutoController extends Controller
 
         // salva produtos no banco
         $prod = new Produto();
+        //$validade_data =
         $prod->nome = $request->input('nome');
         $prod->validade = $request->input('validade');
+        //dd($prod->validade);
         // $prod->quantidade = $request->input('quantidade');
         $prod->preco = $request->input('preco');
         $prod->descricao = $request->input('descricao');
         $prod->categoria_id = $request->input('categoria_id');
-        
-      
+        //$teste = date('Y-m-d',strtotime(str_replace("/",$prod->validade)));
+        //($teste);
+        //$prod->validade = $teste;
+
         $prod->save();
 
         $fotosProduto = $request->file('imagensProduto');
@@ -63,27 +67,27 @@ class ProdutoController extends Controller
             foreach($fotosProduto as $f){
                 $path = $f->store('public');
                 $nomeFoto = str_replace('public/','',$path);
-                
+
 
                 $foto = new FotosProduto();
-                $foto->path = $nomeFoto; 
+                $foto->path = $nomeFoto;
                 $foto->produto_id = $prod->id;
                 $foto->save();
             }
         }
-        
+
         $categoria = Categoria::find($prod->categoria_id);
         $prod['categoria'] = ["nome"=>$categoria->nome];
         // retorna o objeto para exibir na tabela
         return json_encode($prod);
-        
-        
+
+
     }
 
     //Exibe um determinado produto
     public function show($id)
     {
-        
+
         $produto = Produto::with('categoria')->find($id);
         $fotosProduto = FotosProduto::where('produto_id',$id)->get();
         // dd($fotosProduto);
@@ -133,7 +137,7 @@ class ProdutoController extends Controller
         // dd($request->all());
         $prod = Produto::find($id);
         // dd($request->input('nome'));
-        
+
         if(isset($prod)){
             $prod->nome = $request->input('nome');
             $prod->validade = $request->input('validade');
@@ -150,7 +154,7 @@ class ProdutoController extends Controller
                     // $path = $f->store('fotosProduto');
                     // dd($path);
                     $foto = new FotosProduto();
-                    $foto->path = $nomeFoto; 
+                    $foto->path = $nomeFoto;
                     $foto->produto_id = $prod->id;
                     $foto->save();
                 }
@@ -158,7 +162,7 @@ class ProdutoController extends Controller
 
 
             if(isset($request->arrayIdsDeletarFotos)){
-                
+
                 // array contendo o id das imagens para deletar
                 $arrayIdsDeletarFoto = explode(',',$request->arrayIdsDeletarFotos);
                 // dd(gettype($arrayIdsDeletarFoto));
@@ -169,12 +173,12 @@ class ProdutoController extends Controller
                     Storage::delete("public/{$foto->path}");
                     FotosProduto::destroy($foto->id);
                 }
-                
+
             }
             $prod->save();
             $categoria = Categoria::find($prod->categoria_id);
             $prod['categoria'] = ["nome"=>$categoria->nome];
-            
+
             // retorna o objeto para exibir na tabela
             return json_encode($prod);
         }
@@ -184,7 +188,7 @@ class ProdutoController extends Controller
     // {
     //     $prod = Produto::find($id);
     //     // dd($request->input('nome'));
-        
+
     //     if(isset($prod)){
     //         $prod->nome = $request->input('nome');
     //         $prod->validade = $request->input('validade');
@@ -201,7 +205,7 @@ class ProdutoController extends Controller
     //                 // $path = $f->store('fotosProduto');
     //                 // dd($path);
     //                 $foto = new FotosProduto();
-    //                 $foto->path = $nomeFoto; 
+    //                 $foto->path = $nomeFoto;
     //                 $foto->produto_id = $prod->id;
     //                 $foto->save();
     //             }
@@ -214,13 +218,13 @@ class ProdutoController extends Controller
 
     //                     // File::delete("public/".$foto->path);
     //                     // $foto->delete();
-                        
+
     //                     Storage::delete("public/{$foto->path}");
     //                     FotosProduto::destroy($foto->id);
     //                 }
     //             }
     //         }
-            
+
     //         $prod->save();
     //         // retorna o objeto para exibir na tabela
     //         return json_encode($prod);
@@ -230,7 +234,7 @@ class ProdutoController extends Controller
     //     }
     // }
 
-    
+
     // Função para deletar produto e foto
     public function destroy($id)
     {
@@ -242,7 +246,7 @@ class ProdutoController extends Controller
                 foreach($fotosProduto as $foto){
                     Storage::delete("public/{$foto->path}");
                     FotosProduto::destroy($foto->id);
-                       
+
                 }
             }
             $prod->delete();

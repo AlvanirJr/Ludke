@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        
+
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
@@ -15,7 +15,7 @@
                     <div class="col-sm-2">
                         <button class="btn btn-primary-ludke" role="button" onclick="novoFuncionario()">Novo</button>
                     </div>
-                    <div class="col-sm-3"> 
+                    <div class="col-sm-3">
                         <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
                     </div>
                 </div>
@@ -32,15 +32,8 @@
                         <th>ID</th>
                         <th>Nome</th>
                         <th>Cargo</th>
-                        <th>Telefone Residêncial</th>
+                        <th>Email</th>
                         <th>Celular</th>
-                        <th>CEP</th>
-                        <th>Rua</th>
-                        <th>Número</th>
-                        <th>Bairro</th>
-                        <th>Cidade</th>
-                        <th>UF</th>
-                        <th>Complemento</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -61,7 +54,7 @@
                     <h5 class="modal-title">Novo Funcionário</h5>
                 </div>
                 <div class="modal-body">
-                    
+
                     {{-- ID do produto --}}
                     <input type="hidden" id="id" class="form-control">
 
@@ -87,7 +80,7 @@
 
                     {{-- row nome + cargo --}}
                     <div class="row justify-content-center">
-                        
+
                         {{-- Nome do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -98,7 +91,7 @@
                                 <div id="validationEmail"></div>
                             </div>
                         </div>
-                        
+
                         {{-- Cargo do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -115,7 +108,7 @@
 
                     {{-- row telefones --}}
                     <div class="row justify-content-center">
-                        
+
                         {{-- Nome do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -138,7 +131,7 @@
                         </div>
 
                     </div>
-                    
+
                     {{-- row Endereço --}}
                     <div class="row justify-content-left">
                         <div class="col-sm-12">
@@ -148,7 +141,7 @@
 
                     {{-- row rua + CEP --}}
                     <div class="row justify-content-center">
-                        
+
                         {{-- CEP--}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -198,7 +191,7 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
                     {{-- row UF + Número --}}
                     <div class="row justify-content-center">
@@ -252,9 +245,9 @@
 
 @section('javascript')
 <script>
-    
+
     //essa função é chamada sempre que atualiza a pagina
-    $(function(){        
+    $(function(){
         // Configura o ajax para todas as requisições ir com token csrf
         $.ajaxSetup({
             headers:{
@@ -262,9 +255,9 @@
             }
         });
 
-        carregarCargos(); 
+        carregarCargos();
         carregarFuncionarios();
-        carregarEstados();     
+        carregarEstados();
     });
 
     function carregarFuncionarios(){
@@ -320,7 +313,7 @@
         $('#uf').val('');
         $('#numero').val('');
         $('#complemento').val('');
-        
+
         $(".span").remove(); //limpa os span de erro
 
         // exibe modal cadastrar Produtos
@@ -328,7 +321,7 @@
     }
 
     function salvarFuncionario(){
-        console.log('SalvarFuncionario');
+       // console.log('SalvarFuncionario');
 
         funcionario = {
             id: $('#id').val(),
@@ -361,15 +354,15 @@
                     e[0].cells[0].textContent = funcionario.id;
                     e[0].cells[1].textContent = funcionario.nome;
                     e[0].cells[2].textContent = funcionario.cargo;
-                    e[0].cells[3].textContent = funcionario.residencial;
-                    e[0].cells[4].textContent = funcionario.celular;
+                    e[0].cells[3].textContent = funcionario.email;
+                   /* e[0].cells[4].textContent = funcionario.celular;
                     e[0].cells[5].textContent = funcionario.cep;
                     e[0].cells[6].textContent = funcionario.rua;
                     e[0].cells[7].textContent = funcionario.numero;
                     e[0].cells[8].textContent = funcionario.bairro;
                     e[0].cells[9].textContent = funcionario.cidade;
                     e[0].cells[10].textContent = funcionario.uf;
-                    e[0].cells[11].textContent = funcionario.complemento;
+                    e[0].cells[11].textContent = funcionario.complemento;*/
 
                 }
                 $('#dlgFuncionarios').modal('hide');
@@ -388,19 +381,19 @@
                         "<td>"+f.id+"</td>"+
                         "<td>"+f.nome+"</td>"+
                         "<td>"+f.cargo+"</td>"+
-                        "<td>"+f.residencial+"</td>"+
+                        "<td>"+f.email+"</td>"+
                         "<td>"+f.celular+"</td>"+
-                        "<td>"+f.cep+"</td>"+
-                        "<td>"+f.rua+"</td>"+
-                        "<td>"+f.numero+"</td>"+
-                        "<td>"+f.bairro+"</td>"+
-                        "<td>"+f.cidade+"</td>"+
-                        "<td>"+f.uf+"</td>"+
-                        "<td>"+f.complemento+"</td>"+
+                        //"<td>"+f.cep+"</td>"+
+                        //"<td>"+f.rua+"</td>"+
+                        //"<td>"+f.numero+"</td>"+
+                        //"<td>"+f.bairro+"</td>"+
+                        //"<td>"+f.cidade+"</td>"+
+                        //"<td>"+f.uf+"</td>"+
+                        //"<td>"+f.complemento+"</td>"+
                         "<td>"+
                             "<a href="+"#"+" onclick="+"editarFuncionario("+f.id+")"+">"+
                                 "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
-                            "</a>"+                            
+                            "</a>"+
                             "<a href="+"#"+" onclick="+"removerFuncionario("+f.id+")"+">"+
                                 "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
                             "</a>"+
@@ -425,9 +418,9 @@
             $('#uf').val(data.uf),
             $('#numero').val(data.numero),
             $('#complemento').val(data.complemento)
-            
+
             $(".span").remove(); //limpa os span de erro
-            
+
             // exibe modal cadastrar Produtos
             $('#dlgFuncionarios').modal('show');
         });
@@ -456,7 +449,7 @@
             });
         }
 
-        
+
     }
     function criarFuncionario(){
         console.log('criarFuncionario');
@@ -494,7 +487,7 @@
 
             }
         });
-        
+
     }
 
     function exibirErros(error){

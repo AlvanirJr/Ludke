@@ -19,7 +19,7 @@ class FuncionarioController extends Controller
 
     public function index()
     {
-        
+
 
         $funcionarios = Funcionario::all();
         $arrayFuncionarios = Array();
@@ -27,11 +27,15 @@ class FuncionarioController extends Controller
             $user = User::where('id',$f->user_id)->first();
             $endereco = Endereco::where('id',$user->endereco_id)->first();
             $telefone = Telefone::where('id',$user->telefone_id)->first();
+            $cargo = Cargo::find($f->cargo_id);
+
+
+           //console.log($f->cargo_id);
             $fun = [
                     'id' => $f->id,
                     'email' => $user->email,
                     'nome' => $user->name,
-                    'cargo' => $f->cargo_id,
+                    'cargo' => $f->cargo->nome,
                     'residencial' => $telefone->residencial,
                     'celular' => $telefone->celular,
                     'cep' => $endereco->cep,
@@ -42,7 +46,7 @@ class FuncionarioController extends Controller
                     'numero' => $endereco->numero,
                     'complemento' => $endereco->complemento,
                     ];
-            array_push($arrayFuncionarios,$fun);                
+            array_push($arrayFuncionarios,$fun);
         }
         return json_encode($arrayFuncionarios);
         // $funcionario = Funcionario::find(1)->user;
@@ -59,16 +63,16 @@ class FuncionarioController extends Controller
         //
     }
 
-    
+
     public function store(Request $request)
     {
-        
+
         // Validação
         $validator = $this->validate($request,[
             'email' => 'required|email',
             'nome' => 'required|string|min:5',
             'cargo' => 'required',
-            'residencial' => 'required',
+            //'residencial' => 'required',
             'celular' => 'required',
             'cep' => 'nullable|string',
             'rua' => 'required',
@@ -121,7 +125,7 @@ class FuncionarioController extends Controller
             'id' => $funcionario->id,
             'email' => $user->email,
             'nome' => $user->name,
-            'cargo' => $funcionario->cargo_id,
+            'cargo' => $funcionario->cargo->nome,
             'residencial' => $telefone->residencial,
             'celular' => $telefone->celular,
             'cep' => $endereco->cep,
@@ -136,17 +140,19 @@ class FuncionarioController extends Controller
         // var_dump($fun);
         return json_encode($fun);
         // Response::json(array('user'=>$user, 'endereco'=> $endereco, 'telefone'=>$telefone));
-        
+
     }
 
-    
+
     public function show($id)
     {
         $funcionario = Funcionario::find($id);
+
         $user = User::find($funcionario->user_id);
         $telefone = Telefone::find($user->telefone_id);
         $endereco = Endereco::find($user->endereco_id);
-
+       // dd($funcionario->cardo_id);
+        //console.log($cargo);
         if(isset($funcionario) && isset($user)
         && isset($telefone) && isset($endereco)){
 
@@ -154,7 +160,7 @@ class FuncionarioController extends Controller
                 'id' => $funcionario->id,
                 'email' => $user->email,
                 'nome' => $user->name,
-                'cargo' => $funcionario->cargo_id,
+                'cargo' => $funcionario->cargo->nome,
                 'residencial' => $telefone->residencial,
                 'celular' => $telefone->celular,
                 'cep' => $endereco->cep,
@@ -165,9 +171,9 @@ class FuncionarioController extends Controller
                 'numero' => $endereco->numero,
                 'complemento' => $endereco->complemento,
             ];
-            
+
             return json_encode($fun);
-    
+
         }
         else{
             return response('Funcionário não encontrado',404);
@@ -176,13 +182,13 @@ class FuncionarioController extends Controller
 
     }
 
-    
+
     public function edit($id)
     {
         //
     }
 
-    
+
     public function update(Request $request, $id)
     {
         // Validação
@@ -190,7 +196,7 @@ class FuncionarioController extends Controller
             'email' => 'required|email',
             'nome' => 'required|string|min:5',
             'cargo' => 'required',
-            'residencial' => 'required',
+            //'residencial' => 'required',
             'celular' => 'required',
             'cep' => 'nullable|string',
             'rua' => 'required',
@@ -245,7 +251,7 @@ class FuncionarioController extends Controller
             'numero' => $endereco->numero,
             'complemento' => $endereco->complemento,
         ];
-        
+
             return json_encode($fun);
 
         }
@@ -254,7 +260,7 @@ class FuncionarioController extends Controller
         }
     }
 
-    
+
     public function destroy($id)
     {
         $funcionario = Funcionario::find($id);

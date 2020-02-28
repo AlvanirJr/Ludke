@@ -40,15 +40,15 @@ class CategoriaController extends Controller
         $validator = $this->validate($request,[
             'nome' => 'required|string|min:5',
         ]);
-        
+
 
         $categoria = new Categoria();
         $categoria->nome = $request->input('nome');
         $categoria->save();
-        
-        // retorna o objeto para exibir na tabela
+
+        //retorna o objeto para exibir na tabela
         return json_encode($categoria);
-        
+
     }
 
     /**
@@ -79,7 +79,7 @@ class CategoriaController extends Controller
         $validator = $this->validate($request,[
             'nome' => 'required|string|min:5',
         ]);
-        
+
         $cat = Categoria::find($id);
         // dd($cat);
         if(isset($cat)){
