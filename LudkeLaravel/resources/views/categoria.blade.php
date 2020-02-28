@@ -175,7 +175,7 @@
 
     function criarCategoria(){
         cat = {
-            nome: $('#nomeCategoria').val()
+            nome: $('#nomeCategoria').val().toUpperCase()
         };
 
         // $.post('api/categorias',cat,function(data){
@@ -219,7 +219,7 @@
         $("#span").remove(); //remove a linha do span
         cat = {
             id: $('#id').val(),
-            nome: $('#nomeCategoria').val()
+            nome: $('#nomeCategoria').val().toUpperCase()
         };
         console.log(cat);
         // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar

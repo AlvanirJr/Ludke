@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Produto;
 use App\FotosProduto;
+use App\Categoria;
 use File;
 
 class ProdutoController extends Controller
@@ -19,7 +20,7 @@ class ProdutoController extends Controller
     //usado pela api para retornar os produtos
     public function index()
     {
-        $produtos = Produto::all();
+        $produtos = Produto::with(['categoria'])->get();
         return $produtos->toJson();
     }
 
@@ -71,7 +72,8 @@ class ProdutoController extends Controller
             }
         }
         
-        
+        $categoria = Categoria::find($prod->categoria_id);
+        $prod['categoria'] = ["nome"=>$categoria->nome];
         // retorna o objeto para exibir na tabela
         return json_encode($prod);
         
@@ -81,7 +83,8 @@ class ProdutoController extends Controller
     //Exibe um determinado produto
     public function show($id)
     {
-        $produto = Produto::find($id);
+        
+        $produto = Produto::with('categoria')->find($id);
         $fotosProduto = FotosProduto::where('produto_id',$id)->get();
         // dd($fotosProduto);
         // dd($produto);
@@ -95,6 +98,7 @@ class ProdutoController extends Controller
             'created_at' => $produto->created_at,
             'updated_at' => $produto->updated_at,
             'fotosProduto' => $fotosProduto,
+            'categoria' => $produto->categoria,
         ];
         if(isset($prod)){
             return json_encode($prod);// retorna um objeto json
@@ -167,8 +171,10 @@ class ProdutoController extends Controller
                 }
                 
             }
-            
             $prod->save();
+            $categoria = Categoria::find($prod->categoria_id);
+            $prod['categoria'] = ["nome"=>$categoria->nome];
+            
             // retorna o objeto para exibir na tabela
             return json_encode($prod);
         }

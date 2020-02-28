@@ -177,7 +177,7 @@
                             <div class="form-group">
                                 <label for="emailCliente" class="control-label">E-mail do Cliente</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="emailCliente" placeholder="E-mail do Cliente">
+                                    <input type="email" class="form-control" id="emailCliente" placeholder="E-mail do Cliente">
                                 </div>
                                 <div id="validationEmail"></div>
                             </div>
@@ -436,23 +436,23 @@
 
         cliente = {
             id: $('#id').val(),
-            nome: $('#nomeCliente').val(),
+            nome: $('#nomeCliente').val().toUpperCase(),
             email: $('#emailCliente').val(),
-            nomeReduzido: $('#nomeReduzido').val(),
-            nomeResponsavel: $('#nomeResponsavel').val(),
+            nomeReduzido: $('#nomeReduzido').val().toUpperCase(),
+            nomeResponsavel: $('#nomeResponsavel').val().toUpperCase(),
             cpfCnpj: $('#cpfCnpj').val(),
-            tipo: $('#tipo').val(),
-            inscricaoEstadual: $('#inscricaoEstadual').val(),
+            tipo: $('#tipo').val().toUpperCase(),
+            inscricaoEstadual: $('#inscricaoEstadual').val().toUpperCase(),
             
-            residencial: $('#residencial').val(),
+            residencial: $('#residencial').val().toUpperCase(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
-            rua: $('#rua').val(),
-            bairro: $('#bairro').val(),
-            cidade: $('#cidade').val(),
-            uf: $('#uf').val(),
+            rua: $('#rua').val().toUpperCase(),
+            bairro: $('#bairro').val().toUpperCase(),
+            cidade: $('#cidade').val().toUpperCase(),
+            uf: $('#uf').val().toUpperCase(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val()
+            complemento: $('#complemento').val().toUpperCase()
         }
 
         $.ajax({
@@ -490,23 +490,23 @@
         console.log('Criar Cliente');
 
         cliente = {
-            nome: $('#nomeCliente').val(),
+            nome: $('#nomeCliente').val().toUpperCase(),
             email: $('#emailCliente').val(),
-            nomeReduzido: $('#nomeReduzido').val(),
-            nomeResponsavel: $('#nomeResponsavel').val(),
+            nomeReduzido: $('#nomeReduzido').val().toUpperCase(),
+            nomeResponsavel: $('#nomeResponsavel').val().toUpperCase(),
             cpfCnpj: $('#cpfCnpj').val(),
-            tipo: $('#tipo').val(),
-            inscricaoEstadual: $('#inscricaoEstadual').val(),
+            tipo: $('#tipo').val().toUpperCase(),
+            inscricaoEstadual: $('#inscricaoEstadual').val().toUpperCase(),
             
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
-            rua: $('#rua').val(),
-            bairro: $('#bairro').val(),
-            cidade: $('#cidade').val(),
-            uf: $('#uf').val(),
+            rua: $('#rua').val().toUpperCase(),
+            bairro: $('#bairro').val().toUpperCase(),
+            cidade: $('#cidade').val().toUpperCase(),
+            uf: $('#uf').val().toUpperCase(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val()
+            complemento: $('#complemento').val().toUpperCase()
         }
 
         $.ajax({

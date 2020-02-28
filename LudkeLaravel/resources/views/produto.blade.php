@@ -95,7 +95,7 @@
                     <div class="form-group">
                         <label for="precoProduto" class="control-label">Preço do Produto (por Kg)</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="precoProduto" placeholder="Preço do Produto">
+                            <input type="number" step="0.01" class="form-control" id="precoProduto" placeholder="Preço do Produto">
                         </div>
                         <div id="validationPreco"></div>
                     </div>
@@ -220,7 +220,7 @@
         var linha = "<tr>"+
                         "<td>"+p.id+"</td>"+
                         "<td>"+p.nome+"</td>"+
-                        "<td>"+p.categoria_id+"</td>"+
+                        "<td>"+p.categoria.nome+"</td>"+
                         "<td>"+p.validade+"</td>"+
                         // "<td>"+p.quantidade+"</td>"+
                         "<td>"+p.preco+"</td>"+
@@ -280,10 +280,24 @@
             arrayIdsDeletarFotos.length = 0;
         });
     }
+    function confirmaDeletarProduto(id){
+        
+        linhasTabela = $("#tabelaProdutos>tbody>tr");//pega linha da tabela
+        
+        linha = linhasTabela.filter(function(i,elemento){
+            //faz um filtro na linha e retorna a que tiver o id igual ao informado
+            if(elemento.cells[0].textContent == id){
+                return elemento.cells[1].textContent
+            }
+        });
+        // return nome;
+        
+        return confirm("Você tem certeza que deseja remover o produto "+linha[0].cells[1].textContent+"?");
+    }
     function removerProduto(id){
         
-        // exibe alerta de confirmação
-        confirma = confirm("Você tem certeza que deseja remover o produto com ID = "+id+"?");
+        confirma = confirmaDeletarProduto(id);
+        console.log(confirma)
         // se o usuário confirmar 
         if(confirma){
             // faz requisição DELETE para /api/produtos passando o id do produto que deseja apagar
@@ -312,6 +326,7 @@
     // carrega produtos do banco através da api e chama a função montarLinha para colocar na tabela
     function carregarProdutos(){
         $.getJSON('/api/produtos',function(produtos){
+            console.log(produtos)
             for(i=0;i<produtos.length;i++){
                 linha = montarLinha(produtos[i]);
                 $('#tabelaProdutos>tbody').append(linha);
@@ -357,11 +372,11 @@
         // console.log(imagensProduto);
 
         prod = {
-            nome: $('#nomeProduto').val(), 
+            nome: $('#nomeProduto').val().toUpperCase(), 
             validade: $('#validadeProduto').val(), 
             preco: $('#precoProduto').val(), 
-            descricao: $('#descricaoProduto').val(), 
-            categoria_id: $('#categoriaProduto').val(),
+            descricao: $('#descricaoProduto').val().toUpperCase(), 
+            categoria_id: $('#categoriaProduto').val().toUpperCase(),
             // fotosProduto: imagensProduto
         };
         console.log(prod);
@@ -447,11 +462,11 @@
         // cria um objeto com os dados do form
         prod = {
             id: $('#id').val(),
-            nome: $('#nomeProduto').val(), 
+            nome: $('#nomeProduto').val().toUpperCase(), 
             validade: $('#validadeProduto').val(), 
             preco: $('#precoProduto').val(), 
-            descricao: $('#descricaoProduto').val(), 
-            categoria_id: $('#categoriaProduto').val(),
+            descricao: $('#descricaoProduto').val().toUpperCase(), 
+            categoria_id: $('#categoriaProduto').val().toUpperCase(),
             arrayIdsDeletarFotos: arrayIdsDeletarFotos,
             // imagensProduto: imagensProduto
         };
@@ -502,10 +517,11 @@
                     });
                     // console.log(e);
                     // se encontrou a linha, atualiza cada coluna
+                    console.log(prod)
                     if(e){
                         e[0].cells[0].textContent = prod.id;
                         e[0].cells[1].textContent = prod.nome;
-                        e[0].cells[2].textContent = prod.categoria_id;
+                        e[0].cells[2].textContent = prod.categoria.nome;
                         e[0].cells[3].textContent = prod.validade;
                         // e[0].cells[4].textContent = prod.quantidade;
                         e[0].cells[4].textContent = prod.preco;

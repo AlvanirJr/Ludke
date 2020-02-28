@@ -35,7 +35,7 @@
             </div>
 
             {{-- Card 3 --}}
-            {{-- Desabilitado --}}
+            
             <div class="col-sm-4">
                 <div id="card">
                     <a id="link-card" href="{{route('clientes')}}">
@@ -85,13 +85,13 @@
             {{-- Card 3 --}}
             {{-- Desabilitado --}}
             <div class="col-sm-4">
-                <div id="card" style="background-color:#aaa; box-shadow: none" onclick="alerta()">
-                    <a id="link-card" href="">
+                <div id="card">
+                    <a id="link-card" href="{{route("listarPedidos")}}">
                         <div class="row justify-content-center">
-                            <img id="card-image" src="{{ asset("img/lojas.png")  }}" alt="">
+                            <img id="card-image" src="{{ asset("img/cash-register-solid.svg")  }}" alt="">
                         </div>
                         <div class="row justify-content-center">
-                            <div id="card-text">Lojas</div>
+                            <div id="card-text">Pedidos</div>
                         </div>
                     </a>
                 </div>

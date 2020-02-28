@@ -33,3 +33,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
 
         Route::resource('/clientes', 'ClienteController');
+
+// Route::resource('/pedidos', 'PedidoController');
+
