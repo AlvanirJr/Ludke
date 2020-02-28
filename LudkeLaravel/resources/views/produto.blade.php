@@ -34,9 +34,9 @@
                         <th>ID</th>
                         <th>Nome</th>
                         <th>Categoria</th>
-                        <th>Validade</th>
+                        <th>Validade (Meses)</th>
                         {{-- <th>Quantidade</th> --}}
-                        <th>Preço(R$)</th>
+                        <th>Preço (R$)</th>
                         <th>Descrição</th>
                         <th>Ações</th>
                     </tr>
@@ -84,9 +84,9 @@
 
                     {{-- Validade do Produto --}}
                     <div class="form-group">
-                        <label for="validadeProduto" class="control-label">Validade do Produto</label>
+                        <label for="validadeProduto" class="control-label">Validade do Produto (Meses)</label>
                         <div class="input-group">
-                            <input type="date" class="form-control" id="validadeProduto" placeholder="Validade do Produto">
+                            <input type="number" class="form-control" id="validadeProduto" placeholder="Validade do Produto">
                         </div>
                         <div id="validationValidade"></div>
                     </div>
