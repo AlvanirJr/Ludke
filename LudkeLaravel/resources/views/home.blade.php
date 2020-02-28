@@ -71,7 +71,7 @@
             {{-- Card 2 --}}
             {{-- Desabilitado --}}
             <div class="col-sm-4">
-                <div id="card">
+                <div id="card" >
                     <a id="link-card" href="{{route("cargos")}}">
                         <div class="row justify-content-center">
                             <img id="card-image" src="{{ asset("img/cargos.png")  }}" alt="">
@@ -82,7 +82,6 @@
                     </a>
                 </div>
             </div>
-
             {{-- Card 3 --}}
             {{-- Desabilitado --}}
             <div class="col-sm-4">
