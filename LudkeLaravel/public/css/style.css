@@ -36,9 +36,7 @@ input[type=number] {
     width: 250px;
     height: 250px;
     background-color: #BF1A2C;
-    margin-top: 100px;
-    margin-left: 50px;
-    margin-right: 50px;
+    margin:50px;
     transition: all 0.1s linear;
 }
 #card:hover{
