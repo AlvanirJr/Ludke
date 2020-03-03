@@ -260,6 +260,8 @@
         // getJSON já faz o parser do dado recebido para json
         $.getJSON('/api/produtos/'+id, function(data){
             console.log(data);
+                    split = data.validade.split('-');
+                    novadata = split[2] + "/" +split[1]+"/"+split[0];
             $('#id').val(data.id);
             $('#nomeProduto').val(data.nome);
             $('#categoriaProduto').val(data.categoria_id);
@@ -268,17 +270,21 @@
             $('#precoProduto').val(data.preco);
             $('#descricaoProduto').val(data.descricao);
 
+            //$('#validadeProduto').val(novadata);
+
             let fotosProduto = data.fotosProduto;
             montarLinhaImagem(fotosProduto);
             exibirBotaoExcluirFoto();
 
             $(".span").remove(); //limpa os span de erro
-            // exibe modal cadastrar Produtos
-            $('#dlgProdutos').modal('show');
 
+            $('#dlgProdutos').modal('show');
             // limpa o array contendo o id das imagens para deletar
             arrayIdsDeletarFotos.length = 0;
+
         });
+        // exibe modal cadastrar Produtos
+
     }
     function confirmaDeletarProduto(id){
 
@@ -323,11 +329,17 @@
 
 
     }
+
+
     // carrega produtos do banco através da api e chama a função montarLinha para colocar na tabela
     function carregarProdutos(){
         $.getJSON('/api/produtos',function(produtos){
-            console.log(produtos)
             for(i=0;i<produtos.length;i++){
+                split = produtos[i].validade.split('-');
+                novadata =  split[2] + "/" +split[1]+"/"+split[0];
+                //console.log(novadata);
+                produtos[i].validade = (novadata);
+                //console.log(produtos[i].validade);
                 linha = montarLinha(produtos[i]);
                 $('#tabelaProdutos>tbody').append(linha);
             }
@@ -378,9 +390,14 @@
             descricao: $('#descricaoProduto').val().toUpperCase(),
             categoria_id: $('#categoriaProduto').val().toUpperCase(),
             // fotosProduto: imagensProduto
-        };
-        console.log(prod);
 
+
+    };
+        //console.log("Aquiiii", prod.validade);
+        split = prod.validade.split('-');
+        novadata = split[2] + "/" +split[1]+"/"+split[0];
+        prod.validade = novadata;
+        console.log(prod.validade);
         // cria um FormData para ser enviado ao controller com os dados da requisição presentes no formulário
         let form = document.getElementById('formProduto');
         let formData = new FormData(form);
@@ -480,6 +497,10 @@
         console.log("valores do FormData");
         for(value of formData.values())
             console.log(value);
+
+        split = prod.validade.split('-');
+        novadata = split[2] + "/" +split[1]+"/"+split[0];
+        prod.validade = novadata;
 
         formData.append('id',prod.id);
         formData.append('nome',prod.nome);

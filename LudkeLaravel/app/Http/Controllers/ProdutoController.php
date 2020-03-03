@@ -87,7 +87,7 @@ class ProdutoController extends Controller
     //Exibe um determinado produto
     public function show($id)
     {
-
+        //dd("Ok");
         $produto = Produto::with('categoria')->find($id);
         $fotosProduto = FotosProduto::where('produto_id',$id)->get();
         // dd($fotosProduto);
