@@ -304,7 +304,7 @@ class PedidoController extends Controller
     }
 
     public function getPedidos(){
-        $pedidos = Pedido::with(['itensPedidos'])->orderBy('dataEntrega')->get();
+        $pedidos = Pedido::with(['itensPedidos'])->orderBy('status')->orderBy('dataEntrega')->get();
         $size = sizeof($pedidos);
         for($i = 0; $i < $size; $i++){
             $cliente = Cliente::with('user')->find($pedidos[$i]->cliente_id);

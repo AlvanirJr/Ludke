@@ -231,7 +231,7 @@
     function retornaLinhaItensPedido(itens_pedidos){
         linhaPedido = "";
         for(var i = 0; i < itens_pedidos.length; i++){
-            linhaPedido += String("<li>NOME: "+itens_pedidos[i].nomeProduto+" | PESO SOLICITADO: "+itens_pedidos[i].pesoFinal+" KG</li>")
+            linhaPedido += String("<li>"+itens_pedidos[i].nomeProduto+" | "+itens_pedidos[i].pesoFinal+" KG</li>")
         }
         return linhaPedido;
         
