@@ -43,7 +43,7 @@ class CategoriaController extends Controller
 
 
         $categoria = new Categoria();
-        $categoria->nome = $request->input('nome');
+        $categoria->nome = strtoupper($request->input('nome'));
         $categoria->save();
 
         //retorna o objeto para exibir na tabela
@@ -83,7 +83,7 @@ class CategoriaController extends Controller
         $cat = Categoria::find($id);
         // dd($cat);
         if(isset($cat)){
-            $cat->nome = $request->input('nome');
+            $cat->nome = strtoupper($request->input('nome'));
             $cat->save();
             return json_encode($cat);
         }
