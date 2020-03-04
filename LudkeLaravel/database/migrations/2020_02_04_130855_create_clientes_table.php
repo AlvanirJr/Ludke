@@ -18,7 +18,7 @@ class CreateClientesTable extends Migration
 
             $table->string('nomeReduzido')->nullable();
             $table->string('nomeResponsavel')->nullable();
-            $table->integer('cpfCnpj');
+            $table->string('cpfCnpj');
             $table->string('tipo'); //física ou juridica
             $table->string('inscricaoEstadual')->nullable();
 
