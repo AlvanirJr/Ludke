@@ -175,15 +175,8 @@
 
     function criarCategoria(){
         cat = {
-            nome: $('#nomeCategoria').val().toUpperCase()
+            nome: $('#nomeCategoria').val()
         };
-
-        // $.post('api/categorias',cat,function(data){
-        //     // console.log('Nova Categoria: '+data);
-        //     categoria = JSON.parse(data);
-        //     linha = montarLinha(categoria);
-        //     $('#tabelaCategorias>tbody').append(linha);
-        // });
         $.ajax({
             type: "POST",
             url: "/api/categorias",
@@ -191,7 +184,7 @@
             data:cat,
             success: function(data){
                 categoria = JSON.parse(data);
-                console.log(categoria);
+                
                 linha = montarLinha(categoria);
                 $('#tabelaCategorias>tbody').append(linha);
                 $('#dlgCategorias').modal('hide');
@@ -219,9 +212,9 @@
         $("#span").remove(); //remove a linha do span
         cat = {
             id: $('#id').val(),
-            nome: $('#nomeCategoria').val().toUpperCase()
+            nome: $('#nomeCategoria').val()
         };
-        console.log(cat);
+        
         // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
         $.ajax({
             type: "PUT",
@@ -229,7 +222,7 @@
             context: this,
             data: cat,
             success: function(data){
-                console.log("data")
+                
                 cat = JSON.parse(data);
                 console.log("salvou OK");
                 $('#dlgCategorias').modal('hide');
