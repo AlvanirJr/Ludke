@@ -174,7 +174,7 @@
 
         function criarCargo(){
             cargo = {
-                nome: $('#nomeCargo').val().toUpperCase()
+                nome: $('#nomeCargo').val()
             };
 
 
@@ -209,7 +209,7 @@
             $("#span").remove(); //remove a linha do span
             cargo = {
                 id: $('#id').val(),
-                nome: $('#nomeCargo').val().toUpperCase()
+                nome: $('#nomeCargo').val()
             };
             // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
             $.ajax({

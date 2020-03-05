@@ -71,7 +71,7 @@ class ClienteController extends Controller
     {
         $validation = $this->validate($request,[
                 'nome'=> 'required|string|min:5|max:255',
-                'email' => 'required|email',
+                'email' => 'required|string|email|max:255|unique:users',
                 'nomeReduzido' => 'nullable|string|max:255',
                 'nomeResponsavel' => 'nullable|string|max:255',
                 'cpfCnpj' => 'required|unique:clientes',
@@ -90,13 +90,13 @@ class ClienteController extends Controller
 
         // ENDERECO
         $endereco = new Endereco();
-        $endereco->rua = $request->input('rua');
+        $endereco->rua = strtoupper($request->input('rua'));
         $endereco->numero = $request->input('numero');
-        $endereco->bairro = $request->input('bairro');
-        $endereco->cidade = $request->input('cidade');
-        $endereco->uf = $request->input('uf');
+        $endereco->bairro = strtoupper($request->input('bairro'));
+        $endereco->cidade = strtoupper($request->input('cidade'));
+        $endereco->uf = strtoupper($request->input('uf'));
         $endereco->cep = $request->input('cep');
-        $endereco->complemento = $request->input('complemento');
+        $endereco->complemento = strtoupper($request->input('complemento'));
         $endereco->save();
 
         // TELEFONE
@@ -108,7 +108,7 @@ class ClienteController extends Controller
         // USER
         $user = new User();
         $senhaAutomatica = bcrypt('123456');
-        $user->name = $request->input('nome');
+        $user->name = strtoupper($request->input('nome'));
         $user->tipo = 'cliente';
         $user->email= $request->input('email');
         $user->password = $senhaAutomatica;
@@ -118,11 +118,11 @@ class ClienteController extends Controller
 
         // CLIENTE
         $cliente = new Cliente();
-        $cliente->nomeReduzido = $request->input('nomeReduzido');
-        $cliente->nomeResponsavel = $request->input('nomeResponsavel');
+        $cliente->nomeReduzido = strtoupper($request->input('nomeReduzido'));
+        $cliente->nomeResponsavel = strtoupper($request->input('nomeResponsavel'));
         $cliente->cpfCnpj = $request->input('cpfCnpj');
         $cliente->tipo = $request->input('tipo');
-        $cliente->inscricaoEstadual = $request->input('inscricaoEstadual');
+        $cliente->inscricaoEstadual = strtoupper($request->input('inscricaoEstadual'));
         $cliente->user_id = $user->id;
         $cliente->save();
 
@@ -215,7 +215,7 @@ class ClienteController extends Controller
         //
         $validation = $this->validate($request,[
             'nome'=> 'required|string|min:5|max:255',
-            'email' => 'required|email',
+            'email' => 'required|string|email|max:255',
             'nomeReduzido' => 'nullable|string|max:255',
             'nomeResponsavel' => 'nullable|string|max:255',
             'cpfCnpj' => 'required',
@@ -240,13 +240,13 @@ class ClienteController extends Controller
         if(isset($cliente) && isset($user)
         && isset($telefone) && isset($endereco)){
             // ENDERECO
-            $endereco->rua = $request->input('rua');
+            $endereco->rua = strtoupper($request->input('rua'));
             $endereco->numero = $request->input('numero');
-            $endereco->bairro = $request->input('bairro');
-            $endereco->cidade = $request->input('cidade');
-            $endereco->uf = $request->input('uf');
+            $endereco->bairro = strtoupper($request->input('bairro'));
+            $endereco->cidade = strtoupper($request->input('cidade'));
+            $endereco->uf = strtoupper($request->input('uf'));
             $endereco->cep = $request->input('cep');
-            $endereco->complemento = $request->input('complemento');
+            $endereco->complemento = strtoupper($request->input('complemento'));
             $endereco->save();
 
             // TELEFONE
@@ -255,16 +255,16 @@ class ClienteController extends Controller
             $telefone->save();
 
             // USER
-            $user->name = $request->input('nome');
+            $user->name = strtoupper($request->input('nome'));
             $user->email= $request->input('email');
             $user->save();
 
             // CLIENTE
-            $cliente->nomeReduzido = $request->input('nomeReduzido');
-            $cliente->nomeResponsavel = $request->input('nomeResponsavel');
+            $cliente->nomeReduzido = strtoupper($request->input('nomeReduzido'));
+            $cliente->nomeResponsavel = strtoupper($request->input('nomeResponsavel'));
             $cliente->cpfCnpj = $request->input('cpfCnpj');
             $cliente->tipo = $request->input('tipo');
-            $cliente->inscricaoEstadual = $request->input('inscricaoEstadual');
+            $cliente->inscricaoEstadual = strtoupper($request->input('inscricaoEstadual'));
             $cliente->save();
 
             $cli = [

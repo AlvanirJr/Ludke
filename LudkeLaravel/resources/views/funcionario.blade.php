@@ -266,7 +266,7 @@
         $.getJSON('/api/funcionarios',function(funcionarios){
             // console.log(funcionarios);
             for(i=0; i<funcionarios.length;i++){
-                console.log(funcionarios[i])
+                
                 linha = montarLinha(funcionarios[i]);
                 $('#tabelaFuncionarios>tbody').append(linha);
             }
@@ -326,8 +326,8 @@
         funcionario = {
             id: $('#id').val(),
             email: $('#emailFuncionario').val(),
-            nome: $('#nomeFuncionario').val().toUpperCase(),
-            cargo: $('#cargoFuncionario').val().toUpperCase(),
+            nome: $('#nomeFuncionario').val(),
+            cargo: $('#cargoFuncionario').val(),
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
@@ -404,7 +404,7 @@
     function editarFuncionario(id){
         console.log("editar Funcionario");
         $.getJSON("/api/funcionarios/"+id, function(data){
-            console.log(data);
+            
             $('#id').val(data.id);
             $('#emailFuncionario').val(data.email),
             $('#nomeFuncionario').val(data.nome),
@@ -455,18 +455,19 @@
         console.log('criarFuncionario');
         funcionario = {
             email: $('#emailFuncionario').val(),
-            nome: $('#nomeFuncionario').val().toUpperCase(),
-            cargo: $('#cargoFuncionario').val().toUpperCase(),
+            nome: $('#nomeFuncionario').val(),
+            cargo: $('#cargoFuncionario').val(),
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
-            rua: $('#rua').val().toUpperCase(),
-            bairro: $('#bairro').val().toUpperCase(),
-            cidade: $('#cidade').val().toUpperCase(),
-            uf: $('#uf').val().toUpperCase(),
+            rua: $('#rua').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            uf: $('#uf').val(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val().toUpperCase()
+            complemento: $('#complemento').val()
         }
+        
 
         $.ajax({
             type: "POST",
@@ -474,7 +475,7 @@
             context:this,
             data:funcionario,
             success: function(data){
-                console.log('Nova Categoria: '+data);
+                
                 funcionario = JSON.parse(data);
                 linha = montarLinha(funcionario);
                 $('#dlgFuncionarios').modal('hide');
