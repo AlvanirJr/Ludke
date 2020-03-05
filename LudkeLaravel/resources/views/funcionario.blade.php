@@ -326,8 +326,8 @@
         funcionario = {
             id: $('#id').val(),
             email: $('#emailFuncionario').val(),
-            nome: $('#nomeFuncionario').val().toUpperCase(),
-            cargo: $('#cargoFuncionario').val().toUpperCase(),
+            nome: $('#nomeFuncionario').val(),
+            cargo: $('#cargoFuncionario').val(),
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
@@ -455,18 +455,19 @@
         console.log('criarFuncionario');
         funcionario = {
             email: $('#emailFuncionario').val(),
-            nome: $('#nomeFuncionario').val().toUpperCase(),
-            cargo: $('#cargoFuncionario').val().toUpperCase(),
+            nome: $('#nomeFuncionario').val(),
+            cargo: $('#cargoFuncionario').val(),
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
-            rua: $('#rua').val().toUpperCase(),
-            bairro: $('#bairro').val().toUpperCase(),
-            cidade: $('#cidade').val().toUpperCase(),
-            uf: $('#uf').val().toUpperCase(),
+            rua: $('#rua').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            uf: $('#uf').val(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val().toUpperCase()
+            complemento: $('#complemento').val()
         }
+        console.log(funcionario)
 
         $.ajax({
             type: "POST",
