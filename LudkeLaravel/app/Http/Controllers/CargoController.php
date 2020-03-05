@@ -49,7 +49,7 @@ class CargoController extends Controller
         ]);
 
         $cargo = new Cargo();
-        $cargo->nome = $request->input('nome');
+        $cargo->nome = strtoupper($request->input('nome'));
         $cargo->save();
 
         return json_encode($cargo);
@@ -102,7 +102,7 @@ class CargoController extends Controller
         
         $cargo = Cargo::find($id);
         if(isset($cargo)){
-            $cargo->nome = $request->input('nome');
+            $cargo->nome = strtoupper($request->input('nome'));
             $cargo->save();
             return  json_encode($cargo);
 

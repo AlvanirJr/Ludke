@@ -266,7 +266,7 @@
         $.getJSON('/api/funcionarios',function(funcionarios){
             // console.log(funcionarios);
             for(i=0; i<funcionarios.length;i++){
-                console.log(funcionarios[i])
+                
                 linha = montarLinha(funcionarios[i]);
                 $('#tabelaFuncionarios>tbody').append(linha);
             }
@@ -404,7 +404,7 @@
     function editarFuncionario(id){
         console.log("editar Funcionario");
         $.getJSON("/api/funcionarios/"+id, function(data){
-            console.log(data);
+            
             $('#id').val(data.id);
             $('#emailFuncionario').val(data.email),
             $('#nomeFuncionario').val(data.nome),
@@ -467,7 +467,7 @@
             numero: $('#numero').val(),
             complemento: $('#complemento').val()
         }
-        console.log(funcionario)
+        
 
         $.ajax({
             type: "POST",
@@ -475,7 +475,7 @@
             context:this,
             data:funcionario,
             success: function(data){
-                console.log('Nova Categoria: '+data);
+                
                 funcionario = JSON.parse(data);
                 linha = montarLinha(funcionario);
                 $('#dlgFuncionarios').modal('hide');
