@@ -13,14 +13,12 @@ class FuncionarioSeeder extends Seeder
      */
     public function run()
     {
-        /*
-        $user = User::find(1);
-        $cargo = Cargo::find(2);
+
 
         DB::table('funcionarios')->insert([
-            'user_id'=> $user->id,
-            'cargo_id'=> $cargo->id,
+            'user_id'=> 1,
+            'cargo_id'=> 2,
         ]);
-    }*/
     }
+    
 }

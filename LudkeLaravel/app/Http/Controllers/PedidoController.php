@@ -258,7 +258,6 @@ class PedidoController extends Controller
         return $valorTotal;
     }
     public function finalizarPedido(Request $request){
-
         $cliente = Cliente::find($request->input('cliente_id'));
         
         // valor total sem desconto
@@ -279,8 +278,10 @@ class PedidoController extends Controller
         $pedido->dataEntrega = $request->input('dataEntrega');
         $pedido->status = "ABERTO";
         $pedido->cliente_id = $cliente->id;
-        $pedido->funcionario_id = Auth::user()->id; //salvando o user_id do funcionario
+        $funcionario = Funcionario::find(Auth::user()->id);
+        $pedido->funcionario_id = $funcionario->id; //salvando o user_id do funcionario que está logado
         
+        // dd($pedido);
         $pedido->save(); // salva o pedido
         // dd($pedido);
 
