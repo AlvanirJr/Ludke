@@ -602,7 +602,8 @@
                 success: function(data){
                     msg = JSON.parse(data);
                     if(msg.success == true){
-                        limparTela();
+                        // limparTela();
+                        window.location.href = '/pedidos/listar';
                     }
                 },
                 error: function(error){
