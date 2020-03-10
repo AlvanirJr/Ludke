@@ -178,9 +178,6 @@
     function excluirFoto(id){
         arrayIdsDeletarFotos.push(id);
         foto = document.getElementById(id).style.display="none";
-
-        console.log("Excluir Foto com id: "+id);
-        console.log(arrayIdsDeletarFotos);
     }
 
     // Sempre que clica no botão novo, limpa os campos do modal
@@ -205,7 +202,6 @@
     // carrega categorias da api e coloca no select
     function carregarCategorias(){
         $.getJSON('/api/categorias',function(data){
-            // console.log(data);
 
             for(i=0 ; i<data.length; i++){
                 // adiciona cada categoria no select do formulário
@@ -259,9 +255,6 @@
         console.log(imagensProduto);
         // getJSON já faz o parser do dado recebido para json
         $.getJSON('/api/produtos/'+id, function(data){
-            console.log(data);
-                    split = data.validade.split('-');
-                    novadata = split[2] + "/" +split[1]+"/"+split[0];
             $('#id').val(data.id);
             $('#nomeProduto').val(data.nome);
             $('#categoriaProduto').val(data.categoria_id);
@@ -303,7 +296,6 @@
     function removerProduto(id){
 
         confirma = confirmaDeletarProduto(id);
-        console.log(confirma)
         // se o usuário confirmar
         if(confirma){
             // faz requisição DELETE para /api/produtos passando o id do produto que deseja apagar
@@ -335,10 +327,10 @@
     function carregarProdutos(){
         $.getJSON('/api/produtos',function(produtos){
             for(i=0;i<produtos.length;i++){
-                split = produtos[i].validade.split('-');
-                novadata =  split[2] + "/" +split[1]+"/"+split[0];
-                //console.log(novadata);
-                produtos[i].validade = (novadata);
+                // split = produtos[i].validade.split('-');
+                // novadata =  split[2] + "/" +split[1]+"/"+split[0];
+                // //console.log(novadata);
+                // produtos[i].validade = (novadata);
                 //console.log(produtos[i].validade);
                 linha = montarLinha(produtos[i]);
                 $('#tabelaProdutos>tbody').append(linha);
@@ -384,20 +376,18 @@
         // console.log(imagensProduto);
 
         prod = {
-            nome: $('#nomeProduto').val().toUpperCase(),
+            nome: $('#nomeProduto').val(),
             validade: $('#validadeProduto').val(),
             preco: $('#precoProduto').val(),
-            descricao: $('#descricaoProduto').val().toUpperCase(),
-            categoria_id: $('#categoriaProduto').val().toUpperCase(),
+            descricao: $('#descricaoProduto').val(),
+            categoriaProduto: $('#categoriaProduto').val(),
             // fotosProduto: imagensProduto
 
 
     };
-        //console.log("Aquiiii", prod.validade);
-        split = prod.validade.split('-');
-        novadata = split[2] + "/" +split[1]+"/"+split[0];
-        prod.validade = novadata;
-        console.log(prod.validade);
+        
+        
+        
         // cria um FormData para ser enviado ao controller com os dados da requisição presentes no formulário
         let form = document.getElementById('formProduto');
         let formData = new FormData(form);
@@ -405,7 +395,7 @@
         formData.append('validade',prod.validade);
         formData.append('preco',prod.preco);
         formData.append('descricao',prod.descricao);
-        formData.append('categoria_id',prod.categoria_id);
+        formData.append('categoriaProduto',prod.categoriaProduto);
         // formData.append('fotosProduto',prod.imagensProduto);
 
         // console.log(formData);
@@ -465,6 +455,9 @@
                     $("#validationDescricao").append("<span class="+"span"+" style="+"color:red"+">"+error.descricao[i]+"</span>")
                 }
             }
+            if(prod.categoriaProduto == null){
+                $("#validationCategoria").append("<span class="+"span"+" style="+"color:red"+">O campo categoria é obrigatório.</span>")
+            }
 
         }
     }
@@ -475,45 +468,39 @@
 
         var imagensProduto = document.getElementById("imagensProduto").files;
 
-
+        
         // cria um objeto com os dados do form
         prod = {
             id: $('#id').val(),
-            nome: $('#nomeProduto').val().toUpperCase(),
+            nome: $('#nomeProduto').val(),
             validade: $('#validadeProduto').val(),
             preco: $('#precoProduto').val(),
-            descricao: $('#descricaoProduto').val().toUpperCase(),
-            categoria_id: $('#categoriaProduto').val().toUpperCase(),
+            descricao: $('#descricaoProduto').val(),
+            categoriaProduto: $('#categoriaProduto').val(),
             arrayIdsDeletarFotos: arrayIdsDeletarFotos,
             // imagensProduto: imagensProduto
         };
 
-        console.log(prod.arrayIdsDeletarFotos);
+        
 
         // console.log(prod.imagensProduto);
         let form = document.getElementById('formProduto');
         let formData = new FormData(form);
 
-        console.log("valores do FormData");
-        for(value of formData.values())
-            console.log(value);
-
-        split = prod.validade.split('-');
-        novadata = split[2] + "/" +split[1]+"/"+split[0];
-        prod.validade = novadata;
+        
 
         formData.append('id',prod.id);
         formData.append('nome',prod.nome);
         formData.append('validade',prod.validade);
         formData.append('preco',prod.preco);
         formData.append('descricao',prod.descricao);
-        formData.append('categoria_id',prod.categoria_id);
+        formData.append('categoriaProduto',prod.categoriaProduto);
         formData.append('arrayIdsDeletarFotos',prod.arrayIdsDeletarFotos);
 
 
-        console.log("valores do FormData");
-        for(value of formData.values())
-            console.log(value + typeof(value));
+        // console.log("valores do FormData");
+        // for(value of formData.values())
+        //     console.log(value + typeof(value));
         // for(var value of formData.entries())
         //     console.log(value);
 
@@ -529,7 +516,6 @@
             cache: false,
             processData: false,
             success: function(prod){
-                    // console.log(JSON.parse(data));
                     // prod = JSON.parse(data); //converte a string data para um objeto json
                     console.log("Salvou OK");
                     linhas = $('#tabelaProdutos>tbody>tr'); //pega todas as linhas da tabela
@@ -538,7 +524,6 @@
                     });
                     // console.log(e);
                     // se encontrou a linha, atualiza cada coluna
-                    console.log(prod)
                     if(e){
                         e[0].cells[0].textContent = prod.id;
                         e[0].cells[1].textContent = prod.nome;
@@ -550,7 +535,6 @@
                     }
                     // limpa o array contendo o id das imagens para deletar
                     arrayIdsDeletarFotos.length = 0;
-                    console.log(arrayIdsDeletarFotos);
 
                     $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
                 },

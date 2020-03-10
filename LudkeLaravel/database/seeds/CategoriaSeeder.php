@@ -13,7 +13,7 @@ class CategoriaSeeder extends Seeder
     {
         //
         DB::table('categorias')->insert([
-            'nome'=> 'embutidos',
+            'nome'=> 'EMBUTIDOS',
         ]);
     }
 }

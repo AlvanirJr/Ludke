@@ -13,15 +13,15 @@ class CargoSeeder extends Seeder
     {
         //
         $cargos = [
-            'Gerente Administrativo', 
-            'Gerente Geral',
-            'Vendedor(a)', 
-            'Secretário(a)',
-            'Atendente',
-            'Açougueiro(a)',
-            'Salsicheiro(a)',
-            'Desossador(a)',
-            'Balconista',
+            'GERENTE ADMINISTRATIVO', 
+            'GERENTE GERAL',
+            'VENDEDOR(A)', 
+            'SECRETÁRIO(A)',
+            'ATENDENTE',
+            'AÇOUGUEIRO(A)',
+            'SALSICHEIRO(A)',
+            'DESOSSADOR(A)',
+            'BALCONISTA',
         ];
         for($i = 0; $i < count($cargos); $i++){
             DB::table('cargos')->insert([

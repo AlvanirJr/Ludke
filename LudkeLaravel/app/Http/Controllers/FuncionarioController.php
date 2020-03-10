@@ -69,7 +69,7 @@ class FuncionarioController extends Controller
 
         // Validação
         $validator = $this->validate($request,[
-            'email' => 'required|email',
+            'email' => 'required|string|email|max:255',
             'nome' => 'required|string|min:5',
             'cargo' => 'required',
             //'residencial' => 'required',
@@ -85,13 +85,13 @@ class FuncionarioController extends Controller
 
         // ENDERECO
         $endereco = new Endereco();
-        $endereco->rua = $request->input('rua');
+        $endereco->rua = strtoupper($request->input('rua'));
         $endereco->numero = $request->input('numero');
-        $endereco->bairro = $request->input('bairro');
-        $endereco->cidade = $request->input('cidade');
-        $endereco->uf = $request->input('uf');
+        $endereco->bairro = strtoupper($request->input('bairro'));
+        $endereco->cidade = strtoupper($request->input('cidade'));
+        $endereco->uf = strtoupper($request->input('uf'));
         $endereco->cep = $request->input('cep');
-        $endereco->complemento = $request->input('complemento');
+        $endereco->complemento = strtoupper($request->input('complemento'));
         $endereco->save();
 
         // TELEFONE
@@ -103,7 +103,7 @@ class FuncionarioController extends Controller
         // USER
         $user = new User();
         $senhaAutomatica = bcrypt('123456');
-        $user->name = $request->input('nome');
+        $user->name = strtoupper($request->input('nome'));
         $user->tipo = 'funcionario';
         $user->email= $request->input('email');
         $user->password = $senhaAutomatica;
@@ -160,7 +160,7 @@ class FuncionarioController extends Controller
                 'id' => $funcionario->id,
                 'email' => $user->email,
                 'nome' => $user->name,
-                'cargo' => $funcionario->cargo->nome,
+                'cargo' => $funcionario->cargo->id,
                 'residencial' => $telefone->residencial,
                 'celular' => $telefone->celular,
                 'cep' => $endereco->cep,
@@ -230,7 +230,7 @@ class FuncionarioController extends Controller
             $telefone->save();
 
             // USER
-            $user->name = $request->input('nome');
+            $user->name = strtoupper($request->input('nome'));
             $user->email= $request->input('email');
             $user->save();
 

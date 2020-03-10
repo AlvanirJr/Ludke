@@ -38,27 +38,25 @@ class ProdutoController extends Controller
     // Recebe o request do ajax e salva produto com as fotos
     public function store(Request $request)
     {
-
         $validator = $this->validate($request,[
             'nome' => 'required|string|min:3|max:255',
             'validade' => 'required|string',
             'preco' => 'required',
             'descricao' => 'nullable|string|min:5|max:255',
+            'categoriaProduto' => 'required',
         ]);
 
         // salva produtos no banco
         $prod = new Produto();
         //$validade_data =
-        $prod->nome = $request->input('nome');
+        $prod->nome = strtoupper($request->input('nome'));
         $prod->validade = $request->input('validade');
         //dd($prod->validade);
         // $prod->quantidade = $request->input('quantidade');
         $prod->preco = $request->input('preco');
-        $prod->descricao = $request->input('descricao');
-        $prod->categoria_id = $request->input('categoria_id');
-        //$teste = date('Y-m-d',strtotime(str_replace("/",$prod->validade)));
-        //($teste);
-        //$prod->validade = $teste;
+        $prod->descricao = strtoupper($request->input('descricao'));
+        $prod->categoria_id = $request->input('categoriaProduto');
+        
 
         $prod->save();
 
@@ -76,7 +74,7 @@ class ProdutoController extends Controller
             }
         }
 
-        $categoria = Categoria::find($prod->categoria_id);
+        $categoria = Categoria::find(intval($prod->categoria_id));
         $prod['categoria'] = ["nome"=>$categoria->nome];
         // retorna o objeto para exibir na tabela
         return json_encode($prod);
@@ -128,6 +126,8 @@ class ProdutoController extends Controller
     // Nova Função para atualizar o produto e foto
     public function updateProdWithImage(Request $request, $id){
 
+        // dd($request->input('categoriaProduto'));
+
         $validator = $this->validate($request,[
             'nome' => 'required|string|min:3|max:255',
             'validade' => 'required|string',
@@ -139,12 +139,12 @@ class ProdutoController extends Controller
         // dd($request->input('nome'));
 
         if(isset($prod)){
-            $prod->nome = $request->input('nome');
+            $prod->nome = strtoupper($request->input('nome'));
             $prod->validade = $request->input('validade');
             // $prod->quantidade = $request->input('quantidade');
             $prod->preco = $request->input('preco');
-            $prod->descricao = $request->input('descricao');
-            $prod->categoria_id = $request->input('categoria_id');
+            $prod->descricao = strtoupper($request->input('descricao'));
+            $prod->categoria_id = $request->input('categoriaProduto');
 
             $fotosProduto = $request->file('imagensProduto');
             if(isset($fotosProduto)){
@@ -175,6 +175,7 @@ class ProdutoController extends Controller
                 }
 
             }
+            // dd($prod);
             $prod->save();
             $categoria = Categoria::find($prod->categoria_id);
             $prod['categoria'] = ["nome"=>$categoria->nome];

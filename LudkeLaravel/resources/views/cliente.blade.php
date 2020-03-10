@@ -125,8 +125,8 @@
                                 <div class="input-group">
                                     <select class="form-control" id="tipo">
                                         <option value="" disabled selected hidden>-- Tipo --</option>
-                                        <option value="pessoaFisica">Pessoa Física</option>
-                                        <option value="pessoaJuridica">Pessoa Jurídica</option>
+                                        <option value="pessoaFisica">PESSOA FÍSICA</option>
+                                        <option value="pessoaJuridica">PESSOA JURÍDICA</option>
                                     </select>
                                 </div>
                                 <div id="validationTipo"></div>
@@ -341,7 +341,6 @@
 
     function editarCliente(id){
         $.getJSON("/api/clientes/"+id, function(data){
-            console.log(data);
             $('#id').val(data.id);
             $('#nomeCliente').val(data.nome);
             $('#emailCliente').val(data.email);
@@ -436,23 +435,23 @@
 
         cliente = {
             id: $('#id').val(),
-            nome: $('#nomeCliente').val().toUpperCase(),
+            nome: $('#nomeCliente').val(),
             email: $('#emailCliente').val(),
-            nomeReduzido: $('#nomeReduzido').val().toUpperCase(),
-            nomeResponsavel: $('#nomeResponsavel').val().toUpperCase(),
+            nomeReduzido: $('#nomeReduzido').val(),
+            nomeResponsavel: $('#nomeResponsavel').val(),
             cpfCnpj: $('#cpfCnpj').val(),
-            tipo: $('#tipo').val().toUpperCase(),
-            inscricaoEstadual: $('#inscricaoEstadual').val().toUpperCase(),
+            tipo: $('#tipo').val(),
+            inscricaoEstadual: $('#inscricaoEstadual').val(),
             
-            residencial: $('#residencial').val().toUpperCase(),
+            residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
-            rua: $('#rua').val().toUpperCase(),
-            bairro: $('#bairro').val().toUpperCase(),
-            cidade: $('#cidade').val().toUpperCase(),
-            uf: $('#uf').val().toUpperCase(),
+            rua: $('#rua').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            uf: $('#uf').val(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val().toUpperCase()
+            complemento: $('#complemento').val()
         }
 
         $.ajax({
@@ -490,23 +489,23 @@
         console.log('Criar Cliente');
 
         cliente = {
-            nome: $('#nomeCliente').val().toUpperCase(),
+            nome: $('#nomeCliente').val(),
             email: $('#emailCliente').val(),
-            nomeReduzido: $('#nomeReduzido').val().toUpperCase(),
-            nomeResponsavel: $('#nomeResponsavel').val().toUpperCase(),
+            nomeReduzido: $('#nomeReduzido').val(),
+            nomeResponsavel: $('#nomeResponsavel').val(),
             cpfCnpj: $('#cpfCnpj').val(),
-            tipo: $('#tipo').val().toUpperCase(),
-            inscricaoEstadual: $('#inscricaoEstadual').val().toUpperCase(),
+            tipo: $('#tipo').val(),
+            inscricaoEstadual: $('#inscricaoEstadual').val(),
             
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
-            rua: $('#rua').val().toUpperCase(),
-            bairro: $('#bairro').val().toUpperCase(),
-            cidade: $('#cidade').val().toUpperCase(),
-            uf: $('#uf').val().toUpperCase(),
+            rua: $('#rua').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            uf: $('#uf').val(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val().toUpperCase()
+            complemento: $('#complemento').val()
         }
 
         $.ajax({
@@ -515,7 +514,6 @@
                 context: this,
                 data: cliente,
                 success: function(data){
-                    console.log(data);
                     cliente = JSON.parse(data);
                     linha = montarLinha(cliente);
                     $('#tabelaClientes>tbody').append(linha);
@@ -523,8 +521,9 @@
                 },
                 error: function(error){
                     retorno = JSON.parse(error.responseText);
+                    
                     exibirErros(retorno.errors);
-                    // console.log(error);
+                    
                 }
 
             });
@@ -537,6 +536,12 @@
                 for(i=0;i<error.nome.length;i++){
                     console.log(error.nome[i]);
                     $("#validationNome").append("<span class="+"span"+" style="+"color:red"+">"+error.nome[i]+"</span>");
+                }
+            }
+            if(error.email){
+                for(i=0;i<error.email.length;i++){
+                    console.log(error.email[i]);
+                    $("#validationEmail").append("<span class="+"span"+" style="+"color:red"+">"+error.email[i]+"</span>");
                 }
             }
             if(error.cpfCnpj){

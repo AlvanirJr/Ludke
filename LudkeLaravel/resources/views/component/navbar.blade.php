@@ -24,8 +24,9 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
                                     <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
-                                    <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
                                     <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
+                                    <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
+                                    <a class="dropdown-item" href="{{route('cargos')}}">Cargos</a>
                                 </div>
                         </li>
                         <li class="nav-item dropdown">
