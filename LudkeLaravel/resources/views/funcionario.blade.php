@@ -71,7 +71,7 @@
                             <div class="form-group">
                                 <label for="nomeFuncionario" class="control-label">Nome do Funcionario</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="nomeFuncionario" placeholder="Nome do Funcionário">
+                                    <input type="text" class="form-control" id="nomeFuncionario" placeholder="Nome do Funcionário" autofocus>
                                 </div>
                                 <div id="validationNome"></div>
                             </div>
@@ -258,6 +258,11 @@
         carregarCargos();
         carregarFuncionarios();
         carregarEstados();
+
+        // ao exibir o modal, procura o input com autofocus e seleciona ele
+        $('.modal').on('shown.bs.modal',function() {
+            $(this).find('[autofocus]').focus();
+        });
     });
 
     function carregarFuncionarios(){

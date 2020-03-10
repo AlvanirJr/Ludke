@@ -59,7 +59,7 @@
                         <div class="form-group">
                             <label for="nomeCargo" class="control-label">Nome do Cargo</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="nomeCargo" placeholder="Nome do Cargo">
+                                <input type="text" class="form-control" id="nomeCargo" placeholder="Nome do Cargo" autofocus>
                             </div>
                             <div class="validationCargo"></div>
                         </div>
@@ -95,6 +95,11 @@
             });
 
             carregarCargos();
+
+            // ao exibir o modal, procura o input com autofocus e seleciona ele
+            $('.modal').on('shown.bs.modal',function() {
+                $(this).find('[autofocus]').focus();
+            });
         });
 
         //function novaCategoria(){

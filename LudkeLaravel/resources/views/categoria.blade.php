@@ -97,8 +97,9 @@
 
         carregarCategorias();
 
+        // ao exibir o modal, procura o input com autofocus e seleciona ele
         $('.modal').on('shown.bs.modal',function() {
-            $(this).find('[autofocus').focus();
+            $(this).find('[autofocus]').focus();
         });
 
     });
