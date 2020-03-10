@@ -157,13 +157,18 @@
             timerR = true;
         });
     }
+    function formatarData(data){
+        var split = data.split('-');
+        data_formatada = split[2] + "/" + split[1] + "/" + split[0];
+        return data_formatada;
+    }
     function montarLinha(pedido){
         if(pedido.status != "FINALIZADO"){
             var linha = "<tr id="+pedido.id+">" +
                             "<td>"+pedido.id+"</td>"+
                             "<td>"+pedido.nomeCliente+"</td>"+
                             "<td>"+pedido.nomeFuncionario+"</td>"+
-                            "<td>"+pedido.dataEntrega+"</td>"+
+                            "<td>"+formatarData(pedido.dataEntrega)+"</td>"+
                             "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
                             "<td>"+pedido.status+"</td>"+
                             "<td>R$ "+pedido.valorTotal+"</td>"+
@@ -184,7 +189,7 @@
                             "<td>"+pedido.id+"</td>"+
                             "<td>"+pedido.nomeCliente+"</td>"+
                             "<td>"+pedido.nomeFuncionario+"</td>"+
-                            "<td>"+pedido.dataEntrega+"</td>"+
+                            "<td>"+formatarData(pedido.dataEntrega)+"</td>"+
                             "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
                             "<td>"+pedido.status+"</td>"+
                             "<td>R$ "+pedido.valorTotal+"</td>"+
