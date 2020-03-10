@@ -60,7 +60,7 @@
                         {{-- Div para validação --}}
                         <label for="nomeCategoria" class="control-label">Nome da Categoria</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="nomeCategoria" placeholder="Nome da Categoria">
+                            <input type="text" class="form-control" id="nomeCategoria" placeholder="Nome da Categoria" autofocus>
 
                         </div>
                         <div class="validationCategoria"></div>
@@ -96,6 +96,11 @@
         });
 
         carregarCategorias();
+
+        $('.modal').on('shown.bs.modal',function() {
+            $(this).find('[autofocus').focus();
+        });
+
     });
 
     //function novaCategoria(){
@@ -106,6 +111,9 @@
         $("#span").remove(); //remove a linha do span
         // exibe o modal cadastrar categorias
         $('#dlgCategorias').modal('show');
+
+        
+
     }
 
     function montarLinha(cat){
