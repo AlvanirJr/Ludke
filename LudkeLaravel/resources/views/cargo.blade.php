@@ -81,8 +81,9 @@
 
     <script type="text/javascript">
 
-        // Usa a biblioteca quicksearch para buscar dados na tabela
-        // $('input#inputBusca').quicksearch('table#tabelaCategorias tbody tr');
+        
+
+
         var token = <?php json_encode(Auth::user()->api_token); ?>
         console.log(token);
         $(function(){
@@ -100,6 +101,9 @@
             $('.modal').on('shown.bs.modal',function() {
                 $(this).find('[autofocus]').focus();
             });
+
+            // Usa a biblioteca quicksearch para buscar dados na tabela
+            // $('input#inputBusca').quicksearch('table#tabelaCargos tbody tr');
         });
 
         //function novaCategoria(){

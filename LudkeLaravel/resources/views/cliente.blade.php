@@ -265,7 +265,7 @@
                             <div class="form-group">
                                 <label for="numero" class="control-label">Número</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="numero" placeholder="Número">
+                                    <input type="text" class="form-control" id="numero" placeholder="Número">
                                 </div>
                                 <div id="validationNumero"></div>
                             </div>

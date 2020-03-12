@@ -84,7 +84,7 @@ class ClienteController extends Controller
                 'bairro' => 'required|string|max:255',
                 'cidade' => 'required|string|max:255',
                 'uf' => 'required',
-                'numero' => 'required|integer',
+                'numero' => 'required|string',
                 'complemento' => 'nullable|string',
         ]);
 
@@ -228,7 +228,7 @@ class ClienteController extends Controller
             'bairro' => 'required|string|max:255',
             'cidade' => 'required|string|max:255',
             'uf' => 'required',
-            'numero' => 'required|integer',
+            'numero' => 'required|string',
             'complemento' => 'nullable|string',
         ]);
 
