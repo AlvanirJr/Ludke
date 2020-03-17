@@ -205,7 +205,7 @@
 
     // carrega categorias da api e coloca no select
     function carregarCategorias(){
-        $.getJSON('/api/categorias',function(data){
+        $.getJSON('/categorias',function(data){
 
             for(i=0 ; i<data.length; i++){
                 // adiciona cada categoria no select do formulário
@@ -258,7 +258,7 @@
 
         console.log(imagensProduto);
         // getJSON já faz o parser do dado recebido para json
-        $.getJSON('/api/produtos/'+id, function(data){
+        $.getJSON('/produtos/'+id, function(data){
             $('#id').val(data.id);
             $('#nomeProduto').val(data.nome);
             $('#categoriaProduto').val(data.categoria_id);
@@ -305,7 +305,7 @@
             // faz requisição DELETE para /api/produtos passando o id do produto que deseja apagar
             $.ajax({
                 type: "DELETE",
-                url: "/api/produtos/"+id,
+                url: "/produtos/"+id,
                 context: this,
                 success: function(){
                     console.log("Deletou");
@@ -329,7 +329,7 @@
 
     // carrega produtos do banco através da api e chama a função montarLinha para colocar na tabela
     function carregarProdutos(){
-        $.getJSON('/api/produtos',function(produtos){
+        $.getJSON('/produtos',function(produtos){
             for(i=0;i<produtos.length;i++){
                 // split = produtos[i].validade.split('-');
                 // novadata =  split[2] + "/" +split[1]+"/"+split[0];
@@ -404,7 +404,7 @@
 
         // console.log(formData);
         $.ajax({
-            url:'/api/produtos',
+            url:'/produtos',
             method:"POST",
             data:formData,
             dataType:'JSON',
@@ -515,7 +515,7 @@
 
 
         $.ajax({
-            url:'/api/produtos/'+prod.id,
+            url:'/produtos/'+prod.id,
             method:"POST",
             data:formData,
             dataType:'JSON',

@@ -24,7 +24,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 // chama a view de produtos
-Route::get('/produtos','ProdutoController@indexView')->name('produtos');
+Route::get('/indexProdutos','ProdutoController@indexView')->name('produtos');
 // Route::post('produtos','ProdutoController@store')->name('produto.store');
 
 
@@ -32,11 +32,11 @@ Route::get('/produtos','ProdutoController@indexView')->name('produtos');
 Route::get('/indexCategorias','CategoriaController@indexView')->name('categorias');
 
 // View Funcionários
-Route::get('/funcionarios','FuncionarioController@indexView')->name('funcionarios');
+Route::get('/indexFuncionarios','FuncionarioController@indexView')->name('funcionarios');
 
-Route::get('/clientes','ClienteController@indexView')->name('clientes');
+Route::get('/indexClientes','ClienteController@indexView')->name('clientes');
 
-Route::get('/cargos', 'CargoController@indexView')->name('cargos');
+Route::get('/indexCargos', 'CargoController@indexView')->name('cargos');
 
 Route::get('/pedidos','PedidoController@index')->name('pedidos');
 
@@ -54,7 +54,10 @@ Route::get('/getPedidos','PedidoController@getPedidos');
 Route::get('/pedidos/edit/{id}','PedidoController@edit')->name('pedido.editar'); //Editar Pedido
 Route::put('/pedidos/update/{id}','PedidoController@update');
 
+// Antigas rotas da API
 Route::resource('/categorias','CategoriaController');
+Route::resource('/produtos', 'ProdutoController'); //cria todas as rotas para produto
+Route::post('/produtos/{id}','ProdutoController@updateProdWithImage');
 
 // Rotas para testar banco
 use App\Produto;
