@@ -81,6 +81,8 @@
 
     <script type="text/javascript">
 
+        // Usa a biblioteca quicksearch para buscar dados na tabela
+        // $('input#inputBusca').quicksearch('table#tabelaCargos tbody tr');
         
 
 
@@ -102,8 +104,6 @@
                 $(this).find('[autofocus]').focus();
             });
 
-            // Usa a biblioteca quicksearch para buscar dados na tabela
-            // $('input#inputBusca').quicksearch('table#tabelaCargos tbody tr');
         });
 
         //function novaCategoria(){

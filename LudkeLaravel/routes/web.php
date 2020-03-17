@@ -29,7 +29,7 @@ Route::get('/produtos','ProdutoController@indexView')->name('produtos');
 
 
 // View Categorias
-Route::get('/categorias','CategoriaController@indexView')->name('categorias');
+Route::get('/indexCategorias','CategoriaController@indexView')->name('categorias');
 
 // View Funcionários
 Route::get('/funcionarios','FuncionarioController@indexView')->name('funcionarios');
@@ -53,6 +53,8 @@ Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("lista
 Route::get('/getPedidos','PedidoController@getPedidos');
 Route::get('/pedidos/edit/{id}','PedidoController@edit')->name('pedido.editar'); //Editar Pedido
 Route::put('/pedidos/update/{id}','PedidoController@update');
+
+Route::resource('/categorias','CategoriaController');
 
 // Rotas para testar banco
 use App\Produto;

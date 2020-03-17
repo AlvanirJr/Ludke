@@ -433,6 +433,9 @@
                 for(i=0;i<error.nome.length;i++){
                     console.log(error.nome[i]);
                     $("#validationNome").append("<span class="+"span"+" style="+"color:red"+">"+error.nome[i]+"</span>")
+                    // ao exibir o modal, procura o input com autofocus e seleciona ele
+                    
+                    
                 }
             }
             if(error.validade){
