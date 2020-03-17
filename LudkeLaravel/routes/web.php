@@ -58,6 +58,8 @@ Route::put('/pedidos/update/{id}','PedidoController@update');
 Route::resource('/categorias','CategoriaController');
 Route::resource('/produtos', 'ProdutoController'); //cria todas as rotas para produto
 Route::post('/produtos/{id}','ProdutoController@updateProdWithImage');
+Route::resource('/cargos', 'CargoController'); //cria todas as rotas para cargos
+Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
 
 // Rotas para testar banco
 use App\Produto;

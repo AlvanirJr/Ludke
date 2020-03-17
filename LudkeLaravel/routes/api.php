@@ -23,14 +23,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         // Route::resource('/categorias','CategoriaController');
 
         // cria todas as rotas de produto. verificar com " php artisan route:list "
-        Route::resource('/produtos', 'ProdutoController'); //cria todas as rotas para produto
-        Route::post('/produtos/{id}','ProdutoController@updateProdWithImage');
+        // Route::resource('/produtos', 'ProdutoController'); //cria todas as rotas para produto
+        // Route::post('/produtos/{id}','ProdutoController@updateProdWithImage');
 
 
         // cria todas as rotas de cargos. verificar com " php artisan route:list "
-        Route::resource('/cargos', 'CargoController'); //cria todas as rotas para cargos
+        // Route::resource('/cargos', 'CargoController'); //cria todas as rotas para cargos
         // cria todas as rotas de funcionarios. verificar com " php artisan route:list "
-        Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
+        // Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
 
         Route::resource('/clientes', 'ClienteController');
 

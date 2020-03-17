@@ -134,7 +134,7 @@
         }
         function editarCargos(id){
             console.log(id);
-            $.getJSON('/api/cargos/'+id, function(data){
+            $.getJSON('/cargos/'+id, function(data){
                 // console.log(data);
                 $('#id').val(data.id);
                 $('#nomeCargo').val(data.nome);
@@ -150,7 +150,7 @@
             if(confirma){
                 $.ajax({
                     type: "DELETE",
-                    url: "/api/cargos/"+id,
+                    url: "/cargos/"+id,
                     context: this,
                     success: function(){
                         console.log("deletou");
@@ -172,7 +172,7 @@
 
         }
         function carregarCargos(){
-            $.getJSON('/api/cargos', function(cargos){
+            $.getJSON('/cargos', function(cargos){
 
                 for(i=0; i < cargos.length;i++){
                     linha = montarLinha(cargos[i]);
@@ -189,7 +189,7 @@
 
             $.ajax({
             type: "POST",
-            url: "/api/cargos",
+            url: "/cargos",
             context:this,
             data:cargo,
             success: function(data){
@@ -223,7 +223,7 @@
             // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
             $.ajax({
                 type: "PUT",
-                url: "/api/cargos/"+cargo.id,
+                url: "/cargos/"+cargo.id,
                 context: this,
                 data: cargo,
                 success: function(data){
