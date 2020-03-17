@@ -32,7 +32,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         // cria todas as rotas de funcionarios. verificar com " php artisan route:list "
         // Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
 
-        Route::resource('/clientes', 'ClienteController');
+        // Route::resource('/clientes', 'ClienteController');
 
 // Route::resource('/pedidos', 'PedidoController');
 

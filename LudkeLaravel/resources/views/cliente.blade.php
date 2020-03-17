@@ -315,7 +315,7 @@
 
     function carregarClientes(){
         // console.log('clientes');
-        $.getJSON('/api/clientes',function(clientes){
+        $.getJSON('/clientes',function(clientes){
             for(i=0; i<clientes.length;i++){
                 // console.log(clientes[i]);
                 linha = montarLinha(clientes[i]);
@@ -345,7 +345,7 @@
     }
 
     function editarCliente(id){
-        $.getJSON("/api/clientes/"+id, function(data){
+        $.getJSON("/clientes/"+id, function(data){
             $('#id').val(data.id);
             $('#nomeCliente').val(data.nome);
             $('#emailCliente').val(data.email);
@@ -376,7 +376,7 @@
         if(confirma){
             $.ajax({
                 type: "DELETE",
-                url: "/api/clientes/"+id,
+                url: "/clientes/"+id,
                 context: this,
                 success: function(){
                     console.log("Deletou Cliente");
@@ -461,7 +461,7 @@
 
         $.ajax({
             type: "PUT",
-            url: "/api/clientes/"+cliente.id,
+            url: "/clientes/"+cliente.id,
             context: this,
             data: cliente,
             success: function(data){
@@ -515,7 +515,7 @@
 
         $.ajax({
                 type: "POST",
-                url: "/api/clientes",
+                url: "/clientes",
                 context: this,
                 data: cliente,
                 success: function(data){
