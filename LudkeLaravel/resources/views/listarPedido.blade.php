@@ -9,13 +9,16 @@
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
-                    <div class="col-sm-10">
+                    <div class="col-sm-7">
                         <div class="titulo-pagina-nome">
                             <h2>Pedidos</h2>
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Novo Pedido</a>
+                    </div>
+                    <div class="col-sm-3">
+                        <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
                     </div>
                     
                 </div>
@@ -113,6 +116,15 @@
 @section('javascript')
 
 <script type="text/javascript">
+    // Busca na tabela
+    $(function(){
+        $("#inputBusca").on("keyup",function(){
+            var value = $(this).val().toUpperCase();
+            $("#tabelaPedidos tbody tr").filter(function(){
+                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
+            });
+        });
+    });
     $(function(){
 
         // Configuração do ajax com token csrf

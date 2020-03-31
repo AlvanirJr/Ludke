@@ -245,7 +245,15 @@
 
 @section('javascript')
 <script>
-
+    // Busca na tabela
+    $(function(){
+        $("#inputBusca").on("keyup",function(){
+            var value = $(this).val().toUpperCase();
+            $("#tabelaFuncionarios tbody tr").filter(function(){
+                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
+            });
+        });
+    });
     //essa função é chamada sempre que atualiza a pagina
     $(function(){
         // Configura o ajax para todas as requisições ir com token csrf

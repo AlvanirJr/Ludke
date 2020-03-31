@@ -297,6 +297,15 @@
 
 @section('javascript')
 <script>
+    // Busca na tabela
+    $(function(){
+        $("#inputBusca").on("keyup",function(){
+            var value = $(this).val().toUpperCase();
+            $("#tabelaClientes tbody tr").filter(function(){
+                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
+            });
+        });
+    });
     $(function(){
         $.ajaxSetup({
             headers:{
