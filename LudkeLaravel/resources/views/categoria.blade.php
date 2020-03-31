@@ -86,6 +86,15 @@
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabelaCategorias tbody tr');
 
+    // Busca na tabela
+    $(function(){
+        $("#inputBusca").on("keyup",function(){
+            var value = $(this).val().toUpperCase();
+            $("#tabelaCategorias tbody tr").filter(function(){
+                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
+            });
+        });
+    });
     $(function(){
 
         // Configuração do ajax com token csrf
