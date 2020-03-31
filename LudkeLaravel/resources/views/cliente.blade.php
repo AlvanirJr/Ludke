@@ -71,7 +71,7 @@
                             <div class="form-group">
                                 <label for="nomeCliente" class="control-label">Nome do Cliente</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="nomeCliente" placeholder="Nome do Cliente">
+                                    <input type="text" class="form-control" id="nomeCliente" placeholder="Nome do Cliente" autofocus>
                                 </div>
                                 <div id="validationNome"></div>
                             </div>
@@ -265,7 +265,7 @@
                             <div class="form-group">
                                 <label for="numero" class="control-label">Número</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="numero" placeholder="Número">
+                                    <input type="text" class="form-control" id="numero" placeholder="Número">
                                 </div>
                                 <div id="validationNumero"></div>
                             </div>
@@ -315,11 +315,16 @@
 
         carregarEstados();
         carregarClientes();
+
+        // ao exibir o modal, procura o input com autofocus e seleciona ele
+        $('.modal').on('shown.bs.modal',function() {
+            $(this).find('[autofocus]').focus();
+        });
     });
 
     function carregarClientes(){
         // console.log('clientes');
-        $.getJSON('/api/clientes',function(clientes){
+        $.getJSON('/clientes',function(clientes){
             for(i=0; i<clientes.length;i++){
                 // console.log(clientes[i]);
                 linha = montarLinha(clientes[i]);
@@ -349,7 +354,7 @@
     }
 
     function editarCliente(id){
-        $.getJSON("/api/clientes/"+id, function(data){
+        $.getJSON("/clientes/"+id, function(data){
             $('#id').val(data.id);
             $('#nomeCliente').val(data.nome);
             $('#emailCliente').val(data.email);
@@ -380,7 +385,7 @@
         if(confirma){
             $.ajax({
                 type: "DELETE",
-                url: "/api/clientes/"+id,
+                url: "/clientes/"+id,
                 context: this,
                 success: function(){
                     console.log("Deletou Cliente");
@@ -465,7 +470,7 @@
 
         $.ajax({
             type: "PUT",
-            url: "/api/clientes/"+cliente.id,
+            url: "/clientes/"+cliente.id,
             context: this,
             data: cliente,
             success: function(data){
@@ -519,7 +524,7 @@
 
         $.ajax({
                 type: "POST",
-                url: "/api/clientes",
+                url: "/clientes",
                 context: this,
                 data: cliente,
                 success: function(data){

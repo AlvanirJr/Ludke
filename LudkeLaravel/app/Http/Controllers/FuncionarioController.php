@@ -79,7 +79,7 @@ class FuncionarioController extends Controller
             'bairro' => 'required',
             'cidade' => 'required',
             'uf' => 'required',
-            'numero' => 'required|integer',
+            'numero' => 'required|string',
             'complemento' => 'nullable|string|max:255',
         ]);
 
@@ -203,7 +203,7 @@ class FuncionarioController extends Controller
             'bairro' => 'required',
             'cidade' => 'required',
             'uf' => 'required',
-            'numero' => 'required|integer',
+            'numero' => 'required|string',
             'complemento' => 'nullable|string|max:255',
         ]);
 

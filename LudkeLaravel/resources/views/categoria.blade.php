@@ -60,7 +60,7 @@
                         {{-- Div para validação --}}
                         <label for="nomeCategoria" class="control-label">Nome da Categoria</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="nomeCategoria" placeholder="Nome da Categoria">
+                            <input type="text" class="form-control" id="nomeCategoria" placeholder="Nome da Categoria" autofocus>
 
                         </div>
                         <div class="validationCategoria"></div>
@@ -105,6 +105,12 @@
         });
 
         carregarCategorias();
+
+        // ao exibir o modal, procura o input com autofocus e seleciona ele
+        $('.modal').on('shown.bs.modal',function() {
+            $(this).find('[autofocus]').focus();
+        });
+
     });
 
     //function novaCategoria(){
@@ -115,6 +121,9 @@
         $("#span").remove(); //remove a linha do span
         // exibe o modal cadastrar categorias
         $('#dlgCategorias').modal('show');
+
+        
+
     }
 
     function montarLinha(cat){
@@ -135,7 +144,7 @@
     }
     function editarCategoria(id){
         console.log('Editar Categoria');
-        $.getJSON('/api/categorias/'+id, function(data){
+        $.getJSON('/categorias/'+id, function(data){
             // console.log(data);
             $('#id').val(data.id);
             $('#nomeCategoria').val(data.nome);
@@ -151,7 +160,7 @@
         if(confirma){
             $.ajax({
                 type: "DELETE",
-                url: "/api/categorias/"+id,
+                url: "/categorias/"+id,
                 context: this,
                 success: function(){
                     console.log("deletou");
@@ -173,7 +182,7 @@
 
     }
     function carregarCategorias(){
-        $.getJSON('/api/categorias', function(categorias){
+        $.getJSON('/categorias', function(categorias){
 
             for(i=0; i < categorias.length;i++){
                 linha = montarLinha(categorias[i]);
@@ -188,7 +197,7 @@
         };
         $.ajax({
             type: "POST",
-            url: "/api/categorias",
+            url: "/categorias",
             context:this,
             data:cat,
             success: function(data){
@@ -227,7 +236,7 @@
         // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
         $.ajax({
             type: "PUT",
-            url: "/api/categorias/"+cat.id,
+            url: "/categorias/"+cat.id,
             context: this,
             data: cat,
             success: function(data){

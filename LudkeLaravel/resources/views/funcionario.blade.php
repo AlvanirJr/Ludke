@@ -71,7 +71,7 @@
                             <div class="form-group">
                                 <label for="nomeFuncionario" class="control-label">Nome do Funcionario</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="nomeFuncionario" placeholder="Nome do Funcionário">
+                                    <input type="text" class="form-control" id="nomeFuncionario" placeholder="Nome do Funcionário" autofocus>
                                 </div>
                                 <div id="validationNome"></div>
                             </div>
@@ -213,7 +213,7 @@
                             <div class="form-group">
                                 <label for="numero" class="control-label">Número</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="numero" placeholder="Número">
+                                    <input type="text" class="form-control" id="numero" placeholder="Número">
                                 </div>
                                 <div id="validationNumero"></div>
                             </div>
@@ -266,12 +266,17 @@
         carregarCargos();
         carregarFuncionarios();
         carregarEstados();
+
+        // ao exibir o modal, procura o input com autofocus e seleciona ele
+        $('.modal').on('shown.bs.modal',function() {
+            $(this).find('[autofocus]').focus();
+        });
     });
 
     function carregarFuncionarios(){
         // alert('funcionarios');
         console.log('funcionarios');
-        $.getJSON('/api/funcionarios',function(funcionarios){
+        $.getJSON('/funcionarios',function(funcionarios){
             // console.log(funcionarios);
             for(i=0; i<funcionarios.length;i++){
                 
@@ -295,7 +300,7 @@
             }
     }
     function carregarCargos(){
-        $.getJSON('/api/cargos',function(data){
+        $.getJSON('/cargos',function(data){
             // console.log(data);
 
             for(i = 0; i < data.length; i++){
@@ -349,7 +354,7 @@
 
         $.ajax({
             type: "PUT",
-            url: "/api/funcionarios/"+funcionario.id,
+            url: "/funcionarios/"+funcionario.id,
             context: this,
             data: funcionario,
             success: function(data){
@@ -411,7 +416,7 @@
     }
     function editarFuncionario(id){
         console.log("editar Funcionario");
-        $.getJSON("/api/funcionarios/"+id, function(data){
+        $.getJSON("/funcionarios/"+id, function(data){
             
             $('#id').val(data.id);
             $('#emailFuncionario').val(data.email),
@@ -439,7 +444,7 @@
         if(confirma){
             $.ajax({
                 type: "DELETE",
-                url: "/api/funcionarios/"+id,
+                url: "/funcionarios/"+id,
                 context: this,
                 success: function(){
                     console.log("Deletou Funcionario");
@@ -479,7 +484,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/api/funcionarios",
+            url: "/funcionarios",
             context:this,
             data:funcionario,
             success: function(data){

@@ -59,7 +59,7 @@
                         <div class="form-group">
                             <label for="nomeCargo" class="control-label">Nome do Cargo</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="nomeCargo" placeholder="Nome do Cargo">
+                                <input type="text" class="form-control" id="nomeCargo" placeholder="Nome do Cargo" autofocus>
                             </div>
                             <div class="validationCargo"></div>
                         </div>
@@ -92,7 +92,10 @@
     });
 
         // Usa a biblioteca quicksearch para buscar dados na tabela
-        // $('input#inputBusca').quicksearch('table#tabelaCategorias tbody tr');
+        // $('input#inputBusca').quicksearch('table#tabelaCargos tbody tr');
+        
+
+
         var token = <?php json_encode(Auth::user()->api_token); ?>
         console.log(token);
         $(function(){
@@ -105,6 +108,12 @@
             });
 
             carregarCargos();
+
+            // ao exibir o modal, procura o input com autofocus e seleciona ele
+            $('.modal').on('shown.bs.modal',function() {
+                $(this).find('[autofocus]').focus();
+            });
+
         });
 
         //function novaCategoria(){
@@ -135,7 +144,7 @@
         }
         function editarCargos(id){
             console.log(id);
-            $.getJSON('/api/cargos/'+id, function(data){
+            $.getJSON('/cargos/'+id, function(data){
                 // console.log(data);
                 $('#id').val(data.id);
                 $('#nomeCargo').val(data.nome);
@@ -151,7 +160,7 @@
             if(confirma){
                 $.ajax({
                     type: "DELETE",
-                    url: "/api/cargos/"+id,
+                    url: "/cargos/"+id,
                     context: this,
                     success: function(){
                         console.log("deletou");
@@ -173,7 +182,7 @@
 
         }
         function carregarCargos(){
-            $.getJSON('/api/cargos', function(cargos){
+            $.getJSON('/cargos', function(cargos){
 
                 for(i=0; i < cargos.length;i++){
                     linha = montarLinha(cargos[i]);
@@ -190,7 +199,7 @@
 
             $.ajax({
             type: "POST",
-            url: "/api/cargos",
+            url: "/cargos",
             context:this,
             data:cargo,
             success: function(data){
@@ -224,7 +233,7 @@
             // faz requisição PUT para /api/categorias passando o id da categoria que deseja editar
             $.ajax({
                 type: "PUT",
-                url: "/api/cargos/"+cargo.id,
+                url: "/cargos/"+cargo.id,
                 context: this,
                 data: cargo,
                 success: function(data){
