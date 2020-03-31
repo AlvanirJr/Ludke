@@ -6,18 +6,18 @@
     <div class="container">
         <div class="row justify-content-center">
 
-            <div class="col-sm-12">
+            <div class="col-md-12">
                 <div class="titulo-pagina">
                     <div class="row">
-                        <div class="col-sm-7">
+                        <div class="col-md-7">
                             <div class="titulo-pagina-nome">
                                 <h2>Cargos</h2>
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-md-2">
                             <a class="btn btn-primary-ludke" role="button" onclick="novoCargo()">Novo</a>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
                         </div>
                     </div>
@@ -27,8 +27,8 @@
 
 
         <div class="row justify-content-center">
-            <div class="col-sm-12">
-                <table id="tabelaCargos" class="table table-hover table-responsive-sm">
+            <div class="col-md-12">
+                <table id="tabelaCargos" class="table table-hover table-responsive-md">
                     <thead class="thead-primary">
                     <tr>
                         <th>ID</th>
@@ -80,6 +80,16 @@
 @section('javascript')
 
     <script type="text/javascript">
+
+    // Busca na tabela
+    $(function(){
+        $("#inputBusca").on("keyup",function(){
+            var value = $(this).val().toUpperCase();
+            $("#tabelaCargos tbody tr").filter(function(){
+                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
+            });
+        });
+    });
 
         // Usa a biblioteca quicksearch para buscar dados na tabela
         // $('input#inputBusca').quicksearch('table#tabelaCategorias tbody tr');
