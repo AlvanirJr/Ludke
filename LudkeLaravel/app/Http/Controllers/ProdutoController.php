@@ -14,7 +14,7 @@ class ProdutoController extends Controller
     // Retorna a view dos produtos
     public function indexView()
     {
-        $produtos = Produto::paginate(10);
+        $produtos = Produto::orderby("nome")->paginate(10);
         return view('produto',["produtos"=>$produtos]);
     }
 

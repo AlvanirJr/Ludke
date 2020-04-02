@@ -78,7 +78,7 @@
 
                         {{-- Nome do Cargo --}}
                         <div class="form-group">
-                            <label for="nomeCargo" class="control-label">Nome do Cargo</label>
+                            <label for="nomeCargo" class="control-label">Nome do Cargo <span class="obrigatorio">*</span></label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="nomeCargo" placeholder="Nome do Cargo" autofocus>
                             </div>
@@ -222,7 +222,7 @@
                 // linha = montarLinha(categoria);
                 // $('#tabelaCargos>tbody').append(linha);
                 // $('#dlgCargos').modal('hide');
-
+                alert("Cargo cadastrado com sucesso!");
                 window.location.href = '/indexCargos';
                 },
             error:function(error){
@@ -254,6 +254,9 @@
                 context: this,
                 data: cargo,
                 success: function(data){
+                    cargo = JSON.parse(data);
+                    alert("Cargo "+cargo.nome+" salvo com sucesso!")
+                    window.location.href = '/indexCargos';
                     // console.log(cargo);
                     // cargo = JSON.parse(data);
                     // console.log("salvou OK");
@@ -268,7 +271,6 @@
                     //     e[0].cells[1].textContent = cargo.nome;
                     // }
                     
-                    window.location.href = '/indexCargos';
                 },
                 error: function(error){
                     console.log(error);
