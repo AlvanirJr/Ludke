@@ -77,7 +77,7 @@
                     {{-- Nome do Categoria --}}
                     <div class="form-group">
                         {{-- Div para validação --}}
-                        <label for="nomeCategoria" class="control-label">Nome da Categoria</label>
+                        <label for="nomeCategoria" class="control-label">Nome da Categoria <span class="obrigatorio">*</span></label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="nomeCategoria" placeholder="Nome da Categoria" autofocus>
 
@@ -182,15 +182,17 @@
                 url: "/categorias/"+id,
                 context: this,
                 success: function(){
-                    console.log("deletou");
-                    linhas = $("#tabelaCategorias>tbody>tr");
-                    e = linhas.filter(function(i,elemento){
-                        return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
+                    alert("Categoria deletada com sucesso!");
+                    window.location.href = '/indexCategorias';
+                    // console.log("deletou");
+                    // linhas = $("#tabelaCategorias>tbody>tr");
+                    // e = linhas.filter(function(i,elemento){
+                    //     return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
 
-                    });
-                    if(e){
-                        e.remove();
-                    }
+                    // });
+                    // if(e){
+                    //     e.remove();
+                    // }
                 },
                 error: function(error){
                     console.log(error);
@@ -221,10 +223,15 @@
             data:cat,
             success: function(data){
                 categoria = JSON.parse(data);
-                
-                linha = montarLinha(categoria);
-                $('#tabelaCategorias>tbody').append(linha);
                 $('#dlgCategorias').modal('hide');
+                alert("Categoria "+categoria.nome+" cadastrada com sucesso!")
+                window.location.href = '/indexCategorias';
+                
+                // categoria = JSON.parse(data);
+                
+                // linha = montarLinha(categoria);
+                // $('#tabelaCategorias>tbody').append(linha);
+                // $('#dlgCategorias').modal('hide');
             },
             error:function(error){
                 retorno = JSON.parse(error.responseText);
@@ -259,20 +266,23 @@
             context: this,
             data: cat,
             success: function(data){
-                
                 cat = JSON.parse(data);
-                console.log("salvou OK");
-                $('#dlgCategorias').modal('hide');
-                linhas = $('#tabelaCategorias>tbody>tr');
-                e = linhas.filter(function(i,elemento){
-                    return (elemento.cells[0].textContent == cat.id);
-                });
-                console.log(e);
+                alert("Categoria "+cat.nome+" salva com sucesso!")
+                window.location.href = '/indexCategorias';
 
-                if(e){
-                    e[0].cells[0].textContent = cat.id;
-                    e[0].cells[1].textContent = cat.nome;
-                }
+                // cat = JSON.parse(data);
+                // console.log("salvou OK");
+                // $('#dlgCategorias').modal('hide');
+                // linhas = $('#tabelaCategorias>tbody>tr');
+                // e = linhas.filter(function(i,elemento){
+                //     return (elemento.cells[0].textContent == cat.id);
+                // });
+                // console.log(e);
+
+                // if(e){
+                //     e[0].cells[0].textContent = cat.id;
+                //     e[0].cells[1].textContent = cat.nome;
+                // }
             },
             error: function(error){
                 console.log(error);

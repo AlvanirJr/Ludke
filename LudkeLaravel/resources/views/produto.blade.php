@@ -336,14 +336,16 @@
                 url: "/produtos/"+id,
                 context: this,
                 success: function(){
-                    console.log("Deletou");
-                    linhas = $("#tabelaProdutos>tbody>tr");//pega linha da tabela
-                    e = linhas.filter(function(i,elemento){
-                        return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
-                    });
-                    if(e){
-                        e.remove();// remove a linha
-                    }
+                    // console.log("Deletou");
+                    // linhas = $("#tabelaProdutos>tbody>tr");//pega linha da tabela
+                    // e = linhas.filter(function(i,elemento){
+                    //     return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
+                    // });
+                    // if(e){
+                    //     e.remove();// remove a linha
+                    // }
+                    alert("Cargo deletado com sucesso!")
+                    window.location.href='/indexProdutos';
                 },
                 error: function(error){
                     console.log(error);
@@ -442,7 +444,7 @@
             success:function(produto){
 
                 $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
-                alert("Produto Cadastrado com Sucesso!");
+                alert("Produto cadastrado com Sucesso!");
 
                 window.location.href = '/indexProdutos';
 

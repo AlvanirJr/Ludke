@@ -186,6 +186,7 @@
                         // if(e){
                         //     e.remove();
                         // }
+                        alert("Cargo deletado com sucesso!")
                         window.location.href = '/indexCargos';
                     },
                     error: function(error){
@@ -218,12 +219,13 @@
             context:this,
             data:cargo,
             success: function(data){
-                // categoria = JSON.parse(data);
-                // linha = montarLinha(categoria);
+                cargo = JSON.parse(data);
+                alert("Cargo "+cargo.nome+" cadastrado com sucesso!");
+                window.location.href = '/indexCargos';
+                // cargo = JSON.parse(data);
+                // linha = montarLinha(cargo);
                 // $('#tabelaCargos>tbody').append(linha);
                 // $('#dlgCargos').modal('hide');
-                alert("Cargo cadastrado com sucesso!");
-                window.location.href = '/indexCargos';
                 },
             error:function(error){
                 retorno = JSON.parse(error.responseText);

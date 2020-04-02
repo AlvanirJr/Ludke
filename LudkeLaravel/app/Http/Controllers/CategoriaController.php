@@ -11,7 +11,7 @@ class CategoriaController extends Controller
     // Retorna a view dos categoria
     public function indexView()
     {
-        $categorias = Categoria::paginate(10);
+        $categorias = Categoria::orderby('nome')->paginate(10);
         return view('categoria',["categorias"=>$categorias]);
     }
     public function index(Request $request)
