@@ -12,7 +12,8 @@ class ClienteController extends Controller
     // Retorna a view dos funcionarios
     public function indexView()
     {
-        return view('cliente');
+        $clientes = Cliente::paginate(10);
+        return view('cliente',["clientes"=>$clientes]);
     }
 
 

@@ -39,8 +39,30 @@
                 </thead>
 
                 <tbody>
+                    @foreach ($clientes as $cliente)
+                    <tr>
+                        <td>{{$cliente->id}}</td>
+                        <td>{{$cliente->user->name}}</td>
+                        <td>{{$cliente->cpfCnpj}}</td>
+                        <td>{{$cliente->user->telefone->residencial}}</td>
+                        <td>{{$cliente->user->telefone->celular}}</td>
+                        <td>
+                            <a href="#" onclick="editarCliente({{$cliente->id}})">
+                               <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}">
+                            </a>                            
+                            <a href="#" onclick="removerCliente({{$cliente->id}})">
+                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table> <!-- end table -->
+
+            <div class="row justify-content-center">
+                {{$clientes->links()}}
+
+            </div>
         </div><!-- end col-->
     </div><!-- end row-->
 </div>
@@ -314,7 +336,7 @@
         });
 
         carregarEstados();
-        carregarClientes();
+        // carregarClientes();
 
         // ao exibir o modal, procura o input com autofocus e seleciona ele
         $('.modal').on('shown.bs.modal',function() {

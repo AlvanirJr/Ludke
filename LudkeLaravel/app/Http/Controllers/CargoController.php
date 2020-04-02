@@ -10,8 +10,9 @@ class CargoController extends Controller
 {
 
     public function indexView()
-    {
-        return view('cargo');
+    {   
+        $cargos = Cargo::paginate(10);
+        return view('cargo',['cargos'=>$cargos]);
     }
 
     /**

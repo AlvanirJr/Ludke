@@ -43,8 +43,30 @@
                 </thead>
 
                 <tbody>
+                    @foreach ($produtos as $produto)
+                    <tr>
+                        <td>{{$produto->id}}</td>
+                        <td>{{$produto->nome}}</td>
+                        <td>{{$produto->categoria->nome}}</td>
+                        <td>{{$produto->validade}}</td>
+                        <td>{{$produto->preco}}</td>
+                        <td>{{$produto->descricao}}</td>
+                        <td>
+                            <a href="#" onclick="editarProduto({{$produto->id}})">
+                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" >
+                            </a>
+                            <a href="#" onclick="removerProduto({{$produto->id}})">
+                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table> <!-- end table -->
+            <div class="row justify-content-center">
+                {{$produtos->links()}}
+
+            </div>
         </div><!-- end col-->
     </div><!-- end row-->
 </div>
@@ -167,7 +189,7 @@
         });
 
         carregarCategorias();
-        carregarProdutos();
+        // carregarProdutos();
 
         // Função para aparecer icone de excluir foto
         exibirBotaoExcluirFoto();

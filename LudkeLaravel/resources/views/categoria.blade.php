@@ -38,8 +38,27 @@
                 </thead>
                 <tbody>
                     {{-- Linhas da tabela serão adicionadas com javascript --}}
+                    {{-- Linhas da tabela serão adicionadas com javascript --}}
+                    @foreach ($categorias as $categoria)
+                    <tr>
+                        <td>{{$categoria->id}}</td>
+                        <td>{{$categoria->nome}}</td>
+                        <td>
+                            <a href="#" onclick="editarCategoria({{$categoria->id}})">
+                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="">
+                            </a>
+                            <a href="#" onclick="removerCategoria({{$categoria->id}})">
+                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="">
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table> <!-- end table -->
+            <div class="row justify-content-center">
+                {{$categorias->links()}}
+
+            </div>
         </div><!-- end col-->
     </div><!-- end row-->
 </div>
@@ -104,7 +123,7 @@
             }
         });
 
-        carregarCategorias();
+        // carregarCategorias();
 
         // ao exibir o modal, procura o input com autofocus e seleciona ele
         $('.modal').on('shown.bs.modal',function() {

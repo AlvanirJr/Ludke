@@ -14,7 +14,8 @@ class FuncionarioController extends Controller
     // Retorna a view dos funcionarios
     public function indexView()
     {
-        return view('funcionario');
+        $funcionarios = Funcionario::paginate(10);
+        return view('funcionario',['funcionarios'=>$funcionarios]);
     }
 
     public function index()

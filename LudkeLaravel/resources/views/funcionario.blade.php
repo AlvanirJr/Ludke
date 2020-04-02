@@ -39,8 +39,29 @@
                 </thead>
 
                 <tbody>
+                    @foreach ($funcionarios as $func)
+                    <tr>
+                        <td>{{$func->id}}</td>
+                        <td>{{$func->user->name}}</td>
+                        <td>{{$func->cargo->nome}}</td>
+                        <td>{{$func->user->email}}</td>
+                        <td>{{$func->user->telefone->celular}}</td>
+                        <td>
+                            <a href="#" onclick="editarFuncionario({{$func->id}})">
+                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}">
+                            </a>
+                            <a href="#" onclick="removerFuncionario({{$func->id}})">
+                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table> <!-- end table -->
+            <div class="row justify-content-center">
+                {{$funcionarios->links()}}
+
+            </div>
         </div><!-- end col-->
     </div><!-- end row-->
 </div>
@@ -264,7 +285,7 @@
         });
 
         carregarCargos();
-        carregarFuncionarios();
+        // carregarFuncionarios();
         carregarEstados();
 
         // ao exibir o modal, procura o input com autofocus e seleciona ele
