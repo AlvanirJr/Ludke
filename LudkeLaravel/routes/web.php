@@ -12,10 +12,14 @@
 */
 
 Route::get('/', function () {
-    return view('auth.login');
+    return redirect('/login');
 });
 
+
 Auth::routes();
+
+Route::post('/login', 'CustomLoginController@loginUser')->name('login');
+Route::get('/logout', 'CustomHomeController@logoutUser');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
