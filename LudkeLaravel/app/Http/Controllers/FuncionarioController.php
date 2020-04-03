@@ -70,11 +70,9 @@ class FuncionarioController extends Controller
 
         // Validação
         $validator = $this->validate($request,[
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
             'nome' => 'required|string|min:5',
             'cargo' => 'required',
-            //'residencial' => 'required',
-            'celular' => 'required',
             'cep' => 'nullable|string',
             'rua' => 'required',
             'bairro' => 'required',
@@ -192,26 +190,44 @@ class FuncionarioController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validação
-        $validator = $this->validate($request,[
-            'email' => 'required|email',
-            'nome' => 'required|string|min:5',
-            'cargo' => 'required',
-            //'residencial' => 'required',
-            'celular' => 'required',
-            'cep' => 'nullable|string',
-            'rua' => 'required',
-            'bairro' => 'required',
-            'cidade' => 'required',
-            'uf' => 'required',
-            'numero' => 'required|string',
-            'complemento' => 'nullable|string|max:255',
-        ]);
-
         $funcionario = Funcionario::find($id);
         $user = User::find($funcionario->user_id);
         $telefone = Telefone::find($user->telefone_id);
         $endereco = Endereco::find($user->endereco_id);
+        
+        if($user->email != $request->input('email')){
+            // Validação
+            $validator = $this->validate($request,[
+                'email' => 'required|email',
+                'nome' => 'required|string|min:5',
+                'cargo' => 'required',
+                'cep' => 'nullable|string',
+                'rua' => 'required',
+                'bairro' => 'required',
+                'cidade' => 'required',
+                'uf' => 'required',
+                'numero' => 'required|string',
+                'complemento' => 'nullable|string|max:255',
+            ]);
+        }else{
+            // Validação
+            $validator = $this->validate($request,[
+                // 'email' => 'required|email',
+                'nome' => 'required|string|min:5',
+                'cargo' => 'required',
+                'cep' => 'nullable|string',
+                'rua' => 'required',
+                'bairro' => 'required',
+                'cidade' => 'required',
+                'uf' => 'required',
+                'numero' => 'required|string',
+                'complemento' => 'nullable|string|max:255',
+            ]);
+        }
+        
+        
+
+        
 
         if(isset($funcionario) && isset($user)
         && isset($telefone) && isset($endereco)){
