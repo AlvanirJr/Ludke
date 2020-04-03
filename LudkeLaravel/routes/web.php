@@ -38,6 +38,9 @@ Route::get('/indexClientes','ClienteController@indexView')->name('clientes');
 
 Route::get('/indexCargos', 'CargoController@indexView')->name('cargos');
 
+
+Route::post('/buscarCargo','CargoController@buscarCargo')->name('buscarCargo');
+
 Route::get('/pedidos','PedidoController@index')->name('pedidos');
 
 // ROTAS PARA O PEDIDO
