@@ -11,7 +11,7 @@ class CargoController extends Controller
 
     public function indexView()
     {   
-        $cargos = Cargo::paginate(10);
+        $cargos = Cargo::orderby('nome')->paginate(10);
         return view('cargo',['cargos'=>$cargos]);
     }
 
