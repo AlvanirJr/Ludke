@@ -78,8 +78,8 @@ class ClienteController extends Controller
                 'cpfCnpj' => 'required|unique:clientes',
                 'tipo' => 'required',
                 'inscricaoEstadual' => 'nullable|string|max:255',
-                'residencial' => 'required|string',
-                'celular' => 'required|string',
+                'residencial' => 'nullable|string',
+                'celular' => 'nullable|string',
                 'cep' => 'nullable|string',
                 'rua' => 'required|string|max:255',
                 'bairro' => 'required|string|max:255',
@@ -214,29 +214,92 @@ class ClienteController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $validation = $this->validate($request,[
-            'nome'=> 'required|string|min:5|max:255',
-            'email' => 'required|string|email|max:255',
-            'nomeReduzido' => 'nullable|string|max:255',
-            'nomeResponsavel' => 'nullable|string|max:255',
-            'cpfCnpj' => 'required',
-            'tipo' => 'required',
-            'inscricaoEstadual' => 'nullable|string|max:255',
-            'residencial' => 'required|string',
-            'celular' => 'required|string',
-            'cep' => 'nullable|string',
-            'rua' => 'required|string|max:255',
-            'bairro' => 'required|string|max:255',
-            'cidade' => 'required|string|max:255',
-            'uf' => 'required',
-            'numero' => 'required|string',
-            'complemento' => 'nullable|string',
-        ]);
-
         $cliente = Cliente::find($id);
         $user = User::find($cliente->user_id);
         $telefone = Telefone::find($user->telefone_id);
         $endereco = Endereco::find($user->endereco_id);
+
+        if($user->email != $request->input('email') && $cliente->cpfCnpj != $request->input('cpfCnpj')){
+            $validation = $this->validate($request,[
+                'nome'=> 'required|string|min:5|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'nomeReduzido' => 'nullable|string|max:255',
+                'nomeResponsavel' => 'nullable|string|max:255',
+                'cpfCnpj' => 'required|unique:clientes',
+                'tipo' => 'required',
+                'inscricaoEstadual' => 'nullable|string|max:255',
+                'residencial' => 'nullable|string',
+                'celular' => 'nullable|string',
+                'cep' => 'nullable|string',
+                'rua' => 'required|string|max:255',
+                'bairro' => 'required|string|max:255',
+                'cidade' => 'required|string|max:255',
+                'uf' => 'required',
+                'numero' => 'required|string',
+                'complemento' => 'nullable|string',
+            ]);
+        }
+        if($user->email == $request->input('email') && $cliente->cpfCnpj != $request->input('cpfCnpj')){
+            $validation = $this->validate($request,[
+                'nome'=> 'required|string|min:5|max:255',
+                // 'email' => 'required|string|email|max:255|unique:users',
+                'nomeReduzido' => 'nullable|string|max:255',
+                'nomeResponsavel' => 'nullable|string|max:255',
+                'cpfCnpj' => 'required|unique:clientes',
+                'tipo' => 'required',
+                'inscricaoEstadual' => 'nullable|string|max:255',
+                'residencial' => 'nullable|string',
+                'celular' => 'nullable|string',
+                'cep' => 'nullable|string',
+                'rua' => 'required|string|max:255',
+                'bairro' => 'required|string|max:255',
+                'cidade' => 'required|string|max:255',
+                'uf' => 'required',
+                'numero' => 'required|string',
+                'complemento' => 'nullable|string',
+            ]);
+        }
+        if($user->email != $request->input('email') && $cliente->cpfCnpj == $request->input('cpfCnpj')){
+            $validation = $this->validate($request,[
+                'nome'=> 'required|string|min:5|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'nomeReduzido' => 'nullable|string|max:255',
+                'nomeResponsavel' => 'nullable|string|max:255',
+                // 'cpfCnpj' => 'required|unique:clientes',
+                'tipo' => 'required',
+                'inscricaoEstadual' => 'nullable|string|max:255',
+                'residencial' => 'nullable|string',
+                'celular' => 'nullable|string',
+                'cep' => 'nullable|string',
+                'rua' => 'required|string|max:255',
+                'bairro' => 'required|string|max:255',
+                'cidade' => 'required|string|max:255',
+                'uf' => 'required',
+                'numero' => 'required|string',
+                'complemento' => 'nullable|string',
+            ]);
+        }
+        else{
+            $validation = $this->validate($request,[
+                'nome'=> 'required|string|min:5|max:255',
+                // 'email' => 'required|string|email|max:255|unique:users',
+                'nomeReduzido' => 'nullable|string|max:255',
+                'nomeResponsavel' => 'nullable|string|max:255',
+                // 'cpfCnpj' => 'required|unique:clientes',
+                'tipo' => 'required',
+                'inscricaoEstadual' => 'nullable|string|max:255',
+                'residencial' => 'nullable|string',
+                'celular' => 'nullable|string',
+                'cep' => 'nullable|string',
+                'rua' => 'required|string|max:255',
+                'bairro' => 'required|string|max:255',
+                'cidade' => 'required|string|max:255',
+                'uf' => 'required',
+                'numero' => 'required|string',
+                'complemento' => 'nullable|string',
+            ]);
+        }
+        
 
         if(isset($cliente) && isset($user)
         && isset($telefone) && isset($endereco)){

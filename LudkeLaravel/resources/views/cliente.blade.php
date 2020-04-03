@@ -91,7 +91,7 @@
                         {{-- Nome do funcionário --}}
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="nomeCliente" class="control-label">Nome do Cliente</label>
+                                <label for="nomeCliente" class="control-label">Nome do Cliente <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="nomeCliente" placeholder="Nome do Cliente" autofocus>
                                 </div>
@@ -132,7 +132,7 @@
                         {{-- cpf/cnpj --}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="cpfCnpj" class="control-label">CPF/CNPJ</label>
+                                <label for="cpfCnpj" class="control-label">CPF/CNPJ <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="cpfCnpj" placeholder="CPF/CNPJ">
                                 </div>
@@ -143,7 +143,7 @@
                         {{-- tipo do cliente --}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="cargoFuncionario" class="control-label">Tipo</label>
+                                <label for="cargoFuncionario" class="control-label">Tipo <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <select class="form-control" id="tipo">
                                         <option value="" disabled selected hidden>-- Tipo --</option>
@@ -197,7 +197,7 @@
                         {{-- email do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="emailCliente" class="control-label">E-mail do Cliente</label>
+                                <label for="emailCliente" class="control-label">E-mail do Cliente <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="email" class="form-control" id="emailCliente" placeholder="E-mail do Cliente">
                                 </div>
@@ -230,7 +230,7 @@
                         {{-- Rua--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="rua" class="control-label">Rua</label>
+                                <label for="rua" class="control-label">Rua <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="rua" placeholder="Rua">
                                 </div>
@@ -246,7 +246,7 @@
                         {{-- Bairro--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="bairro" class="control-label">Bairro</label>
+                                <label for="bairro" class="control-label">Bairro <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="bairro" placeholder="Bairro">
                                 </div>
@@ -257,7 +257,7 @@
                         {{-- Cidade--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="cidade" class="control-label">Cidade</label>
+                                <label for="cidade" class="control-label">Cidade <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="cidade" placeholder="Cidade">
                                 </div>
@@ -272,7 +272,7 @@
                         {{-- UF--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="uf" class="control-label">UF</label>
+                                <label for="uf" class="control-label">UF <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <select class="form-control" id="uf">
                                         <option value="" disabled selected hidden>-- UF --</option>
@@ -285,7 +285,7 @@
                         {{-- Número--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="numero" class="control-label">Número</label>
+                                <label for="numero" class="control-label">Número <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="numero" placeholder="Número">
                                 </div>
@@ -410,14 +410,16 @@
                 url: "/clientes/"+id,
                 context: this,
                 success: function(){
-                    console.log("Deletou Cliente");
-                    linhas = $("#tabelaClientes>tbody>tr");
-                    e = linhas.filter(function(i,elemento){
-                        return elemento.cells[0].textContent== id;
-                    });
-                    if(e){
-                        e.remove();
-                    }
+                    alert("Cliente deletado com sucesso!");
+                    window.location.href="\indexClientes";
+                    // console.log("Deletou Cliente");
+                    // linhas = $("#tabelaClientes>tbody>tr");
+                    // e = linhas.filter(function(i,elemento){
+                    //     return elemento.cells[0].textContent== id;
+                    // });
+                    // if(e){
+                    //     e.remove();
+                    // }
                 },
                 error: function(error){
                     console.log(error);
@@ -496,21 +498,23 @@
             context: this,
             data: cliente,
             success: function(data){
-                
                 cli = JSON.parse(data);
-                linhas = $('#tabelaClientes>tbody>tr');
-                e = linhas.filter(function(i,elemento){
-                    return (elemento.cells[0].textContent == cliente.id);
-                });
-                if(e){
-                    e[0].cells[0].textContent = cliente.id;
-                    e[0].cells[1].textContent = cliente.nome;
-                    e[0].cells[2].textContent = cliente.cpfCnpj;
-                    e[0].cells[3].textContent = cliente.residencial;
-                    e[0].cells[4].textContent = cliente.celular;
+                alert("Cliente "+cli.nome+" salvo com sucesso!")
+                window.location.href="\indexClientes";
+                // cli = JSON.parse(data);
+                // linhas = $('#tabelaClientes>tbody>tr');
+                // e = linhas.filter(function(i,elemento){
+                //     return (elemento.cells[0].textContent == cliente.id);
+                // });
+                // if(e){
+                //     e[0].cells[0].textContent = cliente.id;
+                //     e[0].cells[1].textContent = cliente.nome;
+                //     e[0].cells[2].textContent = cliente.cpfCnpj;
+                //     e[0].cells[3].textContent = cliente.residencial;
+                //     e[0].cells[4].textContent = cliente.celular;
 
-                }
-                $('#dlgClientes').modal('hide');
+                // }
+                // $('#dlgClientes').modal('hide');
             },
             error: function(error){
                     console.log(error);
@@ -551,9 +555,12 @@
                 data: cliente,
                 success: function(data){
                     cliente = JSON.parse(data);
-                    linha = montarLinha(cliente);
-                    $('#tabelaClientes>tbody').append(linha);
-                    $('#dlgClientes').modal('hide');
+                    alert("Cliente "+cliente.nome+" cadastrado com sucesso!");
+                    window.location.href="\indexClientes";
+                    // cliente = JSON.parse(data);
+                    // linha = montarLinha(cliente);
+                    // $('#tabelaClientes>tbody').append(linha);
+                    // $('#dlgClientes').modal('hide');
                 },
                 error: function(error){
                     retorno = JSON.parse(error.responseText);
