@@ -25,7 +25,6 @@
             </div><!-- end col-->
         </div><!-- end row-->
 
-
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <table id="tabelaCargos" class="table table-hover table-responsive-md">
@@ -38,10 +37,32 @@
                     </thead>
                     <tbody>
                     {{-- Linhas da tabela serão adicionadas com javascript --}}
-                    </tbody>
-                </table> <!-- end table -->
+                    @foreach ($cargos as $cargo)
+                    <tr>
+                        <td>{{$cargo->id}}</td>
+                        <td>{{$cargo->nome}}</td>
+                        <td>
+                            <a href="#" onclick="editarCargos({{$cargo->id}})">
+                            <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" style="">
+                            </a>
+                            <a href="#" onclick="removerCargo({{$cargo->id}})">
+                            <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" style="">
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+
+                </tbody>
+            </table> <!-- end table -->
+
+            <div class="row justify-content-center">
+                {{$cargos->links()}}
+
+            </div>
             </div><!-- end col-->
         </div><!-- end row-->
+
+        
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="dlgCargos">
@@ -57,7 +78,7 @@
 
                         {{-- Nome do Cargo --}}
                         <div class="form-group">
-                            <label for="nomeCargo" class="control-label">Nome do Cargo</label>
+                            <label for="nomeCargo" class="control-label">Nome do Cargo <span class="obrigatorio">*</span></label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="nomeCargo" placeholder="Nome do Cargo" autofocus>
                             </div>
@@ -78,9 +99,8 @@
 @endsection
 
 @section('javascript')
-
-    <script type="text/javascript">
-
+<script type="text/javascript">
+    
     // Busca na tabela
     $(function(){
         $("#inputBusca").on("keyup",function(){
@@ -90,11 +110,6 @@
             });
         });
     });
-
-        // Usa a biblioteca quicksearch para buscar dados na tabela
-        // $('input#inputBusca').quicksearch('table#tabelaCargos tbody tr');
-        
-
 
         var token = <?php json_encode(Auth::user()->api_token); ?>
         console.log(token);
@@ -107,13 +122,12 @@
                 }
             });
 
-            carregarCargos();
+            // carregarCargos();
 
             // ao exibir o modal, procura o input com autofocus e seleciona ele
             $('.modal').on('shown.bs.modal',function() {
                 $(this).find('[autofocus]').focus();
             });
-
         });
 
         //function novaCategoria(){
@@ -163,15 +177,17 @@
                     url: "/cargos/"+id,
                     context: this,
                     success: function(){
-                        console.log("deletou");
-                        linhas = $("#tabelaCargos>tbody>tr");
-                        e = linhas.filter(function(i,elemento){
-                            return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
+                        // console.log("deletou");
+                        // linhas = $("#tabelaCargos>tbody>tr");
+                        // e = linhas.filter(function(i,elemento){
+                        //     return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
 
-                        });
-                        if(e){
-                            e.remove();
-                        }
+                        // });
+                        // if(e){
+                        //     e.remove();
+                        // }
+                        alert("Cargo deletado com sucesso!")
+                        window.location.href = '/indexCargos';
                     },
                     error: function(error){
                         console.log(error);
@@ -203,10 +219,13 @@
             context:this,
             data:cargo,
             success: function(data){
-                categoria = JSON.parse(data);
-                linha = montarLinha(categoria);
-                $('#tabelaCargos>tbody').append(linha);
-                $('#dlgCargos').modal('hide');
+                cargo = JSON.parse(data);
+                alert("Cargo "+cargo.nome+" cadastrado com sucesso!");
+                window.location.href = '/indexCargos';
+                // cargo = JSON.parse(data);
+                // linha = montarLinha(cargo);
+                // $('#tabelaCargos>tbody').append(linha);
+                // $('#dlgCargos').modal('hide');
                 },
             error:function(error){
                 retorno = JSON.parse(error.responseText);
@@ -237,21 +256,23 @@
                 context: this,
                 data: cargo,
                 success: function(data){
-                    console.log(cargo);
                     cargo = JSON.parse(data);
-                    console.log("salvou OK");
-                    linhas = $('#tabelaCargos>tbody>tr');
-                    $("#dlgCargos").modal('hide');
-                    e = linhas.filter(function(i,elemento){
-                        return (elemento.cells[0].textContent == cargo.id);
-                    });
-                    console.log(e);
-
-                    if(e){
-                        e[0].cells[0].textContent = cargo.id;
-                        e[0].cells[1].textContent = cargo.nome;
-                    }
-
+                    alert("Cargo "+cargo.nome+" salvo com sucesso!")
+                    window.location.href = '/indexCargos';
+                    // console.log(cargo);
+                    // cargo = JSON.parse(data);
+                    // console.log("salvou OK");
+                    // linhas = $('#tabelaCargos>tbody>tr');
+                    // $("#dlgCargos").modal('hide');
+                    // e = linhas.filter(function(i,elemento){
+                    //     return (elemento.cells[0].textContent == cargo.id);
+                    // });
+                    // console.log(e);
+                    // if(e){
+                    //     e[0].cells[0].textContent = cargo.id;
+                    //     e[0].cells[1].textContent = cargo.nome;
+                    // }
+                    
                 },
                 error: function(error){
                     console.log(error);

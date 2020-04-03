@@ -43,8 +43,30 @@
                 </thead>
 
                 <tbody>
+                    @foreach ($produtos as $produto)
+                    <tr>
+                        <td>{{$produto->id}}</td>
+                        <td>{{$produto->nome}}</td>
+                        <td>{{$produto->categoria->nome}}</td>
+                        <td>{{$produto->validade}}</td>
+                        <td>{{$produto->preco}}</td>
+                        <td>{{$produto->descricao}}</td>
+                        <td>
+                            <a href="#" onclick="editarProduto({{$produto->id}})">
+                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" >
+                            </a>
+                            <a href="#" onclick="removerProduto({{$produto->id}})">
+                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table> <!-- end table -->
+            <div class="row justify-content-center">
+                {{$produtos->links()}}
+
+            </div>
         </div><!-- end col-->
     </div><!-- end row-->
 </div>
@@ -64,7 +86,7 @@
 
                     {{-- Nome do produto --}}
                     <div class="form-group">
-                        <label for="nomeProduto" class="control-label">Nome do Produto</label>
+                        <label for="nomeProduto" class="control-label">Nome do Produto <span class="obrigatorio">*</span></label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="nomeProduto" placeholder="Nome do Produto" autofocus>
                         </div>
@@ -73,7 +95,7 @@
 
                     {{-- Categoria do produto --}}
                     <div class="form-group">
-                        <label for="categoriaProduto" class="control-label">Categoria do Produto</label>
+                        <label for="categoriaProduto" class="control-label">Categoria do Produto <span class="obrigatorio">*</span></label>
                         <div class="input-group">
                             <select class="form-control" id="categoriaProduto">
                                 <option value="" disabled selected hidden>-- Selecionar Categoria --</option>
@@ -84,7 +106,7 @@
 
                     {{-- Validade do Produto --}}
                     <div class="form-group">
-                        <label for="validadeProduto" class="control-label">Validade do Produto (Meses)</label>
+                        <label for="validadeProduto" class="control-label">Validade do Produto (Meses) <span class="obrigatorio">*</span></label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="validadeProduto" placeholder="Validade do Produto">
                         </div>
@@ -93,7 +115,7 @@
 
                     {{-- Preço do produto --}}
                     <div class="form-group">
-                        <label for="precoProduto" class="control-label">Preço do Produto (por Kg)</label>
+                        <label for="precoProduto" class="control-label">Preço do Produto (por Kg) <span class="obrigatorio">*</span></label>
                         <div class="input-group">
                             <input type="number" step="0.01" class="form-control" id="precoProduto" placeholder="Preço do Produto">
                         </div>
@@ -167,7 +189,7 @@
         });
 
         carregarCategorias();
-        carregarProdutos();
+        // carregarProdutos();
 
         // Função para aparecer icone de excluir foto
         exibirBotaoExcluirFoto();
@@ -314,14 +336,16 @@
                 url: "/produtos/"+id,
                 context: this,
                 success: function(){
-                    console.log("Deletou");
-                    linhas = $("#tabelaProdutos>tbody>tr");//pega linha da tabela
-                    e = linhas.filter(function(i,elemento){
-                        return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
-                    });
-                    if(e){
-                        e.remove();// remove a linha
-                    }
+                    // console.log("Deletou");
+                    // linhas = $("#tabelaProdutos>tbody>tr");//pega linha da tabela
+                    // e = linhas.filter(function(i,elemento){
+                    //     return elemento.cells[0].textContent == id;//faz um filtro na linha e retorna a que tiver o id igual ao informado
+                    // });
+                    // if(e){
+                    //     e.remove();// remove a linha
+                    // }
+                    alert("Cargo deletado com sucesso!")
+                    window.location.href='/indexProdutos';
                 },
                 error: function(error){
                     console.log(error);
@@ -418,11 +442,16 @@
             cache: false,
             processData: false,
             success:function(produto){
-                // produto = JSON.parse(data);//converter o dado retornado para JSON ocorrerá um erro, pois o dado retornado é um object
-                linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
-                $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
 
                 $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
+                alert("Produto cadastrado com Sucesso!");
+
+                window.location.href = '/indexProdutos';
+
+                // // produto = JSON.parse(data);//converter o dado retornado para JSON ocorrerá um erro, pois o dado retornado é um object
+                // linha = montarLinha(produto); //monta a linha html para exibir o novo produto adicionado
+                // $('#tabelaProdutos>tbody').append(linha);//injeta a linha na tabela
+
             },
             error: function(error){
                 retorno = JSON.parse(error.responseText);
@@ -529,27 +558,28 @@
             cache: false,
             processData: false,
             success: function(prod){
+                    alert("Produto "+prod.nome+" atualizado com sucesso!");
+                    window.location.href = '/indexProdutos';
                     // prod = JSON.parse(data); //converte a string data para um objeto json
-                    console.log("Salvou OK");
-                    linhas = $('#tabelaProdutos>tbody>tr'); //pega todas as linhas da tabela
-                    e = linhas.filter(function(i,elemento){//faz uma filtragem e retorna a linha que contem o id do produto atualizado
-                        return (elemento.cells[0].textContent == prod.id);
-                    });
-                    // console.log(e);
-                    // se encontrou a linha, atualiza cada coluna
-                    if(e){
-                        e[0].cells[0].textContent = prod.id;
-                        e[0].cells[1].textContent = prod.nome;
-                        e[0].cells[2].textContent = prod.categoria.nome;
-                        e[0].cells[3].textContent = prod.validade;
-                        // e[0].cells[4].textContent = prod.quantidade;
-                        e[0].cells[4].textContent = prod.preco;
-                        e[0].cells[5].textContent = prod.descricao;
-                    }
-                    // limpa o array contendo o id das imagens para deletar
-                    arrayIdsDeletarFotos.length = 0;
+                    // linhas = $('#tabelaProdutos>tbody>tr'); //pega todas as linhas da tabela
+                    // e = linhas.filter(function(i,elemento){//faz uma filtragem e retorna a linha que contem o id do produto atualizado
+                    //     return (elemento.cells[0].textContent == prod.id);
+                    // });
+                    // // console.log(e);
+                    // // se encontrou a linha, atualiza cada coluna
+                    // if(e){
+                    //     e[0].cells[0].textContent = prod.id;
+                    //     e[0].cells[1].textContent = prod.nome;
+                    //     e[0].cells[2].textContent = prod.categoria.nome;
+                    //     e[0].cells[3].textContent = prod.validade;
+                    //     // e[0].cells[4].textContent = prod.quantidade;
+                    //     e[0].cells[4].textContent = prod.preco;
+                    //     e[0].cells[5].textContent = prod.descricao;
+                    // }
+                    // // limpa o array contendo o id das imagens para deletar
+                    // arrayIdsDeletarFotos.length = 0;
 
-                    $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
+                    // $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
                 },
                 error: function(error){
                     // limpa o array contendo o id das imagens para deletar
