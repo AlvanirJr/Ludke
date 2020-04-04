@@ -140,16 +140,7 @@
 
 @section('javascript')
 <script type="text/javascript">
-    
-    // Busca na tabela
-    $(function(){
-        $("#inputBusca").on("keyup",function(){
-            var value = $(this).val().toUpperCase();
-            $("#tabelaCargos tbody tr").filter(function(){
-                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
-            });
-        });
-    });
+
 
         var token = <?php json_encode(Auth::user()->api_token); ?>
         console.log(token);
