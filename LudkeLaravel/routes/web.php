@@ -31,7 +31,7 @@ Route::post('/buscarProduto','ProdutoController@buscarProduto')->name('buscarPro
 
 // View Categorias
 Route::get('/indexCategorias','CategoriaController@indexView')->name('categorias');
-
+Route::post('/buscarCategoria','CategoriaController@buscarCategoria')->name('buscarCategoria');
 // View Funcionários
 Route::get('/indexFuncionarios','FuncionarioController@indexView')->name('funcionarios');
 

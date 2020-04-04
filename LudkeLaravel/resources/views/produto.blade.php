@@ -95,7 +95,14 @@
     
                 </div>
             </div>
-            {{$menssage}}
+            {{-- Mensagem Alerta --}}
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger" role="alert">
+                        {{$menssage}}
+                    </div>
+                </div>
+            </div>
             @endif
         </div><!-- end col-->
     </div><!-- end row-->
