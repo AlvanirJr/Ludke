@@ -34,12 +34,11 @@ Route::get('/indexCategorias','CategoriaController@indexView')->name('categorias
 Route::post('/buscarCategoria','CategoriaController@buscarCategoria')->name('buscarCategoria');
 // View Funcionários
 Route::get('/indexFuncionarios','FuncionarioController@indexView')->name('funcionarios');
-
+// Clientes
 Route::get('/indexClientes','ClienteController@indexView')->name('clientes');
-
+Route::post('/buscarCliente','ClienteController@buscarCliente')->name('buscarCliente');
+// Cargos
 Route::get('/indexCargos', 'CargoController@indexView')->name('cargos');
-
-
 Route::post('/buscarCargo','CargoController@buscarCargo')->name('buscarCargo');
 
 Route::get('/pedidos','PedidoController@index')->name('pedidos');

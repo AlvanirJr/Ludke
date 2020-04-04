@@ -7,7 +7,7 @@
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
-                    <div class="col-sm-7">
+                    <div class="col-sm-6">
                         <div class="titulo-pagina-nome">
                             <h2>Clientes</h2>
                         </div>
@@ -15,17 +15,39 @@
                     <div class="col-sm-2">
                         <button class="btn btn-primary-ludke" role="button" onclick="novoCliente()">Novo</button>
                     </div>
-                    <div class="col-sm-3"> 
-                        <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
+                    <div class="col-md-4 input-group">
+                        {{-- <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar"> --}}
+                        <form action="{{route('buscarCliente')}}" method="POST">
+                            @csrf
+                            <div class="input-group mb-3">
+                                <input name="q" type="text" class="form-control" placeholder="Buscar Cliente" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                  <button class="btn btn-primary-ludke" type="submit">Buscar</button>
+                                </div>
+                              </div>
+                        </form>
+
                     </div>
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
+    
+    {{-- botão listar Todos --}}
+    @if(isset($achou) && $achou == true)
+    <div class="row">
+        <div class="col-sm-12 limparBusca">
+            <a href="{{route('clientes')}}">
+                <button class="btn btn-outline-danger">Listar Todos</button>
+            </a>
 
+        </div>
+    </div>
+    @endif
 
     <div class="row justify-content-center">
         <div class="col-sm-12">
+            @if(isset($clientes))
             <table id="tabelaClientes" class="table table-hover table-responsive-xl">
                 <thead class="thead-primary">
                     <tr>
@@ -60,9 +82,27 @@
             </table> <!-- end table -->
 
             <div class="row justify-content-center">
-                {{$clientes->links()}}
-
+                {{ $clientes->render() }}
             </div>
+            @else
+            <div class="row">
+                <div class="col-sm-12 limparBusca">
+                    <a href="{{route('clientes')}}">
+                        <button class="btn btn-outline-danger">Listar Todos</button>
+                    </a>
+    
+                </div>
+            </div>
+            {{-- Mensagem Alerta --}}
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger" role="alert">
+                        {{$menssage}}
+                    </div>
+                </div>
+            </div>
+            
+            @endif
         </div><!-- end col-->
     </div><!-- end row-->
 </div>

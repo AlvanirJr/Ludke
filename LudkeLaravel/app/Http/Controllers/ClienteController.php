@@ -16,7 +16,26 @@ class ClienteController extends Controller
         return view('cliente',["clientes"=>$clientes]);
     }
 
+    public function buscarCliente(Request $request){
+        $c =  strtoupper($request->input('q'));
+        // dd($c);
+        
+        if(isset($c)){
+            $users = User::where('name','LIKE','%'.$c.'%')->pluck('id');
+            $clientes = Cliente::whereIn('user_id',$users)->paginate(10)->setpath('');
+            // dd($clientes);
 
+            // ->paginate(10)->setpath('');
+            $clientes->appends(array('q'=>$request->input('q')));
+            if(count($clientes) > 0){
+                // dd($cargos);
+                return view('cliente',['clientes'=>$clientes, 'achou'=> true]);
+            }else{
+                return view('cliente')->withMenssage("Desculpa, não foi possível encontrar este cargo.");
+            }
+        }
+
+    }
     public function index()
     {
         $clientes = Cliente::all();
