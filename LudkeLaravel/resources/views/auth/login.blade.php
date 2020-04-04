@@ -171,7 +171,7 @@
             var email = $("input[name=email]").val();
             var password  = $("input[name=password]").val();
 
-
+            console.log(token);
             if(button == 1)
                 var data = {
                     _token:token,
@@ -181,7 +181,7 @@
 
                 $.ajax({
                     type:'post',
-                    url:'/login',
+                    url:'/login/user',
                     data: data,
                     cache:false,
                     success: function (data) {
@@ -189,11 +189,13 @@
 
                     },
                     error: function (data) {
-                        alert('Fail to run login...');
+
+                        //Fazer Verificação
+                       //alert('Fail to run login...');
 
                     }
                 });
-            
+
 
 
 
