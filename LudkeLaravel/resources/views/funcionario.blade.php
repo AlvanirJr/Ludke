@@ -39,8 +39,29 @@
                 </thead>
 
                 <tbody>
+                    @foreach ($funcionarios as $func)
+                    <tr>
+                        <td>{{$func->id}}</td>
+                        <td>{{$func->user->name}}</td>
+                        <td>{{$func->cargo->nome}}</td>
+                        <td>{{$func->user->email}}</td>
+                        <td>{{$func->user->telefone->celular}}</td>
+                        <td>
+                            <a href="#" onclick="editarFuncionario({{$func->id}})">
+                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}">
+                            </a>
+                            <a href="#" onclick="removerFuncionario({{$func->id}})">
+                                <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table> <!-- end table -->
+            <div class="row justify-content-center">
+                {{$funcionarios->links()}}
+
+            </div>
         </div><!-- end col-->
     </div><!-- end row-->
 </div>
@@ -69,7 +90,7 @@
                         {{-- Nome do funcionário --}}
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="nomeFuncionario" class="control-label">Nome do Funcionario</label>
+                                <label for="nomeFuncionario" class="control-label">Nome do Funcionario <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="nomeFuncionario" placeholder="Nome do Funcionário" autofocus>
                                 </div>
@@ -84,7 +105,7 @@
                         {{-- Nome do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="emailFuncionario" class="control-label">E-mail do Funcionario</label>
+                                <label for="emailFuncionario" class="control-label">E-mail do Funcionario <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="email" class="form-control" id="emailFuncionario" placeholder="E-mail do Funcionário">
                                 </div>
@@ -95,7 +116,7 @@
                         {{-- Cargo do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="cargoFuncionario" class="control-label">Cargo do Funcionário</label>
+                                <label for="cargoFuncionario" class="control-label">Cargo do Funcionário <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <select class="form-control" id="cargoFuncionario">
                                         <option value="" disabled selected hidden>-- Cargo --</option>
@@ -156,7 +177,7 @@
                         {{-- Rua--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="rua" class="control-label">Rua</label>
+                                <label for="rua" class="control-label">Rua <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="rua" placeholder="Rua">
                                 </div>
@@ -172,7 +193,7 @@
                         {{-- Bairro--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="bairro" class="control-label">Bairro</label>
+                                <label for="bairro" class="control-label">Bairro <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="bairro" placeholder="Bairro">
                                 </div>
@@ -183,7 +204,7 @@
                         {{-- Cidade--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="cidade" class="control-label">Cidade</label>
+                                <label for="cidade" class="control-label">Cidade <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="cidade" placeholder="Cidade">
                                 </div>
@@ -198,7 +219,7 @@
                         {{-- UF--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="uf" class="control-label">UF</label>
+                                <label for="uf" class="control-label">UF <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <select class="form-control" id="uf">
                                         <option value="" disabled selected hidden>-- UF --</option>
@@ -211,7 +232,7 @@
                         {{-- Número--}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="numero" class="control-label">Número</label>
+                                <label for="numero" class="control-label">Número <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="numero" placeholder="Número">
                                 </div>
@@ -248,9 +269,9 @@
     // Busca na tabela
     $(function(){
         $("#inputBusca").on("keyup",function(){
-            var value = $(this).val().toUpperCase();
+            var value = $(this).val();
             $("#tabelaFuncionarios tbody tr").filter(function(){
-                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
+                $(this).toggle($(this).text().indexOf(value) > -1)
             });
         });
     });
@@ -264,7 +285,7 @@
         });
 
         carregarCargos();
-        carregarFuncionarios();
+        // carregarFuncionarios();
         carregarEstados();
 
         // ao exibir o modal, procura o input com autofocus e seleciona ele
@@ -344,12 +365,12 @@
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
-            rua: $('#rua').val().toUpperCase(),
-            bairro: $('#bairro').val().toUpperCase(),
-            cidade: $('#cidade').val().toUpperCase(),
-            uf: $('#uf').val().toUpperCase(),
+            rua: $('#rua').val(),
+            bairro: $('#bairro').val(),
+            cidade: $('#cidade').val(),
+            uf: $('#uf').val(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val().toUpperCase()
+            complemento: $('#complemento').val()
         }
 
         $.ajax({
@@ -359,26 +380,29 @@
             data: funcionario,
             success: function(data){
                 func = JSON.parse(data);
-                linhas = $('#tabelaFuncionarios>tbody>tr');
-                e = linhas.filter(function(i,elemento){
-                    return (elemento.cells[0].textContent == funcionario.id);
-                });
-                if(e){
-                    e[0].cells[0].textContent = funcionario.id;
-                    e[0].cells[1].textContent = funcionario.nome;
-                    e[0].cells[2].textContent = funcionario.cargo;
-                    e[0].cells[3].textContent = funcionario.email;
-                   /* e[0].cells[4].textContent = funcionario.celular;
-                    e[0].cells[5].textContent = funcionario.cep;
-                    e[0].cells[6].textContent = funcionario.rua;
-                    e[0].cells[7].textContent = funcionario.numero;
-                    e[0].cells[8].textContent = funcionario.bairro;
-                    e[0].cells[9].textContent = funcionario.cidade;
-                    e[0].cells[10].textContent = funcionario.uf;
-                    e[0].cells[11].textContent = funcionario.complemento;*/
+                alert("Funcionário "+func.nome+" salvo com sucesso!");
+                window.location.href="indexFuncionarios";
+                // func = JSON.parse(data);
+                // linhas = $('#tabelaFuncionarios>tbody>tr');
+                // e = linhas.filter(function(i,elemento){
+                //     return (elemento.cells[0].textContent == funcionario.id);
+                // });
+                // if(e){
+                //     e[0].cells[0].textContent = funcionario.id;
+                //     e[0].cells[1].textContent = funcionario.nome;
+                //     e[0].cells[2].textContent = funcionario.cargo;
+                //     e[0].cells[3].textContent = funcionario.email;
+                //    /* e[0].cells[4].textContent = funcionario.celular;
+                //     e[0].cells[5].textContent = funcionario.cep;
+                //     e[0].cells[6].textContent = funcionario.rua;
+                //     e[0].cells[7].textContent = funcionario.numero;
+                //     e[0].cells[8].textContent = funcionario.bairro;
+                //     e[0].cells[9].textContent = funcionario.cidade;
+                //     e[0].cells[10].textContent = funcionario.uf;
+                //     e[0].cells[11].textContent = funcionario.complemento;*/
 
-                }
-                $('#dlgFuncionarios').modal('hide');
+                // }
+                // $('#dlgFuncionarios').modal('hide');
             },
             error: function(error){
                     console.log(error);
@@ -447,14 +471,16 @@
                 url: "/funcionarios/"+id,
                 context: this,
                 success: function(){
-                    console.log("Deletou Funcionario");
-                    linhas = $("#tabelaFuncionarios>tbody>tr");
-                    e = linhas.filter(function(i,elemento){
-                        return elemento.cells[0].textContent == id;
-                    });
-                    if(e){
-                        e.remove();
-                    }
+                    alert("Funcionário deletado com sucesso!");
+                    window.location.href="\indexFuncionarios";
+                    // console.log("Deletou Funcionario");
+                    // linhas = $("#tabelaFuncionarios>tbody>tr");
+                    // e = linhas.filter(function(i,elemento){
+                    //     return elemento.cells[0].textContent == id;
+                    // });
+                    // if(e){
+                    //     e.remove();
+                    // }
                 },
                 error: function(error){
                     console.log(error);
@@ -488,11 +514,13 @@
             context:this,
             data:funcionario,
             success: function(data){
-                
                 funcionario = JSON.parse(data);
-                linha = montarLinha(funcionario);
-                $('#dlgFuncionarios').modal('hide');
-            $('#tabelaFuncionarios>tbody').append(linha);
+                alert("Funcionário "+funcionario.nome+" cadastrado com sucesso!");
+                window.location.href="\indexFuncionarios";
+            //     funcionario = JSON.parse(data);
+            //     linha = montarLinha(funcionario);
+            //     $('#dlgFuncionarios').modal('hide');
+            // $('#tabelaFuncionarios>tbody').append(linha);
             },
             error:function(error){
                 retorno = JSON.parse(error.responseText);

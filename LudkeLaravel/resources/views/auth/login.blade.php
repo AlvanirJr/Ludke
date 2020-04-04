@@ -166,7 +166,7 @@
             // animação Fade
             $("#conteudo-login").delay(800).fadeIn(1200);
 
-            var button =  $("submit[name=button]").val();
+            //var button =  $("submit[name=button]").val();
             var token    = $("input[name=_token]").val();
             var email = $("input[name=email]").val();
             var password  = $("input[name=password]").val();
@@ -190,8 +190,11 @@
                     },
                     error: function (data) {
 
+
                         //Fazer Verificação
                        //alert('Fail to run login...');
+
+
 
                     }
                 });
