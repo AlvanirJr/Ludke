@@ -31,7 +31,7 @@ class ClienteController extends Controller
                 // dd($cargos);
                 return view('cliente',['clientes'=>$clientes, 'achou'=> true]);
             }else{
-                return view('cliente')->withMenssage("Desculpa, não foi possível encontrar este cargo.");
+                return view('cliente')->withMenssage("Desculpa, não foi possível encontrar este cliente.");
             }
         }
 

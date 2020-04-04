@@ -14,10 +14,29 @@ class FuncionarioController extends Controller
     // Retorna a view dos funcionarios
     public function indexView()
     {
-        $funcionarios = Funcionario::paginate(10);
+        $funcionarios = Funcionario::paginate(25);
         return view('funcionario',['funcionarios'=>$funcionarios]);
     }
+    public function buscarFuncionario(Request $request){
+        $f =  strtoupper($request->input('q'));
+        // dd($c);
+        
+        if(isset($f)){
+            $users = User::where('name','LIKE','%'.$f.'%')->pluck('id');
+            $funcionarios = Funcionario::whereIn('user_id',$users)->paginate(10)->setpath('');
+            // dd($clientes);
 
+            // ->paginate(10)->setpath('');
+            $funcionarios->appends(array('q'=>$request->input('q')));
+            if(count($funcionarios) > 0){
+                // dd($cargos);
+                return view('funcionario',['funcionarios'=>$funcionarios, 'achou'=> true]);
+            }else{
+                return view('funcionario')->withMenssage("Desculpa, não foi possível encontrar este funcionario.");
+            }
+        }
+
+    }
     public function index()
     {
 
