@@ -25,6 +25,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // chama a view de produtos
 Route::get('/indexProdutos','ProdutoController@indexView')->name('produtos');
+Route::post('/buscarProduto','ProdutoController@buscarProduto')->name('buscarProduto');
 // Route::post('produtos','ProdutoController@store')->name('produto.store');
 
 
