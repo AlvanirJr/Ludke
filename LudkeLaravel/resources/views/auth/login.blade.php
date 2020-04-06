@@ -181,7 +181,7 @@
 
                 $.ajax({
                     type:'post',
-                    url:'/login/user',
+                    url:'/login',
                     data: data,
                     cache:false,
                     success: function (data) {
