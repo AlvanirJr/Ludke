@@ -37,7 +37,6 @@
                         <th>Validade (Meses)</th>
                         {{-- <th>Quantidade</th> --}}
                         <th>Preço (R$)</th>
-                        <th>Descrição</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -50,7 +49,6 @@
                         <td>{{$produto->categoria->nome}}</td>
                         <td>{{$produto->validade}}</td>
                         <td>{{$produto->preco}}</td>
-                        <td>{{$produto->descricao}}</td>
                         <td>
                             <a href="#" onclick="editarProduto({{$produto->id}})">
                                 <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}" >
@@ -146,14 +144,7 @@
                         </div>
                     </div>
                     {{-- Descrição do produto --}}
-                    <div class="form-group" style="margin-top:20px">
-                        <label for="descricaoProduto" class="control-label">Descrição do Produto</label>
-                        <div class="input-group">
-                            <textarea class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"></textarea>
-                            {{-- <input type="text" class="form-control" id="descricaoProduto" placeholder="Descrição do Produto"> --}}
-                        </div>
-                        <div id="validationDescricao"></div>
-                    </div>
+
                 </div><!-- end modal body-->
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Cadastrar</button>
@@ -222,7 +213,7 @@
         $('#imagensProduto').val('');
         $('#precoProduto').val('');
         $(".listaImagem").html("");
-        $('#descricaoProduto').val('');
+        //$('#descricaoProduto').val('');
 
         $(".span").remove(); //limpa os span de erro
 
@@ -252,7 +243,7 @@
                         "<td>"+p.validade+"</td>"+
                         // "<td>"+p.quantidade+"</td>"+
                         "<td>"+p.preco+"</td>"+
-                        "<td>"+p.descricao+"</td>"+
+                        
                         "<td>"+
                             "<a href="+"#"+" onclick="+"editarProduto("+p.id+")"+">"+
                                 "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
@@ -293,7 +284,7 @@
             $('#validadeProduto').val(data.validade);
             // $('#quantidadeProduto').val(data.quantidade);
             $('#precoProduto').val(data.preco);
-            $('#descricaoProduto').val(data.descricao);
+           // $('#descricaoProduto').val(data.descricao);
 
             //$('#validadeProduto').val(novadata);
 
@@ -413,7 +404,7 @@
             nome: $('#nomeProduto').val(),
             validade: $('#validadeProduto').val(),
             preco: $('#precoProduto').val(),
-            descricao: $('#descricaoProduto').val(),
+            //descricao: $('#descricaoProduto').val(),
             categoriaProduto: $('#categoriaProduto').val(),
             // fotosProduto: imagensProduto
 
@@ -428,7 +419,7 @@
         formData.append('nome',prod.nome);
         formData.append('validade',prod.validade);
         formData.append('preco',prod.preco);
-        formData.append('descricao',prod.descricao);
+       // formData.append('descricao',prod.descricao);
         formData.append('categoriaProduto',prod.categoriaProduto);
         // formData.append('fotosProduto',prod.imagensProduto);
 
@@ -491,12 +482,7 @@
                     $("#validationImagensProduto").append("<span class="+"span"+" style="+"color:red"+">"+error.imagensProduto[i]+"</span>")
                 }
             }
-            if(error.descricao){
-                for(i=0;i<error.descricao.length;i++){
-                    console.log(error.descricao[i]);
-                    $("#validationDescricao").append("<span class="+"span"+" style="+"color:red"+">"+error.descricao[i]+"</span>")
-                }
-            }
+
             if(prod.categoriaProduto == null){
                 $("#validationCategoria").append("<span class="+"span"+" style="+"color:red"+">O campo categoria é obrigatório.</span>")
             }
@@ -517,7 +503,7 @@
             nome: $('#nomeProduto').val(),
             validade: $('#validadeProduto').val(),
             preco: $('#precoProduto').val(),
-            descricao: $('#descricaoProduto').val(),
+           // descricao: $('#descricaoProduto').val(),
             categoriaProduto: $('#categoriaProduto').val(),
             arrayIdsDeletarFotos: arrayIdsDeletarFotos,
             // imagensProduto: imagensProduto
@@ -535,7 +521,7 @@
         formData.append('nome',prod.nome);
         formData.append('validade',prod.validade);
         formData.append('preco',prod.preco);
-        formData.append('descricao',prod.descricao);
+       // formData.append('descricao',prod.descricao);
         formData.append('categoriaProduto',prod.categoriaProduto);
         formData.append('arrayIdsDeletarFotos',prod.arrayIdsDeletarFotos);
 

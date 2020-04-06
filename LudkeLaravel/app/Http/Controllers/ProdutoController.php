@@ -43,7 +43,7 @@ class ProdutoController extends Controller
             'nome' => 'required|string|min:3|max:255',
             'validade' => 'required|string',
             'preco' => 'required',
-            'descricao' => 'nullable|string|min:5|max:255',
+            //'descricao' => 'nullable|string|min:5|max:255',
             'categoriaProduto' => 'required',
         ]);
 
@@ -55,7 +55,7 @@ class ProdutoController extends Controller
         //dd($prod->validade);
         // $prod->quantidade = $request->input('quantidade');
         $prod->preco = $request->input('preco');
-        $prod->descricao = strtoupper($request->input('descricao'));
+        //$prod->descricao = strtoupper($request->input('descricao'));
         $prod->categoria_id = $request->input('categoriaProduto');
         
 
@@ -96,7 +96,7 @@ class ProdutoController extends Controller
             'nome' => $produto->nome,
             'validade' => $produto->validade,
             'preco' => $produto->preco,
-            'descricao' => $produto->descricao,
+            //'descricao' => $produto->descricao,
             'categoria_id' => $produto->categoria_id,
             'created_at' => $produto->created_at,
             'updated_at' => $produto->updated_at,
@@ -133,7 +133,7 @@ class ProdutoController extends Controller
             'nome' => 'required|string|min:3|max:255',
             'validade' => 'required|string',
             'preco' => 'required',
-            'descricao' => 'nullable|string|min:5|max:255',
+            //'descricao' => 'nullable|string|min:5|max:255',
         ]);
         // dd($request->all());
         $prod = Produto::find($id);
@@ -144,7 +144,7 @@ class ProdutoController extends Controller
             $prod->validade = $request->input('validade');
             // $prod->quantidade = $request->input('quantidade');
             $prod->preco = $request->input('preco');
-            $prod->descricao = strtoupper($request->input('descricao'));
+           // $prod->descricao = strtoupper($request->input('descricao'));
             $prod->categoria_id = $request->input('categoriaProduto');
 
             $fotosProduto = $request->file('imagensProduto');
