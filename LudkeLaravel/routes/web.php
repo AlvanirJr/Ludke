@@ -29,18 +29,22 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // chama a view de produtos
 Route::get('/indexProdutos','ProdutoController@indexView')->name('produtos');
+Route::post('/buscarProduto','ProdutoController@buscarProduto')->name('buscarProduto');
 // Route::post('produtos','ProdutoController@store')->name('produto.store');
 
 
 // View Categorias
 Route::get('/indexCategorias','CategoriaController@indexView')->name('categorias');
-
+Route::post('/buscarCategoria','CategoriaController@buscarCategoria')->name('buscarCategoria');
 // View Funcionários
 Route::get('/indexFuncionarios','FuncionarioController@indexView')->name('funcionarios');
-
+Route::post('/buscarFuncionario','FuncionarioController@buscarFuncionario')->name('buscarFuncionario');
+// Clientes
 Route::get('/indexClientes','ClienteController@indexView')->name('clientes');
-
+Route::post('/buscarCliente','ClienteController@buscarCliente')->name('buscarCliente');
+// Cargos
 Route::get('/indexCargos', 'CargoController@indexView')->name('cargos');
+Route::post('/buscarCargo','CargoController@buscarCargo')->name('buscarCargo');
 
 Route::get('/pedidos','PedidoController@index')->name('pedidos');
 

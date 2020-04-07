@@ -11,8 +11,26 @@ class CargoController extends Controller
 
     public function indexView()
     {   
-        $cargos = Cargo::orderby('nome')->paginate(10);
+        $cargos = Cargo::orderby('nome')->paginate(25);
         return view('cargo',['cargos'=>$cargos]);
+    }
+
+    public function buscarCargo(Request $request){
+        $c =  strtoupper($request->input('q'));
+        // dd($c);
+        
+        if(isset($c)){
+            $cargos = Cargo::where('nome','LIKE','%'.$c.'%')
+            ->paginate(10)->setpath('');
+            $cargos->appends(array('q'=>$request->input('q')));
+            if(count($cargos) > 0){
+                // dd($cargos);
+                return view('cargo',['cargos'=>$cargos, 'achou'=> true]);
+            }else{
+                return view('cargo')->withMenssage("Desculpa, não foi possível encontrar este cargo.");
+            }
+        }
+
     }
 
     /**
