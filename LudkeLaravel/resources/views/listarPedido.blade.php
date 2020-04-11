@@ -191,9 +191,7 @@
                                 "<a href="+"/pedidos/edit/"+pedido.id+">"+
                                     "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px;margin-right:15px"+">"+
                                 "</a>"+
-                                "<a href="+"/relatorio/"+pedido.id+">"+
-                                    "<img id="+"iconePrint"+" class="+"icone"+" src="+"{{asset('img/print.svg')}}"+" style="+"width:35px;margin-right:20px"+">"+
-                                "</a>"+
+
                                 "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
                                     "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+" "+">"+
                                 "</a>"+
@@ -208,7 +206,10 @@
                             "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
                             "<td>"+pedido.status+"</td>"+
                             "<td>R$ "+pedido.valorTotal+"</td>"+
-                            "<td>"+                          
+                            "<td>"+   
+                            "<a href="+"/relatorio/"+pedido.id+">"+
+                                    "<img id="+"iconePrint"+" class="+"icone"+" src="+"{{asset('img/print.svg')}}"+" style="+"width:35px;margin-right:20px"+">"+
+                                "</a>"+                       
                                 "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
                                     "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
                                 "</a>"+
