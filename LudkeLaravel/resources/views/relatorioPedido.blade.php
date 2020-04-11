@@ -15,7 +15,10 @@
 		</thead>
 		<tbody>
 
+		<?php dd($itens); ?>
+
 			@foreach($itens as $iten)
+
 				<tr class="linha">
 					<td>{{$iten->pesoSolicitado}}</td>
 						<td>{{$iten->pesoFinal}}</td>

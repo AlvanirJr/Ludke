@@ -14,11 +14,7 @@ class RelatorioPedidosController extends Controller
     public function RelatorioPedidos($id){
         $view = 'relatorioPedido';
         $pedido = Pedido::find($id);
-
-        dd($pedido);
-
         $itens = ItensPedido::where('produto_id', '=', $pedido->id)->get();
-        dd($itens);
         
          
         
