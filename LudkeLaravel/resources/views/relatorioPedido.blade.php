@@ -14,6 +14,7 @@
 			</tr>
 		</thead>
 		<tbody>
+
 			@foreach($itens as $iten)
 				<tr class="linha">
 					<td>{{$iten->pesoSolicitado}}</td>
