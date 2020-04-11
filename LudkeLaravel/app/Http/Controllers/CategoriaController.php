@@ -20,7 +20,22 @@ class CategoriaController extends Controller
         return json_encode($cats);
     }
 
+    public function buscarCategoria(Request $request){
+        $c =  strtoupper($request->input('q'));
 
+        if(isset($c)){
+            $categorias = Categoria::where('nome','LIKE','%'.$c.'%')
+                            ->paginate(10)->setpath('');
+            $categorias->appends(array('q'=>$request->input('q')));
+            if(count($categorias) > 0){
+                // dd($categorias);
+
+                return view('categoria',['categorias'=>$categorias, 'achou'=> true]);
+            }else{
+                return view('categoria')->withMenssage("Desculpa, não foi possível encontrar esta categoria.");
+            }
+        }
+    }
     public function adicionar(Request $request)
     {
 

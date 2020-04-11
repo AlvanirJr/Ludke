@@ -171,7 +171,7 @@
             var email = $("input[name=email]").val();
             var password  = $("input[name=password]").val();
 
-
+            console.log(token);
             if(button == 1)
                 var data = {
                     _token:token,
@@ -189,11 +189,16 @@
 
                     },
                     error: function (data) {
-                       // alert('Fail to run login...');
+
+
+                        //Fazer Verificação
+                       //alert('Fail to run login...');
+
+
 
                     }
                 });
-            
+
 
 
 

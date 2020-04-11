@@ -9,7 +9,7 @@
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
-                    <div class="col-sm-7">
+                    <div class="col-sm-6">
                         <div class="titulo-pagina-nome">
                             <h2>Categorias</h2>
                         </div>
@@ -17,17 +17,37 @@
                     <div class="col-sm-2">
                         <a class="btn btn-primary-ludke" role="button" onclick="novaCategoria()">Novo</a>
                     </div>
-                    <div class="col-sm-3">
-                        <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
+                    <div class="col-md-4 input-group">
+                        {{-- <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar"> --}}
+                        <form action="{{route('buscarCategoria')}}" method="POST">
+                            @csrf
+                            <div class="input-group mb-3">
+                                <input name="q" type="text" class="form-control" placeholder="Buscar Categoria">
+                                <div class="input-group-append">
+                                  <button class="btn btn-primary-ludke" type="submit">Buscar</button>
+                                </div>
+                              </div>
+                        </form>
+
                     </div>
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
 
+    @if(isset($achou) && $achou == true)
+    <div class="row">
+        <div class="col-sm-12 limparBusca">
+            <a href="{{route('categorias')}}">
+                <button class="btn btn-outline-danger">Listar Todos</button>
+            </a>
 
+        </div>
+    </div>
+    @endif
     <div class="row justify-content-center">
         <div class="col-sm-12">
+            @if(isset($categorias))
             <table id="tabelaCategorias" class="table table-hover table-responsive-sm">
                 <thead class="thead-primary">
                     <tr>
@@ -55,10 +75,28 @@
                     @endforeach
                 </tbody>
             </table> <!-- end table -->
-            <div class="row justify-content-center">
-                {{$categorias->links()}}
 
+            <div class="row justify-content-center">
+                {{ $categorias->render() }}
             </div>
+            @else
+            <div class="row">
+                <div class="col-sm-12 limparBusca">
+                    <a href="{{route('categorias')}}">
+                        <button class="btn btn-outline-danger">Listar Todos</button>
+                    </a>
+    
+                </div>
+            </div>
+            {{-- Mensagem Alerta --}}
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger" role="alert">
+                        {{$menssage}}
+                    </div>
+                </div>
+            </div>
+            @endif
         </div><!-- end col-->
     </div><!-- end row-->
 </div>
@@ -105,15 +143,6 @@
     // Usa a biblioteca quicksearch para buscar dados na tabela
     // $('input#inputBusca').quicksearch('table#tabelaCategorias tbody tr');
 
-    // Busca na tabela
-    $(function(){
-        $("#inputBusca").on("keyup",function(){
-            var value = $(this).val().toUpperCase();
-            $("#tabelaCategorias tbody tr").filter(function(){
-                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
-            });
-        });
-    });
     $(function(){
 
         // Configuração do ajax com token csrf

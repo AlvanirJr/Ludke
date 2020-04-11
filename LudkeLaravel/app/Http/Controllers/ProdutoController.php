@@ -14,10 +14,23 @@ class ProdutoController extends Controller
     // Retorna a view dos produtos
     public function indexView()
     {
-        $produtos = Produto::orderby("nome")->paginate(10);
+        $produtos = Produto::orderby("nome")->paginate(25);
         return view('produto',["produtos"=>$produtos]);
     }
+    public function buscarProduto(Request $request){
+        $p = strtoupper($request->input('q'));
 
+        if(isset($p)){
+            $produtos = Produto::where('nome','LIKE','%'.$p.'%')
+                        ->paginate(25)->setpath('');
+            $produtos->appends(array('q'=>$request->input('q')));
+            if(count($produtos)){
+                return view('produto',['produtos'=>$produtos, 'achou'=>true]);
+            }else{
+                return view('produto')->withMenssage("Desculpa, não foi possível encontrar este produto.");
+            }
+        }
+    }
     //usado pela api para retornar os produtos
     public function index()
     {

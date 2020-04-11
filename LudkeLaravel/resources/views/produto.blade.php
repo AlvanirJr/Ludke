@@ -9,7 +9,7 @@
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
-                    <div class="col-sm-7">
+                    <div class="col-sm-6">
                         <div class="titulo-pagina-nome">
                             <h2>Produtos</h2>
                         </div>
@@ -17,17 +17,37 @@
                     <div class="col-sm-2">
                         <button class="btn btn-primary-ludke" role="button" onclick="novoProduto()">Novo</button>
                     </div>
-                    <div class="col-sm-3">
-                        <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
+                    <div class="col-md-4 input-group">
+                        {{-- <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar"> --}}
+                        <form action="{{route('buscarProduto')}}" method="POST">
+                            @csrf
+                            <div class="input-group mb-3">
+                                <input name="q" type="text" class="form-control" placeholder="Buscar Produto" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                  <button class="btn btn-primary-ludke" type="submit">Buscar</button>
+                                </div>
+                              </div>
+                        </form>
+
                     </div>
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
 
+    @if(isset($achou) && $achou == true)
+    <div class="row">
+        <div class="col-sm-12 limparBusca">
+            <a href="{{route('produtos')}}">
+                <button class="btn btn-outline-danger">Listar Todos</button>
+            </a>
 
+        </div>
+    </div>
+    @endif
     <div class="row justify-content-center">
         <div class="col-sm-12">
+            @if(isset($produtos))
             <table id="tabelaProdutos" class="table table-hover table-responsive-sm">
                 <thead class="thead-primary">
                     <tr>
@@ -62,9 +82,26 @@
                 </tbody>
             </table> <!-- end table -->
             <div class="row justify-content-center">
-                {{$produtos->links()}}
-
+                {{$produtos->render()}}
             </div>
+            @else
+            <div class="row">
+                <div class="col-sm-12 limparBusca">
+                    <a href="{{route('produtos')}}">
+                        <button class="btn btn-outline-danger">Listar Todos</button>
+                    </a>
+    
+                </div>
+            </div>
+            {{-- Mensagem Alerta --}}
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger" role="alert">
+                        {{$menssage}}
+                    </div>
+                </div>
+            </div>
+            @endif
         </div><!-- end col-->
     </div><!-- end row-->
 </div>
@@ -161,15 +198,6 @@
 
 <script type="text/javascript">
 
-    // Busca na tabela
-    $(function(){
-        $("#inputBusca").on("keyup",function(){
-            var value = $(this).val().toUpperCase();
-            $("#tabelaProdutos tbody tr").filter(function(){
-                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
-            });
-        });
-    });
     //essa função é chamada sempre que atualiza a pagina
     $(function(){
         // Configura o ajax para todas as requisições ir com token csrf

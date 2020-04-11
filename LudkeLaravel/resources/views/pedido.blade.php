@@ -365,7 +365,7 @@
     // Busca Produto selecionado no banco
     function buscaProduto(id){
         $.ajax({
-            url:'/api/produtos/'+id,
+            url:'/produtos/'+id,
             method:"GET",
             success: function(data){
                 produto = JSON.parse(data);
@@ -397,7 +397,7 @@
         
         peso = parseFloat($("#pesoProduto").val());
         if(peso && peso>0){
-            $.getJSON('/api/produtos/'+id,function(data){
+            $.getJSON('/produtos/'+id,function(data){
                 produto = data;
                 // console.log("adicionarProduto()",produto)
                 if(produto){
