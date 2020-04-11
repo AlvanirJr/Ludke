@@ -15,7 +15,7 @@
 		</thead>
 		<tbody>
 
-		<?php dd($itens); ?>
+		
 
 			@foreach($itens as $iten)
 
