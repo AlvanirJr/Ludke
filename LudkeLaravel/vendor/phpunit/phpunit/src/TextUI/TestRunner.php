@@ -83,7 +83,7 @@ final class TestRunner extends BaseTestRunner
     private $loader;
 
     /**
-     * @var Printer&TestListener
+     * @var ResultPrinter
      */
     private $printer;
 
@@ -269,11 +269,11 @@ final class TestRunner extends BaseTestRunner
 
         if ($this->printer === null) {
             if (isset($arguments['printer'])) {
-                if ($arguments['printer'] instanceof Printer && $arguments['printer'] instanceof TestListener) {
+                if ($arguments['printer'] instanceof Printer) {
                     $this->printer = $arguments['printer'];
                 } elseif (\is_string($arguments['printer']) && \class_exists($arguments['printer'], false)) {
                     try {
-                        new \ReflectionClass($arguments['printer']);
+                        $class = new \ReflectionClass($arguments['printer']);
                         // @codeCoverageIgnoreStart
                     } catch (\ReflectionException $e) {
                         throw new Exception(
@@ -284,7 +284,7 @@ final class TestRunner extends BaseTestRunner
                     }
                     // @codeCoverageIgnoreEnd
 
-                    if (\is_subclass_of($arguments['printer'], ResultPrinter::class)) {
+                    if ($class->isSubclassOf(ResultPrinter::class)) {
                         $this->printer = $this->createPrinter($arguments['printer'], $arguments);
                     }
                 }
@@ -1303,13 +1303,6 @@ final class TestRunner extends BaseTestRunner
         $this->messagePrinted = true;
     }
 
-    /**
-     * @template T as Printer
-     *
-     * @param class-string<T> $class
-     *
-     * @return T
-     */
     private function createPrinter(string $class, array $arguments): Printer
     {
         return new $class(

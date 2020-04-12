@@ -2,8 +2,8 @@
 
 namespace Facade\Ignition\Solutions;
 
-use Facade\IgnitionContracts\RunnableSolution;
 use Illuminate\Support\Facades\Blade;
+use Facade\IgnitionContracts\RunnableSolution;
 
 class SuggestCorrectVariableNameSolution implements RunnableSolution
 {

@@ -23,7 +23,7 @@ final class Json
      */
     public static function prettify(string $json): string
     {
-        $decodedJson = \json_decode($json, false);
+        $decodedJson = \json_decode($json, true);
 
         if (\json_last_error()) {
             throw new Exception(

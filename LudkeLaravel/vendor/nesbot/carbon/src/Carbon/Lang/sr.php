@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-/*
+/**
  * Authors:
  * - Josh Soref
  * - François B
@@ -32,7 +32,7 @@ return [
     'h' => ':count č.',
     'minute' => ':count minut|:count minuta|:count minuta',
     'min' => ':count min.',
-    'second' => ':count sekundu|:count sekunde|:count sekundi',
+    'second' => ':count sekund|:count sekunde|:count sekunde',
     's' => ':count sek.',
     'ago' => 'pre :time',
     'from_now' => 'za :time',

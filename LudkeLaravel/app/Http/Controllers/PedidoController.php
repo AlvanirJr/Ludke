@@ -23,7 +23,9 @@ class PedidoController extends Controller
     }
 
     public function indexListarPedidos(){
-        return view('listarPedido');
+        $pedidos = Pedido::paginate(25);
+        // dd(Pedido::first()->itensPedidos);
+        return view('listarPedido',['pedidos'=>$pedidos]);
     }
     /**
      * Show the form for creating a new resource.
@@ -336,6 +338,7 @@ class PedidoController extends Controller
 
         // dd($pedido);
         $pedido->save();
-        return view('listarPedido');
+        $pedidos = Pedido::paginate(25);
+        return view('listarPedido',['pedidos'=>$pedidos]);
     }
 }

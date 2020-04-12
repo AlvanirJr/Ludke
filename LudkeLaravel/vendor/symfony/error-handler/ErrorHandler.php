@@ -92,7 +92,6 @@ class ErrorHandler
     private $screamedErrors = 0x55; // E_ERROR + E_CORE_ERROR + E_COMPILE_ERROR + E_PARSE
     private $loggedErrors = 0;
     private $traceReflector;
-    private $debug;
 
     private $isRecursive = 0;
     private $isRoot = false;
@@ -181,7 +180,7 @@ class ErrorHandler
         }
     }
 
-    public function __construct(BufferingLogger $bootstrappingLogger = null, bool $debug = false)
+    public function __construct(BufferingLogger $bootstrappingLogger = null)
     {
         if ($bootstrappingLogger) {
             $this->bootstrappingLogger = $bootstrappingLogger;
@@ -189,7 +188,6 @@ class ErrorHandler
         }
         $this->traceReflector = new \ReflectionProperty('Exception', 'trace');
         $this->traceReflector->setAccessible(true);
-        $this->debug = $debug;
     }
 
     /**
@@ -246,14 +244,14 @@ class ErrorHandler
             if (!\is_array($log)) {
                 $log = [$log];
             } elseif (!\array_key_exists(0, $log)) {
-                throw new \InvalidArgumentException('No logger provided.');
+                throw new \InvalidArgumentException('No logger provided');
             }
             if (null === $log[0]) {
                 $this->loggedErrors &= ~$type;
             } elseif ($log[0] instanceof LoggerInterface) {
                 $this->loggedErrors |= $type;
             } else {
-                throw new \InvalidArgumentException('Invalid logger provided.');
+                throw new \InvalidArgumentException('Invalid logger provided');
             }
             $this->loggers[$type] = $log + $prev[$type];
 
@@ -413,11 +411,6 @@ class ErrorHandler
         $throw = $this->thrownErrors & $type & $level;
         $type &= $level | $this->screamedErrors;
 
-        // Never throw on warnings triggered by assert()
-        if (E_WARNING === $type && 'a' === $message[0] && 0 === strncmp($message, 'assert(): ', 10)) {
-            $throw = 0;
-        }
-
         if (!$type || (!$log && !$throw)) {
             return !$silenced && $type && $log;
         }
@@ -519,7 +512,7 @@ class ErrorHandler
         if ($this->isRecursive) {
             $log = 0;
         } else {
-            if (\PHP_VERSION_ID < (\PHP_VERSION_ID < 70400 ? 70316 : 70404)) {
+            if (!\defined('HHVM_VERSION')) {
                 $currentErrorHandler = set_error_handler('var_dump');
                 restore_error_handler();
             }
@@ -531,7 +524,7 @@ class ErrorHandler
             } finally {
                 $this->isRecursive = false;
 
-                if (\PHP_VERSION_ID < (\PHP_VERSION_ID < 70400 ? 70316 : 70404)) {
+                if (!\defined('HHVM_VERSION')) {
                     set_error_handler($currentErrorHandler);
                 }
             }
@@ -704,7 +697,7 @@ class ErrorHandler
      */
     private function renderException(\Throwable $exception): void
     {
-        $renderer = \in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliErrorRenderer() : new HtmlErrorRenderer($this->debug);
+        $renderer = \in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliErrorRenderer() : new HtmlErrorRenderer(0 !== $this->scopedErrors);
 
         $exception = $renderer->render($exception);
 
@@ -768,7 +761,7 @@ class ErrorHandler
      */
     private function parseAnonymousClass(string $message): string
     {
-        return preg_replace_callback('/class@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', static function ($m) {
+        return preg_replace_callback('/class@anonymous\x00.*?\.php0x?[0-9a-fA-F]++/', static function ($m) {
             return class_exists($m[0], false) ? get_parent_class($m[0]).'@anonymous' : $m[0];
         }, $message);
     }
