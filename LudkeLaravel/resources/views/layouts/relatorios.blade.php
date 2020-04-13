@@ -11,10 +11,13 @@
 		<title>@yield('titulo')</title>
 	</head>
 	<body>
+	
 		<h1 style="text-align:center;">@yield('titulo')</h1>
 		<h2 style="text-align:center;">
 			- Emitido em @yield('date') -
 		</h2><br>
 	    @yield('content')
 	</body>
+
+
 </html>

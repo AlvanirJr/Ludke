@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Dompdf\Dompdf;
 use App\ItensPedido;
 use App\Pedido;
+use App\Cliente;
 
 class RelatorioPedidosController extends Controller
 {
@@ -15,14 +16,19 @@ class RelatorioPedidosController extends Controller
         $view = 'relatorioPedido';
         $pedido = Pedido::find($id);
         $itens = ItensPedido::where('pedido_id', '=', $pedido->id)->get();
-        
-         
-        
+        $clientes = Cliente::where('id', '=', $pedido->cliente_id)->get();
+        $soma = 0;
+        foreach ($itens as $iten){
+            $soma += $iten->valorReal;
+        }
+
+
+
 
         $date = date('d/m/Y');
-		$view = \View::make($view, compact('itens', 'date'))->render();
+		$view = \View::make($view, compact('itens', 'clientes','soma',  'date'))->render();
 		$pdf = \App::make('dompdf.wrapper');
-		$pdf->loadHTML($view)->setPaper('a4', 'landscape');
+		$pdf->loadHTML($view)->setPaper('a6', 'landscape');
 
 		$filename = 'relatorioPedido'.$date;
 
