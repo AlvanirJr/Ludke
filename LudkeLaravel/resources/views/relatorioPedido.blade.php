@@ -25,10 +25,8 @@
  		<thead class="table thead">
 			<tr >
 				<th>Peso</th>
-                <th>Valor Item</th>
+                <th>Valor do Item</th>
 				<th>Produto</th>
-                <th>Valor Total</th>
-
 
 			</tr>
 		</thead>
@@ -37,15 +35,15 @@
 
         @foreach($itens as $iten)
 				<tr class="linha">
-                    <td>{{$iten->pesoFinal}}</td>
-                    <td>{{$iten->valorReal}}</td>
+                    <td>{{$iten->pesoFinal}} KG</td>
+                    <td>{{$iten->valorReal = number_format($iten->valorReal, '2',',','.')}}</td>
                     <td>{{$iten->nomeProduto}}</td>
-                    <td>{{$soma}}</td>
-
                 </tr>
 				@endforeach
 		</tbody>
 	</table>
+
+    <h2 border=1  width=80% height=80% ALIGN=center >Valor Total: {{$soma = number_format($soma, '2',',','.')}} R$</h2>
 
 
 @stop
