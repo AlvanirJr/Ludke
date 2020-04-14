@@ -22,6 +22,7 @@ class RelatorioPedidosController extends Controller
             $soma += $iten->valorReal;
         }
 
+        #####Soma
 
 
 
@@ -31,6 +32,7 @@ class RelatorioPedidosController extends Controller
 		$pdf->loadHTML($view)->setPaper('a6', 'landscape');
 
 		$filename = 'relatorioPedido'.$date;
+
 
 		return $pdf->stream($filename.'.pdf');
     }
