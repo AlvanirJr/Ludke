@@ -27,7 +27,7 @@ class RelatorioPedidosController extends Controller
 
 
         $date = date('d/m/Y');
-		$view = \View::make($view, compact('itens', 'clientes','soma',  'date'))->render();
+		$view = \View::make($view, compact('itens', 'clientes', 'date'))->render();
 		$pdf = \App::make('dompdf.wrapper');
 		$pdf->loadHTML($view)->setPaper('a6', 'landscape');
 
