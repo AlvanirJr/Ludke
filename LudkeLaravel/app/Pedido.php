@@ -37,7 +37,7 @@ class Pedido extends Model
                     $cliente = Cliente::where('user_id',$user->id)->first();
                     $query->where('cliente_id',$cliente->id);
                 }
-            })->paginate($itensPorPagina);
+            })->orderBy('status')->orderBy('dataEntrega')->paginate($itensPorPagina);
         } catch (\Throwable $th) {
             return [];
         }           

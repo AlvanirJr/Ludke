@@ -24,7 +24,7 @@ class PedidoController extends Controller
     }
 
     public function indexListarPedidos(){
-        $pedidos = Pedido::paginate(25);
+        $pedidos = Pedido::orderBy('status')->orderBy('dataEntrega')->paginate(25);
         // dd(Pedido::first()->itensPedidos);
         return view('listarPedido',['pedidos'=>$pedidos]);
     }
