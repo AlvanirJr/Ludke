@@ -61,6 +61,7 @@ Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("lista
 Route::get('/getPedidos','PedidoController@getPedidos');
 Route::get('/pedidos/edit/{id}','PedidoController@edit')->name('pedido.editar'); //Editar Pedido
 Route::put('/pedidos/update/{id}','PedidoController@update');
+Route::any('/pedidos/filtrar','PedidoController@filtrarPedido')->name('pedido.filtrar');
 
 // Antigas rotas da API
 Route::resource('/categorias','CategoriaController');

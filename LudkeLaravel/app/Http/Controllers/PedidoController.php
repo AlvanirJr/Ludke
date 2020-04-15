@@ -10,6 +10,7 @@ use App\User;
 use App\ItensPedido;
 use App\Pedido;
 use App\Funcionario;
+
 class PedidoController extends Controller
 {
     /**
@@ -340,5 +341,17 @@ class PedidoController extends Controller
         $pedido->save();
         $pedidos = Pedido::paginate(25);
         return view('listarPedido',['pedidos'=>$pedidos]);
+    }
+
+
+    public function filtrarPedido(Request $request, Pedido $pedido){
+        $filtro = $request->all();
+        // dd($filtro);
+        
+        $pedidos = $pedido->filtro($filtro);
+
+        return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
+        // dd($pedidos);
+
     }
 }

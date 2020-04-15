@@ -15,6 +15,12 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
+                        {{-- <a href="#" data-toggle="modal" data-target="#dlgFiltro"class="btn btn-primary-ludke">Filtrar</a> --}}
+                        <button type="button" class="btn btn-primary-ludke" data-toggle="modal" data-target="#exampleModal">
+                            Filtrar
+                          </button>
+                    </div>
+                    <div class="col-sm-2">
                         <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Novo Pedido</a>
                     </div>
                     
@@ -23,33 +29,16 @@
         </div><!-- end col-->
     </div><!-- end row-->
 
-    <form action="" method="POST">
-        @csrf
-        <div class="form-group row">
-            <div class="col-sm-2">
-                <input type="text" class="form-control" name="cliente" placeholder="Nome do Cliente">
-            </div>
-            <div class="col-sm-2">
-                <input type="date" class="form-control" name="cliente" placeholder="Nome do Cliente">
-            </div>
-            <div class="col-sm-2">
-                <select class="form-control" name="status" id="">
-                    <option value="" disabled selected>-- STATUS --</option>
-                    <option value="ABERTO">ABERTO</option>
-                    <option value="FINALIZADO">FINALIZADO</option>
-                </select>
-            </div>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" name="cidade" placeholder="Cidade">
-            </div>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" name="bairro" placeholder="Bairro">
-            </div>
-            <div class="col-sm-2">
-                <button type="submit" class="btn btn-primary-ludke">FILTRAR</button>
-            </div>
+    @if(isset($achou) && $achou == true)
+    <div class="row">
+        <div class="col-sm-12 limparBusca">
+            <a href="{{route('listarPedidos')}}">
+                <button class="btn btn-outline-danger">Listar Todos</button>
+            </a>
+
         </div>
-    </form>
+    </div>
+    @endif
     <div class="row justify-content-center">
         <div class="col-sm-12">
             <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
@@ -72,7 +61,7 @@
                                 <td>{{$pedido->id}}</td>
                                 <td>{{$pedido->cliente->user->name}}</td>
                                 <td>{{$pedido->funcionario->user->name}}</td>
-                                <td>{{$pedido->created_at}}</td>
+                                <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
                                 <td>
                                     <ul>
                                         @foreach ($pedido->itensPedidos as $itens)
@@ -100,7 +89,7 @@
                                 <td>{{$pedido->id}}</td>
                                 <td>{{$pedido->cliente->user->name}}</td>
                                 <td>{{$pedido->funcionario->user->name}}</td>
-                                <td>{{$pedido->created_at}}</td>
+                                <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
                                 <td>
                                     <ul>
                                         @foreach ($pedido->itensPedidos as $itens)
@@ -132,10 +121,74 @@
     </div><!-- end row-->
 
     <div class="row justify-content-center">
-        {{ $pedidos->render() }}
+        @if ($pedidos != [])
+            @if (isset($filtro))
+            {{ $pedidos->appends($filtro)->links() }}
+            
+            @else
+            {{ $pedidos->links() }}
+            @endif
+        @endif
     </div>
 
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Filtrar Pedido</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{{route('pedido.filtrar')}}" method="POST">
+            @csrf
+            <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="cliente">Nome do Cliente</label>
+                            <input type="text" class="form-control" name="cliente" placeholder="Nome do Cliente">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="dataEntrega">Data de Entrega</label>
+                            <input type="date" class="form-control" name="dataEntrega">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="status">Status</label>
+                            <select class="form-control" name="status" id="">
+                                <option value="" disabled selected>-- STATUS --</option>
+                                <option value="ABERTO">ABERTO</option>
+                                <option value="FINALIZADO">FINALIZADO</option>
+                            </select>
+                        </div>
+                    </div>
+                    {{-- <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" class="form-control" name="cidade" placeholder="Cidade">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="bairro">Bairro</label>
+                            <input type="text" class="form-control" name="bairro" placeholder="Bairro">
+                        </div>
+                    </div> --}}
+
+                </div>
+                <div class="modal-footer">
+                    <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Filtrar</button>
+                </div>
+            </form>
+      </div>
+    </div>
+  </div>
 
 @endsection
 
