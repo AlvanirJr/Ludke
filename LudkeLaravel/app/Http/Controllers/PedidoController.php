@@ -348,7 +348,7 @@ class PedidoController extends Controller
         $filtro = $request->all();
         // dd($filtro);
         
-        $pedidos = $pedido->filtro($filtro);
+        $pedidos = $pedido->filtro($filtro,25);
 
         return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
         // dd($pedidos);

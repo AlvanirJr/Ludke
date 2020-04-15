@@ -16,7 +16,7 @@
                     </div>
                     <div class="col-sm-2">
                         {{-- <a href="#" data-toggle="modal" data-target="#dlgFiltro"class="btn btn-primary-ludke">Filtrar</a> --}}
-                        <button type="button" class="btn btn-primary-ludke" data-toggle="modal" data-target="#exampleModal">
+                        <button id="btnFiltrar" type="button" class="btn btn-primary-ludke" data-toggle="modal" data-target="#modalFiltro">
                             Filtrar
                           </button>
                     </div>
@@ -133,7 +133,7 @@
 
 </div>
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalFiltro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -148,19 +148,19 @@
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <label for="cliente">Nome do Cliente</label>
-                            <input type="text" class="form-control" name="cliente" placeholder="Nome do Cliente">
+                            <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nome do Cliente">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <label for="dataEntrega">Data de Entrega</label>
-                            <input type="date" class="form-control" name="dataEntrega">
+                            <input type="date" class="form-control" id="dataEntrega" name="dataEntrega">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <label for="status">Status</label>
-                            <select class="form-control" name="status" id="">
+                            <select class="form-control" name="status" id="status">
                                 <option value="" disabled selected>-- STATUS --</option>
                                 <option value="ABERTO">ABERTO</option>
                                 <option value="FINALIZADO">FINALIZADO</option>
@@ -205,7 +205,14 @@
             }
         });
 
-        start();
+        // cliente
+        // dataEntrega
+        // status
+        $('#btnFiltrar').click(function(){
+            $('#cliente').val('');
+            $('#dataEntrega').val('');
+            $('#status').val('');
+        });
     });
 
     function excluirPedido(id){

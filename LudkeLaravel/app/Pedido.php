@@ -21,7 +21,7 @@ class Pedido extends Model
     }
 
 
-    public function filtro($filtro){
+    public function filtro($filtro,$itensPorPagina){
 
         try {
             //code...
@@ -37,7 +37,7 @@ class Pedido extends Model
                     $cliente = Cliente::where('user_id',$user->id)->first();
                     $query->where('cliente_id',$cliente->id);
                 }
-            })->paginate(1);
+            })->paginate($itensPorPagina);
         } catch (\Throwable $th) {
             return [];
         }           
