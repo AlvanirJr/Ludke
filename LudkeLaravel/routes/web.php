@@ -63,6 +63,10 @@ Route::get('/pedidos/edit/{id}','PedidoController@edit')->name('pedido.editar');
 Route::put('/pedidos/update/{id}','PedidoController@update');
 Route::any('/pedidos/filtrar','PedidoController@filtrarPedido')->name('pedido.filtrar');
 
+// ROTAS PARA VENDA
+Route::get('/vendas/listar', 'VendaController@indexListarVendas')->name('listarVendas');
+
+
 // Antigas rotas da API
 Route::resource('/categorias','CategoriaController');
 Route::resource('/produtos', 'ProdutoController'); //cria todas as rotas para produto
@@ -72,19 +76,19 @@ Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas
 Route::resource('/clientes', 'ClienteController');
 
 // Rotas para testar banco
-use App\Produto;
-use App\Categoria;
-use App\Cliente;
-use App\User;
-use App\Pedido;
-Route::get('/teste',function(){
-    $users = User::with('cliente')->get();
-    $cliente = Cliente::with('user')->get();
-    $produtos = Produto::with('categoria')->find(1);
-    $categoria = Categoria::with('produtos')->get();
-    $pedidos = Pedido::with(['itensPedidos'])->get();
+// use App\Produto;
+// use App\Categoria;
+// use App\Cliente;
+// use App\User;
+// use App\Pedido;
+// Route::get('/teste',function(){
+//     $users = User::with('cliente')->get();
+//     $cliente = Cliente::with('user')->get();
+//     $produtos = Produto::with('categoria')->find(1);
+//     $categoria = Categoria::with('produtos')->get();
+//     $pedidos = Pedido::with(['itensPedidos'])->get();
 
-    return json_encode($users[2]->cliente);
+//     return json_encode($users[2]->cliente);
 
-    // return $pedidos;
-});
+//     // return $pedidos;
+// });
