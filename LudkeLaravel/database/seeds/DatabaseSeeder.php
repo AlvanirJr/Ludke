@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriaSeeder::class);
         $this->call(CargoSeeder::class);
         $this->call(FuncionarioSeeder::class);
+        $this->call(StatusSeeder::class);
     }
 }

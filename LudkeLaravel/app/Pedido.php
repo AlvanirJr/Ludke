@@ -20,14 +20,17 @@ class Pedido extends Model
         return $this->hasMany('App\ItensPedido','pedido_id');
     }
 
+    function status(){
+        return $this->belongsTo('App\Status');
+    }
 
     public function filtro($filtro,$itensPorPagina){
-
         try {
             //code...
             return $this->where(function($query) use ($filtro){
-                if(isset($filtro['status'])){
-                    $query->where('status',$filtro['status']);
+                if(isset($filtro['status_id'])){
+
+                    $query->where('status_id',intval($filtro['status_id']));
                 }
                 if(isset($filtro['dataEntrega'])){
                     $query->where('dataEntrega',$filtro['dataEntrega']);
@@ -37,7 +40,7 @@ class Pedido extends Model
                     $cliente = Cliente::where('user_id',$user->id)->first();
                     $query->where('cliente_id',$cliente->id);
                 }
-            })->orderBy('status')->orderBy('dataEntrega')->paginate($itensPorPagina);
+            })->orderBy('status_id')->orderBy('dataEntrega')->paginate($itensPorPagina);
         } catch (\Throwable $th) {
             return [];
         }           

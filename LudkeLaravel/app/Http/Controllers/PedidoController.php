@@ -10,6 +10,7 @@ use App\User;
 use App\ItensPedido;
 use App\Pedido;
 use App\Funcionario;
+use App\Status;
 
 class PedidoController extends Controller
 {
@@ -24,8 +25,8 @@ class PedidoController extends Controller
     }
 
     public function indexListarPedidos(){
-        $pedidos = Pedido::orderBy('status')->orderBy('dataEntrega')->paginate(25);
-        // dd(Pedido::first()->itensPedidos);
+        $pedidos = Pedido::with(['status'])->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+        // dd($pedidos);
         return view('listarPedido',['pedidos'=>$pedidos]);
     }
     /**
@@ -125,7 +126,7 @@ class PedidoController extends Controller
         // forma de pagamento só é definida na conclusão do pedido
         
         $pedido->dataEntrega = $request->input('dataEntrega');
-        $pedido->status = "ABERTO";
+        // $pedido->status = "ABERTO";
         
         
         
@@ -263,6 +264,7 @@ class PedidoController extends Controller
     public function finalizarPedido(Request $request){
         $cliente = Cliente::find($request->input('cliente_id'));
         
+        
         // valor total sem desconto
         $valorTotal = 0;
         $desconto = 0;
@@ -279,7 +281,9 @@ class PedidoController extends Controller
         $pedido->formaPagamento = "";
         // $pedido->desconto = floatval($request->input('valorDesconto'));
         $pedido->dataEntrega = $request->input('dataEntrega');
-        $pedido->status = "ABERTO";
+        $status = Status::find(1);
+        // dd($status->id);
+        $pedido->status_id = $status->id;
         $pedido->cliente_id = $cliente->id;
         $funcionario = Funcionario::find(Auth::user()->id);
         $pedido->funcionario_id = $funcionario->id; //salvando o user_id do funcionario que está logado
@@ -308,7 +312,7 @@ class PedidoController extends Controller
     }
 
     public function getPedidos(){
-        $pedidos = Pedido::with(['itensPedidos'])->orderBy('status')->orderBy('dataEntrega')->get();
+        $pedidos = Pedido::with(['itensPedidos'])->orderBy('status_id')->orderBy('dataEntrega')->get();
         $size = sizeof($pedidos);
         for($i = 0; $i < $size; $i++){
             $cliente = Cliente::with('user')->find($pedidos[$i]->cliente_id);
@@ -335,7 +339,8 @@ class PedidoController extends Controller
             $item->save();
         }
         $pedido->valorTotal = $valorTotal;
-        $pedido->status = "FINALIZADO";
+        $status = Status::find(2);
+        $pedido->status_id = $status->id;
 
         // dd($pedido);
         $pedido->save();

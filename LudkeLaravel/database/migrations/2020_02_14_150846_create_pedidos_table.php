@@ -19,7 +19,7 @@ class CreatePedidosTable extends Migration
             $table->string('formaPagamento')->nullable();
             $table->date('dataEntrega');
             $table->float('valorTotal');
-            $table->string('status');
+            // $table->integer('status');
 
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id')->on('clientes');

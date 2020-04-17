@@ -56,7 +56,7 @@
                 </thead>
                 <tbody>
                     @foreach ($pedidos as $pedido)
-                        @if($pedido->status != "FINALIZADO")
+                        @if($pedido->status_id != 2)
                             <tr id="{{$pedido->id}}">
                                 <td>{{$pedido->id}}</td>
                                 <td>{{$pedido->cliente->user->name}}</td>
@@ -69,7 +69,7 @@
                                         @endforeach
                                     </ul>
                                 </td>
-                                <td>{{$pedido->status}}</td>
+                                <td>{{$pedido->status->status}}</td>
                                 <td>R$ {{$pedido->valorTotal}}</td>
                                 <td>
                                     <a href="/pedidos/concluir/{{$pedido->id}}">
@@ -97,7 +97,7 @@
                                         @endforeach
                                     </ul>
                                 </td>
-                                <td>{{$pedido->status}}</td>
+                                <td>{{$pedido->status->status}}</td>
                                 <td>R$ {{$pedido->valorTotal}}</td>
                                 <td>
                                     {{-- <a href="/pedidos/concluir/{{$pedido->id}}">
@@ -159,11 +159,11 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12">
-                            <label for="status">Status</label>
-                            <select class="form-control" name="status" id="status">
+                            <label for="status_id">Status</label>
+                            <select class="form-control" name="status_id" id="status_id">
                                 <option value="" disabled selected>-- STATUS --</option>
-                                <option value="ABERTO">ABERTO</option>
-                                <option value="FINALIZADO">FINALIZADO</option>
+                                <option value="1">SOLICITADO</option>
+                                <option value="2">PESADO</option>
                             </select>
                         </div>
                     </div>
