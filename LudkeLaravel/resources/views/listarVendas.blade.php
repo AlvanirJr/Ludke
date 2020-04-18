@@ -56,7 +56,7 @@
                 </thead>
                 <tbody>
                     @foreach ($pedidos as $pedido)
-                        @if($pedido->status_id != 2)
+                        @if($pedido->status_id == 2)
                             <tr id="{{$pedido->id}}">
                                 <td>{{$pedido->id}}</td>
                                 <td>{{$pedido->cliente->user->name}}</td>
@@ -72,37 +72,9 @@
                                 <td>{{$pedido->status->status}}</td>
                                 <td>R$ {{$pedido->valorTotal}}</td>
                                 <td>
-                                    <a href="/pedidos/concluir/{{$pedido->id}}">
+                                    <a href="{{route('vendas.concluir',['id'=>$pedido->id])}}">
                                         <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
                                     </a>                            
-                                    <a href="/pedidos/edit/{{$pedido->id}}">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">
-                                    </a>
-
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
-                                    </a>
-                                </td>
-                            </tr>
-                        @else
-                            <tr id="{{$pedido->id}}">
-                                <td>{{$pedido->id}}</td>
-                                <td>{{$pedido->cliente->user->name}}</td>
-                                <td>{{$pedido->funcionario->user->name}}</td>
-                                <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
-                                <td>
-                                    <ul>
-                                        @foreach ($pedido->itensPedidos as $itens)
-                                            <li>{{$itens->nomeProduto}} | {{$itens->pesoFinal}} KG</li>
-                                        @endforeach
-                                    </ul>
-                                </td>
-                                <td>{{$pedido->status->status}}</td>
-                                <td>R$ {{$pedido->valorTotal}}</td>
-                                <td>
-                                    {{-- <a href="/pedidos/concluir/{{$pedido->id}}">
-                                        <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
-                                    </a>                             --}}
                                     {{-- <a href="/pedidos/edit/{{$pedido->id}}">
                                         <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">
                                     </a> --}}
@@ -112,7 +84,6 @@
                                     </a>
                                 </td>
                             </tr>
-
                         @endif
                     @endforeach
                 </tbody>

@@ -65,6 +65,8 @@ Route::any('/pedidos/filtrar','PedidoController@filtrarPedido')->name('pedido.fi
 // ROTAS PARA VENDA
 Route::get('/vendas', 'VendaController@index')->name('vendas');
 Route::get('/vendas/listar', 'VendaController@indexListarVendas')->name('listarVendas');
+Route::get('/vendas/concluir/{id}', 'VendaController@concluirVenda')->name('vendas.concluir');
+Route::post('/vendas/concluir', 'VendaController@concluirVendaPagamento')->name('vendas.concluir');
 
 
 // Antigas rotas da API

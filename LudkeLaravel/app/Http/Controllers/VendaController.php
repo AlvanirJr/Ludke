@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Pedido;
+use App\Produto;
+use App\Funcionario;
+use App\Cliente;
 
 class VendaController extends Controller
 {
@@ -84,5 +87,29 @@ class VendaController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function concluirVenda($id){
+        // dd($id);
+        $pedido = Pedido::with(['itensPedidos'])->find($id);
+        // dd($pedido);
+        if(isset($pedido)){
+            for($i = 0; $i< count($pedido->itensPedidos); $i++){
+                $produto = Produto::find($pedido->itensPedidos[$i]->produto_id);
+                $pedido->itensPedidos[$i]["precoProduto"] = $produto->preco;
+            }
+            $cliente = Cliente::with('user')->find($pedido->cliente_id);
+            $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
+            
+            // $pedido["valorProduto"]= $produto->preco;
+            $pedido["nomeCliente"] = $cliente->user->name;
+            $pedido["nomeFuncionario"] = $funcionario->user->name;
+            // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
+            
+            return view('finalizarVenda')->with(["pedido"=>$pedido]);
+        }
+    }
+    public function concluirVendaPagamento(Request $request){
+        dd($request->input('desconto'));
     }
 }
