@@ -46,9 +46,8 @@ Route::post('/buscarCliente','ClienteController@buscarCliente')->name('buscarCli
 Route::get('/indexCargos', 'CargoController@indexView')->name('cargos');
 Route::post('/buscarCargo','CargoController@buscarCargo')->name('buscarCargo');
 
-Route::get('/pedidos','PedidoController@index')->name('pedidos');
-
 // ROTAS PARA O PEDIDO
+Route::get('/pedidos','PedidoController@index')->name('pedidos');
 Route::post('/pedidos/getCliente','PedidoController@getCliente');
 Route::post('/pedidos/buscaCliente/{id}','PedidoController@buscaCliente');
 Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
@@ -64,6 +63,7 @@ Route::put('/pedidos/update/{id}','PedidoController@update');
 Route::any('/pedidos/filtrar','PedidoController@filtrarPedido')->name('pedido.filtrar');
 
 // ROTAS PARA VENDA
+Route::get('/vendas', 'VendaController@index')->name('vendas');
 Route::get('/vendas/listar', 'VendaController@indexListarVendas')->name('listarVendas');
 
 

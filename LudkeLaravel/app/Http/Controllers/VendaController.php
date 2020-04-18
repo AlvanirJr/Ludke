@@ -7,11 +7,10 @@ use App\Pedido;
 
 class VendaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function index(){
+        return view('venda');
+    }
+
     public function indexListarVendas()
     {
         $pedidos = Pedido::with(['status'])->
