@@ -72,7 +72,7 @@
                                 <td>{{$pedido->status->status}}</td>
                                 <td>R$ {{$pedido->valorTotal}}</td>
                                 <td>
-                                    <a href="{{route('vendas.concluir',['id'=>$pedido->id])}}">
+                                    <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
                                         <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
                                     </a>                            
                                     {{-- <a href="/pedidos/edit/{{$pedido->id}}">
@@ -138,18 +138,6 @@
                             </select>
                         </div>
                     </div>
-                    {{-- <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label for="cidade">Cidade</label>
-                            <input type="text" class="form-control" name="cidade" placeholder="Cidade">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label for="bairro">Bairro</label>
-                            <input type="text" class="form-control" name="bairro" placeholder="Bairro">
-                        </div>
-                    </div> --}}
 
                 </div>
                 <div class="modal-footer">

@@ -69,7 +69,7 @@
     </div>
 
 
-    <form method="POST" action="{{route('vendas.concluir')}}">    
+    <form method="POST" action="{{route('vendas.concluirVendaPagamento')}}">    
         @csrf
         <input type="hidden" name="pedido_id" value="{{$pedido->id}}">
         <div class="row justify-content-center">
@@ -99,7 +99,7 @@
                                     <td>{{$item->valorReal}}</td>
                                     <td>
                                         {{-- <input id="pesoFinal{{$item->id}}" value='0' oninput="atualizarValor({{$item->precoProduto}},{{$item->id}})" name="pesoFinal{{$item->id}}" step="0.01" type="number" class="form-control" placeholder="Peso Final" required> --}}
-                                        <input id="pesoFinal{{$item->id}}" value='0' oninput="atualizarValor({{$item->precoProduto}},{{$item->id}})" name="desconto[]" step="0.01" type="number" class="form-control" placeholder="Peso Final" required>
+                                        <input id="pesoFinal{{$item->id}}" name="desconto[]" value='0' oninput="atualizarValor({{$pedido->valorTotal}})"  step="0.01" type="number" class="form-control" placeholder="Peso Final" required>
                                         
                                         @error('pesoFinal{{$item->id}}')
                                         <span class="invalid-feedback" role="alert">
@@ -114,7 +114,6 @@
                     </p>
                     </div>
                 </div>
-                <?php //dd($pedido)?>
                 
             </div>
         </div>
@@ -135,29 +134,64 @@
 @section('javascript')
 
 <script type="text/javascript">
-    function validar(){
-        alert("Digite o peso do item: ");
-    }
+    
     // Valor final do pedido
     let valorDoPedido = $("#valorDoPedido").val();
     
-    var valores = {};
-
-    function atualizarValor(precoProduto,id){
-        valor = 0.0;
-        
-        linhas = $('#tabelaItens>tbody>tr'); 
+    function validar(){
+        alert("Digite o peso do item: ");
+    }
+    
+    function precosItens(){
+        let precosItens = []; //array contendo o preço total de cada item
+        linhas = $('#tabelaItens>tbody>tr');
         linhas.filter(function(i,elemento){
-            
-            valorInput = $('#pesoFinal'+elemento.cells[0].textContent).val();
-            if(valorInput){
-                valor += parseFloat(valorInput) * parseFloat(elemento.cells[2].textContent);
-            }
-            
-        });
-        $("#valorDoPedido").html(valor);
+            valorTotalItem = parseFloat(elemento.cells[4].textContent);
+            precosItens.push(valorTotalItem);
+        }); 
+        return precosItens;
     }
 
-    // console.log(e[0].cells[1].textContent)
+
+    function valoresInputDesconto(){
+        let valoresInputDesconto = [];
+        linhas = $('#tabelaItens>tbody>tr'); 
+        linhas.filter(function(i,elemento){
+            valorDesconto = parseFloat($('#pesoFinal'+elemento.cells[0].textContent).val());
+            if(valorDesconto > 100){
+                alert("Você não pode aplicar um desconto maior do que 100%");
+                $('#pesoFinal'+elemento.cells[0].textContent).val(0);
+                valorDesconto = 0;
+                valoresInputDesconto.push(valorDesconto);
+                return;
+            }
+            else{
+                valoresInputDesconto.push(valorDesconto);
+
+            }
+        });
+
+        return valoresInputDesconto;
+    }
+    function calcularDesconto(arrayPrecosItens,arrayValoresInputDesconto){
+        let desconto = 0.0;
+        for(i = 0; i<arrayPrecosItens.length;i++){
+            desconto += arrayPrecosItens[i] * (arrayValoresInputDesconto[i]/100);
+        }
+        // console.log(`Desconto: ${desconto}`)
+        return desconto;
+    }
+    function atualizarValor(pedidoValorTotal){
+        // Inicializo Valores
+        let arrayPrecosItens = precosItens();
+        let arrayValoresInputDesconto = valoresInputDesconto();
+        let valorDescontoTotal = 0.0; 
+        // Calcular descontos
+        valorDescontoTotal = calcularDesconto(arrayPrecosItens,arrayValoresInputDesconto);
+        let valorDoPedido = pedidoValorTotal;
+
+        $("#valorDoPedido").html(valorDoPedido - valorDescontoTotal);
+    }
+    
 </script>    
 @endsection
