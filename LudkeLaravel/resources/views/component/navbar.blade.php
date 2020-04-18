@@ -14,45 +14,61 @@
             {{-- @if(Auth::check()) --}}
             @can('view_admin', Auth::user())
                 <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('home')}}">Início</a>
-                        </li>
-                        <li class="nav-item dropdown">
+                    {{-- Inicio --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('home')}}">Início</a>
+                    </li>
+                    {{-- Cruds --}}
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Gerenciar
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
-                                    <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
-                                    <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
-                                    <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
-                                    <a class="dropdown-item" href="{{route('cargos')}}">Cargos</a>
-                                </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Pedidos
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{route('pedidos')}}">Novo Pedido</a>
-                                        <a class="dropdown-item" href="{{route('listarPedidos')}}">Listar Pedidos</a>
-                                    </div>
-                            </li>
-                        <li class="nav-item">
-                            <a class="nav-link" >Relatórios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Ajuda</a>
-                        </li>
+                            Gerenciar
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
+                            <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
+                            <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
+                            <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
+                            <a class="dropdown-item" href="{{route('cargos')}}">Cargos</a>
+                        </div>
+                    </li>
+                    {{-- Pedidos --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Pedidos
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('pedidos')}}">Novo Pedido</a>
+                            <a class="dropdown-item" href="{{route('listarPedidos')}}">Listar Pedidos</a>
+                        </div>
+                    </li>
+                    {{-- Vendas --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Vendas
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('listarVendas')}}">Listar Vendas</a>
+                        </div>
+                    </li>
+                    {{-- Relatórios --}}
+                    <li class="nav-item">
+                        <a class="nav-link" >Relatórios</a>
+                    </li>
+                    {{-- Ajuda --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Ajuda</a>
+                    </li>
                 </ul>
             @endcan
 
 
             @can('view_gerenteAdmin', Auth::user())
                 <ul class="navbar-nav mr-auto">
+                    {{-- Inicio --}}
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('home')}}">Início</a>
                     </li>
+                    {{-- Cruds --}}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Gerenciar

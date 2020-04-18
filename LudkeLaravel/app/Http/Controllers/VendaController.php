@@ -14,8 +14,11 @@ class VendaController extends Controller
      */
     public function indexListarVendas()
     {
-        
-        return view('listarVendas');
+        $pedidos = Pedido::with(['status'])->
+                            where('status_id',2)->
+                            orderBy('status_id')->
+                            orderBy('dataEntrega')->paginate(25);
+        return view('listarVendas',['pedidos'=>$pedidos]);
     }
 
     /**

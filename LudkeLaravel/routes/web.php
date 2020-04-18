@@ -76,19 +76,19 @@ Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas
 Route::resource('/clientes', 'ClienteController');
 
 // Rotas para testar banco
-use App\Produto;
-use App\Categoria;
-use App\Cliente;
-use App\User;
-use App\Pedido;
-Route::get('/teste',function(){
-    $users = User::with('cliente')->get();
-    $cliente = Cliente::with('user')->get();
-    $produtos = Produto::with('categoria')->find(1);
-    $categoria = Categoria::with('produtos')->get();
-    $pedidos = Pedido::with(['itensPedidos','status'])->get();
+// use App\Produto;
+// use App\Categoria;
+// use App\Cliente;
+// use App\User;
+// use App\Pedido;
+// Route::get('/teste',function(){
+//     $users = User::with('cliente')->get();
+//     $cliente = Cliente::with('user')->get();
+//     $produtos = Produto::with('categoria')->find(1);
+//     $categoria = Categoria::with('produtos')->get();
+//     $pedidos = Pedido::with(['itensPedidos','status'])->get();
 
-    return json_encode($pedidos);
+//     return json_encode($pedidos);
 
-    // return $pedidos;
-});
+//     // return $pedidos;
+// });
