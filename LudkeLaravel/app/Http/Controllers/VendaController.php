@@ -7,6 +7,9 @@ use App\Pedido;
 use App\Produto;
 use App\Funcionario;
 use App\Cliente;
+use App\ItensPedido;
+use App\User;
+use App\Status;
 
 class VendaController extends Controller
 {
@@ -109,7 +112,46 @@ class VendaController extends Controller
             return view('finalizarVenda')->with(["pedido"=>$pedido]);
         }
     }
-    public function concluirVendaPagamento(Request $request){
-        dd($request->input('desconto'));
+    function calcularDescontosItens($itens, $descontos){
+        $itensComDesconto = [];
+        // dd();
+        for($i = 0; $i < count($itens); $i++){
+            $itensComDesconto[$i] = floatval($itens[$i]->valorReal) - (floatval($itens[$i]->valorReal) * ($descontos[$i] / 100));
+        }
+        return $itensComDesconto;
     }
+    
+    public function concluirVendaPagamento(Request $request){
+        // dd($request->all());
+        $pedido = Pedido::with(['cliente','funcionario'])->find($request->input('pedido_id'));
+        $descontos = $request->input('desconto');
+        
+        if(isset($pedido)){
+            $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
+
+            $itensComDesconto = self::calcularDescontosItens($itensPedido, $descontos);
+
+            // dd($descontos[0]);
+            $valorFinalDoPedido = 0.0;
+            for($i = 0; $i < count($itensPedido); $i++){
+
+                $itensPedido[$i]->descontoPorcentagem = floatval($descontos[$i]);
+                $itensPedido[$i]->valorComDesconto = floatval($itensComDesconto[$i]);
+                $itensPedido[$i]->save();
+                $valorFinalDoPedido += floatval($itensComDesconto[$i]);
+            }
+            $pedido->valorTotal = $valorFinalDoPedido;
+            $status = Status::where('status','PAGO PARCIALMENTE')->first();
+            $pedido->status_id = $status->id;
+            $pedido->save();
+            
+            // dd($itensPedido);
+            
+
+        }
+
+        return view('pagamento',['pedido'=>$pedido]);
+    }
+
+
 }

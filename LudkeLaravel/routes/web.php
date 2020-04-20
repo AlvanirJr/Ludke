@@ -67,6 +67,8 @@ Route::get('/vendas', 'VendaController@index')->name('vendas');
 Route::get('/vendas/listar', 'VendaController@indexListarVendas')->name('listarVendas');
 Route::get('/vendas/concluir/{id}', 'VendaController@concluirVenda')->name('vendas.concluirVenda');
 Route::post('/vendas/concluir', 'VendaController@concluirVendaPagamento')->name('vendas.concluirVendaPagamento');
+Route::post('/vendas/pagamento', 'VendaController@Pagamento')->name('vendas.pagamento');
+
 
 
 // Antigas rotas da API
