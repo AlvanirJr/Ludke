@@ -69,7 +69,7 @@
     </div>
 
 
-    <form method="POST" action="{{route('vendas.concluirVendaPagamento')}}">    
+    <form method="POST" action="{{route('vendas.concluirVendaPagamento',['id'=>$pedido->id])}}">    
         @csrf
         <input type="hidden" name="pedido_id" value="{{$pedido->id}}">
         <div class="row justify-content-center">

@@ -71,6 +71,8 @@ Route::post('/vendas/pagamento', 'VendaController@pagamento')->name('vendas.paga
 
 
 
+
+
 // Antigas rotas da API
 Route::resource('/categorias','CategoriaController');
 Route::resource('/produtos', 'ProdutoController'); //cria todas as rotas para produto

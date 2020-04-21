@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use App\Pedido;
 use App\Produto;
 use App\Funcionario;
@@ -43,73 +44,6 @@ class VendaController extends Controller
             return view('listarVendas',['pedidos'=>$pedidos]);
         }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function concluirVenda($id){
         // dd($id);
         $pedido = Pedido::with(['itensPedidos'])->find($id);
@@ -177,16 +111,9 @@ class VendaController extends Controller
         return $valorDesconto;
     }
     public function pagamento(Request $request){
-        // $request->validate([
-        //     'valorTotalPagamento'=> 'required|numeric',
-        //     'dataVencimento' => 'required|string|date',
-        //     'dataPagamento' => 'required|string|date',
-        //     'statusPagamento' => 'required|string|max:255',
-        //     'valorPago' => 'required|min:0',
-        //     'descontoPagamento' => 'required|min:0',
-        //     'obs' => 'nullable|string|max:255',
-        //     ]);
-        $pedido = Pedido::find($request->input('pedido_id'));
+
+        // Procura pedido referente ao pagamento no banco
+        $pedido = Pedido::find($request->input('pedido_id'));        
         
         // Calcula o valor com o desconto e salva esse valor em $pedido->valorTotal
         $valorDesconto = $this->calcularDescontoPagamento(floatval($pedido->valorTotal),floatval($request->input('descontoPagamento')));
