@@ -11,6 +11,7 @@ use App\ItensPedido;
 use App\Pedido;
 use App\Funcionario;
 use App\Status;
+use App\Pagamento;
 
 class PedidoController extends Controller
 {
@@ -186,6 +187,7 @@ class PedidoController extends Controller
         
         if(isset($pedido)){
             $itensPedido = ItensPedido::where("pedido_id",$id)->delete();
+            $pagamento = Pagamento::where('pedido_id',$id)->delete();
             $pedido->delete();
             return response("Pedido Excluído",200);
 
@@ -281,7 +283,7 @@ class PedidoController extends Controller
         $pedido->formaPagamento = "";
         // $pedido->desconto = floatval($request->input('valorDesconto'));
         $pedido->dataEntrega = $request->input('dataEntrega');
-        $status = Status::find(1);
+        $status = Status::where('status','SOLICITADO')->first(); // Solicitado
         // dd($status->id);
         $pedido->status_id = $status->id;
         $pedido->cliente_id = $cliente->id;
@@ -339,7 +341,7 @@ class PedidoController extends Controller
             $item->save();
         }
         $pedido->valorTotal = $valorTotal;
-        $status = Status::find(2);
+        $status = Status::where('status','PESADO')->first(); //
         $pedido->status_id = $status->id;
 
         // dd($pedido);

@@ -56,7 +56,8 @@
                 </thead>
                 <tbody>
                     @foreach ($pedidos as $pedido)
-                        @if($pedido->status_id == 2)
+                    
+                        @if($pedido->status->status != "SOLICITADO" || $pedido->status->status != "PAGO TOTALMENTE")
                             <tr id="{{$pedido->id}}">
                                 <td>{{$pedido->id}}</td>
                                 <td>{{$pedido->cliente->user->name}}</td>
@@ -84,6 +85,7 @@
                                     </a>
                                 </td>
                             </tr>
+                            
                         @endif
                     @endforeach
                 </tbody>
