@@ -119,10 +119,10 @@
         </div>
 
         <div class="row justify-content-center" style="margin:30px 0 30px 0;">
-            <div class="col-sm-4" style="heigth:100px">
+            <div class="col-sm-6" style="heigth:100px">
                 <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido" >Voltar</a>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <button type="submit" class="btn btn-primary-ludke btn-pedido">Concluir Pedido</button>
             </div>
         </div>

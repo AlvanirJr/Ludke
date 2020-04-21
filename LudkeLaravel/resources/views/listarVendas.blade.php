@@ -62,6 +62,7 @@
                     <th>Pedido</th>
                     <th>Status</th>
                     <th>Valor Total</th>
+                    <th>Valor Pago</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
@@ -81,8 +82,9 @@
                             </ul>
                         </td>
                         <td>{{$pedido->status->status}}</td>
-                        <td>R$ {{$pedido->valorTotal}}</td>
+                        <td>{{$pedido->valorTotal}}</td>
                         @if($pedido->status->status == "PESADO" || $pedido->status->status == "PAGO PARCIALMENTE")
+                        <td>R$ 0</td>
                             <td>
                                 <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
                                     <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
@@ -92,7 +94,19 @@
                                     <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
                                 </a>
                             </td>
+                        @elseif($pedido->status->status == "PAGO PARCIALMENTE")
+                        <td>R$ {{$pedido->pagamento->valorPago}}</td>
+                            <td>
+                                <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
+                                    <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
+                                </a>                            
+
+                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                    <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                </a>
+                            </td>    
                         @elseif($pedido->status->status == "PAGO TOTALMENTE")
+                        <td>R$ {{$pedido->pagamento->valorPago}}</td>
                             <td>
                                 <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                     <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
@@ -100,7 +114,6 @@
                             </td>
                         @endif
                     </tr>
-
                     @endforeach
                 </tbody>
             </table> <!-- end table -->
