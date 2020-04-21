@@ -5,7 +5,6 @@
 
 <div class="container-fluid">
     <div class="row justify-content-center">
-
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row d-flex justify-content-between">
@@ -21,14 +20,26 @@
                           </button>
                     </div>
                     <div class="col-sm-2">
-                        <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Nova Venda</a>
+                        <a href="{{route('vendas')}}" class="btn btn-primary-ludke">Nova Venda</a>
                     </div>
                     
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
-
+    
+    {{-- Caso uma venda seja realizada, o statusVenda é setado como success e uma
+    mensagem é exibida para o usuário informando que a venda foi realizada --}}
+    @if (isset($statusVenda))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Venda Realizada com sucesso!</strong> Aguarde a pesagem do pedido. Para vizualizar os pedidos, <a href="{{route('listarPedidos')}}">clique aqui.</a>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+    
+    {{-- Variável acho é setada caso encontre algum item no filtro --}}
     @if(isset($achou) && $achou == true)
     <div class="row">
         <div class="col-sm-12 limparBusca">

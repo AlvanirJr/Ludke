@@ -104,10 +104,10 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Pedido</a>
+                    <a href="{{route('listarVendas')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Venda</a>
                 </div>
                 <div class="col-sm-6">
-                    <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Concluir Pedido</a>
+                    <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Concluir Venda</a>
                 </div>
             </div>
 
@@ -603,7 +603,7 @@
                     msg = JSON.parse(data);
                     if(msg.success == true){
                         // limparTela();
-                        window.location.href = '/pedidos/listar';
+                        window.location.href = '/vendas/listar/success';
                     }
                 },
                 error: function(error){
