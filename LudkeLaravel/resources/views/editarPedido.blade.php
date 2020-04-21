@@ -580,7 +580,8 @@
                 context: this,
                 success: function(data){
                     console.log("Sucesso!!!")
-                    window.location.href = '/pedidos/listar';
+                    // window.location.href = '/pedidos/listar';
+                    window.location.href = '/vendas/listar';
                 },
                 error: function(error){
                     console.log(error);

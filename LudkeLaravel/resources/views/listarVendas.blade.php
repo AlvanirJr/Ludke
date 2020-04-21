@@ -32,7 +32,7 @@
     mensagem é exibida para o usuário informando que a venda foi realizada --}}
     @if (isset($statusVenda))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Venda Realizada com sucesso!</strong> Aguarde a pesagem do pedido. Para vizualizar os pedidos, <a href="{{route('listarPedidos')}}">clique aqui.</a>
+            <strong>Venda Realizada com sucesso!</strong> Aguarde a pesagem do pedido. Para vizualizar os pedidos solicitados, <a href="{{route('listarPedidos')}}">clique aqui.</a>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -83,11 +83,24 @@
                         </td>
                         <td>{{$pedido->status->status}}</td>
                         <td>{{$pedido->valorTotal}}</td>
-                        @if($pedido->status->status == "PESADO" || $pedido->status->status == "PAGO PARCIALMENTE")
+                        @if($pedido->status->status == "SOLICITADO")
                         <td>R$ 0</td>
                             <td>
                                 <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
-                                    <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
+                                    <img id="iconeEdit" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
+                                </a>                            
+                                <a href="{{route('pedido.editar',['id'=>$pedido->id])}}">
+                                    <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">
+                                </a>
+                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                    <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                </a>
+                            </td>
+                        @elseif($pedido->status->status == "PESADO" || $pedido->status->status == "PAGO PARCIALMENTE")
+                        <td>R$ 0</td>
+                            <td>
+                                <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
+                                    <img id="iconeEdit" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
                                 </a>                            
 
                                 <a href="#" onclick="excluirPedido({{$pedido->id}})">

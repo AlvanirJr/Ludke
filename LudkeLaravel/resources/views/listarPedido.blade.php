@@ -20,9 +20,10 @@
                             Filtrar
                           </button>
                     </div>
-                    <div class="col-sm-2">
+                    {{-- NOVO PEDIDO --}}
+                    {{-- <div class="col-sm-2">
                         <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Novo Pedido</a>
-                    </div>
+                    </div> --}}
                     
                 </div>
             </div><!-- end titulo-pagina -->
@@ -75,9 +76,9 @@
                                     <a href="/pedidos/concluir/{{$pedido->id}}">
                                         <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
                                     </a>                            
-                                    <a href="/pedidos/edit/{{$pedido->id}}">
+                                    {{-- <a href="/pedidos/edit/{{$pedido->id}}">
                                         <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">
-                                    </a>
+                                    </a> --}}
 
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                         <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
