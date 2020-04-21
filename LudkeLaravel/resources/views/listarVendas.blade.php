@@ -43,7 +43,7 @@
     @if(isset($achou) && $achou == true)
     <div class="row">
         <div class="col-sm-12 limparBusca">
-            <a href="{{route('listarPedidos')}}">
+            <a href="{{route('listarVendas')}}">
                 <button class="btn btn-outline-danger">Listar Todos</button>
             </a>
 
@@ -155,7 +155,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form action="{{route('pedido.filtrar')}}" method="POST">
+        <form action="{{route('vendas.filtrar')}}" method="POST">
             @csrf
             <div class="modal-body">
                     <div class="form-group row">
@@ -173,10 +173,13 @@
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <label for="status">Status</label>
-                            <select class="form-control" name="status" id="status">
+                            <select class="form-control" name="status_id" id="status_id">
                                 <option value="" disabled selected>-- STATUS --</option>
-                                <option value="ABERTO">ABERTO</option>
-                                <option value="FINALIZADO">FINALIZADO</option>
+                                <option value="1">SOLICITADO</option>
+                                <option value="2">PESADO</option>
+                                <option value="4">PAGO PARCIALMENTE</option>
+                                <option value="5">PAGO TOTALMENTE</option>
+                                <option value="3">ENTREGUE</option>
                             </select>
                         </div>
                     </div>

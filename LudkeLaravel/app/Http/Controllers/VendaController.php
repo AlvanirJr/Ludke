@@ -25,11 +25,13 @@ class VendaController extends Controller
         // statusVenda é retornado pela rota se uma venda foi cadastrada com sucesso
         if(isset($statusVenda)){
             $pedidos = Pedido::with(['status'])->
+                                orderby('status_id')->
                                 paginate(25);
             return view('listarVendas',['pedidos'=>$pedidos,'statusVenda'=>$statusVenda]);
         }
         else{
             $pedidos = Pedido::with(['status'])->
+                                orderby('status_id')->
                                 paginate(25);
             return view('listarVendas',['pedidos'=>$pedidos]);
         }
@@ -160,13 +162,21 @@ class VendaController extends Controller
         }
         else{
             return view('finalizarVenda')->with(["pedido"=>$pedido,"sucess"=>false]);
-        }
+        }  
+        
+    }
 
+    // Filtra Pedido
+    public function filtrarVenda(Request $request, Pedido $pedido){
+        // dd($request->all());
+        $filtro = $request->all();
+        // dd($filtro);
         
-        
-        
-        
-        
+        $pedidos = $pedido->filtro($filtro,25);
+
+        return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
+        // dd($pedidos);
+
     }
 
 }

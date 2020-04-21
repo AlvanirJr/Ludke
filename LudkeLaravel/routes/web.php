@@ -68,6 +68,7 @@ Route::get('/vendas/listar/{status?}', 'VendaController@indexListarVendas')->nam
 Route::get('/vendas/concluir/{id}', 'VendaController@concluirVenda')->name('vendas.concluirVenda');
 Route::post('/vendas/concluir', 'VendaController@concluirVendaPagamento')->name('vendas.concluirVendaPagamento');
 Route::post('/vendas/pagamento', 'VendaController@pagamento')->name('vendas.pagamento');
+Route::any('/vendas/filtrar','VendaController@filtrarVenda')->name('vendas.filtrar');
 
 
 
