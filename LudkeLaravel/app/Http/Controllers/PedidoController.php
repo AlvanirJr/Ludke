@@ -26,7 +26,12 @@ class PedidoController extends Controller
     }
 
     public function indexListarPedidos(){
-        $pedidos = Pedido::with(['status'])->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+        // Busca os pedidos com status SOLICITADO e PESADO
+        $pedidos = Pedido::with(['status'])->
+                                where('status_id',1)->
+                                orwhere('status_id',2)->
+                                orderBy('status_id')->
+                                orderBy('dataEntrega')->paginate(25);
         // dd($pedidos);
         return view('listarPedido',['pedidos'=>$pedidos]);
     }
@@ -346,11 +351,18 @@ class PedidoController extends Controller
 
         // dd($pedido);
         $pedido->save();
-        $pedidos = Pedido::paginate(25);
+
+        // Busca os pedidos com status SOLICITADO e PESADO
+        $pedidos = Pedido::with(['status'])->
+                                where('status_id',1)->
+                                orwhere('status_id',2)->
+                                orderBy('status_id')->
+                                orderBy('dataEntrega')->paginate(25);
         return view('listarPedido',['pedidos'=>$pedidos]);
     }
 
 
+    // Filtra Pedido
     public function filtrarPedido(Request $request, Pedido $pedido){
         $filtro = $request->all();
         // dd($filtro);

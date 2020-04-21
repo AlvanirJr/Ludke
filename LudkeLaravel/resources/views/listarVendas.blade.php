@@ -68,36 +68,39 @@
                 <tbody>
                     @foreach ($pedidos as $pedido)
                     
-                        @if($pedido->status->status != "SOLICITADO" || $pedido->status->status != "PAGO TOTALMENTE")
-                            <tr id="{{$pedido->id}}">
-                                <td>{{$pedido->id}}</td>
-                                <td>{{$pedido->cliente->user->name}}</td>
-                                <td>{{$pedido->funcionario->user->name}}</td>
-                                <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
-                                <td>
-                                    <ul>
-                                        @foreach ($pedido->itensPedidos as $itens)
-                                            <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
-                                        @endforeach
-                                    </ul>
-                                </td>
-                                <td>{{$pedido->status->status}}</td>
-                                <td>R$ {{$pedido->valorTotal}}</td>
-                                <td>
-                                    <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
-                                        <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
-                                    </a>                            
-                                    {{-- <a href="/pedidos/edit/{{$pedido->id}}">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">
-                                    </a> --}}
+                    <tr id="{{$pedido->id}}">
+                        <td>{{$pedido->id}}</td>
+                        <td>{{$pedido->cliente->user->name}}</td>
+                        <td>{{$pedido->funcionario->user->name}}</td>
+                        <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
+                        <td>
+                            <ul>
+                                @foreach ($pedido->itensPedidos as $itens)
+                                <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td>{{$pedido->status->status}}</td>
+                        <td>R$ {{$pedido->valorTotal}}</td>
+                        @if($pedido->status->status == "PESADO" || $pedido->status->status == "PAGO PARCIALMENTE")
+                            <td>
+                                <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
+                                    <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
+                                </a>                            
 
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
-                                    </a>
-                                </td>
-                            </tr>
-                            
+                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                    <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                </a>
+                            </td>
+                        @elseif($pedido->status->status == "PAGO TOTALMENTE")
+                            <td>
+                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                    <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                </a>
+                            </td>
                         @endif
+                    </tr>
+
                     @endforeach
                 </tbody>
             </table> <!-- end table -->
