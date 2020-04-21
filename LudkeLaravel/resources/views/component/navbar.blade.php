@@ -50,6 +50,7 @@
                                     Vendas
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('vendas')}}">Nova Venda</a>
                             <a class="dropdown-item" href="{{route('listarVendas')}}">Listar Vendas</a>
                         </div>
                     </li>
