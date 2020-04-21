@@ -1,6 +1,6 @@
 
 <nav class="navbar navbar-expand-md navbar-dark shadow-sm">
-    <div class="container">
+    <div class="container-fluid">
         <a class="navbar-brand" href="{{ route('home')}}">
             <img id="logo" src="{{asset('img/logo_navbar.png')}}" style="">
         </a>
