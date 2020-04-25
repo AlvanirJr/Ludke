@@ -22,6 +22,7 @@ class CargoSeeder extends Seeder
             'SALSICHEIRO(A)',
             'DESOSSADOR(A)',
             'BALCONISTA',
+            'ENTREGADOR',
         ];
         for($i = 0; $i < count($cargos); $i++){
             DB::table('cargos')->insert([

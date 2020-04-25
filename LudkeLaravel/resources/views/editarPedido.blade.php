@@ -105,7 +105,7 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Edição</a>
+                    <a href="{{route('listarVendas')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Edição</a>
                 </div>
                 <div class="col-sm-6">
                     <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Finalizar Edição</a>

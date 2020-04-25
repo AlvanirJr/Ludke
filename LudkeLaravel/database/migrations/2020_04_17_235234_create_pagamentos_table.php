@@ -21,7 +21,7 @@ class CreatePagamentosTable extends Migration
             $table->float('descontoPagamento');
             $table->float('valorTotalPagamento');
             $table->float('valorPago');
-            $table->string('status')->nullable();
+            $table->string('formaPagamento')->nullable();
 
             $table->unsignedBigInteger('funcionario_id');
             $table->foreign('funcionario_id')->references('id')->on('funcionarios');

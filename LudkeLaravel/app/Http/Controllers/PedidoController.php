@@ -285,7 +285,7 @@ class PedidoController extends Controller
         // valcula o desconto no valor total
         $pedido->valorTotal = $valorTotal;
         
-        $pedido->formaPagamento = "";
+        
         // $pedido->desconto = floatval($request->input('valorDesconto'));
         $pedido->dataEntrega = $request->input('dataEntrega');
         $status = Status::where('status','SOLICITADO')->first(); // Solicitado

@@ -74,7 +74,7 @@
                             @if($pedido->status->status == "SOLICITADO")
                                 <td>
                                     <a href="/pedidos/concluir/{{$pedido->id}}">
-                                        <img id="iconeEdit" class="icone" src="{{asset('img/clipboard-check-solid.svg')}}" style="width:20px">
+                                        <img id="iconeEdit" class="icone" src="{{asset('img/balanca.svg')}}" style="width:27px">
                                     </a>                            
                                     {{-- <a href="/pedidos/edit/{{$pedido->id}}">
                                         <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">

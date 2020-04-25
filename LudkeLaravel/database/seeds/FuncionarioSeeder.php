@@ -19,6 +19,15 @@ class FuncionarioSeeder extends Seeder
             'user_id'=> 1,
             'cargo_id'=> 2,
         ]);
+
+        DB::table('funcionarios')->insert([
+            'user_id'=> 3,
+            'cargo_id'=> 3,
+        ]);
+        DB::table('funcionarios')->insert([
+            'user_id'=> 6,
+            'cargo_id'=> 3,
+        ]);
     }
     
 }

@@ -98,14 +98,27 @@
                                     <td>{{$item->pesoFinal}}</td> {{-- Durante o pedido, o peso final é igual ao peso solicitado. Somente na conclusão do pedido que o peso final é atualizado--}}
                                     <td>{{$item->valorReal}}</td>
                                     <td>
-                                        {{-- <input id="pesoFinal{{$item->id}}" value='0' oninput="atualizarValor({{$item->precoProduto}},{{$item->id}})" name="pesoFinal{{$item->id}}" step="0.01" type="number" class="form-control" placeholder="Peso Final" required> --}}
-                                        <input id="pesoFinal{{$item->id}}" name="desconto[]" value='0' oninput="atualizarValor({{$pedido->valorTotal}})"  step="0.01" type="number" class="form-control" placeholder="Peso Final" required>
-                                        
-                                        @error('pesoFinal{{$item->id}}')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
+                                        {{-- 
+                                            Caso, o pedido tenha o status pesado, 
+                                            exibe um input para o usuário colocar os valores dos descontos em cada item 
+                                        --}}
+                                        @if($pedido->status->status == "PESADO")
+                                            {{-- <input id="pesoFinal{{$item->id}}" value='0' oninput="atualizarValor({{$item->precoProduto}},{{$item->id}})" name="pesoFinal{{$item->id}}" step="0.01" type="number" class="form-control" placeholder="Peso Final" required> --}}
+                                            <input id="pesoFinal{{$item->id}}" name="desconto[]" value='0' oninput="atualizarValor({{$pedido->valorTotal}})"  step="0.01" type="number" class="form-control" placeholder="Peso Final" required>
+                                            
+                                            @error('pesoFinal{{$item->id}}')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        {{-- 
+                                            Caso, o pedido tenha o status PAGO PARCIALMENTE,
+                                            Exibe um input desabilitado e salva os valores em um array no input hidden    
+                                        --}}
+                                        @elseif($pedido->status->status == "PAGO PARCIALMENTE")
+                                            <input value='{{$item->descontoPorcentagem}}' step="0.01" type="number" class="form-control" placeholder="Peso Final" disabled>
+                                            <input type="hidden" id="pesoFinal{{$item->id}}" name="desconto[]" value='{{$item->descontoPorcentagem}}' oninput="atualizarValor({{$pedido->valorTotal}})" >
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
