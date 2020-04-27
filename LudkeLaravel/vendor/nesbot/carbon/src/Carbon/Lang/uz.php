@@ -23,7 +23,6 @@
  * - Max Melentiev
  * - Juanito Fatas
  * - Alisher Ulugbekov
- * - Ergashev Adizbek
  */
 return [
     'year' => ':count йил',
@@ -41,17 +40,16 @@ return [
     'hour' => ':count соат',
     'a_hour' => '{1}бир соат|:count соат',
     'h' => ':count с',
-    'minute' => ':count дақиқа',
-    'a_minute' => '{1}бир дақиқа|:count дақиқа',
+    'minute' => ':count дакика',
+    'a_minute' => '{1}бир дакика|:count дакика',
     'min' => ':count д',
-    'second' => ':count сония',
-    'a_second' => '{1}сония|:count сония',
-    's' => ':count с',
-    'ago' => ':time аввал',
+    'second' => ':count фурсат',
+    'a_second' => '{1}фурсат|:count фурсат',
+    's' => ':count ф',
+    'ago' => 'Бир неча :time олдин',
     'from_now' => 'Якин :time ичида',
-    'after' => ':timeдан кейин',
-    'before' => ':time олдин',
-    'diff_now' => 'ҳозир',
+    'after' => ':time пас аз он',
+    'before' => ':time пеш аз он',
     'diff_yesterday' => 'Кеча',
     'diff_tomorrow' => 'Эртага',
     'formats' => [
@@ -77,6 +75,6 @@ return [
     'weekdays_min' => ['як', 'ду', 'се', 'чо', 'па', 'жу', 'ша'],
     'first_day_of_week' => 1,
     'day_of_first_week_of_year' => 1,
-    'meridiem' => ['эрталаб', 'кечаси'],
-    'list' => [', ', ' ва '],
+    'meridiem' => ['ertalab', 'kechasi'],
+    'list' => [', ', ' va '],
 ];

@@ -10,6 +10,9 @@ use App\User;
 use App\ItensPedido;
 use App\Pedido;
 use App\Funcionario;
+use App\Status;
+use App\Pagamento;
+
 class PedidoController extends Controller
 {
     /**
@@ -23,7 +26,14 @@ class PedidoController extends Controller
     }
 
     public function indexListarPedidos(){
-        return view('listarPedido');
+        // Busca os pedidos com status SOLICITADO e PESADO
+        $pedidos = Pedido::with(['status'])->
+                                where('status_id',1)->
+                                orwhere('status_id',2)->
+                                orderBy('status_id')->
+                                orderBy('dataEntrega')->paginate(25);
+        // dd($pedidos);
+        return view('listarPedido',['pedidos'=>$pedidos]);
     }
     /**
      * Show the form for creating a new resource.
@@ -122,7 +132,7 @@ class PedidoController extends Controller
         // forma de pagamento só é definida na conclusão do pedido
         
         $pedido->dataEntrega = $request->input('dataEntrega');
-        $pedido->status = "ABERTO";
+        // $pedido->status = "ABERTO";
         
         
         
@@ -182,6 +192,7 @@ class PedidoController extends Controller
         
         if(isset($pedido)){
             $itensPedido = ItensPedido::where("pedido_id",$id)->delete();
+            $pagamento = Pagamento::where('pedido_id',$id)->delete();
             $pedido->delete();
             return response("Pedido Excluído",200);
 
@@ -260,6 +271,7 @@ class PedidoController extends Controller
     public function finalizarPedido(Request $request){
         $cliente = Cliente::find($request->input('cliente_id'));
         
+        
         // valor total sem desconto
         $valorTotal = 0;
         $desconto = 0;
@@ -273,10 +285,12 @@ class PedidoController extends Controller
         // valcula o desconto no valor total
         $pedido->valorTotal = $valorTotal;
         
-        $pedido->formaPagamento = "";
+        
         // $pedido->desconto = floatval($request->input('valorDesconto'));
         $pedido->dataEntrega = $request->input('dataEntrega');
-        $pedido->status = "ABERTO";
+        $status = Status::where('status','SOLICITADO')->first(); // Solicitado
+        // dd($status->id);
+        $pedido->status_id = $status->id;
         $pedido->cliente_id = $cliente->id;
         $funcionario = Funcionario::find(Auth::user()->id);
         $pedido->funcionario_id = $funcionario->id; //salvando o user_id do funcionario que está logado
@@ -305,7 +319,7 @@ class PedidoController extends Controller
     }
 
     public function getPedidos(){
-        $pedidos = Pedido::with(['itensPedidos'])->orderBy('status')->orderBy('dataEntrega')->get();
+        $pedidos = Pedido::with(['itensPedidos'])->orderBy('status_id')->orderBy('dataEntrega')->get();
         $size = sizeof($pedidos);
         for($i = 0; $i < $size; $i++){
             $cliente = Cliente::with('user')->find($pedidos[$i]->cliente_id);
@@ -332,10 +346,31 @@ class PedidoController extends Controller
             $item->save();
         }
         $pedido->valorTotal = $valorTotal;
-        $pedido->status = "FINALIZADO";
+        $status = Status::where('status','PESADO')->first(); //
+        $pedido->status_id = $status->id;
 
         // dd($pedido);
         $pedido->save();
-        return view('listarPedido');
+
+        // Busca os pedidos com status SOLICITADO e PESADO
+        $pedidos = Pedido::with(['status'])->
+                                where('status_id',1)->
+                                orwhere('status_id',2)->
+                                orderBy('status_id')->
+                                orderBy('dataEntrega')->paginate(25);
+        return view('listarPedido',['pedidos'=>$pedidos]);
+    }
+
+
+    // Filtra Pedido
+    public function filtrarPedido(Request $request, Pedido $pedido){
+        $filtro = $request->all();
+        // dd($filtro);
+        
+        $pedidos = $pedido->filtro($filtro,25);
+
+        return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
+        // dd($pedidos);
+
     }
 }

@@ -13,8 +13,6 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
-use ReflectionClass;
-use ReflectionMethod;
 
 /**
  * @property-read HigherOrderBuilderProxy $orWhere
@@ -233,20 +231,6 @@ class Builder
         }
 
         return $this;
-    }
-
-    /**
-     * Add a basic where clause to the query, and return the first result.
-     *
-     * @param  \Closure|string|array  $column
-     * @param  mixed  $operator
-     * @param  mixed  $value
-     * @param  string  $boolean
-     * @return \Illuminate\Database\Eloquent\Model|static
-     */
-    public function firstWhere($column, $operator = null, $value = null, $boolean = 'and')
-    {
-        return $this->where($column, $operator, $value, $boolean)->first();
     }
 
     /**
@@ -703,7 +687,7 @@ class Builder
     /**
      * Paginate the given query.
      *
-     * @param  int|null  $perPage
+     * @param  int  $perPage
      * @param  array  $columns
      * @param  string  $pageName
      * @param  int|null  $page
@@ -730,7 +714,7 @@ class Builder
     /**
      * Paginate the given query into a simple paginator.
      *
-     * @param  int|null  $perPage
+     * @param  int  $perPage
      * @param  array  $columns
      * @param  string  $pageName
      * @param  int|null  $page
@@ -1388,10 +1372,6 @@ class Builder
             return;
         }
 
-        if ($method === 'mixin') {
-            return static::registerMixin($parameters[0], $parameters[1] ?? true);
-        }
-
         if (! static::hasGlobalMacro($method)) {
             static::throwBadMethodCallException($method);
         }
@@ -1401,28 +1381,6 @@ class Builder
         }
 
         return call_user_func_array(static::$macros[$method], $parameters);
-    }
-
-    /**
-     * Register the given mixin with the builder.
-     *
-     * @param  string  $mixin
-     * @param  bool  $replace
-     * @return void
-     */
-    protected static function registerMixin($mixin, $replace)
-    {
-        $methods = (new ReflectionClass($mixin))->getMethods(
-                ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
-            );
-
-        foreach ($methods as $method) {
-            if ($replace || ! static::hasGlobalMacro($method->name)) {
-                $method->setAccessible(true);
-
-                static::macro($method->name, $method->invoke($mixin));
-            }
-        }
     }
 
     /**

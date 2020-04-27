@@ -46,9 +46,8 @@ Route::post('/buscarCliente','ClienteController@buscarCliente')->name('buscarCli
 Route::get('/indexCargos', 'CargoController@indexView')->name('cargos');
 Route::post('/buscarCargo','CargoController@buscarCargo')->name('buscarCargo');
 
-Route::get('/pedidos','PedidoController@index')->name('pedidos');
-
 // ROTAS PARA O PEDIDO
+Route::get('/pedidos','PedidoController@index')->name('pedidos');
 Route::post('/pedidos/getCliente','PedidoController@getCliente');
 Route::post('/pedidos/buscaCliente/{id}','PedidoController@buscaCliente');
 Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
@@ -61,6 +60,19 @@ Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("lista
 Route::get('/getPedidos','PedidoController@getPedidos');
 Route::get('/pedidos/edit/{id}','PedidoController@edit')->name('pedido.editar'); //Editar Pedido
 Route::put('/pedidos/update/{id}','PedidoController@update');
+Route::any('/pedidos/filtrar','PedidoController@filtrarPedido')->name('pedido.filtrar');
+
+// ROTAS PARA VENDA
+Route::get('/vendas', 'VendaController@index')->name('vendas');
+Route::get('/vendas/listar/{status?}', 'VendaController@indexListarVendas')->name('listarVendas');
+Route::get('/vendas/concluir/{id}', 'VendaController@concluirVenda')->name('vendas.concluirVenda');
+Route::post('/vendas/concluir', 'VendaController@concluirVendaPagamento')->name('vendas.concluirVendaPagamento');
+Route::post('/vendas/pagamento', 'VendaController@pagamento')->name('vendas.pagamento');
+Route::any('/vendas/filtrar','VendaController@filtrarVenda')->name('vendas.filtrar');
+
+
+
+
 
 // Antigas rotas da API
 Route::resource('/categorias','CategoriaController');
@@ -71,19 +83,19 @@ Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas
 Route::resource('/clientes', 'ClienteController');
 
 // Rotas para testar banco
-use App\Produto;
-use App\Categoria;
-use App\Cliente;
-use App\User;
-use App\Pedido;
-Route::get('/teste',function(){
-    $users = User::with('cliente')->get();
-    $cliente = Cliente::with('user')->get();
-    $produtos = Produto::with('categoria')->find(1);
-    $categoria = Categoria::with('produtos')->get();
-    $pedidos = Pedido::with(['itensPedidos'])->get();
+// use App\Produto;
+// use App\Categoria;
+// use App\Cliente;
+// use App\User;
+// use App\Pedido;
+// Route::get('/teste',function(){
+//     $users = User::with('cliente')->get();
+//     $cliente = Cliente::with('user')->get();
+//     $produtos = Produto::with('categoria')->find(1);
+//     $categoria = Categoria::with('produtos')->get();
+//     $pedidos = Pedido::with(['itensPedidos','status'])->get();
 
-    return json_encode($users[2]->cliente);
+//     return json_encode($pedidos);
 
-    // return $pedidos;
-});
+//     // return $pedidos;
+// });

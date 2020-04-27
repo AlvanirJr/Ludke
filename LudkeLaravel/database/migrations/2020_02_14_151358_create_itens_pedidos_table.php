@@ -19,6 +19,9 @@ class CreateItensPedidosTable extends Migration
             $table->float('pesoSolicitado');
             $table->float('pesoFinal');
             $table->float('valorReal');
+            $table->float('descontoPorcentagem')->nullable();
+            $table->float('valorComDesconto')->nullable();
+
             $table->string('nomeProduto')->nullable();
             $table->unsignedBigInteger('produto_id');
             $table->foreign('produto_id')->references('id')->on('produtos');

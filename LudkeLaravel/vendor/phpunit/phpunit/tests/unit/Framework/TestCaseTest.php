@@ -333,7 +333,7 @@ final class TestCaseTest extends TestCase
     {
         $test = new \ThrowExceptionTestCase('test');
         $test->expectException(\RuntimeException::class);
-        $test->expectExceptionMessageMatches('/runtime .*? occurred/');
+        $test->expectExceptionMessageRegExp('/runtime .*? occurred/');
 
         $result = $test->run();
 
@@ -347,7 +347,7 @@ final class TestCaseTest extends TestCase
 
         $test = new \ThrowExceptionTestCase('test');
 
-        $test->expectExceptionMessageMatches($messageRegExp);
+        $test->expectExceptionMessageRegExp($messageRegExp);
 
         $this->assertSame($messageRegExp, $test->getExpectedExceptionMessageRegExp());
     }
@@ -356,7 +356,7 @@ final class TestCaseTest extends TestCase
     {
         $test = new \ThrowExceptionTestCase('test');
         $test->expectException(\RuntimeException::class);
-        $test->expectExceptionMessageMatches('/logic .*? occurred/');
+        $test->expectExceptionMessageRegExp('/logic .*? occurred/');
 
         $result = $test->run();
 
@@ -372,7 +372,7 @@ final class TestCaseTest extends TestCase
     {
         $test = new \ThrowExceptionTestCase('test');
         $test->expectException(\RuntimeException::class);
-        $test->expectExceptionMessageMatches('#runtime .*? occurred/');
+        $test->expectExceptionMessageRegExp('#runtime .*? occurred/');
 
         $test->run();
 

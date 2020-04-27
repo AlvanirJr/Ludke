@@ -93,7 +93,7 @@ class Handler implements ExceptionHandlerContract
      * Report or log an exception.
      *
      * @param  \Exception  $e
-     * @return void
+     * @return mixed
      *
      * @throws \Exception
      */
@@ -178,13 +178,11 @@ class Handler implements ExceptionHandlerContract
     }
 
     /**
-     * Render an exception into an HTTP response.
+     * Render an exception into a response.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $e
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $e)
     {
@@ -400,7 +398,7 @@ class Handler implements ExceptionHandlerContract
     {
         $this->registerErrorViewPaths();
 
-        if (view()->exists($view = $this->getHttpExceptionView($e))) {
+        if (view()->exists($view = "errors::{$e->getStatusCode()}")) {
             return response()->view($view, [
                 'errors' => new ViewErrorBag,
                 'exception' => $e,
@@ -422,17 +420,6 @@ class Handler implements ExceptionHandlerContract
         View::replaceNamespace('errors', $paths->map(function ($path) {
             return "{$path}/errors";
         })->push(__DIR__.'/views')->all());
-    }
-
-    /**
-     * Get the view used to render HTTP exceptions.
-     *
-     * @param  \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface  $e
-     * @return string
-     */
-    protected function getHttpExceptionView(HttpExceptionInterface $e)
-    {
-        return "errors::{$e->getStatusCode()}";
     }
 
     /**

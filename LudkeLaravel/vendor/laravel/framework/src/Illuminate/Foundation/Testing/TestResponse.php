@@ -2,7 +2,6 @@
 
 namespace Illuminate\Foundation\Testing;
 
-use ArrayAccess;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
@@ -13,13 +12,12 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
-use LogicException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @mixin \Illuminate\Http\Response
  */
-class TestResponse implements ArrayAccess
+class TestResponse
 {
     use Tappable, Macroable {
         __call as macroCall;
@@ -857,11 +855,11 @@ class TestResponse implements ArrayAccess
         if (is_null($value)) {
             PHPUnit::assertArrayHasKey($key, $this->original->gatherData());
         } elseif ($value instanceof Closure) {
-            PHPUnit::assertTrue($value(Arr::get($this->original->gatherData(), $key)));
+            PHPUnit::assertTrue($value($this->original->gatherData()[$key]));
         } elseif ($value instanceof Model) {
-            PHPUnit::assertTrue($value->is(Arr::get($this->original->gatherData(), $key)));
+            PHPUnit::assertTrue($value->is($this->original->gatherData()[$key]));
         } else {
-            PHPUnit::assertEquals($value, Arr::get($this->original->gatherData(), $key));
+            PHPUnit::assertEquals($value, $this->original->gatherData()[$key]);
         }
 
         return $this;
@@ -1169,25 +1167,6 @@ class TestResponse implements ArrayAccess
     }
 
     /**
-     * Dump the session from the response.
-     *
-     * @param  string|array  $keys
-     * @return $this
-     */
-    public function dumpSession($keys = [])
-    {
-        $keys = (array) $keys;
-
-        if (empty($keys)) {
-            dump($this->session()->all());
-        } else {
-            dump($this->session()->only($keys));
-        }
-
-        return $this;
-    }
-
-    /**
      * Get the streamed content from the response.
      *
      * @return string
@@ -1229,55 +1208,6 @@ class TestResponse implements ArrayAccess
     public function __isset($key)
     {
         return isset($this->baseResponse->{$key});
-    }
-
-    /**
-     * Determine if the given offset exists.
-     *
-     * @param  string  $offset
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->json()[$offset]);
-    }
-
-    /**
-     * Get the value for a given offset.
-     *
-     * @param  string  $offset
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        return $this->json()[$offset];
-    }
-
-    /**
-     * Set the value at the given offset.
-     *
-     * @param  string  $offset
-     * @param  mixed  $value
-     * @return void
-     *
-     * @throws \LogicException
-     */
-    public function offsetSet($offset, $value)
-    {
-        throw new LogicException('Response data may not be mutated using array access.');
-    }
-
-    /**
-     * Unset the value at the given offset.
-     *
-     * @param  string  $offset
-     * @return void
-     *
-     * @throws \LogicException
-     */
-    public function offsetUnset($offset)
-    {
-        throw new LogicException('Response data may not be mutated using array access.');
     }
 
     /**

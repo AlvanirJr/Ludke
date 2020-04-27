@@ -344,7 +344,7 @@ class BelongsToMany extends Relation
      * Set a where clause for a pivot table column.
      *
      * @param  string  $column
-     * @param  string|null  $operator
+     * @param  string  $operator
      * @param  mixed  $value
      * @param  string  $boolean
      * @return $this
@@ -376,7 +376,7 @@ class BelongsToMany extends Relation
      * Set an "or where" clause for a pivot table column.
      *
      * @param  string  $column
-     * @param  string|null  $operator
+     * @param  string  $operator
      * @param  mixed  $value
      * @return $this
      */
@@ -393,8 +393,6 @@ class BelongsToMany extends Relation
      * @param  string|array  $column
      * @param  mixed  $value
      * @return $this
-     *
-     * @throws \InvalidArgumentException
      */
     public function withPivotValue($column, $value = null)
     {
@@ -681,7 +679,7 @@ class BelongsToMany extends Relation
     /**
      * Get a paginator for the "select" statement.
      *
-     * @param  int|null  $perPage
+     * @param  int  $perPage
      * @param  array  $columns
      * @param  string  $pageName
      * @param  int|null  $page
@@ -699,7 +697,7 @@ class BelongsToMany extends Relation
     /**
      * Paginate the given query into a simple paginator.
      *
-     * @param  int|null  $perPage
+     * @param  int  $perPage
      * @param  array  $columns
      * @param  string  $pageName
      * @param  int|null  $page

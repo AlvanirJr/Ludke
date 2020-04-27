@@ -18,4 +18,7 @@ class Funcionario extends Model
     function pedidos(){
         return $this->hasMany('App\Pedido','funcionario_id');
     }
+    function pagamento(){
+        return $this->hasOne('App\Pagamento','funcionario_id');
+    }
 }

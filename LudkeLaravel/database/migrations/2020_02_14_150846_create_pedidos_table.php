@@ -16,16 +16,19 @@ class CreatePedidosTable extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('formaPagamento')->nullable();
+            // $table->string('formaPagamento')->nullable();
             $table->date('dataEntrega');
             $table->float('valorTotal');
-            $table->string('status');
+            // $table->integer('status');
 
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id')->on('clientes');
 
             $table->unsignedBigInteger('funcionario_id');
             $table->foreign('funcionario_id')->references('id')->on('funcionarios');
+
+            $table->unsignedBigInteger('entregador_id')->nullable();
+            // $table->foreign('funcionario_id')->references('id')->on('funcionarios');
 
             $table->timestamps();
         });

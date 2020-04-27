@@ -8,25 +8,38 @@
 
         <div class="col-sm-12">
             <div class="titulo-pagina">
-                <div class="row">
+                <div class="row d-flex justify-content-between">
                     <div class="col-sm-7">
                         <div class="titulo-pagina-nome">
                             <h2>Pedidos</h2>
                         </div>
                     </div>
                     <div class="col-sm-2">
+                        {{-- <a href="#" data-toggle="modal" data-target="#dlgFiltro"class="btn btn-primary-ludke">Filtrar</a> --}}
+                        <button id="btnFiltrar" type="button" class="btn btn-primary-ludke" data-toggle="modal" data-target="#modalFiltro">
+                            Filtrar
+                          </button>
+                    </div>
+                    {{-- NOVO PEDIDO --}}
+                    {{-- <div class="col-sm-2">
                         <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Novo Pedido</a>
-                    </div>
-                    <div class="col-sm-3">
-                        <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
-                    </div>
+                    </div> --}}
                     
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
 
+    @if(isset($achou) && $achou == true)
+    <div class="row">
+        <div class="col-sm-12 limparBusca">
+            <a href="{{route('listarPedidos')}}">
+                <button class="btn btn-outline-danger">Listar Todos</button>
+            </a>
 
+        </div>
+    </div>
+    @endif
     <div class="row justify-content-center">
         <div class="col-sm-12">
             <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
@@ -43,88 +56,124 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{-- Linhas da tabela serão adicionadas com javascript --}}
+                    @foreach ($pedidos as $pedido)
+                    <tr id="{{$pedido->id}}">
+                        <td>{{$pedido->id}}</td>
+                        <td>{{$pedido->cliente->user->name}}</td>
+                        <td>{{$pedido->funcionario->user->name}}</td>
+                        <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
+                        <td>
+                            <ul>
+                                @foreach ($pedido->itensPedidos as $itens)
+                                <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td>{{$pedido->status->status}}</td>
+                        <td>R$ {{$pedido->valorTotal}}</td>
+                            @if($pedido->status->status == "SOLICITADO")
+                                <td>
+                                    <a href="/pedidos/concluir/{{$pedido->id}}">
+                                        <img id="iconeEdit" class="icone" src="{{asset('img/balanca.svg')}}" style="width:27px">
+                                    </a>                            
+                                    {{-- <a href="/pedidos/edit/{{$pedido->id}}">
+                                        <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">
+                                    </a> --}}
+
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                    </a>
+                                </td>
+                            @else                                    
+                                <td>
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                    </a>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
                 </tbody>
             </table> <!-- end table -->
         </div><!-- end col-->
     </div><!-- end row-->
 
+    <div class="row justify-content-center">
+        @if ($pedidos != [])
+            @if (isset($filtro))
+            {{ $pedidos->appends($filtro)->links() }}
+            
+            @else
+            {{ $pedidos->links() }}
+            @endif
+        @endif
+    </div>
+
 </div>
-<div class="modal fade" tabindex="-1" role="dialog" id="dlgPedidos">
+<!-- Modal -->
+<div class="modal fade" id="modalFiltro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <form class="form-horizontal" id="formPedido" name="formPedido">
-                <div class="modal-header">
-                    <h5 class="modal-title">Editar Pedido</h5>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Filtrar Pedido</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{{route('pedido.filtrar')}}" method="POST">
+            @csrf
+            <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="cliente">Nome do Cliente</label>
+                            <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nome do Cliente">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="dataEntrega">Data de Entrega</label>
+                            <input type="date" class="form-control" id="dataEntrega" name="dataEntrega">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="status_id">Status</label>
+                            <select class="form-control" name="status_id" id="status_id">
+                                <option value="" disabled selected>-- STATUS --</option>
+                                <option value="1">SOLICITADO</option>
+                                <option value="2">PESADO</option>
+                            </select>
+                        </div>
+                    </div>
+                    {{-- <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" class="form-control" name="cidade" placeholder="Cidade">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="bairro">Bairro</label>
+                            <input type="text" class="form-control" name="bairro" placeholder="Bairro">
+                        </div>
+                    </div> --}}
+
                 </div>
-                <div class="modal-body">
-                    {{-- ID da categoria --}}
-                    <input type="hidden" id="id" class="form-control">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label for="nomeCategoria" class="control-label">Cliente</label>
-                            <h4 id="nomeCliente"></h4>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label for="nomeCategoria" class="control-label">Funcionário</label>
-                            <h4 id="nomeFuncionario"></h4>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label for="nomeCategoria" class="control-label">Data de Entrega</label>
-                            <div class="input-group">
-                                <input id="inputDataEntrega" type="date" class="form-control">
-                            </div>
-                        </div>
-                        
-                    </div>
-
-                    {{-- Nome do Categoria --}}
-                    <div class="form-group">
-                        {{-- Div para validação --}}
-                        <label for="nomeCategoria" class="control-label">Itens</label>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <select class="form-control" id="itensPedido">
-                                    
-                                  </select>
-                                
-                            </div>
-                        </div>
-                        <div class="validationCategoria"></div>
-                    </div>
-
-
-                </div><!-- end modal body-->
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Cadastrar</button>
                     <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Filtrar</button>
                 </div>
             </form>
-        </div>
+      </div>
     </div>
-</div>
-
+  </div>
 
 @endsection
 
 @section('javascript')
 
 <script type="text/javascript">
-    // Busca na tabela
-    $(function(){
-        $("#inputBusca").on("keyup",function(){
-            var value = $(this).val().toUpperCase();
-            $("#tabelaPedidos tbody tr").filter(function(){
-                $(this).toggle($(this).text().toUpperCase().indexOf(value) > -1)
-            });
-        });
-    });
+    
     $(function(){
 
         // Configuração do ajax com token csrf
@@ -134,98 +183,16 @@
             }
         });
 
-        start();
+        // cliente
+        // dataEntrega
+        // status
+        $('#btnFiltrar').click(function(){
+            $('#cliente').val('');
+            $('#dataEntrega').val('');
+            $('#status').val('');
+        });
     });
 
-    var timeI = null;
-    var timeR = false;
-
-    function stop(){
-        if(timeR){
-            clearTimeout(timerI);
-        }
-        timerR = false;
-    }
-    function start(){
-        stop();
-        carregarPedidos();
-
-    }
-
-    function limpaTabela(){
-        $('#tabelaPedidos>tbody>tr').remove();
-    }
-    function carregarPedidos(){
-        limpaTabela();
-        $.getJSON('/getPedidos',function(pedidos){
-            console.log(pedidos)
-            for(var i=0; i < pedidos.length; i++){
-                
-                linha = montarLinha(pedidos[i]);
-                $('#tabelaPedidos>tbody').append(linha);
-            }
-
-            timerI = setTimeout("carregarPedidos()", 60000);//tempo de espera
-            timerR = true;
-        });
-    }
-    function formatarData(data){
-        var split = data.split('-');
-        data_formatada = split[2] + "/" + split[1] + "/" + split[0];
-        return data_formatada;
-    }
-    function montarLinha(pedido){
-        if(pedido.status != "FINALIZADO"){
-            var linha = "<tr id="+pedido.id+">" +
-                            "<td>"+pedido.id+"</td>"+
-                            "<td>"+pedido.nomeCliente+"</td>"+
-                            "<td>"+pedido.nomeFuncionario+"</td>"+
-                            "<td>"+formatarData(pedido.dataEntrega)+"</td>"+
-                            "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
-                            "<td>"+pedido.status+"</td>"+
-                            "<td>R$ "+pedido.valorTotal+"</td>"+
-                            "<td>"+
-                                "<a href="+"/pedidos/concluir/"+pedido.id+">"+
-                                    "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/clipboard-check-solid.svg')}}"+" style="+"width:20px"+">"+
-                                "</a>"+                            
-                                "<a href="+"/pedidos/edit/"+pedido.id+">"+
-                                    "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+"width:25px;margin-right:15px"+">"+
-                                "</a>"+
-
-                                "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
-                                    "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+" "+">"+
-                                "</a>"+
-                            "</td>"+
-                        "</tr>";
-            }else{
-                var linha = "<tr id="+pedido.id+">" +
-                            "<td>"+pedido.id+"</td>"+
-                            "<td>"+pedido.nomeCliente+"</td>"+
-                            "<td>"+pedido.nomeFuncionario+"</td>"+
-                            "<td>"+formatarData(pedido.dataEntrega)+"</td>"+
-                            "<td><ul>"+retornaLinhaItensPedido(pedido.itens_pedidos)+"</h4></ul></td>"+
-                            "<td>"+pedido.status+"</td>"+
-                            "<td>R$ "+pedido.valorTotal+"</td>"+
-                            "<td>"+   
-                            "<a href="+"/relatorio/"+pedido.id+">"+
-                                    "<img id="+"iconePrint"+" class="+"icone"+" src="+"{{asset('img/print.svg')}}"+" style="+"width:35px;margin-right:20px"+">"+
-                                "</a>"+                       
-                                "<a href="+"#"+" onclick="+"excluirPedido("+pedido.id+")"+">"+
-                                    "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
-                                "</a>"+
-                            "</td>"+
-                        "</tr>";
-            }
-        return linha;
-        
-    }
-
-    function montarLinhaEditar(item){
-        console.log(item)
-        linha = "<option>"+item.nomeProduto+"</option>";
-        return linha;
-        console.log(item)
-    }
     function excluirPedido(id){
         confirma = confirm("Você deseja excluir o pedido?");
         if(confirma){
@@ -248,15 +215,6 @@
         }
     }
 
-
-    function retornaLinhaItensPedido(itens_pedidos){
-        linhaPedido = "";
-        for(var i = 0; i < itens_pedidos.length; i++){
-            linhaPedido += String("<li>"+itens_pedidos[i].nomeProduto+" | "+itens_pedidos[i].pesoFinal+" KG</li>")
-        }
-        return linhaPedido;
-        
-    }
 </script>
 
 @endsection

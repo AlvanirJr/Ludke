@@ -270,11 +270,6 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
     private $doubledTypes = [];
 
     /**
-     * @var bool
-     */
-    private $deprecatedExpectExceptionMessageRegExpUsed = false;
-
-    /**
      * Returns a matcher that matches when the method is executed
      * zero or more times.
      */
@@ -511,8 +506,6 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
      */
     public function expectExceptionMessageRegExp(string $regularExpression): void
     {
-        $this->deprecatedExpectExceptionMessageRegExpUsed = true;
-
         $this->expectExceptionMessageMatches($regularExpression);
     }
 
@@ -545,7 +538,7 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
 
     public function expectDeprecationMessageMatches(string $regularExpression): void
     {
-        $this->expectExceptionMessageMatches($regularExpression);
+        $this->expectExceptionMessageRegExp($regularExpression);
     }
 
     public function expectNotice(): void
@@ -560,7 +553,7 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
 
     public function expectNoticeMessageMatches(string $regularExpression): void
     {
-        $this->expectExceptionMessageMatches($regularExpression);
+        $this->expectExceptionMessageRegExp($regularExpression);
     }
 
     public function expectWarning(): void
@@ -575,7 +568,7 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
 
     public function expectWarningMessageMatches(string $regularExpression): void
     {
-        $this->expectExceptionMessageMatches($regularExpression);
+        $this->expectExceptionMessageRegExp($regularExpression);
     }
 
     public function expectError(): void
@@ -590,7 +583,7 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
 
     public function expectErrorMessageMatches(string $regularExpression): void
     {
-        $this->expectExceptionMessageMatches($regularExpression);
+        $this->expectExceptionMessageRegExp($regularExpression);
     }
 
     public function getStatus(): int
@@ -1454,10 +1447,6 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
                 );
             }
 
-            if ($this->deprecatedExpectExceptionMessageRegExpUsed) {
-                $this->addWarning('expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9.');
-            }
-
             return;
         }
 
@@ -1769,8 +1758,8 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
         $this->recordDoubledType('SoapClient');
 
         if ($originalClassName === '') {
-            $fileName          = \pathinfo(\basename(\parse_url($wsdlFile, \PHP_URL_PATH)), \PATHINFO_FILENAME);
-            $originalClassName = \preg_replace('/\W/', '', $fileName);
+            $fileName          = \pathinfo(\basename(\parse_url($wsdlFile)['path']), \PATHINFO_FILENAME);
+            $originalClassName = \preg_replace('/[^a-zA-Z0-9_]/', '', $fileName);
         }
 
         if (!\class_exists($originalClassName)) {
@@ -1925,7 +1914,7 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
             );
 
             if ($expectedException !== false) {
-                $this->addWarning('The @expectedException, @expectedExceptionCode, @expectedExceptionMessage, and @expectedExceptionMessageRegExp annotations are deprecated. They will be removed in PHPUnit 9. Refactor your test to use expectException(), expectExceptionCode(), expectExceptionMessage(), or expectExceptionMessageMatches() instead.');
+                $this->addWarning('The @expectedException, @expectedExceptionCode, @expectedExceptionMessage, and @expectedExceptionMessageRegExp annotations are deprecated. They will be removed in PHPUnit 9. Refactor your test to use expectException(), expectExceptionCode(), expectExceptionMessage(), or expectExceptionMessageRegExp() instead.');
 
                 $this->expectException($expectedException['class']);
 
@@ -1936,7 +1925,7 @@ abstract class TestCase extends Assert implements SelfDescribing, Test
                 if ($expectedException['message'] !== '') {
                     $this->expectExceptionMessage($expectedException['message']);
                 } elseif ($expectedException['message_regex'] !== '') {
-                    $this->expectExceptionMessageMatches($expectedException['message_regex']);
+                    $this->expectExceptionMessageRegExp($expectedException['message_regex']);
                 }
             }
         } catch (UtilException $e) {

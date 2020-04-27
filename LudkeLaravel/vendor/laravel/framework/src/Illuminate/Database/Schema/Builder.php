@@ -319,7 +319,6 @@ class Builder
      * @return void
      *
      * @throws \Doctrine\DBAL\DBALException
-     * @throws \RuntimeException
      */
     public function registerCustomDoctrineType($class, $name, $type)
     {
