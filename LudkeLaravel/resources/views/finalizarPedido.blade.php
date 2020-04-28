@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-
+{{-- 
+    VIEW PESAGEM DO PEDIDO. NESSA TELA, É INFORMADO O PESO DE CADA ITEM INDIVIDUALMENTE    
+--}}
 <div class="container">
     <div class="row justify-content-center">
 
@@ -10,7 +12,7 @@
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="titulo-pagina-nome">
-                            <h2>Finalizar Pedido</h2>
+                            <h2>Pesagem do Pedido</h2>
                         </div>
                     </div>
                 </div>

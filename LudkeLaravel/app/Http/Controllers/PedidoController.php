@@ -200,8 +200,8 @@ class PedidoController extends Controller
             return response('Pedido não encontrado',404);
         }
     }
-    // Concluir pedido
-    public function concluirPedido($id){
+    // Pesar os itens do pedido
+    public function pesarPedido($id){
         $pedido = Pedido::with(['itensPedidos'])->find($id);
         if(isset($pedido)){
             for($i = 0; $i< count($pedido->itensPedidos); $i++){
@@ -219,6 +219,27 @@ class PedidoController extends Controller
             return view('finalizarPedido')->with(["pedido"=>$pedido]);
         }
         
+    }
+    // Aplica descontos nos ítens dos pedidos
+    public function concluirPedido($id){
+        // dd($id);
+        $pedido = Pedido::with(['itensPedidos'])->find($id);
+        // dd($pedido);
+        if(isset($pedido)){
+            for($i = 0; $i< count($pedido->itensPedidos); $i++){
+                $produto = Produto::find($pedido->itensPedidos[$i]->produto_id);
+                $pedido->itensPedidos[$i]["precoProduto"] = $produto->preco;
+            }
+            $cliente = Cliente::with('user')->find($pedido->cliente_id);
+            $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
+            
+            // $pedido["valorProduto"]= $produto->preco;
+            $pedido["nomeCliente"] = $cliente->user->name;
+            $pedido["nomeFuncionario"] = $funcionario->user->name;
+            // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
+            
+            return view('finalizarVenda')->with(["pedido"=>$pedido]);
+        }
     }
     // retorna o cliente através do cpj ou cnpj
     public function getCliente(Request $request){

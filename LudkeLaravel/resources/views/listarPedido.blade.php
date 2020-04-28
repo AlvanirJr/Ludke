@@ -72,23 +72,44 @@
                         <td>{{$pedido->status->status}}</td>
                         <td>R$ {{$pedido->valorTotal}}</td>
                             @if($pedido->status->status == "SOLICITADO")
-
-                            @elseif($pedido->status->status == "PESADO")
                                 <td>
-                                    <a href="/pedidos/concluir/{{$pedido->id}}">
+                                    {{-- Concluir Pedido --}}
+                                    <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
                                         <img id="pesar" class="icone" src="{{asset('img/balanca.svg')}}" >
-                                    </a>                            
+                                    </a>                
+                                   {{-- Editar Pedido --}}
                                     <a href="/pedidos/edit/{{$pedido->id}}">
                                         <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
                                     </a>
-                                    <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
-                                        <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
-                                    </a> 
+                                    {{-- Excluir Pedido --}}
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
-                            @elseif($pedido->status->status != "PAGO PARCIALMENTE")
+                            @elseif($pedido->status->status == "PESADO")
+                                <td>
+                                    {{-- Editar Pedido --}}
+                                    <a href="/pedidos/edit/{{$pedido->id}}">
+                                        <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
+                                    </a>
+                                    {{-- Concluir Pedido --}}
+                                    <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
+                                        <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
+                                    </a> 
+                                    {{-- Excluir Pedido --}}
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                                    </a>
+                                </td>
+                            @elseif($pedido->status->status == "ENTREGUE" || $pedido->status->status == "PAGO PARCIALMENTE")
+                                {{-- Concluir Pedido --}}
+                                <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
+                                    <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
+                                </a> 
+                                {{-- Excluir Pedido --}}
+                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                    <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                                </a>
                             @else                                    
                                 <td>
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
