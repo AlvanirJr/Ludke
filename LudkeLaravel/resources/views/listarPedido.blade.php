@@ -71,23 +71,28 @@
                         </td>
                         <td>{{$pedido->status->status}}</td>
                         <td>R$ {{$pedido->valorTotal}}</td>
-                            @if($pedido->status->status != "PAGO TOTALMENTE")
+                            @if($pedido->status->status == "SOLICITADO")
+
+                            @elseif($pedido->status->status == "PESADO")
                                 <td>
                                     <a href="/pedidos/concluir/{{$pedido->id}}">
-                                        <img id="iconeEdit" class="icone" src="{{asset('img/balanca.svg')}}" style="width:27px">
+                                        <img id="pesar" class="icone" src="{{asset('img/balanca.svg')}}" >
                                     </a>                            
-                                    {{-- <a href="/pedidos/edit/{{$pedido->id}}">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">
-                                    </a> --}}
-
+                                    <a href="/pedidos/edit/{{$pedido->id}}">
+                                        <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
+                                    </a>
+                                    <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
+                                        <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
+                                    </a> 
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
+                            @elseif($pedido->status->status != "PAGO PARCIALMENTE")
                             @else                                    
                                 <td>
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
                                     </a>
                                 </td>
                             @endif

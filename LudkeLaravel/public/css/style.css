@@ -132,6 +132,10 @@ input[type=number] {
     width:130px;
 }
 
+.icone{
+    width: 25px;
+    margin: 5px;
+}
 
 
 #iconeEdit{
