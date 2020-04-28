@@ -21,9 +21,9 @@
                           </button>
                     </div>
                     {{-- NOVO PEDIDO --}}
-                    {{-- <div class="col-sm-2">
+                    <div class="col-sm-2">
                         <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Novo Pedido</a>
-                    </div> --}}
+                    </div>
                     
                 </div>
             </div><!-- end titulo-pagina -->
@@ -71,7 +71,7 @@
                         </td>
                         <td>{{$pedido->status->status}}</td>
                         <td>R$ {{$pedido->valorTotal}}</td>
-                            @if($pedido->status->status == "SOLICITADO")
+                            @if($pedido->status->status != "PAGO TOTALMENTE")
                                 <td>
                                     <a href="/pedidos/concluir/{{$pedido->id}}">
                                         <img id="iconeEdit" class="icone" src="{{asset('img/balanca.svg')}}" style="width:27px">
