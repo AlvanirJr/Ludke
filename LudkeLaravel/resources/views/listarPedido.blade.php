@@ -73,7 +73,7 @@
                         <td>R$ {{$pedido->valorTotal}}</td>
                             @if($pedido->status->status == "SOLICITADO")
                                 <td>
-                                    {{-- Concluir Pedido --}}
+                                    {{-- PESAR Pedido --}}
                                     <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
                                         <img id="pesar" class="icone" src="{{asset('img/balanca.svg')}}" >
                                     </a>                
@@ -92,8 +92,8 @@
                                     <a href="/pedidos/edit/{{$pedido->id}}">
                                         <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
                                     </a>
-                                    {{-- Concluir Pedido --}}
-                                    <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
+                                    {{-- PESAR Pedido --}}
+                                    <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}">
                                         <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
                                     </a> 
                                     {{-- Excluir Pedido --}}
@@ -102,8 +102,8 @@
                                     </a>
                                 </td>
                             @elseif($pedido->status->status == "ENTREGUE" || $pedido->status->status == "PAGO PARCIALMENTE")
-                                {{-- Concluir Pedido --}}
-                                <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
+                                {{-- PESAR Pedido --}}
+                                <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}">
                                     <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
                                 </a> 
                                 {{-- Excluir Pedido --}}

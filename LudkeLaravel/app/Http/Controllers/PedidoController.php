@@ -238,7 +238,7 @@ class PedidoController extends Controller
             $pedido["nomeFuncionario"] = $funcionario->user->name;
             // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
             
-            return view('finalizarVenda')->with(["pedido"=>$pedido]);
+            return view('concluirPedido')->with(["pedido"=>$pedido]);
         }
     }
     // retorna o cliente através do cpj ou cnpj
