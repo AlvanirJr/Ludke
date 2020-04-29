@@ -163,17 +163,17 @@
             {{-- Valor restante do pagamento --}}
             <input type="hidden" name="valorRestantePagamento" value="{{$valorRestantePagamento}}">
             <div class="row justify-content-center">
-                {{-- DataVencimento --}}
-                <div class="col-sm-4 form-group">
-                    <label for="dataVencimento">Data de Vencimento <span class="obrigatorio">*</span></label>
-                    <input type="date" class="form-control" id="dataVencimento" name="dataVencimento" value="{{$pagamento->dataVencimento}}">
-                    <span style="color:red" id="spanDataVencimento"></span>
-                </div>
                 {{-- DataPagamento --}}
                 <div class="col-sm-4 form-group">
                     <label for="dataPagamento">Data de Pagamento <span class="obrigatorio">*</span></label>
                     <input type="date" class="form-control" id="dataPagamento" name="dataPagamento" value="{{$pagamento->dataPagamento}}">
                     <span style="color:red" id="spanDataPagamento"></span>
+                </div>
+                {{-- DataVencimento --}}
+                <div class="col-sm-4 form-group">
+                    <label for="dataVencimento">Data de Vencimento <span class="obrigatorio">*</span></label>
+                    <input type="date" class="form-control" id="dataVencimento" name="dataVencimento" value="{{$pagamento->dataVencimento}}">
+                    <span style="color:red" id="spanDataVencimento"></span>
                 </div>
     
                 <div class="col-sm-4 form-group">
@@ -233,15 +233,17 @@
         @elseif($pedido->status->status == "PESADO") 
             <input type="hidden" name="valorTotalPagamento" value="{{$pedido->valorTotal}}">
             <div class="row justify-content-center">
-                <div class="col-sm-4 form-group">
-                    <label for="dataVencimento">Data de Vencimento <span class="obrigatorio">*</span></label>
-                    <input type="date" class="form-control" id="dataVencimento" name="dataVencimento">
-                    <span style="color:red" id="spanDataVencimento"></span>
-                </div>
+                {{-- Data de Pagamento --}}
                 <div class="col-sm-4 form-group">
                     <label for="dataPagamento">Data de Pagamento <span class="obrigatorio">*</span></label>
                     <input type="date" class="form-control" id="dataPagamento" name="dataPagamento">
                     <span style="color:red" id="spanDataPagamento"></span>
+                </div>
+                {{-- Data de Vencimento --}}
+                <div class="col-sm-4 form-group">
+                    <label for="dataVencimento">Data de Vencimento <span class="obrigatorio">*</span></label>
+                    <input type="date" class="form-control" id="dataVencimento" name="dataVencimento">
+                    <span style="color:red" id="spanDataVencimento"></span>
                 </div>
     
                 <div class="col-sm-4 form-group">

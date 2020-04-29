@@ -20,7 +20,7 @@ class CreatePagamentosTable extends Migration
             $table->string('obs')->nullable();
             $table->float('descontoPagamento');
             $table->float('valorTotalPagamento');
-            $table->float('valorPago');
+            $table->float('valorPago')->nullable();
             $table->string('formaPagamento')->nullable();
 
             $table->unsignedBigInteger('funcionario_id');
