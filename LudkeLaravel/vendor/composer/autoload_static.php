@@ -463,6 +463,7 @@ class ComposerStaticInit84e6e277ce0e670ce14b0ead29cea9b4
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Endereco' => __DIR__ . '/../..' . '/app/Endereco.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\FormaPagamento' => __DIR__ . '/../..' . '/app/FormaPagamento.php',
         'App\\FotosProduto' => __DIR__ . '/../..' . '/app/FotosProduto.php',
         'App\\Funcionario' => __DIR__ . '/../..' . '/app/Funcionario.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',

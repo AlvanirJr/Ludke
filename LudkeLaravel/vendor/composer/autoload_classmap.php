@@ -12,6 +12,7 @@ return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Endereco' => $baseDir . '/app/Endereco.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\FormaPagamento' => $baseDir . '/app/FormaPagamento.php',
     'App\\FotosProduto' => $baseDir . '/app/FotosProduto.php',
     'App\\Funcionario' => $baseDir . '/app/Funcionario.php',
     'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
