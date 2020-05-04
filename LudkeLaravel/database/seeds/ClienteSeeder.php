@@ -18,6 +18,7 @@ class ClienteSeeder extends Seeder
             'cpfCnpj' => '11111111111',
             'tipo' => 'PESSOA FÍSICA',
             'inscricaoEstadual' => '123456',
+            'funcionario_id' => 1,
             'user_id' => 7,
         ]);
     }

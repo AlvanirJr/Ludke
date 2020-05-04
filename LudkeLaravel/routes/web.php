@@ -21,6 +21,8 @@ Auth::routes();
 #Route::post('/login/user', 'CustomLoginController@loginUser');
 #Route::get('/logout', 'CustomHomeController@logoutUser');
 Route::get('/relatorio/{id}', 'RelatorioPedidosController@RelatorioPedidos')->name('relatorio');
+Route::get('/relatorioCliente', 'ClienteController@relatorioCliente')->name('relatorioCliente');
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
