@@ -19,7 +19,7 @@ class ClienteController extends Controller
     public function buscarCliente(Request $request){
         $c =  strtoupper($request->input('q'));
         // dd($c);
-        
+
         if(isset($c)){
             $users = User::where('name','LIKE','%'.$c.'%')->pluck('id');
             $clientes = Cliente::whereIn('user_id',$users)->paginate(10)->setpath('');
@@ -44,7 +44,7 @@ class ClienteController extends Controller
             $user = User::where('id',$c->user_id)->first();
             $endereco = Endereco::where('id',$user->endereco_id)->first();
             $telefone = Telefone::where('id',$user->telefone_id)->first();
-            
+
             $cli = [
                 'id' => $c->id,
                 'nome'=> $user->name,
@@ -78,7 +78,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -110,6 +110,7 @@ class ClienteController extends Controller
 
         // ENDERECO
         $endereco = new Endereco();
+        //dd($endereco);
         $endereco->rua = strtoupper($request->input('rua'));
         $endereco->numero = $request->input('numero');
         $endereco->bairro = strtoupper($request->input('bairro'));
@@ -177,7 +178,7 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
-        
+
         $cliente = Cliente::find($id);
         $user = User::find($cliente->user_id);
         $telefone = Telefone::find($user->telefone_id);
@@ -318,7 +319,7 @@ class ClienteController extends Controller
                 'complemento' => 'nullable|string',
             ]);
         }
-        
+
 
         if(isset($cliente) && isset($user)
         && isset($telefone) && isset($endereco)){
@@ -397,6 +398,29 @@ class ClienteController extends Controller
             return response('OK',200);
         }
         return resonse('Cliente não encontrado', 404);
+    }
+
+
+    public function relatorioCliente(){
+        $view = 'relatorioCliente';
+        $clientes = Cliente::select('nomeResponsavel','cpfCnpj', 'nomeReduzido')->get();
+        #$cliente_id = Cliente::select('user_id');
+        #$endereco = Endereco::where()
+        #dd($clientes);
+
+
+
+
+        $date = date('d/m/Y');
+        $view = \View::make($view, compact('clientes',  'date'))->render();
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view)->setPaper('a4', 'landscape');
+
+        $filename = 'relatorioCliente'.$date;
+
+
+        return $pdf->stream($filename.'.pdf');
+
     }
 
 }

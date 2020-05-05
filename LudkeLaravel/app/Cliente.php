@@ -17,6 +17,10 @@ class Cliente extends Model
     function user(){
         return $this->belongsTo('App\User');
     }
+
+    public function funcionario(){
+        return $this->belongsTo('App\Funcionario');
+    }
     function pedidos(){
         return $this->hasMany('App\Pedido','cliente_id');
     }

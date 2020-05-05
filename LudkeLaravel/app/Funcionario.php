@@ -15,6 +15,7 @@ class Funcionario extends Model
         return $this->belongsTo('App\User');
     }
 
+
     function pedidos(){
         return $this->hasMany('App\Pedido','funcionario_id');
     }
