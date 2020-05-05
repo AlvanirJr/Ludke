@@ -21,7 +21,7 @@ class CreateClientesTable extends Migration
             $table->string('cpfCnpj');
             $table->string('tipo'); //física ou juridica
             $table->string('inscricaoEstadual')->nullable();
-            $table->unsignedBigInteger('funcionario_id');
+            $table->unsignedBigInteger('funcionario_id')->nullable();
 
             $table->foreign('funcionario_id')->references('id')->on('funcionarios');
 
