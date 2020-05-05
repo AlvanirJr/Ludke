@@ -152,6 +152,9 @@
                 <label for="entregador_id">Entregador</label>
                 <select name="entregador_id" class="form-control" id="entregador">
                     <option value="" selected disabled>-- Entregador --</option>
+                    @foreach ($entregadores as $entregador)
+                        <option value="{{$entregador->id}}">{{$entregador->user->name}}</option>
+                    @endforeach
                 </select>
             </div>
         </div>

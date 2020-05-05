@@ -12,6 +12,7 @@ use App\Pedido;
 use App\Funcionario;
 use App\Status;
 use App\Pagamento;
+use App\Cargo;
 
 class PedidoController extends Controller
 {
@@ -53,13 +54,16 @@ class PedidoController extends Controller
 
         //------------DEBUG--------------------------
         // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
-
+        $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
+        $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
+                                        orwhere('cargo_id',$entregador_id)->get();
 
         return view('pagamento',
             [
                 'pedido'=>$pedido,
                 'valorTotalDoPagamento'=>$valorTotalDoPagamento,
                 'valorDoDesconto'=>$valorDoDesconto,
+                'entregadores'=>$entregadores,
             ]);
     }
     /**
@@ -328,6 +332,7 @@ class PedidoController extends Controller
         // ------------------------ DEBUG ------------------------
         // dd($request->all(),$pedido->status->status,$itensPedido,$itensComDesconto);
         // return view('pagamento',['pedido'=>$pedido]);
+
         return redirect('/pedidos/pagamento/'.$pedido->id);
 
     }
