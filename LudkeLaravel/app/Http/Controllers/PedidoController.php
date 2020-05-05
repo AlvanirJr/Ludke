@@ -35,6 +35,33 @@ class PedidoController extends Controller
         // dd($pedidos);
         return view('listarPedido',['pedidos'=>$pedidos]);
     }
+
+    public function indexPagamento($id){
+        // Pedido
+        $pedido = Pedido::with(['cliente'])->find($id);
+
+        // Itens do Pedido
+        $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
+        
+        $valorTotalDoPagamento = 0;
+        $valorDoDesconto = 0;
+
+        foreach ($itensPedido as $item) {
+            $valorTotalDoPagamento += floatval($item->valorComDesconto);
+            $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
+        }
+
+        //------------DEBUG--------------------------
+        // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
+
+
+        return view('pagamento',
+            [
+                'pedido'=>$pedido,
+                'valorTotalDoPagamento'=>$valorTotalDoPagamento,
+                'valorDoDesconto'=>$valorDoDesconto,
+            ]);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -200,7 +227,11 @@ class PedidoController extends Controller
             return response('Pedido não encontrado',404);
         }
     }
-    // Pesar os itens do pedido
+    /**
+     * Função que carrega os dados do pedido na view para salvar o peso dos itens
+     * @param $id
+     * @return view finalizarPedido
+     */
     public function pesarPedido($id){
         $pedido = Pedido::with(['itensPedidos'])->find($id);
         if(isset($pedido)){
@@ -220,9 +251,12 @@ class PedidoController extends Controller
         }
         
     }
-    // Aplica descontos nos ítens dos pedidos
+    /**
+     * Função busca os dados referente ao pedido e retorna para tela concluirPedido
+     * @param $id
+     * @return view concluirPedido
+     */
     public function concluirPedido($id){
-        // dd($id);
         $pedido = Pedido::with(['itensPedidos'])->find($id);
         // dd($pedido);
         if(isset($pedido)){
@@ -241,6 +275,71 @@ class PedidoController extends Controller
             return view('concluirPedido')->with(["pedido"=>$pedido]);
         }
     }
+
+    /**
+     * Função que calcula os descontos nos itens e retorna um array com o preço dos itens após
+     * o desconto ser aplicado
+     * @param Array $itens
+     * @param Array $descontos
+     * @return Array $itensComDesconto
+     */
+    function itensComDesconto($itens, $descontos){
+        $itensComDesconto = [];
+        for($i = 0; $i < count($itens); $i++){
+            $itensComDesconto[$i] = floatval($itens[$i]->valorReal) - (floatval($itens[$i]->valorReal) * ($descontos[$i] / 100));
+        }
+        return $itensComDesconto;
+    }
+    /**
+     * Salva os dados dos descontos referente aos itens e salva informações do pedido
+     * @param Request
+     * @return view pagamentos
+     */
+    public function concluirPedidoComDescontoNosItens(Request $request){
+        
+        // pedido
+        $pedido = Pedido::find($request['pedido_id']);
+        // array com a porcentagem dos descontos referente aos itens 
+        $descontos = $request['desconto'];
+        // array com os itens do pedido
+        $itensPedido = ItensPedido::where('pedido_id',$request['pedido_id'])->get();
+        // array contendo os preços com os descontos calculados
+        $itensComDesconto = $this->itensComDesconto($itensPedido, $descontos);        
+        
+        
+        // Se o pedido tiver o status PESADO
+        if($pedido->status->status == "PESADO"){
+            /**
+             * Percorre $itensPedido, $descontos e $itensComDesconto 
+             * e salva o descontoPorcentagem e valorComDesconto
+             */
+            if(count($itensPedido) === count($itensComDesconto)){
+                for($i = 0; $i <= count($itensPedido) - 1; $i++ ){
+                    $itensPedido[$i]->descontoPorcentagem = $descontos[$i];
+                    $itensPedido[$i]->valorComDesconto = $itensComDesconto[$i];
+                    $itensPedido[$i]->save();
+                }
+            }
+            $status_id = Status::where('status',"PAGO PARCIALMENTE")->pluck('id')->first();
+            $pedido->status_id = $status_id;
+            $pedido->save();
+        }
+        
+        // ------------------------ DEBUG ------------------------
+        // dd($request->all(),$pedido->status->status,$itensPedido,$itensComDesconto);
+        // return view('pagamento',['pedido'=>$pedido]);
+        return redirect('/pedidos/pagamento/'.$pedido->id);
+
+    }
+
+    /**
+     * 
+     */
+    public function pagamento(Request $request){
+        dd($request->all());
+    }
+
+
     // retorna o cliente através do cpj ou cnpj
     public function getCliente(Request $request){
         $user = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')->get();
@@ -352,7 +451,23 @@ class PedidoController extends Controller
         return json_encode($pedidos);
 
     }
+
+    function calcularDescontosItens($itens, $descontos){
+        $itensComDesconto = [];
+        for($i = 0; $i < count($itens); $i++){
+            $itensComDesconto[$i] = floatval($itens[$i]->valorReal) - (floatval($itens[$i]->valorReal) * ($descontos[$i] / 100));
+        }
+        return $itensComDesconto;
+    }
+
+    /**
+     * Conclui a pesagem dos itens do pedido e salva os dados
+     * 
+     * @param $request
+     * @return view listarPedidos
+     */
     public function concluirPedidoPesoFinal(Request $request){
+        // dd($request->all());
         $pedido = Pedido::with(['itensPedidos'])->find($request->input('pedido_id'));
         $valorTotal = 0;
         foreach($pedido->itensPedidos as $item){

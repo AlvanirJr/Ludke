@@ -98,7 +98,7 @@
                     <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{$valorRestantePagamento}}</h3></p>
                 @else
                     <h5 class="card-title">Valor Total do Pagamento</h5>
-                    <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{$valorPedidoComDesconto}}</h3></p>
+                <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{$valorTotalDoPagamento}}</h3></p>
                 @endif
             </div>
         </div>
@@ -112,10 +112,10 @@
                 <div class="card-body">
                     @if($pedido->status->status == "PAGO PARCIALMENTE")
                     <h5 class="card-title">Valor do Desconto no Pedido</h5>
-                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDesconto">{{$valorDoDescontoNoPedido}}</h3></p>
+                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDesconto">{{$valorDoDesconto}}</h3></p>
                     @else
                         <h5 class="card-title">Valor do Desconto</h5>
-                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDesconto">{{$valorDoDescontoNoPedido}}</h3></p>
+                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDesconto">{{$valorDoDesconto}}</h3></p>
                     @endif
                 </div>
             </div>
@@ -134,112 +134,37 @@
 
 
     {{-- INFORMAÇÕES DO PAGAMENTO --}}
-    <div class="row informacoes">
-        <div class="col-sm-12">
-            <h3>Informações do Pagamento</h3>
-        </div>
-    </div>
+    
 
-
-    <form id="formPagamento" action="{{route('vendas.pagamento')}}" method="POST">    
+    
+    <form id="formPagamento" action="{{route('pedido.pagamento')}}" method="POST">    
         @csrf
 
         {{-- Inputs contendo os descontos adicionados na tela de finalizar venda --}}
-        @foreach ($descontos as $desconto)
-            <input type="hidden" name="descontoItens[]" value="{{$desconto}}" id="descontoItens">    
-        @endforeach
+        
         {{-- ID do pedido --}}
         <input type="hidden" name="pedido_id" value="{{$pedido->id}}">
         {{-- 'funcionario_id' é o id do funcionario logado responsável pelo pagamento--}}
         <input type="hidden" name="funcionario_id" value="{{Auth::user()->funcionario->id}}">
-
-        
-        {{-- Se o pedido for PAGO PARCIALMENTE --}}
-        @if($pedido->status->status == "PAGO PARCIALMENTE")
-        
-            {{-- Valor do pagamento --}}
-            <input type="hidden" name="valorTotalPagamento" value="{{$pagamento->valorTotalPagamento}}">
-
-            {{-- Valor restante do pagamento --}}
-            <input type="hidden" name="valorRestantePagamento" value="{{$valorRestantePagamento}}">
+        {{-- Entregador --}}
+        <div class="row">
+            <div class="col-sm-4 form-group">
+                <label for="entregador_id">Entregador</label>
+                <select name="entregador_id" class="form-control" id="entregador">
+                    <option value="" selected disabled>-- Entregador --</option>
+                </select>
+            </div>
+        </div>
+<!--
+        <div class="divNovaFormaPagamento">
             <div class="row justify-content-center">
                 {{-- DataPagamento --}}
-                <div class="col-sm-4 form-group">
-                    <label for="dataPagamento">Data de Pagamento <span class="obrigatorio">*</span></label>
-                    <input type="date" class="form-control" id="dataPagamento" name="dataPagamento" value="{{$pagamento->dataPagamento}}">
-                    <span style="color:red" id="spanDataPagamento"></span>
-                </div>
-                {{-- DataVencimento --}}
-                <div class="col-sm-4 form-group">
-                    <label for="dataVencimento">Data de Vencimento <span class="obrigatorio">*</span></label>
-                    <input type="date" class="form-control" id="dataVencimento" name="dataVencimento" value="{{$pagamento->dataVencimento}}">
-                    <span style="color:red" id="spanDataVencimento"></span>
-                </div>
-    
-                <div class="col-sm-4 form-group">
-                    {{-- formaPagamento --}}
-                    <label for="formaPagamento">Tipo de Pagamento <span class="obrigatorio">*</span></label>
-                    <select name="formaPagamento" class="form-control" id="formaPagamento">
-                        <option value="" disabled>-- Tipo de Pagamento --</option>
-                        <option value="CARTÃO DE CRÉDITO" @if($pagamento->formaPagamento == "CARTÃO DE CRÉDITO") selected @endif>CARTÃO DE CRÉDITO</option>
-                        <option value="BOLETO" @if($pagamento->formaPagamento == "BOLETO") selected @endif>BOLETO</option>
-                        <option value="À VISTA" @if($pagamento->formaPagamento == "À VISTA") selected @endif>À VISTA</option>
-                        <option value="À PRAZO" @if($pagamento->formaPagamento == "À PRAZO") selected @endif>À PRAZO</option>
-                    </select>
-                    <span style="color:red" id="spanformaPagamento"></span>
-                </div>
-            </div>
-    
-            <div class="row justify-content-center">
-                {{-- Desconto --}}
-                <div class="col-sm-4 form-group">
-                    <label for="descontoPagamento">Desconto %</label>
-                    @if($pedido->status->status == "PAGO PARCIALMENTE")
-                    <input id="descontoPagamento" type="number" class="form-control" value="{{$pagamento->descontoPagamento}}" disabled>
-                    {{-- <input id="descontoPagamento" type="hidden" class="form-control" name="descontoPagamento" value="{{$pagamento->descontoPagamento}}"> --}}
-                    @else
-                    <input id="descontoPagamento" type="number" oninput="atualizarValorDesconto({{$valorPedidoComDesconto}},{{$valorDoDescontoNoPedido}})" class="form-control" name="descontoPagamento" value="0">
-                    @endif
-                    <span style="color:red" id="spanDescontoPagamento"></span>
-                </div>
-                {{-- Valor Pago --}}
-                <div class="col-sm-4 form-group">
-                    <label for="valorPago">Valor Pago (R$) <span class="obrigatorio">*</span></label>
-                    <input type="number" id="valorPago" min="0" step="0.01" oninput="atualizaValorParcialmentePago({{$valorRestantePagamento}},{{$pagamento->valorPago}})" class="form-control" name="valorPago">
-                    <span style="color:red" id="spanValorPago"></span>
-                </div>
-
-                {{-- Entregador --}}
-                <div class="col-sm-4 form-group">
-                    <label for="entregador_id">Entregador</label>
-                    <select name="entregador_id" class="form-control" id="entregador">
-                        <option value="" selected disabled>-- Entregador --</option>
-                        @foreach ($entregadores as $entregador)
-                            <option value="{{$entregador->id}}" @if($pedido->entregador_id == $entregador->id) selected @endif>{{$entregador->user->name}}</option>                            
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            
-            {{-- Observações do pagamento --}}
-            <div class="row justify-content-center">
-                <div class="col-sm-12 form-group">
-                    <label for="obs">Observações</label>
-                    <textarea class="form-control" name="obs" id="" rows="5">{{$pagamento->obs}}</textarea>
-                </div>
-            </div>
-        
-        {{-- Caso COntrário --}}
-        @elseif($pedido->status->status == "PESADO") 
-            <input type="hidden" name="valorTotalPagamento" value="{{$pedido->valorTotal}}">
-            <div class="row justify-content-center">
-                {{-- Data de Pagamento --}}
                 <div class="col-sm-4 form-group">
                     <label for="dataPagamento">Data de Pagamento <span class="obrigatorio">*</span></label>
                     <input type="date" class="form-control" id="dataPagamento" name="dataPagamento">
                     <span style="color:red" id="spanDataPagamento"></span>
                 </div>
-                {{-- Data de Vencimento --}}
+                {{-- DataVencimento --}}
                 <div class="col-sm-4 form-group">
                     <label for="dataVencimento">Data de Vencimento <span class="obrigatorio">*</span></label>
                     <input type="date" class="form-control" id="dataVencimento" name="dataVencimento">
@@ -247,57 +172,62 @@
                 </div>
     
                 <div class="col-sm-4 form-group">
+                    {{-- formaPagamento --}}
                     <label for="formaPagamento">Tipo de Pagamento <span class="obrigatorio">*</span></label>
                     <select name="formaPagamento" class="form-control" id="formaPagamento">
-                        <option value="" selected disabled>-- Tipo de Pagamento --</option>
-                        <option value="CARTÃO DE CRÉDITO">CARTÃO DE CRÉDITO</option>
-                        <option value="BOLETO">BOLETO</option>
-                        <option value="À VISTA">À VISTA</option>
-                        <option value="À PRAZO">À PRAZO</option>
+                        {{-- <option value="" disabled>-- Tipo de Pagamento --</option>
+                        <option value="CARTÃO DE CRÉDITO" @if($pagamento->formaPagamento == "CARTÃO DE CRÉDITO") selected @endif>CARTÃO DE CRÉDITO</option>
+                        <option value="BOLETO" @if($pagamento->formaPagamento == "BOLETO") selected @endif>BOLETO</option>
+                        <option value="À VISTA" @if($pagamento->formaPagamento == "À VISTA") selected @endif>À VISTA</option>
+                        <option value="À PRAZO" @if($pagamento->formaPagamento == "À PRAZO") selected @endif>À PRAZO</option> --}}
                     </select>
                     <span style="color:red" id="spanformaPagamento"></span>
                 </div>
             </div>
-    
+        
             <div class="row justify-content-center">
+                
                 <div class="col-sm-4 form-group">
                     <label for="descontoPagamento">Desconto %</label>
-                    @if($pedido->status->status == "PAGO PARCIALMENTE" && isset($pagamento->valorTotalPagamento))
-                        <input id="descontoPagamento" type="number" class="form-control" name="descontoPagamento" value="{{$pagamento->descontoPagamento}}" disabled>
-                    @else
-                        <input id="descontoPagamento" type="number" oninput="atualizarValorDesconto({{$valorPedidoComDesconto}},{{$valorDoDescontoNoPedido}})" class="form-control" name="descontoPagamento" value="0">
-                        <span style="color:red" id="spanDescontoPagamento"></span>
-                    @endif
+                    <input id="descontoPagamento" type="number" class="form-control" value="">
+                    <span style="color:red" id="spanDescontoPagamento"></span>
                 </div>
+                
                 <div class="col-sm-4 form-group">
-                    
                     <label for="valorPago">Valor Pago (R$) <span class="obrigatorio">*</span></label>
-                    <input type="number" id="valorPago" min="0" step="0.01" oninput="atualizaValorPago({{$valorPedidoComDesconto}})" class="form-control" name="valorPago">
+                    <input type="number" id="valorPago" min="0" step="0.01" oninput="" class="form-control" name="valorPago">
                     <span style="color:red" id="spanValorPago"></span>
                 </div>
-
-                {{-- Entregador --}}
+    
+                
                 <div class="col-sm-4 form-group">
                     <label for="entregador_id">Entregador</label>
                     <select name="entregador_id" class="form-control" id="entregador">
                         <option value="" selected disabled>-- Entregador --</option>
-                        @foreach ($entregadores as $entregador)
-                            <option value="{{$entregador->id}}" @if($pedido->entregador_id == $entregador->id) selected @endif>{{$entregador->user->name}}</option>                            
-                        @endforeach
                     </select>
                 </div>
             </div>
-    
+                
             <div class="row justify-content-center">
                 <div class="col-sm-12 form-group">
                     <label for="obs">Observações</label>
                     <textarea class="form-control" name="obs" id="" rows="5"></textarea>
                 </div>
             </div>
+        </div>
+
+-->   
         
-        @endif
-        
-        
+        <div id='divNovaFormaPagamento'></div>
+
+        {{-- Botão Adicionar Forma de Pagamento --}}
+        <div class="row justify-content-center">
+            <div class="col-sm-4">
+                <button id="bntNovaFormaPagamento" class="btn btn-primary-ludke" style="margin:20px 0 20px 0">
+                    <h3>Adicionar Forma de Pagamento</h3>
+                </button>
+            </div>
+        </div>
 
         <div class="row justify-content-center" style="margin:30px 0 30px 0;">
             <div class="col-sm-6" style="heigth:100px">
@@ -316,35 +246,109 @@
 
 <script type="text/javascript">
 
+    let countFormaPagamento = 0;
     // Calcula o desconto dos itens
     function exibeDescontosItens(){
-        let descontosItens = <?php echo '["' . implode('", "', $descontos) . '"]' ?>;
+        let descontosItens = 0<?php //echo '["' . implode('", "', $descontos ?? '') . '"]' ?>;
         return descontosItens;
     }
     
-
+    function montarForm(){
+        
+    }
     $(function(){
         $('#formPagamento').submit(function(event){
             if(!isValid()){
                 event.preventDefault();
                 // $("#formPagamento").submit();
+
+                $("#divNovaFormaPagamento:not(:has(>div))").each(function(){
+                    alert("Por favor, selecione uma forma de pagamento!");
+                });
             }
-            console.log({
-                dataVencimento: $('#dataVencimento').val(),
-                dataPagamento: $('#dataPagamento').val(),
-                formaPagamento: $('#formaPagamento').val(),
-                valorPago: $('#valorPago').val(),
-                descontoPagamento: $('#descontoPagamento').val()
-            })
+            // console.log({
+            //     dataVencimento: $('#dataVencimento').val(),
+            //     dataPagamento: $('#dataPagamento').val(),
+            //     formaPagamento: $('#formaPagamento').val(),
+            //     valorPago: $('#valorPago').val(),
+            //     descontoPagamento: $('#descontoPagamento').val()
+            // })
+        });
 
-            
-
-
+        // Ao clicar no botão "Adicionar Forma de Pagamento" Adiciona na tela os inputs da nova forma de pagamento
+        $('#bntNovaFormaPagamento').click(function(){
+            // alert('Adicionar Forma de pagamento')
+            var linhaForm = addFormaDePagamento();
+            $("#divNovaFormaPagamento").append(linhaForm);
         });
 
         console.log(exibeDescontosItens());
     });
 
+    // Ao clicar no botão excluir, retira os inputs referente à forma de pagamento
+    function excluirFormaPagamento(id){
+        id = "formaPagamento"+id;
+        $(`#${id}`).remove();
+    }
+
+    // Cria a linha com os inputs da nova forma de pagamento
+    function addFormaDePagamento(){
+        
+        // console.log("Nova Forma de Pagamento")
+        let form = "<div id='formaPagamento"+countFormaPagamento+"'>"+
+                    "<div class='row informacoes'>"+
+                        "<div class='col-sm-10'>"+
+                            "<h3>Informações do Pagamento</h3>"+
+                        "</div>"+
+                        "<div class='col-sm-2'>"+
+                            "<button class='btn btn-secondary-ludke' onclick='excluirFormaPagamento("+countFormaPagamento+")'>Excluir</button>"+
+                        "</div>"+
+                    "</div>"+
+                    "<div class='row justify-content-center'>"+
+                        "<div class='col-sm-6 form-group'>"+
+                            "<label for='dataPagamento'>Data de Pagamento <span class='obrigatorio'>*</span></label>"+
+                            "<input type='date' class='form-control' id='dataPagamento' name='dataPagamento[]' required>"+
+                            "<span style='color:red' id='spanDataPagamento'></span>"+
+                        "</div>"+
+                        "<div class='col-sm-6 form-group'>"+
+                            "<label for='dataVencimento'>Data de Vencimento <span class='obrigatorio'>*</span></label>"+
+                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]' required>"+
+                            "<span style='color:red' id='spanDataVencimento'></span>"+
+                        "</div>"+
+                    "</div>"+
+                    "<div class='row justify-content-center'>"+
+                        "<div class='col-sm-4 form-group'>"+
+                            "<label for='descontoPagamento'>Desconto %</label>"+
+                            "<input id='descontoPagamento' type='number' class='form-control' value='0' name='descontoPagamento[]' required>"+
+                            "<span style='color:red' id='spanDescontoPagamento'></span>"+
+                        "</div>"+
+                        "<div class='col-sm-4 form-group'>"+
+                            "<label for='valorPago'>Valor Pago (R$) <span class='obrigatorio'>*</span></label>"+
+                            "<input type='number' id='valorPago' min='0' step='0.01' oninput='' class='form-control' name='valorPago[]' required>"+
+                            "<span style='color:red' id='spanValorPago'></span>"+
+                        "</div>"+
+                        "<div class='col-sm-4 form-group'>"+
+                            "<label for='formaPagamento'>Tipo de Pagamento <span class='obrigatorio'>*</span></label>"+
+                            "<select name='formaPagamento' class='form-control' id='formaPagamento' required>"+
+                                "<option value='' disabled>-- Tipo de Pagamento --</option>"+
+                                "<option value='CARTÃO DE CRÉDITO'>CARTÃO DE CRÉDITO</option>"+
+                                "<option value='BOLETO'>BOLETO</option>"+
+                                "<option value='À VISTA'>À VISTA</option>"+
+                                "<option value='À PRAZO'>À PRAZO</option>"+
+                            "</select>"+
+                            "<span style='color:red' id='spanformaPagamento'></span>"+
+                        "</div>"+
+                    "</div>"+
+                    "<div class='row justify-content-center'>"+
+                        "<div class='col-sm-12 form-group'>"+
+                            "<label for='obs'>Observações</label>"+
+                            "<textarea class='form-control' name='obs' id='' rows='5'></textarea>"+
+                        "</div>"+
+                    "</div>"+
+                "</div>";
+        countFormaPagamento += 1;
+        return form;           
+    }
     function isValid(){
         let isValid = true;
         if($('#dataVencimento').val() == ""){

@@ -53,9 +53,18 @@ Route::post('/pedidos/buscaCliente/{id}','PedidoController@buscaCliente');
 Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
 Route::post('/pedidos/finalizar','PedidoController@finalizarPedido');
 Route::delete('/pedidos/excluir/{id}','PedidoController@destroy');// Deletar um pedido
-Route::get('/pedidos/pesar/{id}','PedidoController@pesarPedido')->name('pedido.pesarPedido');// Concluir um pedido aberto
-Route::post('/pedidos/concluir','PedidoController@concluirPedidoPesoFinal')->name('concluirPedidoPesoFinal');// Concluir um pedido aberto
+// Rota GET que redireciona para tela de pesagem do pedido
+Route::get('/pedidos/pesar/{id}','PedidoController@pesarPedido')->name('pedido.pesarPedido');
+// rota POST que salva a pesagem dos pedidos
+Route::post('/pedidos/pesar','PedidoController@concluirPedidoPesoFinal')->name('pedido.concluirPedidoPesoFinal');// Concluir um pedido aberto
+// Rota get que redireciona para tela de concluir pedido
 Route::get('/pedidos/concluir/{id}', 'PedidoController@concluirPedido')->name('pedido.concluirPedido');
+// Rota POST que salva os descontos aplicados nos itens da view concluirPedido.
+Route::post('/pedidos/concluir', 'PedidoController@concluirPedidoComDescontoNosItens')->name('pedido.concluirPedidoComDescontoNosItens') ;
+
+// Pagamento
+Route::get('/pedidos/pagamento/{id}','PedidoController@indexPagamento')->name('pedido.indexPagamento');
+Route::post('/pedidos/pagamento','PedidoController@pagamento')->name('pedido.pagamento');
 
 Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("listarPedidos");
 Route::get('/getPedidos','PedidoController@getPedidos');

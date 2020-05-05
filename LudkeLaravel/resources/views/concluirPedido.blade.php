@@ -69,7 +69,7 @@
     </div>
 
 
-    <form method="POST" action="{{route('vendas.concluirVendaPagamento',['id'=>$pedido->id])}}">    
+    <form method="POST" action="{{route('pedido.concluirPedidoComDescontoNosItens')}}">    
         @csrf
         <input type="hidden" name="pedido_id" value="{{$pedido->id}}">
         <div class="row justify-content-center">
@@ -136,7 +136,7 @@
                 <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido" >Voltar</a>
             </div>
             <div class="col-sm-6">
-                <button type="submit" class="btn btn-primary-ludke btn-pedido">Pagamento</button>
+                <button type="submit" class="btn btn-primary-ludke btn-pedido">Concluir Pedido</button>
             </div>
         </div>
     </form>

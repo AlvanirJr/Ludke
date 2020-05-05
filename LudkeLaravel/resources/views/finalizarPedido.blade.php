@@ -71,7 +71,7 @@
     </div>
 
 
-    <form method="POST" action="{{route('concluirPedidoPesoFinal')}}">    
+    <form method="POST" action="{{route('pedido.concluirPedidoPesoFinal')}}">    
         @csrf
         <input type="hidden" name="pedido_id" value="{{$pedido->id}}">
         <div class="row justify-content-center">
@@ -125,7 +125,7 @@
                 <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido" >Voltar</a>
             </div>
             <div class="col-sm-6">
-                <button type="submit" class="btn btn-primary-ludke btn-pedido">Concluir Pedido</button>
+                <button type="submit" class="btn btn-primary-ludke btn-pedido">Finalizar Pesagem</button>
             </div>
         </div>
     </form>
