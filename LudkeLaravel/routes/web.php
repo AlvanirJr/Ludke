@@ -51,6 +51,7 @@ Route::get('/pedidos','PedidoController@index')->name('pedidos');
 Route::post('/pedidos/getCliente','PedidoController@getCliente');
 Route::post('/pedidos/buscaCliente/{id}','PedidoController@buscaCliente');
 Route::post('/pedidos/getProdutos','PedidoController@getProdutos');
+// Rota post para salvar o pedido realizado na tela de pedidos
 Route::post('/pedidos/finalizar','PedidoController@finalizarPedido');
 Route::delete('/pedidos/excluir/{id}','PedidoController@destroy');// Deletar um pedido
 // Rota GET que redireciona para tela de pesagem do pedido
@@ -62,7 +63,7 @@ Route::get('/pedidos/concluir/{id}', 'PedidoController@concluirPedido')->name('p
 // Rota POST que salva os descontos aplicados nos itens da view concluirPedido.
 Route::post('/pedidos/concluir', 'PedidoController@concluirPedidoComDescontoNosItens')->name('pedido.concluirPedidoComDescontoNosItens') ;
 
-// Pagamento
+// Pagamento Pedido
 Route::get('/pedidos/pagamento/{id}','PedidoController@indexPagamento')->name('pedido.indexPagamento');
 Route::post('/pedidos/pagamento','PedidoController@pagamento')->name('pedido.pagamento');
 
@@ -73,11 +74,28 @@ Route::put('/pedidos/update/{id}','PedidoController@update');
 Route::any('/pedidos/filtrar','PedidoController@filtrarPedido')->name('pedido.filtrar');
 
 // ROTAS PARA VENDA
+// tela de realizar venda
 Route::get('/vendas', 'VendaController@index')->name('vendas');
+// tela de Listar vendas
 Route::get('/vendas/listar/{status?}', 'VendaController@indexListarVendas')->name('listarVendas');
-Route::get('/vendas/concluir/{id}', 'VendaController@concluirVenda')->name('vendas.concluirVenda');
-Route::post('/vendas/concluir', 'VendaController@concluirVendaPagamento')->name('vendas.concluirVendaPagamento');
-Route::post('/vendas/pagamento', 'VendaController@pagamento')->name('vendas.pagamento');
+// Rota post para salvar venda na tela de vendas
+Route::post('/vendas/finalizar','VendaController@finalizarVenda');
+
+// Concluir Venda
+// Rota get que redireciona para tela de concluir pedido
+Route::get('/vendas/concluir/{id}', 'VendaController@concluirVenda')->name('concluirVenda');
+// Rota POST que salva os descontos aplicados nos itens da view concluirPedido.
+Route::post('/vendas/concluir', 'VendaController@concluirVendaComDescontoNosItens')->name('concluirVendaComDescontoNosItens') ;
+
+
+// Pagamento Venda
+Route::get('/vendas/pagamento/{id}','VendaController@indexPagamento')->name('venda.indexPagamento');
+Route::post('/vendas/pagamento','VendaController@pagamento')->name('venda.pagamento');
+
+
+// Route::get('/vendas/concluir/{id}', 'VendaController@concluirVenda')->name('vendas.concluirVenda');
+// Route::post('/vendas/concluir', 'VendaController@concluirVendaPagamento')->name('vendas.concluirVendaPagamento');
+// Route::post('/vendas/pagamento', 'VendaController@pagamento')->name('vendas.pagamento');
 Route::any('/vendas/filtrar','VendaController@filtrarVenda')->name('vendas.filtrar');
 
 

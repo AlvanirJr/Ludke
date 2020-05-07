@@ -107,7 +107,7 @@
                             @elseif($pedido->status->status == "PAGO PARCIALMENTE")
                                 <td>
                                     {{-- Contas a pagar --}}
-                                    <a href="#" onclick="alert('A funcionalidade de CONTAS À RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                    <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
                                         <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
                                     </a> 
                                     {{-- Excluir Pedido --}}

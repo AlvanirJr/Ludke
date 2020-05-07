@@ -32,7 +32,7 @@ class PedidoController extends Controller
         $pedidos = Pedido::with(['status'])->
                                 where('status_id',1)->      //SOLICITADO
                                 orwhere('status_id',2)->    //PESADO
-                                orwhere('status_id',3)->    //ENTREGUE
+                                // orwhere('status_id',3)->    //ENTREGUE
                                 orwhere('status_id',4)->    //PAGO PARCIALMENTE
                                 orwhere('status_id',5)->    //PAGO TOTALMENTE
                                 orderBy('status_id')->
@@ -437,6 +437,12 @@ class PedidoController extends Controller
         }
         return $valorTotal;
     }
+
+    /**
+     * Função para salvar pedido realizada
+     * @param Request
+     * @return JSON
+     */
     public function finalizarPedido(Request $request){
         $cliente = Cliente::find($request->input('cliente_id'));
         
