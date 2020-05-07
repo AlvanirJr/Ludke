@@ -18,10 +18,10 @@ class CreatePagamentosTable extends Migration
             $table->date('dataVencimento');
             $table->date('dataPagamento');
             $table->string('obs')->nullable();
-            $table->float('descontoPagamento');
-            $table->float('valorTotalPagamento');
-            $table->float('valorPago');
-            $table->string('formaPagamento')->nullable();
+            $table->float('descontoPagamento')->nullable();
+            $table->float('valorTotalPagamento')->nullable();
+            $table->float('valorPago')->nullable();
+            $table->string('status')->nullable();
 
             $table->unsignedBigInteger('funcionario_id');
             $table->foreign('funcionario_id')->references('id')->on('funcionarios');

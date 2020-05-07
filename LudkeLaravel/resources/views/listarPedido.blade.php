@@ -21,9 +21,9 @@
                           </button>
                     </div>
                     {{-- NOVO PEDIDO --}}
-                    {{-- <div class="col-sm-2">
+                    <div class="col-sm-2">
                         <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Novo Pedido</a>
-                    </div> --}}
+                    </div>
                     
                 </div>
             </div><!-- end titulo-pagina -->
@@ -71,23 +71,54 @@
                         </td>
                         <td>{{$pedido->status->status}}</td>
                         <td>R$ {{$pedido->valorTotal}}</td>
-                            @if($pedido->status->status == "SOLICITADO")
+                            {{-- Pedido com status SOLICITADO --}}
+                            @if($pedido->status->status == "SOLICITADO") 
                                 <td>
-                                    <a href="/pedidos/concluir/{{$pedido->id}}">
-                                        <img id="iconeEdit" class="icone" src="{{asset('img/balanca.svg')}}" style="width:27px">
-                                    </a>                            
-                                    {{-- <a href="/pedidos/edit/{{$pedido->id}}">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">
-                                    </a> --}}
-
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                    {{-- PESAR Pedido --}}
+                                    <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
+                                        <img id="pesar" class="icone" src="{{asset('img/balanca.svg')}}" >
+                                    </a>                
+                                   {{-- Editar Pedido --}}
+                                    <a href="/pedidos/edit/{{$pedido->id}}">
+                                        <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
                                     </a>
+                                    {{-- Excluir Pedido --}}
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                                    </a>
+                                </td>
+                            {{-- Pedido com status PESADO --}}
+                            @elseif($pedido->status->status == "PESADO")
+                                <td>
+                                    {{-- Editar Pedido --}}
+                                    <a href="/pedidos/edit/{{$pedido->id}}">
+                                        <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
+                                    </a>
+                                    {{-- PESAR Pedido --}}
+                                    <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}">
+                                        <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
+                                    </a> 
+                                    {{-- Excluir Pedido --}}
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                                    </a>
+                                </td>
+                                {{-- Pedido com status PAGO PARCIALMENTE --}}
+                            @elseif($pedido->status->status == "PAGO PARCIALMENTE")
+                                <td>
+                                    {{-- Contas a pagar --}}
+                                    <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                        <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
+                                    </a> 
+                                    {{-- Excluir Pedido --}}
+                                    {{-- <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                                    </a> --}}
                                 </td>
                             @else                                    
                                 <td>
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
                                     </a>
                                 </td>
                             @endif
@@ -145,19 +176,6 @@
                             </select>
                         </div>
                     </div>
-                    {{-- <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label for="cidade">Cidade</label>
-                            <input type="text" class="form-control" name="cidade" placeholder="Cidade">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label for="bairro">Bairro</label>
-                            <input type="text" class="form-control" name="bairro" placeholder="Bairro">
-                        </div>
-                    </div> --}}
-
                 </div>
                 <div class="modal-footer">
                     <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

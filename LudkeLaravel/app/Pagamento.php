@@ -16,9 +16,12 @@ class Pagamento extends Model
                         'status'];
 
     public function funcionario(){
-        return $this->belongsTo('App\Pedido');
+        return $this->belongsTo('App\Funcionario');
     }
     public function pedido(){
-        return $this->belongsTo('App\Funcionario');
+        return $this->belongsTo('App\Pedido');
+    }
+    public function forma_pagamento(){
+        return $this->belongsTo('App\FormaPagamento');
     }
 }

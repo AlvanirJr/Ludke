@@ -32,7 +32,7 @@
     mensagem é exibida para o usuário informando que a venda foi realizada --}}
     @if (isset($statusVenda))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Venda Realizada com sucesso!</strong> Aguarde a pesagem do pedido. Para vizualizar os pedidos solicitados, <a href="{{route('listarPedidos')}}" target="_blank">clique aqui.</a>
+            <strong>Venda Realizada com sucesso!</strong> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -82,13 +82,11 @@
                     <th>Pedido</th>
                     <th>Status</th>
                     <th>Valor Total</th>
-                    <th>Valor Pago</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
                 <tbody>
                     @foreach ($pedidos as $pedido)
-                    
                     <tr id="{{$pedido->id}}">
                         <td>{{$pedido->id}}</td>
                         <td>{{$pedido->cliente->user->name}}</td>
@@ -102,74 +100,32 @@
                             </ul>
                         </td>
                         <td>{{$pedido->status->status}}</td>
+                        <td>R$ {{$pedido->valorTotal}}</td>
                         {{-- Verifica se o status do pedido é SOLICITADO --}}
-                        @if($pedido->status->status == "SOLICITADO")
-                        <td>{{$pedido->valorTotal}}</td>
-                        <td> - </td>
-                            <td>                           
-                                <a href="{{route('pedido.editar',['id'=>$pedido->id])}}">
-                                    <img id="iconeDelete" class="icone" src="{{asset('img/edit-solid.svg')}}" style="width:25px;margin-right:15px">
-                                </a>
-                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                    <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
-                                </a>
-                            </td>
+                        @if($pedido->status->status == "ENTREGUE")
+                        
+                        <td>
+                            {{-- Contas a pagar --}}
+                            <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
+                            </a> 
+                            {{-- Excluir Pedido --}}
+                            <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                            </a>
+                        </td>
                         {{-- Verifica se o status do pedido é PESADO --}}
                         @elseif($pedido->status->status == "PESADO")
-                        <td>R$ {{$pedido->valorTotal}}</td>
-                        <td> - </td>
                             <td>
-                                <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
-                                    <img id="iconeEdit" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
+                                <a href="{{route('concluirVenda',['id'=>$pedido->id])}}">
+                                    <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
                                 </a>                            
 
                                 <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                     <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
                                 </a>
                             </td>
-                        @elseif($pedido->status->status == "PAGO PARCIALMENTE")
-                        <td>
-                            @if(isset($pedido->pagamento))
-                            {{$pedido->pagamento->valorTotalPagamento}}
-                            @else
-                            R$ 0
-                            @endif
-                        </td>
-                        <td>
-                            @if(isset($pedido->pagamento))
-                            R$ {{$pedido->pagamento->valorPago}}</td>
-                            @else
-                            R$ 0
-                            @endif
-                            <td>
-                                <a href="{{route('vendas.concluirVenda',['id'=>$pedido->id])}}">
-                                    <img id="iconeEdit" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
-                                </a>                            
-
-                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                    <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
-                                </a>
-                            </td>    
-                        @elseif($pedido->status->status == "PAGO TOTALMENTE")
-                        <td>
-                            @if(isset($pedido->pagamento))
-                            {{$pedido->pagamento->valorTotalPagamento}}
-                            @else
-                            R$ 0
-                            @endif    
-                        </td>
-                        <td>
-                            @if($pedido->pagamento)
-                            R$ {{$pedido->pagamento->valorPago}}</td>
-                            @else
-                            R$ 0
-                            @endif    
-                        </td>
-                            <td>
-                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                    <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
-                                </a>
-                            </td>
+                        
                         @endif
                     </tr>
                     @endforeach

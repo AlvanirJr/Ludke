@@ -567,9 +567,10 @@
         limparCamposProduto();
         $("#tabelaPedidos>tbody").html('');
     }
+    // Monta o pedido e registra a venda
     function montarPedido(){
         
-        
+        console.log(pedido);
         pedido.desconto = parseFloat($("#inputDesconto").val());
 
         pedido.valorDesconto = parseFloat(calcularDesconto());
@@ -595,16 +596,20 @@
             
             // console.log(pedido)
             $.ajax({
-                url: '/pedidos/finalizar',
+                url: '/vendas/finalizar',
                 method: "POST",
                 data: pedido,
                 context: this,
-                success: function(data){
-                    msg = JSON.parse(data);
-                    if(msg.success == true){
-                        // limparTela();
-                        window.location.href = '/vendas/listar/success';
-                    }
+                success: function(pedido_id){
+                    
+                    
+                    // limparTela();
+                    // window.location.href = '/vendas/listar/success';
+                    window.location.href = '/vendas/concluir/'+pedido_id;
+                    
+                    //Redireciona para tela de pagamentos
+                        
+                    
                 },
                 error: function(error){
                     console.log(error);

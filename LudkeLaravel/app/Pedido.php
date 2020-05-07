@@ -24,7 +24,7 @@ class Pedido extends Model
         return $this->belongsTo('App\Status');
     }
     function pagamento(){
-        return $this->hasOne('App\Pagamento','pedido_id');
+        return $this->hasMany('App\Pagamento','pedido_id');
     }
 
     public function filtro($filtro,$itensPorPagina){
