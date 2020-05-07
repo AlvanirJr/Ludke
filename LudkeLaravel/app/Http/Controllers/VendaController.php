@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\Pedido;
@@ -14,6 +15,7 @@ use App\User;
 use App\Status;
 use App\Pagamento;
 use App\Cargo;
+use App\FormaPagamento;
 
 class VendaController extends Controller
 {
@@ -21,22 +23,112 @@ class VendaController extends Controller
         return view('venda');
     }
 
-    public function indexListarVendas($statusVenda=null)
-    {
-        // statusVenda é retornado pela rota se uma venda foi cadastrada com sucesso
-        if(isset($statusVenda)){
-            $pedidos = Pedido::with(['status','pagamento'])->
-                                orderby('status_id')->
-                                paginate(25);
-            return view('listarVendas',['pedidos'=>$pedidos,'statusVenda'=>$statusVenda]);
-        }
-        else{
-            $pedidos = Pedido::with(['status','pagamento'])->
-                                orderby('status_id')->
-                                paginate(25);
-            return view('listarVendas',['pedidos'=>$pedidos]);
-        }
+    public function indexListarVendas()
+    {                        
+        $pedidos = Pedido::with(['status','pagamento'])->
+                            where('status_id',2)-> //PESADO
+                            orwhere('status_id',3)-> //ENTREGUE
+                            orderby('status_id')->
+                            paginate(25);
+        return view('listarVendas',['pedidos'=>$pedidos]);
     }
+
+    /**
+     * Função que redireciona para tela de pagamento da venda
+     */
+    public function indexPagamento($id){
+        // Pedido
+        $pedido = Pedido::with(['cliente'])->find($id);
+
+        // Itens do Pedido
+        $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
+        
+        $valorTotalDoPagamento = 0;
+        $valorDoDesconto = 0;
+
+        foreach ($itensPedido as $item) {
+            $valorTotalDoPagamento += floatval($item->valorComDesconto);
+            $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
+        }
+        // dd($valorTotalDoPagamento,$valorDoDesconto);
+        //------------DEBUG--------------------------
+        // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
+        $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
+        $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
+                                        orwhere('cargo_id',$entregador_id)->get();
+        $formasPagamento = FormaPagamento::all();
+        return view('pagamentoVenda',
+            [
+                'pedido'=>$pedido,
+                'valorTotalDoPagamento'=>$valorTotalDoPagamento,
+                'valorDoDesconto'=>$valorDoDesconto,
+                'entregadores'=>$entregadores,
+                'formasPagamento'=>$formasPagamento,
+            ]);
+    }
+    
+    /**
+     * Função para salvar venda realizada
+     * @param Request
+     * @return pedido_id
+     */
+    function finalizarVenda(Request $request){
+        // dd($request->all());
+        $cliente = Cliente::find($request->input('cliente_id'));
+        
+        
+        // valor total sem desconto
+        $valorTotal = 0;
+        $desconto = 0;
+        foreach($request->input('listaProdutos') as $item){
+            $produto = Produto::find($item[0]['produto_id']);
+            if(isset($produto)){
+                $valorTotal += $produto->preco * $item[0]['peso']; 
+            }
+        }
+        $pedido = new Pedido();
+        $status = Status::where('status','PESADO')->first(); // Solicitado
+        $pedido->status_id = $status->id;
+        // valcula o desconto no valor total
+        $pedido->valorTotal = $valorTotal;
+        
+        
+        // $pedido->desconto = floatval($request->input('valorDesconto'));
+        $pedido->dataEntrega = $request->input('dataEntrega');
+        
+        $pedido->cliente_id = $cliente->id;
+        $funcionario = Funcionario::find(Auth::user()->id);
+        $pedido->funcionario_id = $funcionario->id; //salvando o user_id do funcionario que está logado
+        
+        // dd($pedido);
+        $pedido->save(); // salva o pedido
+        // dd($pedido);
+
+        foreach($request->input('listaProdutos') as $item){
+            
+            $itemPedido = new ItensPedido();
+            $produto = Produto::find($item[0]['produto_id']);
+            if(isset($produto)){
+                $itemPedido->pesoSolicitado = $item[0]['peso'];
+                $itemPedido->pesoFinal = $item[0]['peso'];
+                $itemPedido->valorReal = $produto->preco * $item[0]['peso'];
+                $itemPedido->nomeProduto = $produto->nome;
+                $itemPedido->produto_id = $produto->id;
+                $itemPedido->pedido_id = $pedido->id;
+
+                $itemPedido->save();
+            }
+        }
+
+        return $pedido->id;
+    }
+
+    /**
+     * Função busca os dados referente ao pedido e retorna para tela concluirVenda onde será possível aplicar os descontos
+     * em cada item da venda
+     * @param $id
+     * @return view concluirVenda
+     */
     public function concluirVenda($id){
         // dd($id);
         $pedido = Pedido::with(['itensPedidos'])->find($id);
@@ -54,10 +146,55 @@ class VendaController extends Controller
             $pedido["nomeFuncionario"] = $funcionario->user->name;
             // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
             
-            return view('finalizarVenda')->with(["pedido"=>$pedido]);
+            return view('concluirVenda')->with(["pedido"=>$pedido]);
         }
     }
-    function calcularDescontosItens($itens, $descontos){
+
+    /**
+     * Salva os dados dos descontos referente aos itens e salva informações do pedido
+     * @param Request
+     * @return view pagamentos
+     */
+    public function concluirVendaComDescontoNosItens(Request $request){
+        // dd($request->all());
+        // pedido
+        $pedido = Pedido::find($request['pedido_id']);
+        // array com a porcentagem dos descontos referente aos itens 
+        $descontos = $request['desconto'];
+        // array com os itens do pedido
+        $itensPedido = ItensPedido::where('pedido_id',$request['pedido_id'])->get();
+        // array contendo os preços com os descontos calculados
+        $itensComDesconto = $this->itensComDesconto($itensPedido, $descontos);        
+        
+        // ------------------------ DEBUG ------------------------
+        // dd($request->all(),$pedido->status->status,$itensPedido,$itensComDesconto);
+        
+        /**
+         * Percorre $itensPedido, $descontos e $itensComDesconto 
+         * e salva o descontoPorcentagem e valorComDesconto
+         */
+        if(count($itensPedido) === count($itensComDesconto)){
+            for($i = 0; $i <= count($itensPedido) - 1; $i++ ){
+                $itensPedido[$i]->descontoPorcentagem = $descontos[$i];
+                $itensPedido[$i]->valorComDesconto = $itensComDesconto[$i];
+                $itensPedido[$i]->save();
+            }
+        }
+        $pedido->save();
+        
+        // return view('pagamento',['pedido'=>$pedido]);
+
+        return redirect('/vendas/pagamento/'.$pedido->id);
+
+    }
+    /**
+     * Função que calcula os descontos nos itens e retorna um array com o preço dos itens após
+     * o desconto ser aplicado
+     * @param Array $itens
+     * @param Array $descontos
+     * @return Array $itensComDesconto
+     */
+    function itensComDesconto($itens, $descontos){
         $itensComDesconto = [];
         for($i = 0; $i < count($itens); $i++){
             $itensComDesconto[$i] = floatval($itens[$i]->valorReal) - (floatval($itens[$i]->valorReal) * ($descontos[$i] / 100));
@@ -65,293 +202,54 @@ class VendaController extends Controller
         return $itensComDesconto;
     }
     
-    public function concluirVendaPagamento(Request $request){
-        
-        // Busca o pedido no banco
-        $pedido = Pedido::with(['cliente','funcionario'])->find($request->input('pedido_id'));
-        // Guarda o array contendo os descontos de cada item do pedido
-        $descontos = $request->input('desconto');
-        // busca itens do pedido
-        $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
-        // calcula o desconto dos itens
-        $itensComDesconto = self::calcularDescontosItens($itensPedido, $descontos);
-        // valor do pedido com dos descontos dos itens para ser exibido na view
-        $valorPedidoComDesconto = 0;
-
-        // Seleciona o id do cargo entregador
-        $entregador_id = Cargo::where('nome','VENDEDOR(A)')->pluck('id')->first(); 
-        // Seleciona os entregadores para o pedido
-        $entregadores = Funcionario::with(['user'])->where('cargo_id',$entregador_id)->get();
-        
-        foreach($itensComDesconto as $desc){
-            $valorPedidoComDesconto += $desc;
-        }
-
-        // Se o status do pedido for PESADO
-        if($pedido->status_id== 2){
-            $valorDoDescontoNosItens = 0; //Valor Dos descontos aplicados nos ítens do pedido
-            for($i = 0; $i < count($itensPedido); $i++){
-                $valorDoDescontoNosItens += $itensPedido[$i]->valorReal - $itensComDesconto[$i];
-            }
-            // dd($valorDoDescontoNosItens);
-    
-            // retorna para view de pagamentos com o pedido e os descontos dos itens
-            return view('pagamento',[
-                                    'pedido'=>$pedido,
-                                    'descontos'=>$descontos,
-                                    'valorPedidoComDesconto'=> $valorPedidoComDesconto,
-                                    'valorDoDescontoNoPedido' => $valorDoDescontoNosItens, //valor exibido na tela
-                                    'entregadores' => $entregadores,
-                                    ]);
-        }
-        else{
-            // Seleciona pagamento
-            $pagamento = Pagamento::where('pedido_id',$pedido->id)->first();
-            // dd($pagamento);
-            
-            $valorTotalPagamentoMenosValorPago = $pagamento->valorTotalPagamento - $pagamento->valorPago;
-            
-            // Calcula o desconto no valor do pagamento ((Valor total - descontoItens%) - valorPagamentoComDesconto%)
-            $valorDoDescontoNoPedido = $pedido->valorTotal - $pagamento->valorTotalPagamento;
-            // retorna para view de pagamentos com o pedido e os descontos dos itens
-            return view('pagamento',[
-                                    'pedido'=>$pedido,
-                                    'descontos'=>$descontos, // array com os descontos dos itens
-                                    'valorPedidoComDesconto'=> $valorPedidoComDesconto, //valor para ser usado no pagamento
-                                    'pagamento'=>$pagamento,
-                                    'valorRestantePagamento' => $valorTotalPagamentoMenosValorPago, //Valor exibido na tela
-                                    'valorDoDescontoNoPedido' => $valorDoDescontoNoPedido, //valor exibido na tela
-                                    'entregadores' => $entregadores,
-                                    ]);
-        }
-    }
-
     /**
-     * Calcula o desconto aplicado em cima do pedido e retorna um array
-     * com os valores dos descontos 
-     **/ 
-    
-    public function calcularvalorPagamentoComDesconto($valorTotal, $desconto){
-        $valorDesconto = $valorTotal - ($valorTotal * ($desconto/100));
-        return $valorDesconto;
+     * Função que calcula o desconto aplicado em cada forma de pagamento
+     * 
+     * @param $valorTotalPagamento
+     * @param $descontoPagamento
+     * @return $valorPago
+     */
+    function descontoFormaPagamento($valorTotalPagamento, $descontoPagamento){
+        $valorPago = 0.0;
+        $valorPago = floatval($valorTotalPagamento) - (floatval($valorTotalPagamento) * ($descontoPagamento / 100));
+        return $valorPago;
     }
-
     /**
-        * Faz o pagamento do pedido
-        * Um pedido pode possuir 5 status diferentes:
-        * 1 - SOLICITADO
-        * 2 - PESADO
-        * 3 - ENTREGUE
-        * 4 - PAGO PARCIALMENTE
-        * 5 - PAGO TOTALMENTE
-        * 
-        * Somente os pedidos com status 'PESADO' e 'PAGO PARCIALEMENTE' podem ser pagos
-    */ 
+     * Função que registra o pagamento efetuado na venda
+     * @param Request
+     * @return void
+     */
     public function pagamento(Request $request){
-        // dd($request->all());
-        // Procura pedido referente ao pagamento no banco
-        $pedido = Pedido::find($request->input('pedido_id')); 
-
+        $pedido = Pedido::find($request['pedido_id']);
         
-        // Array contendo os descontos dos itens
-        $descontoItens = $request->input('descontoItens');
-
-        // Se o pedido for encontrado
-        if(isset($pedido)){
+        // -------------DEBUG----------------
+        // dd($request->all(),$pedido,Auth::user()->funcionario->id);
+        
+        $pedido->entregador_id = $request['entregador_id'];
+        $status = Status::where('status','ENTREGUE')->first(); // Solicitado
+        // dd($status->id);
+        $pedido->status_id = $status->id;
+        
+        $pedido->save();
+        
+        //Salva cada forma de pagamento
+        for($i = 0; $i < count($request['formaPagamento']); $i++){
+            $pagamento = new Pagamento();
+            $pagamento->dataVencimento = $request['dataVencimento'][$i];
+            $pagamento->dataPagamento = $request['dataPagamento'][$i];
+            $pagamento->obs = $request['obs'][$i];
+            $pagamento->descontoPagamento = floatval($request['descontoPagamento'][$i]);//porcentagem do pagamento
+            $pagamento->valorTotalPagamento = floatval($request['valorTotalPagamento'][$i]);//valor sem desconto aplicado
+            $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
+            $pagamento->formaPagamento_id = $request['formaPagamento'][$i];
             
-            // Array contendo os itens do pedido
-            $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
-            // O pedido já foi pesado
-            if($pedido->status->status == "PESADO"){
-                // Entregador do Pedido
-                if(isset($request['entregador_id'])){
-                    $pedido->entregador_id = $request['entregador_id'];
-                }
-                // calcula o desconto nos itens e retorna um array com os descontos
-                $arrayDescontoItens = self::calcularDescontosItens($itensPedido, $descontoItens);
-                // contador para armazenar o valor total do desconto dos itens
-                $descontoTotalItens = 0.0;
-                // loop que calcula o desconto total nos itens
-                for($i = 0; $i < count($itensPedido); $i++){
-                    $itensPedido[$i]->descontoPorcentagem = floatval($descontoItens[$i]);
-                    $itensPedido[$i]->valorComDesconto = floatval($arrayDescontoItens[$i]);
-                    $itensPedido[$i]->save(); // Salva o DESCONTO e o VALOR COM DESCONTO no ítem
-                    $descontoTotalItens += floatval($arrayDescontoItens[$i]);
-                }
-                // dd($descontoTotalItens);
-                // Calcula o desconto no valor do pagamento ((Valor total - descontoItens%) - valorPagamentoComDesconto%)
-                $valorPagamentoComDesconto = $this->calcularvalorPagamentoComDesconto(floatval($descontoTotalItens),floatval($request->input('descontoPagamento')));
-                // dd($valorPagamentoComDesconto);
-                // ------------------> DEBUG <----------------------
-                // dd($valorPagamentoComDesconto, $request->all(),$pedido, $itensPedido);
-                // ------------------> END DEBUG <----------------------
-
-                // Cria novo obj pagamento
-                $pagamento = new Pagamento();
-                // Insere valores em Pagamento
-                $pagamento->dataVencimento = $request['dataVencimento'];
-                $pagamento->dataPagamento = $request['dataPagamento'];
-                $pagamento->formaPagamento = $request['formaPagamento'];
-                $pagamento->obs = $request['obs'];
-                $pagamento->descontoPagamento = $request['descontoPagamento'];
-                $pagamento->valorTotalPagamento = $valorPagamentoComDesconto;
-                $pagamento->valorPago = $request['valorPago'];
-                $pagamento->funcionario_id = $request['funcionario_id'];
-                $pagamento->pedido_id = $pedido->id;
-
-                
-
-                // SALVA OS VALORES
-                // Se o valor pago for menor ou igual ao valor total do pagamento
-                //salva os objs
-                if($pagamento->valorPago < $pagamento->valorTotalPagamento){
-                    // Atualiza status do pedido
-                    $status = Status::where('status','PAGO PARCIALMENTE')->first();
-                    $pedido->status_id = $status->id;
-                    $pedido->save();
-                    // $itensPedido->save();
-                    $pagamento->save();
-
-                    // Retorna para tela de listagem de pedidos com msg de sucesso
-                    $pedidos = Pedido::with(['status'])->
-                                    where('status_id',2)->
-                                    orwhere('status_id',3)->
-                                    orwhere('status_id',4)->
-                                    orwhere('status_id',5)->
-                                    orderBy('status_id')->
-                                    orderBy('dataEntrega')->paginate(25);
-                    return view('listarVendas',['pedidos'=>$pedidos,'sucessoPagamento'=>'Pagamento finalizado com sucesso!']);
-                }
-                elseif($pagamento->valorPago == $pagamento->valorTotalPagamento){
-                    // Atualiza status do pedido
-                    $status = Status::where('status','PAGO TOTALMENTE')->first();
-                    $pedido->status_id = $status->id;
-                    $pedido->save();
-                    // $itensPedido->save();
-                    $pagamento->save();
-
-                    // Retorna para tela de listagem de pedidos com msg de sucesso
-                    $pedidos = Pedido::with(['status'])->
-                                    where('status_id',2)->
-                                    orwhere('status_id',3)->
-                                    orwhere('status_id',4)->
-                                    orwhere('status_id',5)->
-                                    orderBy('status_id')->
-                                    orderBy('dataEntrega')->paginate(25);
-                    return view('listarVendas',['pedidos'=>$pedidos,'sucessoPagamento'=>'Pagamento finalizado com sucesso!']);
-                }
-                else{ //senão, retorna para listagem de vendas com um alerta de erro
-                    $pedidos = Pedido::with(['status'])->
-                                    where('status_id',2)->
-                                    orwhere('status_id',3)->
-                                    orwhere('status_id',4)->
-                                    orwhere('status_id',5)->
-                                    orderBy('status_id')->
-                                    orderBy('dataEntrega')->paginate(25);
-                return view('listarVendas',['pedidos'=>$pedidos,'erroPagamento'=>'Não é possível salvar o valor pago maior que o valor total do pagamento!']);
-                }
-
-            }
-            // O pedido já foi pago parciamente
-            elseif($pedido->status->status == "PAGO PARCIALMENTE"){
-                // Entregador do Pedido
-                if(isset($request['entregador_id'])){
-                    $pedido->entregador_id = $request['entregador_id'];
-                }
-                $pagamento = Pagamento::where('pedido_id',$pedido->id)->first();
-
-                $pagamento->dataVencimento = $request['dataVencimento'];
-                $pagamento->dataPagamento = $request['dataPagamento'];
-                $pagamento->formaPagamento = $request['formaPagamento'];
-                $pagamento->obs = $request['obs'];
-                
-                
-                $pagamento->valorPago = $pagamento->valorPago + $request['valorPago'];
-                $pagamento->funcionario_id = $request['funcionario_id'];
-
-                // Se o valor pago for menor que o valor restante do pagamento
-                if($request['valorPago'] < $request['valorRestantePagamento']){
-                    // dd($request->all(),$pedido,$pagamento);                
-                    $status = Status::where('status','PAGO PARCIALMENTE')->first();
-                    $pedido->status_id = $status->id;
-                    $pedido->save();
-                    // $itensPedido->save();
-                    $pagamento->save();
-
-                    // Retorna para tela de listagem de pedidos com msg de sucesso
-                    $pedidos = Pedido::with(['status'])->
-                                    where('status_id',2)->
-                                    orwhere('status_id',3)->
-                                    orwhere('status_id',4)->
-                                    orwhere('status_id',5)->
-                                    orderBy('status_id')->
-                                    orderBy('dataEntrega')->paginate(25);
-                    return view('listarVendas',['pedidos'=>$pedidos,'sucessoPagamento'=>'Pagamento finalizado com sucesso!']);
-                    
-                }
-                // Se o valor pago for igual ao valor restante do pagamento
-                elseif($request['valorPago'] == $request['valorRestantePagamento']){
-                    // dd($request->all(),$pedido,$pagamento);                
-                    $status = Status::where('status','PAGO TOTALMENTE')->first();
-                    $pedido->status_id = $status->id;
-                    $pedido->save();
-                    // $itensPedido->save();
-                    $pagamento->save();
-
-                    // Retorna para tela de listagem de pedidos com msg de sucesso
-                    $pedidos = Pedido::with(['status'])->
-                                    where('status_id',2)->
-                                    orwhere('status_id',3)->
-                                    orwhere('status_id',4)->
-                                    orwhere('status_id',5)->
-                                    orderBy('status_id')->
-                                    orderBy('dataEntrega')->paginate(25);
-                    return view('listarVendas',['pedidos'=>$pedidos,'sucessoPagamento'=>'Pagamento finalizado com sucesso!']);
-                }
-
-                else{ //senão, retorna para listagem de vendas com um alerta de erro
-                    $pedidos = Pedido::with(['status'])->
-                                    where('status_id',2)->
-                                    orwhere('status_id',3)->
-                                    orwhere('status_id',4)->
-                                    orwhere('status_id',5)->
-                                    orderBy('status_id')->
-                                    orderBy('dataEntrega')->paginate(25);
-                return view('listarVendas',['pedidos'=>$pedidos,'erroPagamento'=>'Não é possível salvar o valor pago maior que o valor total do pagamento!']);
-                }
-                
-            }
-            // Caso Contrário, retorna para listargem das vendas
-            else{
-                $pedidos = Pedido::with(['status'])->
-                                    where('status_id',2)->
-                                    orwhere('status_id',3)->
-                                    orwhere('status_id',4)->
-                                    orwhere('status_id',5)->
-                                    orderBy('status_id')->
-                                    orderBy('dataEntrega')->paginate(25);
-                return view('listarVendas',['pedidos'=>$pedidos,'erroPagamento'=>'Não foi possível registrar o pagamento desse pedido.']);
-            }
+            $pagamento->funcionario_id = Auth::user()->funcionario->id;
+            $pagamento->pedido_id = $pedido->id;
+            $pagamento->save();
         }
-        // Caso o pedido não for encontrado
-        else{
-            $pedidos = Pedido::with(['status'])->
-                                where('status_id',2)->
-                                orwhere('status_id',3)->
-                                orwhere('status_id',4)->
-                                orwhere('status_id',5)->
-                                orderBy('status_id')->
-                                orderBy('dataEntrega')->paginate(25);
-            return view('listarVendas',[
-                                        'pedidos'=>$pedidos,
-                                        'erroPagamento'=>'Não foi possível encontrar o pagamento'
-                                        ]);
-        }
-        
-        
-        
-          
-        
+
+        return redirect()->route('listarVendas');
+
     }
 
     // Filtra Pedido

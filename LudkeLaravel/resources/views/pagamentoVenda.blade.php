@@ -27,7 +27,7 @@
     {{-- INFORMAÇÕES DO PEDIDO --}}
     <div class="row informacoes">
         <div class="col-sm-12">
-            <h3>Informações do Pedido</h3>
+            <h3>Informações da Venda</h3>
         </div>
     </div>
 
@@ -100,7 +100,7 @@
         </div>
     </div>
     {{-- FORMULÁRIO --}}
-    <form id="formPagamento" action="{{route('pedido.pagamento')}}" method="POST">    
+    <form id="formPagamento" action="{{route('venda.pagamento')}}" method="POST">    
         @csrf
 
         <div class="row justify-content-center">
@@ -161,7 +161,7 @@
 
         <div class="row justify-content-center" style="margin:30px 0 30px 0;">
             <div class="col-sm-6" style="heigth:100px">
-                <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido" >Voltar</a>
+                <a href="{{route('listarVendas')}}" class="btn btn-secondary-ludke btn-pedido" >Voltar</a>
             </div>
             <div class="col-sm-6">
                 <button type="submit" class="btn btn-primary-ludke btn-pedido">Finalizar Pagamento</button>
