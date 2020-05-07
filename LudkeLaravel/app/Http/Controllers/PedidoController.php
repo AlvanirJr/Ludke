@@ -13,6 +13,7 @@ use App\Funcionario;
 use App\Status;
 use App\Pagamento;
 use App\Cargo;
+use App\FormaPagamento;
 
 class PedidoController extends Controller
 {
@@ -29,8 +30,11 @@ class PedidoController extends Controller
     public function indexListarPedidos(){
         // Busca os pedidos com status SOLICITADO e PESADO
         $pedidos = Pedido::with(['status'])->
-                                where('status_id',1)->
-                                orwhere('status_id',2)->
+                                where('status_id',1)->      //SOLICITADO
+                                orwhere('status_id',2)->    //PESADO
+                                orwhere('status_id',3)->    //ENTREGUE
+                                orwhere('status_id',4)->    //PAGO PARCIALMENTE
+                                orwhere('status_id',5)->    //PAGO TOTALMENTE
                                 orderBy('status_id')->
                                 orderBy('dataEntrega')->paginate(25);
         // dd($pedidos);
@@ -57,13 +61,14 @@ class PedidoController extends Controller
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
         $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
                                         orwhere('cargo_id',$entregador_id)->get();
-
+        $formasPagamento = FormaPagamento::all();
         return view('pagamento',
             [
                 'pedido'=>$pedido,
                 'valorTotalDoPagamento'=>$valorTotalDoPagamento,
                 'valorDoDesconto'=>$valorDoDesconto,
                 'entregadores'=>$entregadores,
+                'formasPagamento'=>$formasPagamento,
             ]);
     }
     /**
@@ -324,8 +329,6 @@ class PedidoController extends Controller
                     $itensPedido[$i]->save();
                 }
             }
-            $status_id = Status::where('status',"PAGO PARCIALMENTE")->pluck('id')->first();
-            $pedido->status_id = $status_id;
             $pedido->save();
         }
         
@@ -338,10 +341,51 @@ class PedidoController extends Controller
     }
 
     /**
+     * Função que calcula o desconto aplicado em cada forma de pagamento
      * 
+     * @param $valorTotalPagamento
+     * @param $descontoPagamento
+     * @return $valorPago
+     */
+    function descontoFormaPagamento($valorTotalPagamento, $descontoPagamento){
+        $valorPago = 0.0;
+        $valorPago = floatval($valorTotalPagamento) - (floatval($valorTotalPagamento) * ($descontoPagamento / 100));
+        return $valorPago;
+    }
+    /**
+     * Função que registra o pagamento efetuado
+     * @param Request
+     * @return void
      */
     public function pagamento(Request $request){
-        dd($request->all());
+        $pedido = Pedido::find($request['pedido_id']);
+        
+        // -------------DEBUG----------------
+        // dd($request->all(),$pedido,Auth::user()->funcionario->id);
+        
+        $pedido->entregador_id = $request['entregador_id'];
+        $status_id = Status::where('status','PAGO PARCIALMENTE')->pluck('id')->first();
+        $pedido->status_id = $status_id;
+        $pedido->save();
+        
+        //Salva cada forma de pagamento
+        for($i = 0; $i < count($request['formaPagamento']); $i++){
+            $pagamento = new Pagamento();
+            $pagamento->dataVencimento = $request['dataVencimento'][$i];
+            $pagamento->dataPagamento = $request['dataPagamento'][$i];
+            $pagamento->obs = $request['obs'][$i];
+            $pagamento->descontoPagamento = floatval($request['descontoPagamento'][$i]);//porcentagem do pagamento
+            $pagamento->valorTotalPagamento = floatval($request['valorTotalPagamento'][$i]);//valor sem desconto aplicado
+            $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
+            $pagamento->formaPagamento_id = $request['formaPagamento'][$i];
+            
+            $pagamento->funcionario_id = Auth::user()->funcionario->id;
+            $pagamento->pedido_id = $pedido->id;
+            $pagamento->save();
+        }
+
+        return redirect()->route('listarPedidos');
+
     }
 
 

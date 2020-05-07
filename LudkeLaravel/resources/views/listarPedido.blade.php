@@ -71,7 +71,8 @@
                         </td>
                         <td>{{$pedido->status->status}}</td>
                         <td>R$ {{$pedido->valorTotal}}</td>
-                            @if($pedido->status->status == "SOLICITADO")
+                            {{-- Pedido com status SOLICITADO --}}
+                            @if($pedido->status->status == "SOLICITADO") 
                                 <td>
                                     {{-- PESAR Pedido --}}
                                     <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
@@ -86,6 +87,7 @@
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
+                            {{-- Pedido com status PESADO --}}
                             @elseif($pedido->status->status == "PESADO")
                                 <td>
                                     {{-- Editar Pedido --}}
@@ -101,15 +103,18 @@
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
-                            @elseif($pedido->status->status == "ENTREGUE" || $pedido->status->status == "PAGO PARCIALMENTE")
-                                {{-- PESAR Pedido --}}
-                                <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}">
-                                    <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
-                                </a> 
-                                {{-- Excluir Pedido --}}
-                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                    <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
-                                </a>
+                                {{-- Pedido com status PAGO PARCIALMENTE --}}
+                            @elseif($pedido->status->status == "PAGO PARCIALMENTE")
+                                <td>
+                                    {{-- Contas a pagar --}}
+                                    <a href="#" onclick="alert('A funcionalidade de CONTAS À RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                        <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
+                                    </a> 
+                                    {{-- Excluir Pedido --}}
+                                    {{-- <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                                    </a> --}}
+                                </td>
                             @else                                    
                                 <td>
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
@@ -171,19 +176,6 @@
                             </select>
                         </div>
                     </div>
-                    {{-- <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label for="cidade">Cidade</label>
-                            <input type="text" class="form-control" name="cidade" placeholder="Cidade">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label for="bairro">Bairro</label>
-                            <input type="text" class="form-control" name="bairro" placeholder="Bairro">
-                        </div>
-                    </div> --}}
-
                 </div>
                 <div class="modal-footer">
                     <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
