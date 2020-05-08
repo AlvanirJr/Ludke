@@ -16,7 +16,7 @@ class ClienteController extends Controller
         $clientes = Cliente::paginate(10);
         #$fun = \App\Funcionario::where('cargo_id', '=', 3)
          #   ->join('users', 'funcionarios.user_id', '=', 'users.id')->get();
-        $fun = Funcionario::with('user')->where('cargo_id',3)->get();
+        $fun = Funcionario::with('user')->get();
         #dd($fun);
         return view('cliente',["clientes"=>$clientes,'fun'=>$fun]);
     }
@@ -419,6 +419,12 @@ class ClienteController extends Controller
     public function relatorioCliente(){
         $view = 'relatorioCliente';
         $clientes = Cliente::select('nomeResponsavel','cpfCnpj', 'nomeReduzido')->get();
+
+
+
+
+        #$dadoClientes = Cliente::with('user')->get();
+        #dd($dadoClientes);
         #$cliente_id = Cliente::select('user_id');
         #$endereco = Endereco::where()
         #dd($clientes);

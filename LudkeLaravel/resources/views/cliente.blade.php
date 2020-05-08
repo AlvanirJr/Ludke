@@ -206,7 +206,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="cargoFuncionario" class="control-label">Tipo <span class="obrigatorio">*</span></label>
+                            <label for="cargoFuncionario" class="control-label">Funcionário Responsável<span class="obrigatorio"></span></label>
                             <div class="input-group">
                                 <select class="form-control" id="funcionario_id" name="funcionario_id">
                                     <option value="0" >Todos</option>
