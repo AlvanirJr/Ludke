@@ -60,6 +60,7 @@ class ClienteController extends Controller
                 'nomeResponsavel' => $c->nomeResponsavel,
                 'cpfCnpj' => $c->cpfCnpj,
                 'tipo' => $c->tipo,
+                'funcionario_id' => $c->funcionario_id,
                 'inscricaoEstadual' => $c->inscricaoEstadual,
                 'residencial' => $telefone->residencial,
                 'celular' => $telefone->celular,
