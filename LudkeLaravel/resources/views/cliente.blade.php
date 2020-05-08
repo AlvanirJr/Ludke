@@ -1,9 +1,14 @@
+
 @extends('layouts.app')
 
 @section('content')
+
+
+
+
 <div class="container">
     <div class="row justify-content-center">
-        
+
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
@@ -32,7 +37,7 @@
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
-    
+
     {{-- botão listar Todos --}}
     @if(isset($achou) && $achou == true)
     <div class="row">
@@ -55,7 +60,7 @@
                         <th>Nome</th>
                         <th>CPF/CNPJ</th>
                         <th>Telefone Residêncial</th>
-                        <th>Celular</th>                        
+                        <th>Celular</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -71,7 +76,7 @@
                         <td>
                             <a href="#" onclick="editarCliente({{$cliente->id}})">
                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}">
-                            </a>                            
+                            </a>
                             <a href="#" onclick="removerCliente({{$cliente->id}})">
                                 <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
                             </a>
@@ -90,7 +95,7 @@
                     <a href="{{route('clientes')}}">
                         <button class="btn btn-outline-danger">Listar Todos</button>
                     </a>
-    
+
                 </div>
             </div>
             {{-- Mensagem Alerta --}}
@@ -101,7 +106,7 @@
                     </div>
                 </div>
             </div>
-            
+
             @endif
         </div><!-- end col-->
     </div><!-- end row-->
@@ -116,7 +121,7 @@
                     <h5 class="modal-title">Novo Cliente</h5>
                 </div>
                 <div class="modal-body">
-                    
+
                     {{-- ID do produto --}}
                     <input type="hidden" id="id" class="form-control">
 
@@ -138,7 +143,7 @@
                                 <div id="validationNome"></div>
                             </div>
                         </div>
-                        
+
                     </div>
 
                     {{-- Nome reduzido + nome responsável --}}
@@ -168,7 +173,7 @@
 
                     {{-- row nome + cargo --}}
                     <div class="row justify-content-center">
-                        
+
                         {{-- cpf/cnpj --}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -179,26 +184,46 @@
                                 <div id="validationCpfCnpj"></div>
                             </div>
                         </div>
-                        
-                        {{-- tipo do cliente --}}
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="cargoFuncionario" class="control-label">Tipo <span class="obrigatorio">*</span></label>
-                                <div class="input-group">
-                                    <select class="form-control" id="tipo">
-                                        <option value="" disabled selected hidden>-- Tipo --</option>
-                                        <option value="pessoaFisica">PESSOA FÍSICA</option>
-                                        <option value="pessoaJuridica">PESSOA JURÍDICA</option>
-                                    </select>
-                                </div>
-                                <div id="validationTipo"></div>
+
+
+                    {{-- Associar vendedor  --}}
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="cargoFuncionario" class="control-label">Tipo <span class="obrigatorio">*</span></label>
+                            <div class="input-group">
+                                <select class="form-control" id="tipo">
+                                    <option value="" disabled selected hidden>-- Tipo --</option>
+                                    <option value="pessoaFisica">PESSOA FÍSICA</option>
+                                    <option value="pessoaJuridica">PESSOA JURÍDICA</option>
+                                </select>
                             </div>
+                            <div id="validationTipo"></div>
                         </div>
                     </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="cargoFuncionario" class="control-label">Tipo <span class="obrigatorio">*</span></label>
+                            <div class="input-group">
+                                <select class="form-control" id="funcionario_id" name="funcionario_id">
+                                    <option value="0" >Todos</option>
+                                    @foreach($fun as $vendedor)
+                                        <option value="{{$vendedor->id}}">{{$vendedor->user->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div id="validationTipo"></div>
+                        </div>
+                    </div>
+                </div>
+
 
                     {{-- row telefones --}}
                     <div class="row justify-content-center">
-                        
+
                         {{-- Nome do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -245,7 +270,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     {{-- row Endereço --}}
                     <div class="row justify-content-left">
                         <div class="col-sm-12">
@@ -255,7 +280,7 @@
 
                     {{-- row rua + CEP --}}
                     <div class="row justify-content-center">
-                        
+
                         {{-- CEP--}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -305,7 +330,7 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
                     {{-- row UF + Número --}}
                     <div class="row justify-content-center">
@@ -388,6 +413,8 @@
         });
     }
 
+
+
     function montarLinha(c){
         var linha = "<tr>"+
                         "<td>"+c.id+"</td>"+
@@ -398,7 +425,7 @@
                         "<td>"+
                             "<a href="+"#"+" onclick="+"editarCliente("+c.id+")"+">"+
                                 "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
-                            "</a>"+                            
+                            "</a>"+
                             "<a href="+"#"+" onclick="+"removerCliente("+c.id+")"+">"+
                                 "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
                             "</a>"+
@@ -417,8 +444,9 @@
             $('#cpfCnpj').val(data.cpfCnpj);
             $('#tipo').val(data.tipo);
             $('#inscricaoEstadual').val(data.inscricaoEstadual);
-            
-            $('#residencial').val(data.residencial);
+            $('#funcionario_id').val(data.funcionario_id),
+
+                $('#residencial').val(data.residencial);
             $('#celular').val(data.celular);
             $('#cep').val(data.cep);
             $('#rua').val(data.rua);
@@ -484,7 +512,7 @@
         $('#cpfCnpj').val('');
         $('#tipo').val('');
         $('#inscricaoEstadual').val('');
-        
+        $('#funcionario_id').val('0');
         $('#residencial').val('');
         $('#celular').val('');
         $('#cep').val('');
@@ -512,7 +540,8 @@
             cpfCnpj: $('#cpfCnpj').val(),
             tipo: $('#tipo').val(),
             inscricaoEstadual: $('#inscricaoEstadual').val(),
-            
+            funcionario_id:$('#funcionario_id').val(),
+
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
@@ -568,7 +597,8 @@
             cpfCnpj: $('#cpfCnpj').val(),
             tipo: $('#tipo').val(),
             inscricaoEstadual: $('#inscricaoEstadual').val(),
-            
+            funcionario_id:$('#funcionario_id').val(),
+
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
@@ -596,9 +626,9 @@
                 },
                 error: function(error){
                     retorno = JSON.parse(error.responseText);
-                    
+
                     exibirErros(retorno.errors);
-                    
+
                 }
 
             });
@@ -692,11 +722,11 @@
             event.preventDefault();// não deixa fechar o modal quando clica no submit
 
             if($('#id').val()!= ''){
-                
+
                 salvarCliente();
             }
             else{
-                
+
                 criarCliente();
             }
             // $('#dlgClientes').modal('hide');
