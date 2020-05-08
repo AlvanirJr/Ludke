@@ -561,7 +561,7 @@
             success: function(data){
                 cli = JSON.parse(data);
                 alert("Cliente "+cli.nome+" salvo com sucesso!")
-                window.location.href="\indexClientes";
+                window.location.href="/indexClientes";
                 // cli = JSON.parse(data);
                 // linhas = $('#tabelaClientes>tbody>tr');
                 // e = linhas.filter(function(i,elemento){
@@ -587,7 +587,7 @@
     }
 
     function criarCliente(){
-        console.log('Criar Cliente');
+        //console.log('Criar Cliente');
 
         cliente = {
             nome: $('#nomeCliente').val(),
@@ -608,16 +608,19 @@
             uf: $('#uf').val(),
             numero: $('#numero').val(),
             complemento: $('#complemento').val()
-        }
+        };
 
+        //#console.log(cliente);
         $.ajax({
                 type: "POST",
                 url: "/clientes",
                 context: this,
                 data: cliente,
                 success: function(data){
-                    cliente = JSON.parse(data);
-                    alert("Cliente "+cliente.nome+" cadastrado com sucesso!");
+                    //console.log(cliente);
+                    cliente = (data);
+
+                    alert("Cliente cadastrado com sucesso!");
                     window.location.href="\indexClientes";
                     // cliente = JSON.parse(data);
                     // linha = montarLinha(cliente);
@@ -626,6 +629,7 @@
                 },
                 error: function(error){
                     retorno = JSON.parse(error.responseText);
+                    //#console.log(retorno);
 
                     exibirErros(retorno.errors);
 
@@ -659,6 +663,13 @@
                 for(i=0;i<error.tipo.length;i++){
                     console.log(error.tipo[i]);
                     $("#validationTipo").append("<span class="+"span"+" style="+"color:red"+">"+error.tipo[i]+"</span>");
+                }
+            }
+
+            if(error.funcionario_id){
+                for(i=0;i<error.funcionario_id.length;i++){
+                    console.log(error.funcionario_id[i]);
+                    $("#validationfuncionario_id").append("<span class="+"span"+" style="+"color:red"+">"+error.funcionario_id[i]+"</span>");
                 }
             }
             if(error.residencial){
