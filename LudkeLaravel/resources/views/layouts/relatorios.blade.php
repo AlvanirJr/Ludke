@@ -11,16 +11,14 @@
 		<title>@yield('titulo')</title>
 	</head>
 	<body>
-		<div class="row">
-			<div class="col-sm-2">
-				<img src="{{asset('img/ludke-red.png')}}"  style="width: 70px;">
-			</div>
-			<div class="col-sm-8">
+		<div class="row justify-content-center">
+			
+			<div class="col-sm-12">
+				<img src="{{asset('img/ludke-red.png')}}"  style="width: 100px; float:left; position:absolute">
 				<h1 style="text-align:center; top:0">@yield('titulo')</h1>
 				<h3 style="text-align:center;">Emitido em @yield('date')</h3>
 			</div>
-			<div class="col-sm-2">
-			</div>
+			
 		</div>
 		
 		@yield('content')

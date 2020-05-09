@@ -12,6 +12,7 @@
                 <th>CNPJ</th>
                 <th>Telefone</th>
                 <th>Endereço</th>
+                <th>Funcionário </th>
             </tr>
             </thead>
             <tbody>
@@ -23,10 +24,12 @@
                     <td>
                         {{$cliente->user->endereco->rua}}, 
                         {{$cliente->user->endereco->numero}}, 
-                        {{$cliente->user->endereco->cidade}} -  
+                        {{$cliente->user->endereco->bairro}} - 
+                        {{$cliente->user->endereco->cidade}} /  
                         {{$cliente->user->endereco->uf}}
                     
                     </td>
+                    <td>{{$cliente->funcionario->user->name}}</td>
         
                 </tr>
             @endforeach
