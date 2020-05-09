@@ -70,7 +70,10 @@
                             </ul>
                         </td>
                         <td>{{$pedido->status->status}}</td>
-                        <td>R$ {{$pedido->valorTotal}}</td>
+                        <td>
+                            {{-- R$ {{$pedido->valorTotal}} --}}
+                            R$ {{money_format('%i',$pedido->valorTotal)}}
+                        </td>
                             {{-- Pedido com status SOLICITADO --}}
                             @if($pedido->status->status == "SOLICITADO") 
                                 <td>

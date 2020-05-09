@@ -100,7 +100,7 @@
                             </ul>
                         </td>
                         <td>{{$pedido->status->status}}</td>
-                        <td>R$ {{$pedido->valorTotal}}</td>
+                        <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>
                         {{-- Verifica se o status do pedido é SOLICITADO --}}
                         @if($pedido->status->status == "ENTREGUE")
                         

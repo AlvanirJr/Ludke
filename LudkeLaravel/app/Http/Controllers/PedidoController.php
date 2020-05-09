@@ -204,7 +204,7 @@ class PedidoController extends Controller
         // Salva o valor total
 
         
-        $pedido->valorTotal = $valorTotal;
+        $pedido->valorTotal = floatval($valorTotal);
         // dd($valorTotal);
         $pedido->save(); // salva o pedido
         return route('listarPedidos');
@@ -234,7 +234,7 @@ class PedidoController extends Controller
     /**
      * Função que carrega os dados do pedido na view para salvar o peso dos itens
      * @param $id
-     * @return view finalizarPedido
+     * @return view pesarPedido
      */
     public function pesarPedido($id){
         $pedido = Pedido::with(['itensPedidos'])->find($id);
@@ -266,7 +266,7 @@ class PedidoController extends Controller
         if(isset($pedido)){
             for($i = 0; $i< count($pedido->itensPedidos); $i++){
                 $produto = Produto::find($pedido->itensPedidos[$i]->produto_id);
-                $pedido->itensPedidos[$i]["precoProduto"] = $produto->preco;
+                $pedido->itensPedidos[$i]["precoProduto"] = floatval($produto->preco);
             }
             $cliente = Cliente::with('user')->find($pedido->cliente_id);
             $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
@@ -319,8 +319,8 @@ class PedidoController extends Controller
              */
             if(count($itensPedido) === count($itensComDesconto)){
                 for($i = 0; $i <= count($itensPedido) - 1; $i++ ){
-                    $itensPedido[$i]->descontoPorcentagem = $descontos[$i];
-                    $itensPedido[$i]->valorComDesconto = $itensComDesconto[$i];
+                    $itensPedido[$i]->descontoPorcentagem = floatval($descontos[$i]);
+                    $itensPedido[$i]->valorComDesconto = floatval($itensComDesconto[$i]);
                     $itensPedido[$i]->save();
                 }
             }
@@ -344,7 +344,7 @@ class PedidoController extends Controller
      */
     function descontoFormaPagamento($valorTotalPagamento, $descontoPagamento){
         $valorPago = 0.0;
-        $valorPago = floatval($valorTotalPagamento) - (floatval($valorTotalPagamento) * ($descontoPagamento / 100));
+        $valorPago = floatval($valorTotalPagamento) - (floatval($valorTotalPagamento) * floatval($descontoPagamento / 100));
         return $valorPago;
     }
     /**
@@ -423,11 +423,11 @@ class PedidoController extends Controller
         }
     }
     function calcularTotal($listaProdutos){
-        $valorTotal = 0;
+        $valorTotal = 0.0;
         foreach($listaProdutos as $item){
             $produto = Produto::find($item[0]['produto_id']);
             if(isset($produto)){
-                $valorTotal += $produto->preco * $item[0]['peso']; 
+                $valorTotal += floatval($produto->preco * $item[0]['peso']); 
             }
         }
         return $valorTotal;
@@ -443,12 +443,12 @@ class PedidoController extends Controller
         
         
         // valor total sem desconto
-        $valorTotal = 0;
-        $desconto = 0;
+        $valorTotal = 0.0;
+        $desconto = 0.0;
         foreach($request->input('listaProdutos') as $item){
             $produto = Produto::find($item[0]['produto_id']);
             if(isset($produto)){
-                $valorTotal += $produto->preco * $item[0]['peso']; 
+                $valorTotal += floatval($produto->preco * $item[0]['peso']); 
             }
         }
         $pedido = new Pedido();
@@ -476,7 +476,7 @@ class PedidoController extends Controller
             if(isset($produto)){
                 $itemPedido->pesoSolicitado = $item[0]['peso'];
                 $itemPedido->pesoFinal = $item[0]['peso'];
-                $itemPedido->valorReal = $produto->preco * $item[0]['peso'];
+                $itemPedido->valorReal = floatval($produto->preco * $item[0]['peso']);
                 $itemPedido->nomeProduto = $produto->nome;
                 $itemPedido->produto_id = $produto->id;
                 $itemPedido->pedido_id = $pedido->id;
@@ -531,7 +531,7 @@ class PedidoController extends Controller
             $valorTotal += floatval($item->valorReal);
             $item->save();
         }
-        $pedido->valorTotal = $valorTotal;
+        $pedido->valorTotal = floatval($valorTotal);
         $status = Status::where('status','PESADO')->first(); //
         $pedido->status_id = $status->id;
 
