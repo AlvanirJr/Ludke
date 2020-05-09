@@ -30,11 +30,6 @@ class PedidoController extends Controller
     public function indexListarPedidos(){
         // Busca os pedidos com status SOLICITADO e PESADO
         $pedidos = Pedido::with(['status'])->
-                                where('status_id',1)->      //SOLICITADO
-                                orwhere('status_id',2)->    //PESADO
-                                // orwhere('status_id',3)->    //ENTREGUE
-                                orwhere('status_id',4)->    //PAGO PARCIALMENTE
-                                orwhere('status_id',5)->    //PAGO TOTALMENTE
                                 orderBy('status_id')->
                                 orderBy('dataEntrega')->paginate(25);
         // dd($pedidos);
@@ -364,7 +359,7 @@ class PedidoController extends Controller
         // dd($request->all(),$pedido,Auth::user()->funcionario->id);
         
         $pedido->entregador_id = $request['entregador_id'];
-        $status_id = Status::where('status','PAGO PARCIALMENTE')->pluck('id')->first();
+        $status_id = Status::where('status','ENTREGUE')->pluck('id')->first();
         $pedido->status_id = $status_id;
         $pedido->save();
         

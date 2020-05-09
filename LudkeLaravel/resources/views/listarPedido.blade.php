@@ -104,7 +104,7 @@
                                     </a>
                                 </td>
                                 {{-- Pedido com status PAGO PARCIALMENTE --}}
-                            @elseif($pedido->status->status == "PAGO PARCIALMENTE")
+                            @elseif($pedido->status->status == "ENTREGUE")
                                 <td>
                                     {{-- Contas a pagar --}}
                                     <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
