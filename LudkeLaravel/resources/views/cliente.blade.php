@@ -1,9 +1,14 @@
+
 @extends('layouts.app')
 
 @section('content')
+
+
+
+
 <div class="container">
     <div class="row justify-content-center">
-        
+
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
@@ -32,7 +37,7 @@
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
-    
+
     {{-- botão listar Todos --}}
     @if(isset($achou) && $achou == true)
     <div class="row">
@@ -55,7 +60,7 @@
                         <th>Nome</th>
                         <th>CPF/CNPJ</th>
                         <th>Telefone Residêncial</th>
-                        <th>Celular</th>                        
+                        <th>Celular</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -71,7 +76,7 @@
                         <td>
                             <a href="#" onclick="editarCliente({{$cliente->id}})">
                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}">
-                            </a>                            
+                            </a>
                             <a href="#" onclick="removerCliente({{$cliente->id}})">
                                 <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
                             </a>
@@ -90,7 +95,7 @@
                     <a href="{{route('clientes')}}">
                         <button class="btn btn-outline-danger">Listar Todos</button>
                     </a>
-    
+
                 </div>
             </div>
             {{-- Mensagem Alerta --}}
@@ -101,7 +106,7 @@
                     </div>
                 </div>
             </div>
-            
+
             @endif
         </div><!-- end col-->
     </div><!-- end row-->
@@ -116,7 +121,7 @@
                     <h5 class="modal-title">Novo Cliente</h5>
                 </div>
                 <div class="modal-body">
-                    
+
                     {{-- ID do produto --}}
                     <input type="hidden" id="id" class="form-control">
 
@@ -138,7 +143,7 @@
                                 <div id="validationNome"></div>
                             </div>
                         </div>
-                        
+
                     </div>
 
                     {{-- Nome reduzido + nome responsável --}}
@@ -168,7 +173,7 @@
 
                     {{-- row nome + cargo --}}
                     <div class="row justify-content-center">
-                        
+
                         {{-- cpf/cnpj --}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -179,26 +184,46 @@
                                 <div id="validationCpfCnpj"></div>
                             </div>
                         </div>
-                        
-                        {{-- tipo do cliente --}}
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="cargoFuncionario" class="control-label">Tipo <span class="obrigatorio">*</span></label>
-                                <div class="input-group">
-                                    <select class="form-control" id="tipo">
-                                        <option value="" disabled selected hidden>-- Tipo --</option>
-                                        <option value="pessoaFisica">PESSOA FÍSICA</option>
-                                        <option value="pessoaJuridica">PESSOA JURÍDICA</option>
-                                    </select>
-                                </div>
-                                <div id="validationTipo"></div>
+
+
+                    {{-- Associar vendedor  --}}
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="cargoFuncionario" class="control-label">Tipo <span class="obrigatorio">*</span></label>
+                            <div class="input-group">
+                                <select class="form-control" id="tipo">
+                                    <option value="" disabled selected hidden>-- Tipo --</option>
+                                    <option value="pessoaFisica">PESSOA FÍSICA</option>
+                                    <option value="pessoaJuridica">PESSOA JURÍDICA</option>
+                                </select>
                             </div>
+                            <div id="validationTipo"></div>
                         </div>
                     </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="cargoFuncionario" class="control-label">Funcionário Responsável<span class="obrigatorio"></span></label>
+                            <div class="input-group">
+                                <select class="form-control" id="funcionario_id" name="funcionario_id">
+                                    <option value="0" >Todos</option>
+                                    @foreach($fun as $vendedor)
+                                        <option value="{{$vendedor->id}}">{{$vendedor->user->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div id="validationTipo"></div>
+                        </div>
+                    </div>
+                </div>
+
 
                     {{-- row telefones --}}
                     <div class="row justify-content-center">
-                        
+
                         {{-- Nome do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -245,7 +270,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     {{-- row Endereço --}}
                     <div class="row justify-content-left">
                         <div class="col-sm-12">
@@ -255,7 +280,7 @@
 
                     {{-- row rua + CEP --}}
                     <div class="row justify-content-center">
-                        
+
                         {{-- CEP--}}
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -305,7 +330,7 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
                     {{-- row UF + Número --}}
                     <div class="row justify-content-center">
@@ -388,6 +413,8 @@
         });
     }
 
+
+
     function montarLinha(c){
         var linha = "<tr>"+
                         "<td>"+c.id+"</td>"+
@@ -398,7 +425,7 @@
                         "<td>"+
                             "<a href="+"#"+" onclick="+"editarCliente("+c.id+")"+">"+
                                 "<img id="+"iconeEdit"+" class="+"icone"+" src="+"{{asset('img/edit-solid.svg')}}"+" style="+""+">"+
-                            "</a>"+                            
+                            "</a>"+
                             "<a href="+"#"+" onclick="+"removerCliente("+c.id+")"+">"+
                                 "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+""+">"+
                             "</a>"+
@@ -417,8 +444,9 @@
             $('#cpfCnpj').val(data.cpfCnpj);
             $('#tipo').val(data.tipo);
             $('#inscricaoEstadual').val(data.inscricaoEstadual);
-            
-            $('#residencial').val(data.residencial);
+            $('#funcionario_id').val(data.funcionario_id),
+
+                $('#residencial').val(data.residencial);
             $('#celular').val(data.celular);
             $('#cep').val(data.cep);
             $('#rua').val(data.rua);
@@ -484,7 +512,7 @@
         $('#cpfCnpj').val('');
         $('#tipo').val('');
         $('#inscricaoEstadual').val('');
-        
+        $('#funcionario_id').val('0');
         $('#residencial').val('');
         $('#celular').val('');
         $('#cep').val('');
@@ -512,7 +540,8 @@
             cpfCnpj: $('#cpfCnpj').val(),
             tipo: $('#tipo').val(),
             inscricaoEstadual: $('#inscricaoEstadual').val(),
-            
+            funcionario_id:$('#funcionario_id').val(),
+
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
@@ -532,7 +561,7 @@
             success: function(data){
                 cli = JSON.parse(data);
                 alert("Cliente "+cli.nome+" salvo com sucesso!")
-                window.location.href="\indexClientes";
+                window.location.href="/indexClientes";
                 // cli = JSON.parse(data);
                 // linhas = $('#tabelaClientes>tbody>tr');
                 // e = linhas.filter(function(i,elemento){
@@ -558,7 +587,7 @@
     }
 
     function criarCliente(){
-        console.log('Criar Cliente');
+        //console.log('Criar Cliente');
 
         cliente = {
             nome: $('#nomeCliente').val(),
@@ -568,7 +597,8 @@
             cpfCnpj: $('#cpfCnpj').val(),
             tipo: $('#tipo').val(),
             inscricaoEstadual: $('#inscricaoEstadual').val(),
-            
+            funcionario_id:$('#funcionario_id').val(),
+
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
@@ -578,16 +608,19 @@
             uf: $('#uf').val(),
             numero: $('#numero').val(),
             complemento: $('#complemento').val()
-        }
+        };
 
+        //#console.log(cliente);
         $.ajax({
                 type: "POST",
                 url: "/clientes",
                 context: this,
                 data: cliente,
                 success: function(data){
-                    cliente = JSON.parse(data);
-                    alert("Cliente "+cliente.nome+" cadastrado com sucesso!");
+                    //console.log(cliente);
+                    cliente = (data);
+
+                    alert("Cliente cadastrado com sucesso!");
                     window.location.href="\indexClientes";
                     // cliente = JSON.parse(data);
                     // linha = montarLinha(cliente);
@@ -596,9 +629,10 @@
                 },
                 error: function(error){
                     retorno = JSON.parse(error.responseText);
-                    
+                    //#console.log(retorno);
+
                     exibirErros(retorno.errors);
-                    
+
                 }
 
             });
@@ -629,6 +663,13 @@
                 for(i=0;i<error.tipo.length;i++){
                     console.log(error.tipo[i]);
                     $("#validationTipo").append("<span class="+"span"+" style="+"color:red"+">"+error.tipo[i]+"</span>");
+                }
+            }
+
+            if(error.funcionario_id){
+                for(i=0;i<error.funcionario_id.length;i++){
+                    console.log(error.funcionario_id[i]);
+                    $("#validationfuncionario_id").append("<span class="+"span"+" style="+"color:red"+">"+error.funcionario_id[i]+"</span>");
                 }
             }
             if(error.residencial){
@@ -692,11 +733,11 @@
             event.preventDefault();// não deixa fechar o modal quando clica no submit
 
             if($('#id').val()!= ''){
-                
+
                 salvarCliente();
             }
             else{
-                
+
                 criarCliente();
             }
             // $('#dlgClientes').modal('hide');

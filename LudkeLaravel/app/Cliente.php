@@ -21,6 +21,7 @@ class Cliente extends Model
     public function funcionario(){
         return $this->belongsTo('App\Funcionario');
     }
+
     function pedidos(){
         return $this->hasMany('App\Pedido','cliente_id');
     }
