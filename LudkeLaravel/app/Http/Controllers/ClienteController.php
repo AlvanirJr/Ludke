@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Funcionario;
 use App\User;
 use App\Endereco;
 use App\Telefone;
@@ -13,7 +14,11 @@ class ClienteController extends Controller
     public function indexView()
     {
         $clientes = Cliente::paginate(10);
-        return view('cliente',["clientes"=>$clientes]);
+        #$fun = \App\Funcionario::where('cargo_id', '=', 3)
+         #   ->join('users', 'funcionarios.user_id', '=', 'users.id')->get();
+        $fun = Funcionario::with('user')->get();
+        #dd($fun);
+        return view('cliente',["clientes"=>$clientes,'fun'=>$fun]);
     }
 
     public function buscarCliente(Request $request){
@@ -23,15 +28,17 @@ class ClienteController extends Controller
         if(isset($c)){
             $users = User::where('name','LIKE','%'.$c.'%')->pluck('id');
             $clientes = Cliente::whereIn('user_id',$users)->paginate(10)->setpath('');
+            $fun = Funcionario::with('user')->where('cargo_id',3)->get();
+
             // dd($clientes);
 
             // ->paginate(10)->setpath('');
             $clientes->appends(array('q'=>$request->input('q')));
             if(count($clientes) > 0){
                 // dd($cargos);
-                return view('cliente',['clientes'=>$clientes, 'achou'=> true]);
+                return view('cliente',['clientes'=>$clientes, 'fun'=>$fun,'achou'=> true]);
             }else{
-                return view('cliente')->withMenssage("Desculpa, não foi possível encontrar este cliente.");
+                return view('cliente',['fun'=>$fun])->withMenssage("Desculpa, não foi possível encontrar este cliente.");
             }
         }
 
@@ -53,6 +60,7 @@ class ClienteController extends Controller
                 'nomeResponsavel' => $c->nomeResponsavel,
                 'cpfCnpj' => $c->cpfCnpj,
                 'tipo' => $c->tipo,
+                'funcionario_id' => $c->funcionario_id,
                 'inscricaoEstadual' => $c->inscricaoEstadual,
                 'residencial' => $telefone->residencial,
                 'celular' => $telefone->celular,
@@ -89,6 +97,8 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
+
+
         $validation = $this->validate($request,[
                 'nome'=> 'required|string|min:5|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
@@ -142,6 +152,8 @@ class ClienteController extends Controller
         $cliente->nomeReduzido = strtoupper($request->input('nomeReduzido'));
         $cliente->nomeResponsavel = strtoupper($request->input('nomeResponsavel'));
         $cliente->cpfCnpj = $request->input('cpfCnpj');
+        $cliente->funcionario_id = $request->input('funcionario_id');
+
         $cliente->tipo = $request->input('tipo');
         $cliente->inscricaoEstadual = strtoupper($request->input('inscricaoEstadual'));
         $cliente->user_id = $user->id;
@@ -167,7 +179,9 @@ class ClienteController extends Controller
             'complemento' => $endereco->complemento,
         ];
 
-        return json_encode($cli);
+
+
+        #return json_encode($cli);
     }
 
     /**
@@ -194,6 +208,7 @@ class ClienteController extends Controller
                 'nomeResponsavel' => $cliente->nomeResponsavel,
                 'cpfCnpj' => $cliente->cpfCnpj,
                 'tipo' => $cliente->tipo,
+                'funcionario_id'=>$cliente->funcionario_id,
                 'inscricaoEstadual' => $cliente->inscricaoEstadual,
                 'residencial' => $telefone->residencial,
                 'celular' => $telefone->celular,
@@ -349,6 +364,7 @@ class ClienteController extends Controller
             $cliente->cpfCnpj = $request->input('cpfCnpj');
             $cliente->tipo = $request->input('tipo');
             $cliente->inscricaoEstadual = strtoupper($request->input('inscricaoEstadual'));
+            $cliente->funcionario_id = $request->input('funcionario_id');
             $cliente->save();
 
             $cli = [
@@ -403,12 +419,7 @@ class ClienteController extends Controller
 
     public function relatorioCliente(){
         $view = 'relatorioCliente';
-        // $clientes = Cliente::select('nomeResponsavel','cpfCnpj', 'nomeReduzido')->get();
-
-        #$cliente_id = Cliente::select('user_id');
-        #$endereco = Endereco::where()
-        #dd($clientes);
-
+        // Clientes
         $clientes = Cliente::with('user')->get();
         // dd($clientes);
 
