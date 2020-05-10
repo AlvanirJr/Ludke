@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="titulo-pagina-nome">
-                            <h2>Registrar Entrega do Pedido</h2>
+                            <h2>Registrar Entrega da Venda</h2>
                         </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
         </div>
     </div>
     {{-- FORMULÁRIO --}}
-    <form action="{{route('pedido.registrarEntregaPedido')}}" method="POST">    
+    <form action="{{route('venda.registrarEntregaPedido')}}" method="POST">    
         @csrf
     
         <div class="row justify-content-center">
