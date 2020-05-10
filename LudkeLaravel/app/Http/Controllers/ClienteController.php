@@ -419,6 +419,7 @@ class ClienteController extends Controller
 
     public function relatorioCliente(){
         $view = 'relatorioCliente';
+
         // Clientes
         $clientes = Cliente::with('user')->get();
         // dd($clientes);
