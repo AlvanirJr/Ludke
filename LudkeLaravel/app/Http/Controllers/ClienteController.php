@@ -419,19 +419,10 @@ class ClienteController extends Controller
 
     public function relatorioCliente(){
         $view = 'relatorioCliente';
-        $clientes = Cliente::select('nomeResponsavel','cpfCnpj', 'nomeReduzido')->get();
 
-
-
-
-        #$dadoClientes = Cliente::with('user')->get();
-        #dd($dadoClientes);
-        #$cliente_id = Cliente::select('user_id');
-        #$endereco = Endereco::where()
-        #dd($clientes);
-
-
-
+        // Clientes
+        $clientes = Cliente::with('user')->get();
+        // dd($clientes);
 
         $date = date('d/m/Y');
         $view = \View::make($view, compact('clientes',  'date'))->render();

@@ -16,13 +16,13 @@ class EnderecoSeeder extends Seeder
         //
         // $user_id = User::where('name','Admin')->pluck('id');
         DB::table('enderecos')->insert([
-            'rua'=>str::random(10),
+            'rua'=>"Rua Tal",
             'numero'=>'123',
-            'bairro'=>str::random(10),
-            'cidade'=>str::random(10),
-            'uf'=>str::random(2),
-            'cep'=>str::random(10),
-            'complemento'=>str::random(10),
+            'bairro'=>"Bairro Tal",
+            'cidade'=>"Cidade Tal",
+            'uf'=>"PE",
+            'cep'=>"00000-000",
+            'complemento'=>"Apartamento",
             // 'user_id'=> $user_id[0]
         ]);
     }
