@@ -10,9 +10,9 @@
             <tr style="height:20px">
                 <th>Nome</th>
                 <th>CNPJ</th>
-                <th>Telefone</th>
+                <th>Cidade</th>
                 <th>Endereço</th>
-                <th>Funcionário </th>
+                <th>Func. Resp. </th>
             </tr>
             </thead>
             <tbody>
@@ -20,7 +20,7 @@
                 <tr align="center">
                     <td>{{$cliente->user->name}}</td>
                     <td >{{$cliente->cpfCnpj}}</td>
-                    <td>{{$cliente->user->telefone->celular}}</td>
+                    <td>{{$cliente->user->endereco->cidade}}</td>
                     <td>
                         {{$cliente->user->endereco->rua}}, 
                         {{$cliente->user->endereco->numero}}, 
