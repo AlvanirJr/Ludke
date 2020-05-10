@@ -65,6 +65,11 @@ Route::get('/pedidos/concluir/{id}', 'PedidoController@concluirPedido')->name('p
 // Rota POST que salva os descontos aplicados nos itens da view concluirPedido.
 Route::post('/pedidos/concluir', 'PedidoController@concluirPedidoComDescontoNosItens')->name('pedido.concluirPedidoComDescontoNosItens') ;
 
+//Rota GET que redireciona para tela de registrar entrega do pedido
+Route::get('/pedidos/registrarEntrega/{id}','PedidoController@indexRegistrarEntregaPedido')->name('pedido.indexRegistrarEntrega');
+//Rota POST que salva a entrega do pedido
+Route::post('/pedidos/registrarEntrega','PedidoController@registrarEntregaPedido')->name('pedido.registrarEntregaPedido');
+
 // Pagamento Pedido
 Route::get('/pedidos/pagamento/{id}','PedidoController@indexPagamento')->name('pedido.indexPagamento');
 Route::post('/pedidos/pagamento','PedidoController@pagamento')->name('pedido.pagamento');
@@ -94,6 +99,11 @@ Route::post('/vendas/concluir', 'VendaController@concluirVendaComDescontoNosIten
 Route::get('/vendas/pagamento/{id}','VendaController@indexPagamento')->name('venda.indexPagamento');
 Route::post('/vendas/pagamento','VendaController@pagamento')->name('venda.pagamento');
 
+
+//Rota GET que redireciona para tela de registrar entrega da venda
+Route::get('/vendas/registrarEntrega/{id}','VendaController@indexRegistrarEntregaPedido')->name('venda.indexRegistrarEntrega');
+//Rota POST que salva a entrega da venda
+Route::post('/vendas/registrarEntrega','VendaController@registrarEntregaPedido')->name('venda.registrarEntregaPedido');
 
 // Route::get('/vendas/concluir/{id}', 'VendaController@concluirVenda')->name('vendas.concluirVenda');
 // Route::post('/vendas/concluir', 'VendaController@concluirVendaPagamento')->name('vendas.concluirVendaPagamento');

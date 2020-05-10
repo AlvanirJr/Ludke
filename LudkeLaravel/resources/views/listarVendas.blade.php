@@ -100,7 +100,7 @@
                             </ul>
                         </td>
                         <td>{{$pedido->status->status}}</td>
-                        <td>R$ {{$pedido->valorTotal}}</td>
+                        <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>
                         {{-- Verifica se o status do pedido é SOLICITADO --}}
                         @if($pedido->status->status == "ENTREGUE")
                         
@@ -119,7 +119,11 @@
                             <td>
                                 <a href="{{route('concluirVenda',['id'=>$pedido->id])}}">
                                     <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
-                                </a>                            
+                                </a>       
+                                {{-- Registrar Entrega do pedido --}}
+                                <a href="{{route('venda.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
+                                    <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
+                                </a>                     
 
                                 <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                     <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
