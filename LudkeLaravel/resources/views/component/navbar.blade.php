@@ -61,7 +61,7 @@
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{route('relatorioCliente')}}">Clientes</a>
+                            <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                         </div>
 
                     </li>
