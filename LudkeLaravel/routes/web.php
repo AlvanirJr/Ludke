@@ -64,6 +64,9 @@ Route::post('/pedidos/pesar','PedidoController@concluirPedidoPesoFinal')->name('
 Route::get('/pedidos/concluir/{id}', 'PedidoController@concluirPedido')->name('pedido.concluirPedido');
 // Rota POST que salva os descontos aplicados nos itens da view concluirPedido.
 Route::post('/pedidos/concluir', 'PedidoController@concluirPedidoComDescontoNosItens')->name('pedido.concluirPedidoComDescontoNosItens') ;
+//Rota GET que redireciona para tela de registrar entrega do pedido
+Route::get('/pedidos/registrarEntrega/{id}','PedidoController@indexRegistrarEntregaPedido')->name('pedido.indexRegistrarEntrega');
+Route::post('/pedidos/registrarEntrega','PedidoController@registrarEntregaPedido')->name('pedido.registrarEntregaPedido');
 
 // Pagamento Pedido
 Route::get('/pedidos/pagamento/{id}','PedidoController@indexPagamento')->name('pedido.indexPagamento');

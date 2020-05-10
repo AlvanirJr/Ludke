@@ -101,6 +101,10 @@
                                     <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}">
                                         <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
                                     </a> 
+                                    {{-- Registrar Entrega do pedido --}}
+                                    <a href="{{route('pedido.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
+                                        <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
+                                    </a>
                                     {{-- Excluir Pedido --}}
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >

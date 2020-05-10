@@ -67,6 +67,56 @@ class PedidoController extends Controller
             ]);
     }
     /**
+     * Função que redireciona para tela de registrar entrega do pedido
+     * @param Integer $id
+     * @return View registrarEntregaPedido
+     */
+    public function indexRegistrarEntregaPedido($id){
+        // dd($id);
+        // Pedido
+        $pedido = Pedido::with(['cliente'])->find($id);
+
+        // Itens do Pedido
+        $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
+        
+        $valorTotalDoPagamento = 0;
+        $valorDoDesconto = 0;
+
+        foreach ($itensPedido as $item) {
+            $valorTotalDoPagamento += floatval($item->valorComDesconto);
+            $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
+        }
+
+        //------------DEBUG--------------------------
+        // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
+        $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
+        $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
+                                        orwhere('cargo_id',$entregador_id)->get();
+        return view('registrarEntregaPedido',
+        [
+            'pedido'=>$pedido,
+            'valorTotalDoPagamento'=>$valorTotalDoPagamento,
+            'valorDoDesconto'=>$valorDoDesconto,
+            'entregadores'=>$entregadores,
+        ]);
+    }
+    /**
+     * Função que registra a entrega do pedido informando o funcionario que entregou
+     * @param Integer $id
+     * @return View listarPedidos
+     */
+    public function registrarEntregaPedido(Request $request){
+        // dd($request->all());
+        $pedido = Pedido::find($request['pedido_id']);
+        $pedido->entregador_id = $request['entregador_id'];
+        $pedido->dataEntrega = $request['dataEntrega'];
+        $status_id = Status::where('status','ENTREGUE')->pluck('id')->first();
+        $pedido->status_id = $status_id;
+        
+        $pedido->save();
+        return redirect()->route('listarPedidos');
+    }
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
