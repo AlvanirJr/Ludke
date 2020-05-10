@@ -363,7 +363,7 @@
                     // if(e){
                     //     e.remove();// remove a linha
                     // }
-                    alert("Cargo deletado com sucesso!")
+                    alert("Produto deletado com sucesso!")
                     window.location.href='/indexProdutos';
                 },
                 error: function(error){

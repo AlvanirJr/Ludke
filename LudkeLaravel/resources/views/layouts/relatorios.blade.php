@@ -14,7 +14,7 @@
 		<div class="row justify-content-center">
 			
 			<div class="col-sm-12">
-				<img src="{{asset('img/ludke-red.png')}}"  style="width: 100px; float:left; position:absolute">
+				<img src="{{asset('img/ludke-red.png')}}"  style="width: 100px; float:left; position:absolute; z-index:10">
 				<h1 style="text-align:center; top:0">@yield('titulo')</h1>
 				<h3 style="text-align:center;">Emitido em @yield('date')</h3>
 			</div>
