@@ -213,6 +213,33 @@
         $(`#${id}`).remove();
     }
 
+    // Função que percorre os valores de entrada nos pagamentos e verifica se é maior que o valor do 
+    //pedido.
+    function validaValorPagamento(){
+        // Valor Total do pedido
+        let valorTotal = <?php echo $valorTotalDoPagamento; ?>
+        // Contador para armazenar o valor adicionado em todas as formas de pagamento. 
+        let contValorTotalPagamento = 0;
+
+        // Mapeia todos os inputs do valor em cada forma de pagamento em um array
+        let arrayValorTotalPagamento = $('input[name="valorTotalPagamento[]"').map(function(){
+            return parseFloat(this.value);
+        }).get();
+
+        // Percore o array e soma todas as posições
+        arrayValorTotalPagamento.forEach(valor => {
+            contValorTotalPagamento += valor
+        });
+
+        if(contValorTotalPagamento > valorTotal){
+            alert("O valor total informado no pagamento é maior do que o valor total do pedido! Por favor, informe novamente os valores.");
+            $('input[name="valorTotalPagamento[]"').val('');
+        }else{
+            console.log(`Pagamento: ${contValorTotalPagamento} | Valor Total: ${valorTotal}`);
+
+        }
+    }
+
     // Cria a linha com os inputs da nova forma de pagamento
     function addFormaDePagamento(){
         
@@ -237,7 +264,7 @@
                         "</div>"+
                         "<div class='col-sm-4 form-group'>"+
                             "<label for='valorTotalPagamento'>Valor (R$) <span class='obrigatorio'>*</span></label>"+
-                            "<input type='number' id='valorTotalPagamento' min='0' step='0.01' oninput='' class='form-control' name='valorTotalPagamento[]' required>"+
+                            "<input type='number' id='valorTotalPagamento' min='0' step='0.01' onkeyup='validaValorPagamento()' class='form-control' name='valorTotalPagamento[]' required>"+
                             "<span style='color:red' id='spanValorPago'></span>"+
                         "</div>"+
                         "<div class='col-sm-4 form-group'>"+

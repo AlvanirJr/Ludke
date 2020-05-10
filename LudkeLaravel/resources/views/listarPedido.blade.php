@@ -70,7 +70,10 @@
                             </ul>
                         </td>
                         <td>{{$pedido->status->status}}</td>
-                        <td>R$ {{$pedido->valorTotal}}</td>
+                        <td>
+                            {{-- R$ {{$pedido->valorTotal}} --}}
+                            R$ {{money_format('%i',$pedido->valorTotal)}}
+                        </td>
                             {{-- Pedido com status SOLICITADO --}}
                             @if($pedido->status->status == "SOLICITADO") 
                                 <td>
@@ -98,13 +101,17 @@
                                     <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}">
                                         <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
                                     </a> 
+                                    {{-- Registrar Entrega do pedido --}}
+                                    <a href="{{route('pedido.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
+                                        <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
+                                    </a>
                                     {{-- Excluir Pedido --}}
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
                                 {{-- Pedido com status PAGO PARCIALMENTE --}}
-                            @elseif($pedido->status->status == "PAGO PARCIALMENTE")
+                            @elseif($pedido->status->status == "ENTREGUE")
                                 <td>
                                     {{-- Contas a pagar --}}
                                     <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
