@@ -105,6 +105,10 @@
                                     <a href="{{route('pedido.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
                                         <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
                                     </a>
+                                    {{-- Imprimir pedido --}}
+                                    <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                        <img id="" class="icone" src="{{asset('img/print.svg')}}" >
+                                    </a>
                                     {{-- Excluir Pedido --}}
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
@@ -117,6 +121,10 @@
                                     <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
                                         <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
                                     </a> 
+                                    {{-- Imprimir pedido --}}
+                                    <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                        <img id="" class="icone" src="{{asset('img/print.svg')}}" >
+                                    </a>
                                     {{-- Excluir Pedido --}}
                                     {{-- <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
