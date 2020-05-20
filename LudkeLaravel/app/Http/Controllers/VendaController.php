@@ -30,6 +30,7 @@ class VendaController extends Controller
                             orwhere('status_id',3)-> //ENTREGUE
                             orderby('status_id')->
                             paginate(25);
+        
         return view('listarVendas',['pedidos'=>$pedidos]);
     }
 

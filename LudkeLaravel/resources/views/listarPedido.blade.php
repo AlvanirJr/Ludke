@@ -177,6 +177,12 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12">
+                            <label for="cliente">Nome Reduzido</label>
+                            <input type="text" class="form-control" id="cliente" name="nomeReduzido" placeholder="Nome Reduzido">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
                             <label for="dataEntrega">Data de Entrega</label>
                             <input type="date" class="form-control" id="dataEntrega" name="dataEntrega">
                         </div>
