@@ -64,7 +64,7 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                   <h5 class="card-title">Valor do Pedido</h5>
-                  <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido"></h3></p>
+                  <p class="card-text"><h3 id="valorDoPedido"></h3></p>
                 </div>
             </div>
         </div>
@@ -86,19 +86,20 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Produto</th>
                                 <th scope="col">(R$) Preço/Kg</th>
-                                <th scope="col">Peso Solicitado</th>
-                                <th scope="col">Valor Estimado</th>
-                                <th scope="col"> Peso Final</th>
+                                <th scope="col">(KG) Peso Solicitado</th>
+                                <th scope="col">(R$) Valor Estimado</th>
+                                <th scope="col">(KG) Peso Final</th>
                             </tr>
                             </thead>
                             <tbody>
+
                             @foreach ($pedido->itensPedidos as $item)
                                 <tr>
                                     <td>{{$item->id}}</td>
                                     <td>{{$item->nomeProduto}}</td>
-                                    <td>{{$item->precoProduto}}</td>
+                                    <td>{{money_format("%i",$item->precoProduto)}}</td>
                                     <td>{{$item->pesoFinal}}</td> {{-- Durante o pedido, o peso final é igual ao peso solicitado. Somente na conclusão do pedido que o peso final é atualizado--}}
-                                    <td>{{$item->valorReal}}</td>
+                                    <td>{{money_format("%i",$item->valorReal)}}</td>
                                     <td>
                                         <input id="pesoFinal{{$item->id}}" oninput="atualizarValor({{$item->precoProduto}},{{$item->id}})" name="pesoFinal{{$item->id}}" step="0.01" type="number" class="form-control" placeholder="Peso Final" required>
                                         
@@ -136,12 +137,19 @@
 @section('javascript')
 
 <script type="text/javascript">
+    
+    // Cria objeto Intl que será responsável por converter os valores para o formato da moeda brasileira
+    let formatter = new Intl.NumberFormat([],{
+        style: 'currency',
+        currency: 'BRL'
+    });
+
     function validar(){
         alert("Digite o peso do item: ");
     }
     // Valor final do pedido
     var valorDoPedido = 0.0;
-    $("#valorDoPedido").html(valorDoPedido);
+    $("#valorDoPedido").html(formatter.format(valorDoPedido));
     
     var valores = {};
 
@@ -157,7 +165,7 @@
             }
             
         });
-        $("#valorDoPedido").html(valor);
+        $("#valorDoPedido").html(formatter.format(valor));
     }
 
     // console.log(e[0].cells[1].textContent)
