@@ -436,15 +436,25 @@ class PedidoController extends Controller
 
     // retorna o cliente através do cpj ou cnpj
     public function getCliente(Request $request){
-        $user = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')->get();
-        $cliente = [];
-        for($i = 0; $i < count($user); $i++){
-            if($user[$i]->cliente != null){
-                array_push($cliente,[
-                    "name"=>$user[$i]->name,"cliente_id"=>$user[$i]->cliente->id
-                    ]);
-            }
-        }        
+        // $user = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')->get();
+        // dd($user);
+        // $cliente = [];
+        // for($i = 0; $i < count($user); $i++){
+        //     if($user[$i]->cliente != null){
+        //         array_push($cliente,[
+        //             "name"=>$user[$i]->name,"cliente_id"=>$user[$i]->cliente->id
+        //             ]);
+        //     }
+        // }        
+        // if(isset($cliente)){
+            //     // dd($cliente);
+            //     return json_encode($cliente);
+            // }
+        $cliente = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')
+            // ->whereHas('cliente')
+            ->orWhereHas('cliente',function($q) use ($request){
+                $q->where('nomeReduzido','like','%'.$request->input('nome').'%');
+            })->get();
         if(isset($cliente)){
             // dd($cliente);
             return json_encode($cliente);
@@ -460,6 +470,7 @@ class PedidoController extends Controller
         // dd($cliente);
         $cliente['id'] = $c->id;
         $cliente['nome'] = $c->user->name;
+        $cliente['nomeReduzido'] = $c->nomeReduzido;
         return json_encode($cliente);
     }
     public function getProdutos(Request $request){

@@ -29,9 +29,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <label>Nome</label>
                                     <h4 id="nomeCliente"></h4>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Nome Reduzido</label>
+                                    <h4 id="nomeReduzidoCliente"></h4>
                                 </div>
                             </div>
                         </div>
@@ -292,14 +296,11 @@
             data: {nome: nomeCliente},
             success: function(data){
                 cliente = JSON.parse(data)
-                
                 // limpa os links da lista com os produtos retornados em tempo real
                 $('#resultadoBuscaCliente').children().remove();
                 for(let i = 0; i < cliente.length; i++){
-
-                    console.log(cliente[i]);
                     let linha = "<a "+"href="+"#"+">"+
-                                    "<li value="+cliente[i].cliente_id+" class="+"list-group-item itemLista"+">"+cliente[i].name+"</li>"+
+                                    "<li value="+cliente[i].cliente.id+" class="+"list-group-item itemLista"+"><strong>Nome: </strong>"+cliente[i].name+"; <strong>Nome Reduzido: </strong>"+cliente[i].cliente.nomeReduzido+"</li>"+
                                 "</a>";
                     $('#resultadoBuscaCliente').append(linha);
                 }
@@ -324,6 +325,7 @@
                 // Adiciona ao objeto Pedido o id do cliente
                 pedido.cliente_id = cliente.id;
                 $("#nomeCliente").html(cliente.nome);
+                $("#nomeReduzidoCliente").html(cliente.nomeReduzido);
                 $("#buscaCliente").val(cliente.nome);
                 // console.log("buscaCliente()",pedido)
                 // limpa os links da lista com os produtos retornados em tempo real
