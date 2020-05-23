@@ -81,10 +81,10 @@
                 <div class="card-body">
                     @if($pedido->status->status == "PAGO PARCIALMENTE" && isset($pagamento->valorTotalPagamento))
                         <h5 class="card-title">Valor Total do Pedido</h5>
-                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{$pedido->valorTotal}}</h3></p>
+                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{money_format("%i",$pedido->valorTotal)}}</h3></p>
                     @else
                         <h5 class="card-title">Valor Total do Pedido</h5>
-                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{$pedido->valorTotal}}</h3></p>
+                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{money_format("%i",$pedido->valorTotal)}}</h3></p>
                     @endif
                 </div>
             </div>
@@ -94,7 +94,7 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                     <h5 class="card-title">Valor Total do Pagamento</h5>
-                    <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{$valorTotalDoPagamento}}</h3></p>
+                    <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{money_format("%i",$valorTotalDoPagamento)}}</h3></p>
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@
                 <div class="card cardFinalizarPedidos">
                     <div class="card-body">
                         <h5 class="card-title">Valor do Desconto nos Itens</h5>
-                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDesconto">{{$valorDoDesconto}}</h3></p>                    
+                        <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDesconto">{{money_format("%i",$valorDoDesconto)}}</h3></p>                    
                     </div>
                 </div>
             </div>
