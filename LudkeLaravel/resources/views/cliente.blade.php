@@ -209,7 +209,8 @@
                             <label for="cargoFuncionario" class="control-label">Funcionário Responsável<span class="obrigatorio"></span></label>
                             <div class="input-group">
                                 <select class="form-control" id="funcionario_id" name="funcionario_id">
-                                    <option value="0" >Todos</option>
+
+                                    <option value="" >Todos</option>
                                     @foreach($fun as $vendedor)
                                         <option value="{{$vendedor->id}}">{{$vendedor->user->name}}</option>
                                     @endforeach
