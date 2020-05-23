@@ -62,7 +62,7 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                   <h5 class="card-title">Valor do Pedido</h5>
-                  <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{$pedido->valorTotal}}</h3></p>
+                  <p class="card-text"><h3 id="valorDoPedido">R$ {{money_format("%i",$pedido->valorTotal)}}</h3></p>
                 </div>
             </div>
         </div>
@@ -138,7 +138,11 @@
 @section('javascript')
 
 <script type="text/javascript">
-    
+    // Cria objeto Intl que será responsável por converter os valores para o formato da moeda brasileira
+    let formatter = new Intl.NumberFormat([],{
+        style: 'currency',
+        currency: 'BRL'
+    });
     // Valor final do pedido
     let valorDoPedido = $("#valorDoPedido").val();
     
@@ -194,7 +198,7 @@
         valorDescontoTotal = calcularDesconto(arrayPrecosItens,arrayValoresInputDesconto);
         let valorDoPedido = pedidoValorTotal;
 
-        $("#valorDoPedido").html(valorDoPedido - valorDescontoTotal);
+        $("#valorDoPedido").html(formatter.format(valorDoPedido - valorDescontoTotal));
     }
     
 </script>    
