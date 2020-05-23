@@ -42,7 +42,7 @@ class PedidoController extends Controller
 
         // Itens do Pedido
         $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
-        
+
         $valorTotalDoPagamento = 0;
         $valorDoDesconto = 0;
 
@@ -78,7 +78,7 @@ class PedidoController extends Controller
 
         // Itens do Pedido
         $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
-        
+
         $valorTotalDoPagamento = 0;
         $valorDoDesconto = 0;
 
@@ -112,7 +112,7 @@ class PedidoController extends Controller
         $pedido->dataEntrega = $request['dataEntrega'];
         $status_id = Status::where('status','ENTREGUE')->pluck('id')->first();
         $pedido->status_id = $status_id;
-        
+
         $pedido->save();
         return redirect()->route('listarPedidos');
     }
@@ -145,7 +145,7 @@ class PedidoController extends Controller
      */
     public function show($id)
     {
-        
+
     }
 
     /**
@@ -164,15 +164,15 @@ class PedidoController extends Controller
             }
             $cliente = Cliente::with('user')->find($pedido->cliente_id);
             $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
-            
+
             // $pedido["valorProduto"]= $produto->preco;
             $pedido["nomeCliente"] = $cliente->user->name;
             $pedido["nomeFuncionario"] = $funcionario->user->name;
 
-            
+
             return view('editarPedido')->with(["pedido"=>$pedido]);
         }
-        
+
     }
 
     /**
@@ -184,10 +184,10 @@ class PedidoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $pedido = Pedido::find($request->input('id'));
         $valorTotal = floatval($pedido->valorTotal);
-        
+
         // Lista com novos pedidos Adicionados
         $listaProdutos = $request->input('listaProdutos');
         if(isset($listaProdutos)){
@@ -201,9 +201,9 @@ class PedidoController extends Controller
                     $itemPedido->nomeProduto = $produto->nome;
                     $itemPedido->produto_id = $produto->id;
                     $itemPedido->pedido_id = $pedido->id;
-    
+
                     $itemPedido->save();
-    
+
                     $valorTotal += $produto->preco * floatval($item['peso']); //soma ao valor total
                 }
             }
@@ -211,12 +211,12 @@ class PedidoController extends Controller
         }
 
         // forma de pagamento só é definida na conclusão do pedido
-        
+
         $pedido->dataEntrega = $request->input('dataEntrega');
         // $pedido->status = "ABERTO";
-        
-        
-        
+
+
+
         // deleta itens
         $deletar = $request->input('deletar');
         // dd($deletar);
@@ -224,7 +224,7 @@ class PedidoController extends Controller
             for($i = 0; $i < sizeof($deletar); $i++){
                 $itemDeletado = ItensPedido::find(intval($deletar[$i]['id']));
                 if(isset($itemDeletado)){
-                    
+
                     $valorTotal -= floatval($itemDeletado['valorReal']);
                     // dd($valorTotal);
                     $itemDeletado->delete();
@@ -235,25 +235,25 @@ class PedidoController extends Controller
         if(isset($itens_pedidos)){
             foreach($request->input('itens_pedidos') as $item){
                 $itemPedido = ItensPedido::find($item['id']);
-                
+
                 $produto = Produto::find($item['produto_id']);
-                
+
                 if(isset($produto)){
                     // dd(floatVal($item['pesoSolicitado']));
-                    // $valorTotal += $produto->preco * floatVal($item['pesoSolicitado']); 
+                    // $valorTotal += $produto->preco * floatVal($item['pesoSolicitado']);
                     // dd($valorTotal);
                     $itemPedido->pesoSolicitado = floatval($item['pesoSolicitado']);
-                    
+
                     $itemPedido->valorReal = $produto->preco * floatVal($item['pesoSolicitado']);
-    
+
                     $itemPedido->save();
                 }
             }
         }
-        
+
         // Salva o valor total
 
-        
+
         $pedido->valorTotal = floatval($valorTotal);
         // dd($valorTotal);
         $pedido->save(); // salva o pedido
@@ -270,7 +270,7 @@ class PedidoController extends Controller
     {
         // dd($id);
         $pedido = Pedido::find($id);
-        
+
         if(isset($pedido)){
             $itensPedido = ItensPedido::where("pedido_id",$id)->delete();
             $pagamento = Pagamento::where('pedido_id',$id)->delete();
@@ -295,15 +295,15 @@ class PedidoController extends Controller
             }
             $cliente = Cliente::with('user')->find($pedido->cliente_id);
             $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
-            
+
             // $pedido["valorProduto"]= $produto->preco;
             $pedido["nomeCliente"] = $cliente->user->name;
             $pedido["nomeFuncionario"] = $funcionario->user->name;
             // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
-            
+
             return view('finalizarPedido')->with(["pedido"=>$pedido]);
         }
-        
+
     }
     /**
      * Função busca os dados referente ao pedido e retorna para tela concluirPedido
@@ -320,12 +320,12 @@ class PedidoController extends Controller
             }
             $cliente = Cliente::with('user')->find($pedido->cliente_id);
             $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
-            
+
             // $pedido["valorProduto"]= $produto->preco;
             $pedido["nomeCliente"] = $cliente->user->name;
             $pedido["nomeFuncionario"] = $funcionario->user->name;
             // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
-            
+
             return view('concluirPedido')->with(["pedido"=>$pedido]);
         }
     }
@@ -350,21 +350,21 @@ class PedidoController extends Controller
      * @return view pagamentos
      */
     public function concluirPedidoComDescontoNosItens(Request $request){
-        
+
         // pedido
         $pedido = Pedido::find($request['pedido_id']);
-        // array com a porcentagem dos descontos referente aos itens 
+        // array com a porcentagem dos descontos referente aos itens
         $descontos = $request['desconto'];
         // array com os itens do pedido
         $itensPedido = ItensPedido::where('pedido_id',$request['pedido_id'])->get();
         // array contendo os preços com os descontos calculados
-        $itensComDesconto = $this->itensComDesconto($itensPedido, $descontos);        
-        
-        
+        $itensComDesconto = $this->itensComDesconto($itensPedido, $descontos);
+
+
         // Se o pedido tiver o status PESADO
         if($pedido->status->status == "PESADO"){
             /**
-             * Percorre $itensPedido, $descontos e $itensComDesconto 
+             * Percorre $itensPedido, $descontos e $itensComDesconto
              * e salva o descontoPorcentagem e valorComDesconto
              */
             if(count($itensPedido) === count($itensComDesconto)){
@@ -376,7 +376,7 @@ class PedidoController extends Controller
             }
             $pedido->save();
         }
-        
+
         // ------------------------ DEBUG ------------------------
         // dd($request->all(),$pedido->status->status,$itensPedido,$itensComDesconto);
         // return view('pagamento',['pedido'=>$pedido]);
@@ -387,7 +387,7 @@ class PedidoController extends Controller
 
     /**
      * Função que calcula o desconto aplicado em cada forma de pagamento
-     * 
+     *
      * @param $valorTotalPagamento
      * @param $descontoPagamento
      * @return $valorPago
@@ -404,15 +404,15 @@ class PedidoController extends Controller
      */
     public function pagamento(Request $request){
         $pedido = Pedido::find($request['pedido_id']);
-        
+
         // -------------DEBUG----------------
         // dd($request->all(),$pedido,Auth::user()->funcionario->id);
-        
+
         $pedido->entregador_id = $request['entregador_id'];
         $status_id = Status::where('status','ENTREGUE')->pluck('id')->first();
         $pedido->status_id = $status_id;
         $pedido->save();
-        
+
         //Salva cada forma de pagamento
         for($i = 0; $i < count($request['formaPagamento']); $i++){
             $pagamento = new Pagamento();
@@ -423,7 +423,7 @@ class PedidoController extends Controller
             $pagamento->valorTotalPagamento = floatval($request['valorTotalPagamento'][$i]);//valor sem desconto aplicado
             $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
             $pagamento->formaPagamento_id = $request['formaPagamento'][$i];
-            
+
             $pagamento->funcionario_id = Auth::user()->funcionario->id;
             $pagamento->pedido_id = $pedido->id;
             $pagamento->save();
@@ -455,6 +455,7 @@ class PedidoController extends Controller
             ->orWhereHas('cliente',function($q) use ($request){
                 $q->where('nomeReduzido','like','%'.$request->input('nome').'%');
             })->get();
+
         if(isset($cliente)){
             // dd($cliente);
             return json_encode($cliente);
@@ -463,7 +464,7 @@ class PedidoController extends Controller
             return resonse('Cliente não encontrado', 404);
         }
     }
-    
+
     public function buscaCliente($id){
         // dd($id);
         $c = Cliente::with(['user'])->find($id);
@@ -488,7 +489,7 @@ class PedidoController extends Controller
         foreach($listaProdutos as $item){
             $produto = Produto::find($item[0]['produto_id']);
             if(isset($produto)){
-                $valorTotal += floatval($produto->preco * $item[0]['peso']); 
+                $valorTotal += floatval($produto->preco * $item[0]['peso']);
             }
         }
         return $valorTotal;
@@ -501,37 +502,40 @@ class PedidoController extends Controller
      */
     public function finalizarPedido(Request $request){
         $cliente = Cliente::find($request->input('cliente_id'));
-        
-        
+
+
         // valor total sem desconto
         $valorTotal = 0.0;
         $desconto = 0.0;
         foreach($request->input('listaProdutos') as $item){
             $produto = Produto::find($item[0]['produto_id']);
             if(isset($produto)){
-                $valorTotal += floatval($produto->preco * $item[0]['peso']); 
+                $valorTotal += floatval($produto->preco * $item[0]['peso']);
             }
         }
         $pedido = new Pedido();
         // valcula o desconto no valor total
         $pedido->valorTotal = $valorTotal;
-        
-        
+
+        //dd($pedido);
+
+
         // $pedido->desconto = floatval($request->input('valorDesconto'));
         $pedido->dataEntrega = $request->input('dataEntrega');
         $status = Status::where('status','SOLICITADO')->first(); // Solicitado
         // dd($status->id);
         $pedido->status_id = $status->id;
         $pedido->cliente_id = $cliente->id;
-        $funcionario = Funcionario::find(Auth::user()->id);
-        $pedido->funcionario_id = $funcionario->id; //salvando o user_id do funcionario que está logado
-        
+        $user = User::find(Auth::user()->id);
+        $funcionario = Funcionario::where('user_id','=', $user->id)->get();
+        //dd($funcionario[0]->id);
+        $pedido->funcionario_id = $funcionario[0]->id; //salvando o user_id do funcionario que está logado
+
         // dd($pedido);
         $pedido->save(); // salva o pedido
-        // dd($pedido);
 
         foreach($request->input('listaProdutos') as $item){
-            
+
             $itemPedido = new ItensPedido();
             $produto = Produto::find($item[0]['produto_id']);
             if(isset($produto)){
@@ -555,7 +559,7 @@ class PedidoController extends Controller
         for($i = 0; $i < $size; $i++){
             $cliente = Cliente::with('user')->find($pedidos[$i]->cliente_id);
             $funcionario = Funcionario::with('user')->find($pedidos[$i]->funcionario_id);
-            
+
             $pedidos[$i]["nomeCliente"] = $cliente->user->name;
             $pedidos[$i]["nomeFuncionario"] = $funcionario->user->name;
         }
@@ -573,7 +577,7 @@ class PedidoController extends Controller
 
     /**
      * Conclui a pesagem dos itens do pedido e salva os dados
-     * 
+     *
      * @param $request
      * @return view listarPedidos
      */
@@ -585,7 +589,7 @@ class PedidoController extends Controller
             $validator = $request->validate([
                 'pesoFinal'.$item->id => 'required',
             ]);
-            
+
             $produto = Produto::find($item->produto_id);
             $item->pesoFinal = floatval($request->input('pesoFinal'.$item->id));
             $item->valorReal = floatval($item->pesoFinal * $produto->preco);
@@ -612,7 +616,6 @@ class PedidoController extends Controller
     // Filtra Pedido
     public function filtrarPedido(Request $request, Pedido $pedido){
         $filtro = $request->all();
-        // dd($filtro);
         if(isset($filtro['status_id'])){
             $pedidos = Pedido::where('status_id',intval($filtro['status_id']))
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
@@ -663,7 +666,6 @@ class PedidoController extends Controller
         
         // // $pedidos = $pedido->filtro($filtro,25);
         // return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
-        
 
     }
 }
