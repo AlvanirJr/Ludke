@@ -191,7 +191,11 @@
 
 @section('javascript')
 <script>
-    
+    // Cria objeto Intl que será responsável por converter os valores para o formato da moeda brasileira
+    let formatter = new Intl.NumberFormat([],{
+        style: 'currency',
+        currency: 'BRL'
+    });
     // Objeto contendo as informações do pedido 
     var pedido = <?php echo $pedido ?>;
     pedido.deletar = [];
@@ -207,8 +211,8 @@
                         "<td value="+pedido.itens_pedidos[i].id+">"+pedido.itens_pedidos[i].id+"</td>"+
                         "<td>"+pedido.itens_pedidos[i].nomeProduto+"</td>"+
                         "<td value="+pedido.itens_pedidos[i].pesoSolicitado+">"+pedido.itens_pedidos[i].pesoSolicitado+"</td>"+
-                        "<td>"+pedido.itens_pedidos[i].precoProduto+"</td>"+
-                        "<td value="+pedido.itens_pedidos[i].valorReal+" class="+"precoCalculado"+">"+pedido.itens_pedidos[i].valorReal+"</td>"+
+                        "<td>"+formatter.format(pedido.itens_pedidos[i].precoProduto)+"</td>"+
+                        "<td value="+pedido.itens_pedidos[i].valorReal+" class="+"precoCalculado"+">"+formatter.format(pedido.itens_pedidos[i].valorReal)+"</td>"+
                         "<td><a href="+"#"+" onclick="+"removerProduto("+cont+")"+">"+
                             "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:18px"+">"+
                         "</a></td>"+
@@ -234,7 +238,7 @@
         total = calcularTotal();
         pedido.total = total;
         // console.log(pedido);
-        $("#valorTotal").html(total);
+        $("#valorTotal").html(formatter.format(total));
         $("#valorTotal").val(total);
     }
     
@@ -276,7 +280,7 @@
         // Digitar o valor do produto
         $('#pesoProduto').keyup(function(){
             if($(this).val() >= 0){
-                $("#precoEstimado").html(calcularPrecoProduto($(this).val()));
+                $("#precoEstimado").html(formatter.format(calcularPrecoProduto($(this).val())));
             }else{
                 alert("Esse peso não pode ser calculado");
                 $(this).val(0);
@@ -351,7 +355,7 @@
                 $("#idProduto").val(produto.id);
                 $("#nomeProduto").html(produto.nome);
                 $("#buscaProduto").val(produto.nome);
-                $("#textoPrecoProduto").html(produto.preco);
+                $("#textoPrecoProduto").html(formatter.format(produto.preco));
                 $("#precoProduto").val(produto.preco);
                 $("#descricaoProduto").html(produto.descricao);
                 $("#categoriaProduto").html(produto.categoria.nome);
@@ -406,7 +410,7 @@
                         console.log(total);
                         pedido.total = total;
                         console.log(pedido);
-                        $("#valorTotal").html(total);
+                        $("#valorTotal").html(formatter.format(total));
                         $("#valorTotal").val(total);
 
 
@@ -425,8 +429,8 @@
                     "<td value="+produto.id+">"+produto.id+"</td>"+
                     "<td>"+produto.nome+"</td>"+
                     "<td value="+peso+">"+peso+"</td>"+
-                    "<td>"+produto.preco+"</td>"+
-                    "<td value="+calcularTotalItem(produto.preco,peso)+" class="+"precoCalculado"+">"+calcularTotalItem(produto.preco,peso)+"</td>"+
+                    "<td>"+formatter.format(produto.preco)+"</td>"+
+                    "<td value="+calcularTotalItem(produto.preco,peso)+" class="+"precoCalculado"+">"+formatter.format(calcularTotalItem(produto.preco,peso))+"</td>"+
                     "<td><a href="+"#"+" onclick="+"removerProduto("+cont+")"+">"+
                         "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:18px"+">"+
                     "</a></td>"+
@@ -464,7 +468,7 @@
                     total = calcularTotal();
                     pedido.total = total;
                     // console.log(pedido);
-                    $("#valorTotal").html(total);
+                    $("#valorTotal").html(formatter.format(total));
                     $("#valorTotal").val(total);
                 }
             }
