@@ -35,12 +35,17 @@ class Pedido extends Model
 
                     $query->where('status_id',intval($filtro['status_id']));
                 }
-                if(isset($filtro['dataEntrega'])){
+                if( isset($filtro['dataEntrega'])){
                     $query->where('dataEntrega',$filtro['dataEntrega']);
                 }
                 if(isset($filtro['cliente'])){
                     $user = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->first();
                     $cliente = Cliente::where('user_id',$user->id)->first();
+                    $query->where('cliente_id',$cliente->id);
+                }
+                if(isset($filtro['nomeReduzido'])){
+                    // $user = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->first();
+                    $cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->first();
                     $query->where('cliente_id',$cliente->id);
                 }
             })->orderBy('status_id')->orderBy('dataEntrega')->paginate($itensPorPagina);
