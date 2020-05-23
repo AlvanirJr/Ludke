@@ -455,8 +455,8 @@
                     "<td value="+produto.id+">"+produto.id+"</td>"+
                     "<td>"+produto.nome+"</td>"+
                     "<td value="+peso+">"+peso+"</td>"+
-                    "<td>"+formatter.format(produto.preco)+"</td>"+
-                    "<td value="+calcularTotalItem(produto.preco,peso)+" class="+"precoCalculado"+">"+formatter.format(calcularTotalItem(produto.preco,peso))+"</td>"+
+                    "<td>"+produto.preco+"</td>"+
+                    "<td value="+calcularTotalItem(produto.preco,peso)+" class="+"precoCalculado"+">"+calcularTotalItem(produto.preco,peso)+"</td>"+
                     "<td><a href="+"#"+" onclick="+"removerProduto("+cont+")"+">"+
                         "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:18px"+">"+
                     "</a></td>"+

@@ -192,7 +192,12 @@
 
 @section('javascript')
 <script>
-    
+    // Cria objeto Intl que será responsável por converter os valores para o formato da moeda brasileira
+    let formatter = new Intl.NumberFormat([],{
+        style: 'currency',
+        currency: 'BRL'
+    });
+
     // Objeto contendo as informações do pedido 
     var pedido = {
         listaProdutos : [],
@@ -208,7 +213,7 @@
         });
         
         // Valor Total e num itens
-        $("#valorTotal").html(0);
+        $("#valorTotal").html(formatter.format(0));
         $("#subtotal").html(0);
         $("#ValorDesconto").html(0);
         $("#qtdItens").html(0);
@@ -253,7 +258,7 @@
         // Digitar o valor do produto
         $('#pesoProduto').keyup(function(){
             if($(this).val() >= 0){
-                $("#precoEstimado").html(calcularPrecoProduto($(this).val()));
+                $("#precoEstimado").html(formatter.format(calcularPrecoProduto($(this).val())));
             }else{
                 alert("Esse peso não pode ser calculado");
                 $(this).val(0);
@@ -377,7 +382,7 @@
                 $("#idProduto").val(produto.id);
                 $("#nomeProduto").html(produto.nome);
                 $("#buscaProduto").val(produto.nome);
-                $("#textoPrecoProduto").html(produto.preco);
+                $("#textoPrecoProduto").html(formatter.format(produto.preco));
                 $("#precoProduto").val(produto.preco);
                 $("#descricaoProduto").html(produto.descricao);
                 $("#categoriaProduto").html(produto.categoria.nome);
@@ -427,7 +432,7 @@
                         total = calcularTotal();
                         pedido.total = total;
                         // console.log(pedido);
-                        $("#valorTotal").html(total);
+                        $("#valorTotal").html(formatter.format(total));
                         $("#valorTotal").val(total);
 
 
@@ -456,7 +461,7 @@
         return linha;
     }
     function removerProduto(idLinha){
-        // console.log("Remover Produto: ",idLinha);
+        console.log("Remover Produto: ",idLinha);
         linhas = $("#tabelaPedidos>tbody>tr");
         e = linhas.filter(function(i,elemento){            
             return elemento.cells[0].textContent == idLinha;
@@ -490,7 +495,7 @@
                     total = calcularTotal();
                     pedido.total = total;
                     // console.log(pedido);
-                    $("#valorTotal").html(total);
+                    $("#valorTotal").html(formatter.format(total));
                     $("#valorTotal").val(total);
                 }
             }
