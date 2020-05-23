@@ -436,15 +436,26 @@ class PedidoController extends Controller
 
     // retorna o cliente através do cpj ou cnpj
     public function getCliente(Request $request){
-        $user = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')->get();
-        $cliente = [];
-        for($i = 0; $i < count($user); $i++){
-            if($user[$i]->cliente != null){
-                array_push($cliente,[
-                    "name"=>$user[$i]->name,"cliente_id"=>$user[$i]->cliente->id
-                    ]);
-            }
-        }
+        // $user = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')->get();
+        // dd($user);
+        // $cliente = [];
+        // for($i = 0; $i < count($user); $i++){
+        //     if($user[$i]->cliente != null){
+        //         array_push($cliente,[
+        //             "name"=>$user[$i]->name,"cliente_id"=>$user[$i]->cliente->id
+        //             ]);
+        //     }
+        // }        
+        // if(isset($cliente)){
+            //     // dd($cliente);
+            //     return json_encode($cliente);
+            // }
+        $cliente = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')
+            // ->whereHas('cliente')
+            ->orWhereHas('cliente',function($q) use ($request){
+                $q->where('nomeReduzido','like','%'.$request->input('nome').'%');
+            })->get();
+
         if(isset($cliente)){
             // dd($cliente);
             return json_encode($cliente);
@@ -460,6 +471,7 @@ class PedidoController extends Controller
         // dd($cliente);
         $cliente['id'] = $c->id;
         $cliente['nome'] = $c->user->name;
+        $cliente['nomeReduzido'] = $c->nomeReduzido;
         return json_encode($cliente);
     }
     public function getProdutos(Request $request){
@@ -604,12 +616,56 @@ class PedidoController extends Controller
     // Filtra Pedido
     public function filtrarPedido(Request $request, Pedido $pedido){
         $filtro = $request->all();
-        // dd($filtro);
-
-        $pedidos = $pedido->filtro($filtro,25);
-
-        return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
-        // dd($pedidos);
+        if(isset($filtro['status_id'])){
+            $pedidos = Pedido::where('status_id',intval($filtro['status_id']))
+                ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+            return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Status"]);
+        }
+        else if(isset($filtro['cliente'])){
+            $user = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->first();
+            if(isset($user)){
+                $cliente = Cliente::where('user_id',$user->id)->first();
+                $pedidos = Pedido::where('cliente_id',$cliente->id)
+                    ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+                return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+            }else{
+                return view('listarPedido',['pedidos'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+            }
+        }
+        else if(isset($filtro['nomeReduzido'])){
+            
+            $cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->first();
+            if(isset($cliente)){
+                $pedidos = Pedido::where('cliente_id',$cliente->id)
+                    ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+                return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
+            }
+            else{
+                return view('listarPedido',['pedidos'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
+            }
+        }
+        else if(isset($filtro['dataEntregaInicial']) && !isset($filtro['dataEntregaFinal'])){
+            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+                ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+            return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Maior ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))]);
+        }
+        else if(!isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
+            $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
+                ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+            return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Menor ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
+        }
+        else if(isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
+            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+                ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
+                ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+            return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Intervalo Data Entrega: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))." e ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
+        }
+        else{
+            return redirect()->route("listarPedidos");
+        }
+        
+        // // $pedidos = $pedido->filtro($filtro,25);
+        // return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
 
     }
 }
