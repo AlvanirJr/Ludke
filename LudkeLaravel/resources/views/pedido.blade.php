@@ -165,9 +165,10 @@
                                             <label for="">Número de Itens</label>
                                             <h4 id="qtdItens"></h4>
 
-                                              <label>Data de Entrega</label>
+                                            <label>Data de Entrega</label>
                                             <div class="input-group">
-                                                <input id="inputDataEntrega" type="date" class="form-control">
+                                            <input id="inputDataEntrega" type="date" class="form-control">
+                                            
                                                 
                                             </div>
                                         </div>
@@ -193,7 +194,12 @@
 @section('javascript')
 
 <script>
-    
+    // Cria objeto Intl que será responsável por converter os valores para o formato da moeda brasileira
+    let formatter = new Intl.NumberFormat([],{
+        style: 'currency',
+        currency: 'BRL'
+    });
+
     // Objeto contendo as informações do pedido 
     var pedido = {
         listaProdutos : [],
@@ -209,9 +215,10 @@
         });
         
         // Valor Total e num itens
-        $("#valorTotal").html("{{money_format('R$ %i',0)}}");
-        $("#subtotal").html("{{money_format('%i',0)}}");
-        $("#ValorDesconto").html("{{money_format('%i',0)}}");
+        // $("#valorTotal").html("{{money_format('R$ %i',0.0)}}");
+        $("#valorTotal").html(formatter.format(0));
+        $("#subtotal").html(formatter.format(0));
+        $("#ValorDesconto").html(formatter.format(0));
         $("#qtdItens").html(0);
 
         // Busca de Cliente
@@ -254,7 +261,7 @@
         // Digitar o valor do produto
         $('#pesoProduto').keyup(function(){
             if($(this).val() >= 0){
-                $("#precoEstimado").html(calcularPrecoProduto($(this).val()));
+                $("#precoEstimado").html(formatter.format(calcularPrecoProduto($(this).val())));
             }else{
                 alert("Esse peso não pode ser calculado");
                 $(this).val(0);
@@ -378,7 +385,7 @@
                 $("#idProduto").val(produto.id);
                 $("#nomeProduto").html(produto.nome);
                 $("#buscaProduto").val(produto.nome);
-                $("#textoPrecoProduto").html(produto.preco);
+                $("#textoPrecoProduto").html(formatter.format(produto.preco));
                 $("#precoProduto").val(produto.preco);
                 $("#descricaoProduto").html(produto.descricao);
                 $("#categoriaProduto").html(produto.categoria.nome);
@@ -428,8 +435,8 @@
                         total = calcularTotal();
                         pedido.total = total;
                         // console.log(pedido);
-                        $("#valorTotal").html(total);
-                        $("#valorTotal").val(total);
+                        $("#valorTotal").html(formatter.format(total));
+                        // $("#valorTotal").val(total);
 
 
                         // console.log()
@@ -448,8 +455,8 @@
                     "<td value="+produto.id+">"+produto.id+"</td>"+
                     "<td>"+produto.nome+"</td>"+
                     "<td value="+peso+">"+peso+"</td>"+
-                    "<td>"+produto.preco+"</td>"+
-                    "<td value="+calcularTotalItem(produto.preco,peso)+" class="+"precoCalculado"+">"+calcularTotalItem(produto.preco,peso)+"</td>"+
+                    "<td>"+formatter.format(produto.preco)+"</td>"+
+                    "<td value="+calcularTotalItem(produto.preco,peso)+" class="+"precoCalculado"+">"+formatter.format(calcularTotalItem(produto.preco,peso))+"</td>"+
                     "<td><a href="+"#"+" onclick="+"removerProduto("+cont+")"+">"+
                         "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:18px"+">"+
                     "</a></td>"+
