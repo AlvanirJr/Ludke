@@ -61,6 +61,11 @@
     
     {{-- Variável acho é setada caso encontre algum item no filtro --}}
     @if(isset($achou) && $achou == true)
+    <div class="row" style="margin-bottom:10px">
+        <div class="col-sm-12">
+            <span class="badge badge-light" style="padding:5px"><h4>Filtro: {{$tipoFiltro}}</h4></span>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-12 limparBusca">
             <a href="{{route('listarVendas')}}">
@@ -184,8 +189,14 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12">
-                            <label for="dataEntrega">Data de Entrega</label>
-                            <input type="date" class="form-control" id="dataEntrega" name="dataEntrega">
+                            <label for="dataEntregaInicial">Data de Entrega Inicial</label>
+                            <input type="date" class="form-control" id="dataEntregaInicial" name="dataEntregaInicial">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="dataEntregaFinal">Data de Entrega Final</label>
+                            <input type="date" class="form-control" id="dataEntregaFinal" name="dataEntregaFinal">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -193,15 +204,11 @@
                             <label for="status">Status</label>
                             <select class="form-control" name="status_id" id="status_id">
                                 <option value="" disabled selected>-- STATUS --</option>
-                                <option value="1">SOLICITADO</option>
                                 <option value="2">PESADO</option>
-                                <option value="4">PAGO PARCIALMENTE</option>
-                                <option value="5">PAGO TOTALMENTE</option>
                                 <option value="3">ENTREGUE</option>
                             </select>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

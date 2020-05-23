@@ -35,7 +35,7 @@ class Pedido extends Model
 
                     $query->where('status_id',intval($filtro['status_id']));
                 }
-                if(isset($filtro['dataEntrega'])){
+                if( isset($filtro['dataEntrega'])){
                     $query->where('dataEntrega',$filtro['dataEntrega']);
                 }
                 if(isset($filtro['cliente'])){

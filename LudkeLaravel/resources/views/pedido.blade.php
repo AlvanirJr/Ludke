@@ -187,6 +187,7 @@
 @endsection
 
 @section('javascript')
+
 <script>
     
     // Objeto contendo as informações do pedido 
@@ -204,9 +205,9 @@
         });
         
         // Valor Total e num itens
-        $("#valorTotal").html(0);
-        $("#subtotal").html(0);
-        $("#ValorDesconto").html(0);
+        $("#valorTotal").html("{{money_format('R$ %i',0)}}");
+        $("#subtotal").html("{{money_format('%i',0)}}");
+        $("#ValorDesconto").html("{{money_format('%i',0)}}");
         $("#qtdItens").html(0);
 
         // Busca de Cliente
