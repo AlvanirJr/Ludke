@@ -62,7 +62,7 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                   <h5 class="card-title">Valor do Pedido</h5>
-                  <p class="card-text"><h3 style="float:left">R$</h3><h3 id="valorDoPedido">{{$pedido->valorTotal}}</h3></p>
+                  <p class="card-text"><h3 id="valorDoPedido">R$ {{money_format("%i",$pedido->valorTotal)}}</h3></p>
                 </div>
             </div>
         </div>
@@ -84,9 +84,9 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Produto</th>
                                 <th scope="col">(R$) Preço/Kg</th>
-                                <th scope="col">Peso Solicitado</th>
-                                <th scope="col">Valor Total do Item</th>
-                                <th scope="col"> Desconto %</th>
+                                <th scope="col">(KG) Peso Solicitado</th>
+                                <th scope="col">(R$) Valor Total do Item</th>
+                                <th scope="col">(%) Desconto</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -94,9 +94,9 @@
                                 <tr>
                                     <td>{{$item->id}}</td>
                                     <td>{{$item->nomeProduto}}</td>
-                                    <td>{{$item->precoProduto}}</td>
+                                    <td>{{money_format("%i",$item->precoProduto)}}</td>
                                     <td>{{$item->pesoFinal}}</td> {{-- Durante o pedido, o peso final é igual ao peso solicitado. Somente na conclusão do pedido que o peso final é atualizado--}}
-                                    <td>{{$item->valorReal}}</td>
+                                    <td>{{money_format("%i",$item->valorReal)}}</td>
                                     <td>
                                         {{-- 
                                             Caso, o pedido tenha o status pesado, 
@@ -147,7 +147,12 @@
 @section('javascript')
 
 <script type="text/javascript">
-    
+    // Cria objeto Intl que será responsável por converter os valores para o formato da moeda brasileira
+    let formatter = new Intl.NumberFormat([],{
+        style: 'currency',
+        currency: 'BRL'
+    });
+    $("#valorDoPedido").val(formatter.format(<?php echo $pedido->valorTotal?>))
     // Valor final do pedido
     let valorDoPedido = $("#valorDoPedido").val();
     
@@ -203,7 +208,7 @@
         valorDescontoTotal = calcularDesconto(arrayPrecosItens,arrayValoresInputDesconto);
         let valorDoPedido = pedidoValorTotal;
 
-        $("#valorDoPedido").html(valorDoPedido - valorDescontoTotal);
+        $("#valorDoPedido").html(formatter.format(valorDoPedido - valorDescontoTotal));
     }
     
 </script>    
