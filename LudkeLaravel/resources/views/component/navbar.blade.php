@@ -62,7 +62,12 @@
 
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
+                            <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank">Produtos</a>
+                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank">Pedidos</a>
                         </div>
+
+
+
 
                     </li>
                     {{-- Ajuda --}}

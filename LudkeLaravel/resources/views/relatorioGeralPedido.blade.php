@@ -1,6 +1,6 @@
 @section('date',$date)
 @section('content')
-@section('titulo','Relatório de Pedido')
+@section('titulo','Relatório dos Pedidos')
 @extends('layouts.relatorios')
 
 <div class="row justify-content-center">
@@ -8,24 +8,23 @@
         <table id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw">
             <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
             <tr style="height:20px">
-                <th>Cpf</th>
+                <th>ID</th>
                 <th>Cliente</th>
-                <th>Peso</th>
+                <th>Vendedor</th>
+                <th>Data de Entrega</th>
                 <th>Valor</th>
-                <th>Produto</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($itens as $item)
-                @foreach($clientes as $cliente)
+            @foreach($pedidos as $pedido)
                 <tr align="center">
-                    <td>{{$cliente->cpfCnpj}}</td>
-                    <td >{{$cliente->nomeReduzido}}</td>
-                    <td>{{$item->pesoFinal}}</td>
-                    <td>{{$item->valorReal = number_format($item->valorReal, '2',',','.').' R$'}}</td>
-                    <td>{{$item->nomeProduto}}</td>
+                    <td>{{$pedido->id}}</td>
+                    <td >{{$pedido->cliente->nomeReduzido}}</td>
+                    <td>{{$pedido->funcionario->user->name}}</td>
+                    <td>{{$pedido->dataEntrega}}</td>
+                    <td>{{$pedido->valorTotal = number_format($pedido->valorTotal, '2',',','.').' R$'}}</td>
+
                 </tr>
-                    @endforeach
             @endforeach
             </tbody>
         </table>

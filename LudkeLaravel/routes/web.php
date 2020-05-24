@@ -20,8 +20,10 @@ Auth::routes();
 
 #Route::post('/login/user', 'CustomLoginController@loginUser');
 #Route::get('/logout', 'CustomHomeController@logoutUser');
-Route::get('/relatorio/{id}', 'RelatorioPedidosController@RelatorioPedidos')->name('relatorio');
+Route::get('/relatorio/{id}', 'RelatorioPedidosController@RelatorioPedidos')->name('pedido.relatorio');
 Route::get('/relatorioCliente', 'ClienteController@relatorioCliente')->name('relatorioCliente');
+Route::get('/relatorioProdutos', 'RelatorioProdutosController@relatorioProduto')->name('relatorioProdutos');
+Route::get('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
 
 Route::get('/home', 'HomeController@index')->name('home');
 

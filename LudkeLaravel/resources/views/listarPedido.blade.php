@@ -24,7 +24,7 @@
                     <div class="col-sm-2">
                         <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Novo Pedido</a>
                     </div>
-                    
+
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
@@ -44,7 +44,7 @@
 
             </div>
         </div>
-        
+
     @endif
     <div class="row justify-content-center">
         <div class="col-sm-12">
@@ -81,12 +81,12 @@
                             R$ {{money_format('%i',$pedido->valorTotal)}}
                         </td>
                             {{-- Pedido com status SOLICITADO --}}
-                            @if($pedido->status->status == "SOLICITADO") 
+                            @if($pedido->status->status == "SOLICITADO")
                                 <td>
                                     {{-- PESAR Pedido --}}
                                     <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
                                         <img id="pesar" class="icone" src="{{asset('img/balanca.svg')}}" >
-                                    </a>                
+                                    </a>
                                    {{-- Editar Pedido --}}
                                     <a href="/pedidos/edit/{{$pedido->id}}">
                                         <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
@@ -106,13 +106,13 @@
                                     {{-- PESAR Pedido --}}
                                     <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}">
                                         <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
-                                    </a> 
+                                    </a>
                                     {{-- Registrar Entrega do pedido --}}
                                     <a href="{{route('pedido.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
                                         <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
                                     </a>
                                     {{-- Imprimir pedido --}}
-                                    <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                    <a href={{route('pedido.relatorio',['id'=>$pedido->id])}}>
                                         <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
                                     {{-- Excluir Pedido --}}
@@ -126,9 +126,9 @@
                                     {{-- Contas a pagar --}}
                                     <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
                                         <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
-                                    </a> 
+                                    </a>
                                     {{-- Imprimir pedido --}}
-                                    <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                    <a  href={{route('pedido.relatorio',['id'=>$pedido->id])}}>
                                         <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
                                     {{-- Excluir Pedido --}}
@@ -136,7 +136,7 @@
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a> --}}
                                 </td>
-                            @else                                    
+                            @else
                                 <td>
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
@@ -154,7 +154,7 @@
         @if ($pedidos != [])
             @if (isset($filtro))
             {{ $pedidos->appends($filtro)->links() }}
-            
+
             @else
             {{ $pedidos->links() }}
             @endif
@@ -225,7 +225,7 @@
 @section('javascript')
 
 <script type="text/javascript">
-    
+
     $(function(){
 
         // Configuração do ajax com token csrf

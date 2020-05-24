@@ -17,6 +17,7 @@ class RelatorioPedidosController extends Controller
         $pedido = Pedido::find($id);
         $itens = ItensPedido::where('pedido_id', '=', $pedido->id)->get();
         $clientes = Cliente::where('id', '=', $pedido->cliente_id)->get();
+        //dd($clientes);
         $soma = 0;
         foreach ($itens as $iten){
             $soma += $iten->valorReal;
@@ -35,5 +36,23 @@ class RelatorioPedidosController extends Controller
 
 
 		return $pdf->stream($filename.'.pdf');
+    }
+
+
+
+    public function RelatorioGeral(){
+        $view = 'relatorioGeralPedido';
+        $pedidos = Pedido::all();
+
+
+        $date = date('d/m/Y');
+        $view = \View::make($view, compact('pedidos', 'date'))->render();
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view)->setPaper('a4', 'landscape');
+
+        $filename = 'relatorioGeralPedido'.$date;
+
+
+        return $pdf->stream($filename.'.pdf');
     }
 }
