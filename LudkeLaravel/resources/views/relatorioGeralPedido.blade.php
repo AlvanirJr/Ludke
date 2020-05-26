@@ -8,7 +8,7 @@
         <table id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw">
             <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
             <tr style="height:20px">
-                <th>ID</th>
+                <th>Código</th>
                 <th>Cliente</th>
                 <th>Vendedor</th>
                 <th>Data de Entrega</th>
@@ -28,6 +28,27 @@
             @endforeach
             </tbody>
         </table>
+        <table  id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw">
+            <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
+            <tr style="height:20px">
+                <th>Número total de pedidos</th>
+            </tr>
+            </thead>
+            <tr align="center">
+                <td>{{$count}}</td>
+            </tr>
+        </table>
+        <table  id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw">
+            <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
+            <tr style="height:20px">
+                <th>Valor total dos Pedidos</th>
+            </tr>
+            </thead>
+            <tr align="center">
+                <td>{{$total = number_format($total, '2',',','.').' R$'}}</td>
+            </tr>
+        </table>
+
     </div>
 </div>
 

@@ -17,6 +17,8 @@ class RelatorioProdutosController extends Controller
             ->select('produtos.id','produtos.nome', 'produtos.preco', 'produtos.validade', 'produtos.categoria_id')
             //->select('categorias.nome')
             ->get();
+        $count = count($produtos);
+        //dd($soma);
         #$categorias = Categoria::all();
 
 
@@ -31,7 +33,7 @@ class RelatorioProdutosController extends Controller
 
 
         $date = date('d/m/Y');
-        $view = \View::make($view, compact('produtos',  'date'))->render();
+        $view = \View::make($view, compact('produtos','count',  'date'))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->setPaper('a4', 'landscape');
 

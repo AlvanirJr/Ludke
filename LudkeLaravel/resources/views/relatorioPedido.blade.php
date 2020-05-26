@@ -5,7 +5,7 @@
 
 <div class="row justify-content-center">
     <div class="col-sm-12">
-        <table id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw">
+        <table id="tabelaPedidos" class="table table-borderless table-striped" style="width: 100vw">
             <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
             <tr style="height:20px">
                 <th>Cpf</th>
@@ -17,15 +17,13 @@
             </thead>
             <tbody>
             @foreach($itens as $item)
-                @foreach($clientes as $cliente)
                 <tr align="center">
-                    <td>{{$cliente->cpfCnpj}}</td>
-                    <td >{{$cliente->nomeReduzido}}</td>
+                    <td>{{$clientes[0]->cpfCnpj}}</td>
+                    <td >{{$clientes[0]->nomeReduzido}}</td>
                     <td>{{$item->pesoFinal}}</td>
                     <td>{{$item->valorReal = number_format($item->valorReal, '2',',','.').' R$'}}</td>
                     <td>{{$item->nomeProduto}}</td>
                 </tr>
-                    @endforeach
             @endforeach
             </tbody>
         </table>
