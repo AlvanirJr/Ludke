@@ -62,8 +62,8 @@
 
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
-                            <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank">Produtos</a>
-                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank">Pedidos</a>
+                            <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
+                            <a class="dropdown-item" href="#" target="_blank" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
                         </div>
 
 
@@ -216,3 +216,69 @@
         </div>
     </div>
 </nav>
+
+{{-- Modal Filtro Relatório Produtos --}}
+<div class="modal fade" id="filtroRelatorioPedidos" tabindex="-1" role="dialog" aria-labelledby="filtroRelatorioProdutoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Gerar Relatório de pedidos</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="relatorioGeralPedidos" action="{{route('relatorioGeralPedidos')}}" method="POST" target="_blanck">
+        <div class="modal-body">
+            <div class="alert alert-secondary" role="alert">
+                Para gerar o relatório com todas as informações, deixe o <strong>filtro</strong> em branco!
+              </div>
+                @csrf
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="cliente">Nome do Cliente</label>
+                        <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nome do Cliente">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="cliente">Nome Reduzido</label>
+                        <input type="text" class="form-control" id="cliente" name="nomeReduzido" placeholder="Nome Reduzido">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="dataEntregaInicial">Data de Entrega Inicial</label>
+                        <input type="date" class="form-control" id="dataEntregaInicial" name="dataEntregaInicial">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="dataEntregaFinal">Data de Entrega Final</label>
+                        <input type="date" class="form-control" id="dataEntregaFinal" name="dataEntregaFinal">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="status_id">Status</label>
+                        <select class="form-control" name="status_id" id="status_id">
+                            <option value="" disabled selected>-- STATUS --</option>
+                            <option value="1">SOLICITADO</option>
+                            <option value="2">PESADO</option>
+                            <option value="3">ENTREGUE</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-danger">Gerar Relatório</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+
+  </script>
