@@ -8,7 +8,8 @@ use App\ItensPedido;
 use App\Pedido;
 use App\Cliente;
 use App\User;
-
+use App\Funcionario;
+use App\Cargo;
 class RelatorioPedidosController extends Controller
 {
     //
@@ -117,10 +118,29 @@ class RelatorioPedidosController extends Controller
                 ->orderBy('status_id')->orderBy('dataEntrega')->get();
                 return $pedidos;
         }
+        else if(isset($filtro['entregador'])){
+            $pedidos = Pedido::where('entregador_id',$filtro['entregador'])->get();
+                return $pedidos;
+        }
         else{
             $pedidos = Pedido::all();
             return $pedidos;
         }
 
+    }
+
+    public function getEntregadores(){
+        $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
+        $gerenteAdministrativo_id = Cargo::where('nome','GERENTE ADMINISTRATIVO')->pluck('id')->first();
+        $gerenteGeral_id = Cargo::where('nome','GERENTE GERAL')->pluck('id')->first();
+        $vendedor_id = Cargo::where('nome','VENDEDOR(A)')->pluck('id')->first();
+                
+        $entregadores = Funcionario::with(['user'])
+            ->where('cargo_id',$entregador_id)
+            ->orWhere('cargo_id',$gerenteAdministrativo_id)
+            ->orWhere('cargo_id',$gerenteGeral_id)
+            ->orWhere('cargo_id',$vendedor_id)
+            ->get();
+        return json_encode($entregadores);
     }
 }

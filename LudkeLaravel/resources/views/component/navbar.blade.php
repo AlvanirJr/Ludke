@@ -63,7 +63,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
-                            <a class="dropdown-item" href="#" target="_blank" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
+                            <a class="dropdown-item" id="relatorioPedidos" href="#" target="_blank" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
                         </div>
 
 
@@ -217,6 +217,7 @@
     </div>
 </nav>
 
+@can('view_admin', Auth::user())
 {{-- Modal Filtro Relatório Produtos --}}
 <div class="modal fade" id="filtroRelatorioPedidos" tabindex="-1" role="dialog" aria-labelledby="filtroRelatorioProdutoLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -242,7 +243,7 @@
                 <div class="form-group row">
                     <div class="col-sm-12">
                         <label for="cliente">Nome Reduzido</label>
-                        <input type="text" class="form-control" id="cliente" name="nomeReduzido" placeholder="Nome Reduzido">
+                        <input type="text" class="form-control" id="nomeReduzido" name="nomeReduzido" placeholder="Nome Reduzido">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -268,6 +269,14 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="entregador">Entregador</label>
+                        <select class="form-control" name="entregador" id="entregador">
+                            <option value="" disabled selected>-- ENTREGADOR --</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -278,7 +287,28 @@
     </div>
   </div>
 
-  <script>
+<script>
 
+    $(document).ready(function(){
 
-  </script>
+        $("#relatorioPedidos").click(function(){
+            // Limpa Inputs modal
+            $("#cliente").val("");
+            $("#nomeReduzido").val("");
+            $("#dataEntregaInicial").val("YYYY-MM-DD");
+            $("#dataEntregaFinal").val("YYYY-MM-DD");
+            $("#status_id").val("");
+            $("#entregador").html('<option value="" disabled selected>-- STATUS --</option>');
+
+            // Busca todos os funcionários que podem entregar pedido
+            $.getJSON('/getEntregadores', function(entregadores){
+                
+                entregadores.forEach(entregador => {
+                    $("#entregador").append(`<option value="${entregador.id}">${entregador.user.name}</option>`)
+                });
+            });
+        });
+    });
+
+</script>
+@endcan
