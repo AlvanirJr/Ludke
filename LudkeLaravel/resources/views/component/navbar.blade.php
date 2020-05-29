@@ -32,7 +32,7 @@
                         </div>
                     </li>
                     {{-- Pedidos --}}
-                    {{-- <li class="nav-item dropdown">
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Pedidos
                         </a>
@@ -40,10 +40,11 @@
                             <a class="dropdown-item" href="{{route('pedidos')}}">Novo Pedido</a>
                             <a class="dropdown-item" href="{{route('listarPedidos')}}">Listar Pedidos</a>
                         </div>
-                    </li> --}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('listarPedidos')}}">Pedidos</a>
                     </li>
+                    {{-- <li class="nav-item">
+                        
+                        <a class="nav-link" href="{{route('listarPedidos')}}">Pedidos</a>
+                    </li> --}}
                     {{-- Vendas --}}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

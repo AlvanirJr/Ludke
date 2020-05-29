@@ -19,9 +19,13 @@
                             Filtrar
                           </button>
                     </div>
+                    @if(Auth::user()->can('view_admin', Auth::user())
+                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
+                    || Auth::user()->can('view_vendedor', Auth::user()))
                     <div class="col-sm-2">
                         <a href="{{route('vendas')}}" class="btn btn-primary-ludke">Nova Venda</a>
                     </div>
+                    @endif
                     
                 </div>
             </div><!-- end titulo-pagina -->
@@ -87,7 +91,12 @@
                     <th>Pedido</th>
                     <th>Status</th>
                     <th>Valor Total</th>
+
+                    @if(Auth::user()->can('view_admin', Auth::user())
+                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
+                    || Auth::user()->can('view_vendedor', Auth::user()))
                     <th>Ações</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -106,42 +115,46 @@
                         </td>
                         <td>{{$pedido->status->status}}</td>
                         <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>
-                        {{-- Verifica se o status do pedido é SOLICITADO --}}
-                        @if($pedido->status->status == "ENTREGUE")
-                        
-                        <td>
-                            {{-- Contas a pagar --}}
-                            <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
-                                <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
-                            </a> 
-                            {{-- Imprimir pedido --}}
-                            <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
-                                <img id="" class="icone" src="{{asset('img/print.svg')}}" >
-                            </a>
-                            {{-- Excluir Pedido --}}
-                            <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
-                            </a>
-                        </td>
-                        {{-- Verifica se o status do pedido é PESADO --}}
-                        @elseif($pedido->status->status == "PESADO")
+                        @if(Auth::user()->can('view_admin', Auth::user())
+                        || Auth::user()->can('view_gerenteAdmin', Auth::user())
+                        || Auth::user()->can('view_vendedor', Auth::user()))
+                            {{-- Verifica se o status do pedido é SOLICITADO --}}
+                            @if($pedido->status->status == "ENTREGUE")
+                            
                             <td>
-                                <a href="{{route('concluirVenda',['id'=>$pedido->id])}}">
-                                    <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
-                                </a>       
-                                {{-- Registrar Entrega do pedido --}}
-                                <a href="{{route('venda.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
-                                    <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
-                                </a>                     
+                                {{-- Contas a pagar --}}
+                                <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                    <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
+                                </a> 
                                 {{-- Imprimir pedido --}}
                                 <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
                                     <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                 </a>
+                                {{-- Excluir Pedido --}}
                                 <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                    <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                    <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                 </a>
                             </td>
-                        
+                            {{-- Verifica se o status do pedido é PESADO --}}
+                            @elseif($pedido->status->status == "PESADO")
+                                <td>
+                                    <a href="{{route('concluirVenda',['id'=>$pedido->id])}}">
+                                        <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
+                                    </a>       
+                                    {{-- Registrar Entrega do pedido --}}
+                                    <a href="{{route('venda.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
+                                        <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
+                                    </a>                     
+                                    {{-- Imprimir pedido --}}
+                                    <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                        <img id="" class="icone" src="{{asset('img/print.svg')}}" >
+                                    </a>
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                    </a>
+                                </td>
+                            
+                            @endif
                         @endif
                     </tr>
                     @endforeach
