@@ -21,6 +21,7 @@
                     </div>
                     @if(Auth::user()->can('view_admin', Auth::user())
                     || Auth::user()->can('view_gerenteAdmin', Auth::user())
+                    || Auth::user()->can('view_gerenteGeral', Auth::user())
                     || Auth::user()->can('view_vendedor', Auth::user()))
                     <div class="col-sm-2">
                         <a href="{{route('vendas')}}" class="btn btn-primary-ludke">Nova Venda</a>
@@ -94,7 +95,7 @@
 
                     @if(Auth::user()->can('view_admin', Auth::user())
                     || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_vendedor', Auth::user()))
+                    || Auth::user()->can('view_gerenteGeral', Auth::user()))
                     <th>Ações</th>
                     @endif
                 </tr>
@@ -117,7 +118,7 @@
                         <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>
                         @if(Auth::user()->can('view_admin', Auth::user())
                         || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                        || Auth::user()->can('view_vendedor', Auth::user()))
+                        || Auth::user()->can('view_gerenteGeral', Auth::user()))
                             {{-- Verifica se o status do pedido é SOLICITADO --}}
                             @if($pedido->status->status == "ENTREGUE")
                             

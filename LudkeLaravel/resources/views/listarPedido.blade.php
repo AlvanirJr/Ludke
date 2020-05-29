@@ -22,6 +22,7 @@
                     </div>
                     @if(Auth::user()->can('view_admin', Auth::user())
                     || Auth::user()->can('view_gerenteAdmin', Auth::user())
+                    || Auth::user()->can('view_gerenteGeral', Auth::user())
                     || Auth::user()->can('view_vendedor', Auth::user()))
                     {{-- NOVO PEDIDO --}}
                     <div class="col-sm-2">
@@ -64,7 +65,7 @@
 
                     @if(Auth::user()->can('view_admin', Auth::user())
                     || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_vendedor', Auth::user()))
+                    || Auth::user()->can('view_gerenteGeral', Auth::user()))
                     <th>Ações</th>
                     @endif
                 </tr>
@@ -90,7 +91,7 @@
                         </td>
                         @if(Auth::user()->can('view_admin', Auth::user())
                         || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                        || Auth::user()->can('view_vendedor', Auth::user()))
+                        || Auth::user()->can('view_gerenteGeral', Auth::user()))
                             {{-- Pedido com status SOLICITADO --}}
                             @if($pedido->status->status == "SOLICITADO")
                                 <td>
