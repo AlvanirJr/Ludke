@@ -4,8 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         {{-- @if(Auth::user()->can('view_salsicheiro', Auth::user())) --}}
-        
-        @if(Auth::user()->can('view_admin', Auth::user())
+
+        @if(Auth::user()->can('view_gerenteGeral', Auth::user())
         || Auth::user()->can('view_gerenteAdmin', Auth::user())
         || Auth::user()->can('view_vendedor', Auth::user()))
 
@@ -40,7 +40,7 @@
             </div>
 
             {{-- Card 3 --}}
-            
+
             <div class="col-sm-4">
                 <div id="card">
                     <a id="link-card" href="{{route('clientes')}}">
