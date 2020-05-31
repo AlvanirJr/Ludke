@@ -70,7 +70,7 @@ class ProdutoController extends Controller
         $prod->preco = $request->input('preco');
         //$prod->descricao = strtoupper($request->input('descricao'));
         $prod->categoria_id = $request->input('categoriaProduto');
-        
+
 
         $prod->save();
 
@@ -175,7 +175,7 @@ class ProdutoController extends Controller
             }
 
 
-            if(isset($request->arrayIdsDeletarFotos)){
+            if(isset($request->arraytarFotos)){
 
                 // array contendo o id das imagens para deletar
                 $arrayIdsDeletarFoto = explode(',',$request->arrayIdsDeletarFotos);

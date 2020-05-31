@@ -1,49 +1,33 @@
 @section('date',$date)
 @section('content')
-@section('titulo','Relatório Pedido')
+@section('titulo','Relatório de Pedido')
 @extends('layouts.relatorios')
 
-<table class="table table-bordered table-striped"  align="center" border="1">
-    <thead class="table thead">
-    <tr>
-        <th>CPF</th>
-        <th>Cliente</th>
-    </tr>
-    </thead>
-    <tbody>
-        @foreach($clientes as $cliente)
-            <tr class="linha">
-                <td >{{$cliente->cpfCnpj}}</td>
-                <td>{{$cliente->nomeResponsavel}}</td>
+<div class="row justify-content-center">
+    <div class="col-sm-12">
+        <table id="tabelaPedidos" class="table table-borderless table-striped" style="width: 100vw">
+            <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
+            <tr style="height:20px">
+                <th>Cpf</th>
+                <th>Cliente</th>
+                <th>Peso</th>
+                <th>Valor</th>
+                <th>Produto</th>
             </tr>
-        @endforeach
-    </tbody>
-</table>
-
-
-    <table  border=1  width=80% height=80% ALIGN=center style="margin-top:10px" >
- 		<thead class="table thead">
-			<tr >
-				<th>Peso</th>
-                <th>Valor do Item</th>
-				<th>Produto</th>
-
-			</tr>
-		</thead>
-		<tbody>
-
-
-        @foreach($itens as $iten)
-				<tr class="linha">
-                    <td>{{$iten->pesoFinal}} KG</td>
-                    <td>{{$iten->valorReal = number_format($iten->valorReal, '2',',','.')}}</td>
-                    <td>{{$iten->nomeProduto}}</td>
+            </thead>
+            <tbody>
+            @foreach($itens as $item)
+                <tr align="center">
+                    <td>{{$clientes[0]->cpfCnpj}}</td>
+                    <td >{{$clientes[0]->nomeReduzido}}</td>
+                    <td>{{$item->pesoFinal}}</td>
+                    <td>{{$item->valorReal = number_format($item->valorReal, '2',',','.').' R$'}}</td>
+                    <td>{{$item->nomeProduto}}</td>
                 </tr>
-				@endforeach
-		</tbody>
-	</table>
-
-    <h2 border=1  width=80% height=80% ALIGN=center >Valor Total: {{$soma = number_format($soma, '2',',','.')}} R$</h2>
-
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
 
 @stop

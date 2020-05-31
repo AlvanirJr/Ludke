@@ -45,8 +45,8 @@ input[type=number] {
 }
 /* --------- Cards ---------------*/
 #card{
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
     background-color: #BF1A2C;
     margin:50px;
     transition: all 0.1s linear;
@@ -58,16 +58,16 @@ input[type=number] {
 #card-image{
     margin-top: 50px;
     margin-bottom: 20px;
-    width: 100px;
+    width: 50px;
 }
 
 #card-image-categorias{
     margin-top: 0;
     margin-bottom: -30px;
-    width: 200px;
+    width: 150px;
 }
 #card-text{
-    font-size: 30px;
+    font-size: 25px;
     
 }
 #link-card{
@@ -142,7 +142,7 @@ input[type=number] {
 
 #logo{
     padding: 10px;
-    width:130px;
+    width:100px;
 }
 
 .icone{

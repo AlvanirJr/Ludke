@@ -109,9 +109,16 @@ class PedidoController extends Controller
         // dd($request->all());
         $pedido = Pedido::find($request['pedido_id']);
         $pedido->entregador_id = $request['entregador_id'];
-        $pedido->dataEntrega = $request['dataEntrega'];
+        $data = $request['dataEntrega'];
+        $data = str_replace('/', '-', $data);
+        $date = date('Y-m-d', strtotime($data));
+        //dd($date);
+        $pedido->dataEntrega = $date;
+        //dd($pedido->dataEntrega);
         $status_id = Status::where('status','ENTREGUE')->pluck('id')->first();
         $pedido->status_id = $status_id;
+
+        //dd($pedido);
 
         $pedido->save();
         return redirect()->route('listarPedidos');
@@ -291,6 +298,7 @@ class PedidoController extends Controller
         if(isset($pedido)){
             for($i = 0; $i< count($pedido->itensPedidos); $i++){
                 $produto = Produto::find($pedido->itensPedidos[$i]->produto_id);
+                //dd($produto);
                 $pedido->itensPedidos[$i]["precoProduto"] = $produto->preco;
             }
             $cliente = Cliente::with('user')->find($pedido->cliente_id);
@@ -445,7 +453,7 @@ class PedidoController extends Controller
         //             "name"=>$user[$i]->name,"cliente_id"=>$user[$i]->cliente->id
         //             ]);
         //     }
-        // }        
+        // }
         // if(isset($cliente)){
             //     // dd($cliente);
             //     return json_encode($cliente);
@@ -633,7 +641,7 @@ class PedidoController extends Controller
             }
         }
         else if(isset($filtro['nomeReduzido'])){
-            
+
             $cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->first();
             if(isset($cliente)){
                 $pedidos = Pedido::where('cliente_id',$cliente->id)
@@ -663,7 +671,7 @@ class PedidoController extends Controller
         else{
             return redirect()->route("listarPedidos");
         }
-        
+
         // // $pedidos = $pedido->filtro($filtro,25);
         // return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
 

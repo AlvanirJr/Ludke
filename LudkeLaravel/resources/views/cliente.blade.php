@@ -56,11 +56,11 @@
             <table id="tabelaClientes" class="table table-hover table-responsive-xl">
                 <thead class="thead-primary">
                     <tr>
-                        <th>ID</th>
+                        <th>Código</th>
                         <th>Nome</th>
+                        <th>Nome Reduzido</th>
                         <th>CPF/CNPJ</th>
-                        <th>Telefone Residêncial</th>
-                        <th>Celular</th>
+                        <th>Cidade</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -70,9 +70,9 @@
                     <tr>
                         <td>{{$cliente->id}}</td>
                         <td>{{$cliente->user->name}}</td>
+                        <td>{{$cliente->nomeReduzido}}</td>
                         <td>{{$cliente->cpfCnpj}}</td>
-                        <td>{{$cliente->user->telefone->residencial}}</td>
-                        <td>{{$cliente->user->telefone->celular}}</td>
+                        <td>{{$cliente->user->endereco->cidade}}</td>
                         <td>
                             <a href="#" onclick="editarCliente({{$cliente->id}})">
                                <img id="iconeEdit" class="icone" src="{{asset('img/edit-solid.svg')}}">

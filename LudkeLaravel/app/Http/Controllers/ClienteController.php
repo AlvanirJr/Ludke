@@ -424,8 +424,10 @@ class ClienteController extends Controller
         $clientes = Cliente::with('user')->get();
         // dd($clientes);
 
+        $count = count($clientes);
+
         $date = date('d/m/Y');
-        $view = \View::make($view, compact('clientes',  'date'))->render();
+        $view = \View::make($view, compact('clientes', 'count', 'date'))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->setPaper('a4', 'landscape');
 
