@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Funcionario;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -16,8 +17,9 @@ class UserPolicy
      */
     public function view_admin(User $user)
     {
-        //dd($user->tipo);
-        if($user->tipo == 'admin'){
+
+        $fun = Funcionario::where('user_id', '=', $user->id)->get();
+        if($fun[0]->cargo_id == 1){
             return true;
         }
         else{
@@ -28,8 +30,9 @@ class UserPolicy
 
 
     public function view_gerenteAdmin(User $user){
-        //dd($user->tipo);
-        if($user->tipo == 'gerenteAdmin'){
+        $fun = Funcionario::where('user_id', '=', $user->id)->get();
+        //dd($fun[0]->cargo_id);
+        if($fun[0]->cargo_id == 1){
             return true;
         }
         else{
@@ -38,7 +41,11 @@ class UserPolicy
     }
 
     public function view_gerenteGeral(User $user){
-        if($user->tipo == 'gerenteGeral'){
+        //dd(2);
+
+        $fun = Funcionario::where('user_id', '=', $user->id)->get();
+
+        if($fun[0]->cargo_id == 2){
             return true;
         }
         else{
@@ -47,8 +54,9 @@ class UserPolicy
     }
 
     public function view_vendedor(User $user){
+        $fun = Funcionario::where('user_id', '=', $user->id)->get();
 
-        if($user->tipo == 'vendedor'){
+        if($fun[0]->cargo_id == 3){
             return true;
         }
         else{
@@ -57,7 +65,21 @@ class UserPolicy
     }
 
     public function view_salsicheiro(User $user){
-        if($user->tipo == 'salsicheiro'){
+        $fun = Funcionario::where('user_id', '=', $user->id)->get();
+
+        if($fun[0]->cargo_id == 7){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+    public function view_secretaria(User $user){
+        $fun = Funcionario::where('user_id', '=', $user->id)->get();
+
+        if($fun[0]->cargo_id == 4){
             return true;
         }
         else{

@@ -20,7 +20,7 @@ class FuncionarioController extends Controller
     public function buscarFuncionario(Request $request){
         $f =  strtoupper($request->input('q'));
         // dd($c);
-        
+
         if(isset($f)){
             $users = User::where('name','LIKE','%'.$f.'%')->pluck('id');
             $funcionarios = Funcionario::whereIn('user_id',$users)->paginate(10)->setpath('');
@@ -213,7 +213,7 @@ class FuncionarioController extends Controller
         $user = User::find($funcionario->user_id);
         $telefone = Telefone::find($user->telefone_id);
         $endereco = Endereco::find($user->endereco_id);
-        
+
         if($user->email != $request->input('email')){
             // Validação
             $validator = $this->validate($request,[
@@ -243,10 +243,10 @@ class FuncionarioController extends Controller
                 'complemento' => 'nullable|string|max:255',
             ]);
         }
-        
-        
 
-        
+
+
+
 
         if(isset($funcionario) && isset($user)
         && isset($telefone) && isset($endereco)){
@@ -269,6 +269,10 @@ class FuncionarioController extends Controller
             $user->name = strtoupper($request->input('nome'));
             $user->email= $request->input('email');
             $user->save();
+
+            $funcionario->user_id = $user->id;
+            $funcionario->cargo_id = $request->input('cargo');
+            $funcionario->save();
 
 
 

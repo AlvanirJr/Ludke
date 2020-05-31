@@ -90,8 +90,10 @@ class PedidoController extends Controller
         //------------DEBUG--------------------------
         // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
-        $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
-                                        orwhere('cargo_id',$entregador_id)->get();
+        //dd($entregador_id);
+        //$entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
+          //                              orwhere('cargo_id',$entregador_id)->get();
+        $entregadores = Funcionario::all();
         return view('registrarEntregaPedido',
         [
             'pedido'=>$pedido,

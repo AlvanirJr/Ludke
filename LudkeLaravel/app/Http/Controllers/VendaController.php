@@ -24,13 +24,13 @@ class VendaController extends Controller
     }
 
     public function indexListarVendas()
-    {                        
+    {
         $pedidos = Pedido::with(['status','pagamento'])->
                             where('status_id',2)-> //PESADO
                             orwhere('status_id',3)-> //ENTREGUE
                             orderby('status_id')->
                             paginate(25);
-        
+
         return view('listarVendas',['pedidos'=>$pedidos]);
     }
 
@@ -43,7 +43,7 @@ class VendaController extends Controller
 
         // Itens do Pedido
         $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
-        
+
         $valorTotalDoPagamento = 0;
         $valorDoDesconto = 0;
 
@@ -76,10 +76,10 @@ class VendaController extends Controller
         // dd($id);
         // Pedido
         $pedido = Pedido::with(['cliente'])->find($id);
-        
+
         // Itens do Pedido
         $itensPedido = ItensPedido::where('pedido_id',$pedido->id)->get();
-        
+
         $valorTotalDoPagamento = 0;
         $valorDoDesconto = 0;
 
@@ -88,14 +88,16 @@ class VendaController extends Controller
             if(isset($item->valorComDesconto)){
                 $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
             }
-            
+
         }
 
         //------------DEBUG--------------------------
         // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
-        $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
+       /* $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
                                         orwhere('cargo_id',$entregador_id)->get();
+       */
+        $entregadores = Funcionario::all();
         return view('registrarEntregaPedido',
         [
             'pedido'=>$pedido,
@@ -116,7 +118,7 @@ class VendaController extends Controller
         $pedido->dataEntrega = $request['dataEntrega'];
         $status_id = Status::where('status','ENTREGUE')->pluck('id')->first();
         $pedido->status_id = $status_id;
-        
+
         $pedido->save();
         return redirect()->route('listarVendas');
     }
@@ -128,15 +130,15 @@ class VendaController extends Controller
     function finalizarVenda(Request $request){
         // dd($request->all());
         $cliente = Cliente::find($request->input('cliente_id'));
-        
-        
+
+
         // valor total sem desconto
         $valorTotal = 0;
         $desconto = 0;
         foreach($request->input('listaProdutos') as $item){
             $produto = Produto::find($item[0]['produto_id']);
             if(isset($produto)){
-                $valorTotal += $produto->preco * $item[0]['peso']; 
+                $valorTotal += $produto->preco * $item[0]['peso'];
             }
         }
         $pedido = new Pedido();
@@ -144,21 +146,21 @@ class VendaController extends Controller
         $pedido->status_id = $status->id;
         // valcula o desconto no valor total
         $pedido->valorTotal = $valorTotal;
-        
-        
+
+
         // $pedido->desconto = floatval($request->input('valorDesconto'));
         $pedido->dataEntrega = $request->input('dataEntrega');
-        
+
         $pedido->cliente_id = $cliente->id;
         $funcionario = Funcionario::find(Auth::user()->id);
         $pedido->funcionario_id = $funcionario->id; //salvando o user_id do funcionario que está logado
-        
+
         // dd($pedido);
         $pedido->save(); // salva o pedido
         // dd($pedido);
 
         foreach($request->input('listaProdutos') as $item){
-            
+
             $itemPedido = new ItensPedido();
             $produto = Produto::find($item[0]['produto_id']);
             if(isset($produto)){
@@ -193,12 +195,12 @@ class VendaController extends Controller
             }
             $cliente = Cliente::with('user')->find($pedido->cliente_id);
             $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
-            
+
             // $pedido["valorProduto"]= $produto->preco;
             $pedido["nomeCliente"] = $cliente->user->name;
             $pedido["nomeFuncionario"] = $funcionario->user->name;
             // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
-            
+
             return view('concluirVenda')->with(["pedido"=>$pedido]);
         }
     }
@@ -212,18 +214,18 @@ class VendaController extends Controller
         // dd($request->all());
         // pedido
         $pedido = Pedido::find($request['pedido_id']);
-        // array com a porcentagem dos descontos referente aos itens 
+        // array com a porcentagem dos descontos referente aos itens
         $descontos = $request['desconto'];
         // array com os itens do pedido
         $itensPedido = ItensPedido::where('pedido_id',$request['pedido_id'])->get();
         // array contendo os preços com os descontos calculados
-        $itensComDesconto = $this->itensComDesconto($itensPedido, $descontos);        
-        
+        $itensComDesconto = $this->itensComDesconto($itensPedido, $descontos);
+
         // ------------------------ DEBUG ------------------------
         // dd($request->all(),$pedido->status->status,$itensPedido,$itensComDesconto);
-        
+
         /**
-         * Percorre $itensPedido, $descontos e $itensComDesconto 
+         * Percorre $itensPedido, $descontos e $itensComDesconto
          * e salva o descontoPorcentagem e valorComDesconto
          */
         if(count($itensPedido) === count($itensComDesconto)){
@@ -234,7 +236,7 @@ class VendaController extends Controller
             }
         }
         $pedido->save();
-        
+
         // return view('pagamento',['pedido'=>$pedido]);
 
         return redirect('/vendas/pagamento/'.$pedido->id);
@@ -254,10 +256,10 @@ class VendaController extends Controller
         }
         return $itensComDesconto;
     }
-    
+
     /**
      * Função que calcula o desconto aplicado em cada forma de pagamento
-     * 
+     *
      * @param $valorTotalPagamento
      * @param $descontoPagamento
      * @return $valorPago
@@ -274,17 +276,17 @@ class VendaController extends Controller
      */
     public function pagamento(Request $request){
         $pedido = Pedido::find($request['pedido_id']);
-        
+
         // -------------DEBUG----------------
         // dd($request->all(),$pedido,Auth::user()->funcionario->id);
-        
+
         $pedido->entregador_id = $request['entregador_id'];
         $status = Status::where('status','ENTREGUE')->first(); // Solicitado
         // dd($status->id);
         $pedido->status_id = $status->id;
-        
+
         $pedido->save();
-        
+
         //Salva cada forma de pagamento
         for($i = 0; $i < count($request['formaPagamento']); $i++){
             $pagamento = new Pagamento();
@@ -295,7 +297,7 @@ class VendaController extends Controller
             $pagamento->valorTotalPagamento = floatval($request['valorTotalPagamento'][$i]);//valor sem desconto aplicado
             $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
             $pagamento->formaPagamento_id = $request['formaPagamento'][$i];
-            
+
             $pagamento->funcionario_id = Auth::user()->funcionario->id;
             $pagamento->pedido_id = $pedido->id;
             $pagamento->save();
@@ -327,7 +329,7 @@ class VendaController extends Controller
             }
         }
         else if(isset($filtro['nomeReduzido'])){
-            
+
             $cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->first();
             if(isset($cliente)){
                 $pedidos = Pedido::where('cliente_id',$cliente->id)
@@ -357,7 +359,7 @@ class VendaController extends Controller
         else{
             return redirect()->route("listarVendas");
         }
-        
+
         // $pedidos = $pedido->filtro($filtro,25);
         // return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
         // dd($pedidos);
