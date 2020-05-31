@@ -19,7 +19,7 @@ class UserPolicy
     {
 
         $fun = Funcionario::where('user_id', '=', $user->id)->get();
-        if($fun[0]->cargo_id == 1){
+        if($fun[0]->cargo_id == 0){
             return true;
         }
         else{
