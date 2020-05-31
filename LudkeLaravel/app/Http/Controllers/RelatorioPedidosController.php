@@ -7,7 +7,9 @@ use Dompdf\Dompdf;
 use App\ItensPedido;
 use App\Pedido;
 use App\Cliente;
-
+use App\User;
+use App\Funcionario;
+use App\Cargo;
 class RelatorioPedidosController extends Controller
 {
     //
@@ -39,9 +41,14 @@ class RelatorioPedidosController extends Controller
 
 
 
-    public function RelatorioGeral(){
+    public function RelatorioGeral(Request $request){
+        // Set variável filtro
+        $filtro = $request->all();
+        // filtra os pedidos
+        $pedidos = self::filtrarPedido($filtro);
+        
         $view = 'relatorioGeralPedido';
-        $pedidos = Pedido::all();
+        // $pedidos = Pedido::all();
         $total = 0;
         foreach ($pedidos as $pedido){
             $total += $pedido->valorTotal;
@@ -60,5 +67,80 @@ class RelatorioPedidosController extends Controller
 
 
         return $pdf->stream($filename.'.pdf');
+    }
+
+
+    // Filtra Pedido
+    public function filtrarPedido($filtro){
+        
+        $pedidos = [];
+        if(isset($filtro['status_id'])){
+            $pedidos = Pedido::where('status_id',intval($filtro['status_id']))
+                ->orderBy('status_id')->orderBy('dataEntrega')->get();
+            return $pedidos;
+        }
+        else if(isset($filtro['cliente'])){
+            $user = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->first();
+            if(isset($user)){
+                $cliente = Cliente::where('user_id',$user->id)->first();
+                $pedidos = Pedido::where('cliente_id',$cliente->id)
+                    ->orderBy('status_id')->orderBy('dataEntrega')->get();
+                    return $pedidos;
+            }else{
+                return view('listarPedido',['pedidos'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+            }
+        }
+        else if(isset($filtro['nomeReduzido'])){
+
+            $cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->first();
+            if(isset($cliente)){
+                $pedidos = Pedido::where('cliente_id',$cliente->id)
+                    ->orderBy('status_id')->orderBy('dataEntrega')->get();
+                return $pedidos;
+            }
+            else{
+                return $pedidos;
+            }
+        }
+        else if(isset($filtro['dataEntregaInicial']) && !isset($filtro['dataEntregaFinal'])){
+            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+                ->orderBy('status_id')->orderBy('dataEntrega')->get();
+                return $pedidos;
+        }
+        else if(!isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
+            $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
+                ->orderBy('status_id')->orderBy('dataEntrega')->get();
+                return $pedidos;
+        }
+        else if(isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
+            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+                ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
+                ->orderBy('status_id')->orderBy('dataEntrega')->get();
+                return $pedidos;
+        }
+        else if(isset($filtro['entregador'])){
+            $pedidos = Pedido::where('entregador_id',$filtro['entregador'])->get();
+                return $pedidos;
+        }
+        else{
+            $pedidos = Pedido::all();
+            return $pedidos;
+        }
+
+    }
+
+    public function getEntregadores(){
+        $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
+        $gerenteAdministrativo_id = Cargo::where('nome','GERENTE ADMINISTRATIVO')->pluck('id')->first();
+        $gerenteGeral_id = Cargo::where('nome','GERENTE GERAL')->pluck('id')->first();
+        $vendedor_id = Cargo::where('nome','VENDEDOR(A)')->pluck('id')->first();
+                
+        $entregadores = Funcionario::with(['user'])
+            ->where('cargo_id',$entregador_id)
+            ->orWhere('cargo_id',$gerenteAdministrativo_id)
+            ->orWhere('cargo_id',$gerenteGeral_id)
+            ->orWhere('cargo_id',$vendedor_id)
+            ->get();
+        return json_encode($entregadores);
     }
 }
