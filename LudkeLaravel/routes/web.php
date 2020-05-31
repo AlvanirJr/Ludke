@@ -23,7 +23,9 @@ Auth::routes();
 Route::get('/relatorio/{id}', 'RelatorioPedidosController@RelatorioPedidos')->name('pedido.relatorio');
 Route::get('/relatorioCliente', 'ClienteController@relatorioCliente')->name('relatorioCliente');
 Route::get('/relatorioProdutos', 'RelatorioProdutosController@relatorioProduto')->name('relatorioProdutos');
-Route::get('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
+Route::post('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
+// Route::get('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
+Route::get('/getEntregadores','RelatorioPedidosController@getEntregadores');
 
 Route::get('/home', 'HomeController@index')->name('home');
 

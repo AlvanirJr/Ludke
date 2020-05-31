@@ -9,9 +9,12 @@
             <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
             <tr style="height:20px">
                 <th>Código</th>
-                <th>Cliente</th>
+                <th>Nome Cliente</th>
+                <th>Nome Reduzido</th>
                 <th>Vendedor</th>
                 <th>Data de Entrega</th>
+                <th>Pedido</th>
+                <th>Status</th>
                 <th>Valor</th>
             </tr>
             </thead>
@@ -19,9 +22,18 @@
             @foreach($pedidos as $pedido)
                 <tr align="center">
                     <td>{{$pedido->id}}</td>
+                    <td >{{$pedido->cliente->user->name}}</td>
                     <td >{{$pedido->cliente->nomeReduzido}}</td>
                     <td>{{$pedido->funcionario->user->name}}</td>
-                    <td>{{$pedido->dataEntrega}}</td>
+                    <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
+                    <td>
+                        <ul>
+                            @foreach ($pedido->itensPedidos as $itens)
+                            <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
+                            @endforeach
+                        </ul>
+                    </td>
+                    <td>{{$pedido->status->status}}</td>
                     <td>{{$pedido->valorTotal = number_format($pedido->valorTotal, '2',',','.').' R$'}}</td>
 
                 </tr>
