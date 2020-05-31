@@ -24,8 +24,11 @@
                     <td>{{$cliente->nomeReduzido}}</td>
                     <td>{{$cliente->nomeResponsavel}}</td>
                     <td>{{$cliente->user->endereco->cidade}}</td>
-                    <td>{{$cliente->funcionario->user->name}}</td>
-
+                    @if($cliente->funcionario_id == '')
+                        <td>{{$cliente->funcionario_id = ''}}</td>
+                    @else
+                        <td>{{$cliente->funcionario->user->name}}</td>
+                    @endif
                 </tr>
             @endforeach
             </tbody>
