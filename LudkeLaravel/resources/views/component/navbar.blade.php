@@ -64,7 +64,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
-                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank">Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
                         </div>
 
 
@@ -131,7 +131,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
-                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank" >Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
 
                         </div>
 
@@ -245,7 +245,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
-                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank" >Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
 
 
                         </div>
@@ -295,7 +295,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank">Produtos</a>
-                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank">Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
                         </div>
 
 
@@ -343,7 +343,9 @@
     </div>
 </nav>
 
-@can('view_admin', Auth::user())
+@if(Auth::user()->can('view_admin', Auth::user())
+|| Auth::user()->can('view_gerenteAdmin', Auth::user())
+|| Auth::user()->can('view_gerenteGeral', Auth::user()))
 {{-- Modal Filtro Relatório Produtos --}}
 <div class="modal fade" id="filtroRelatorioPedidos" tabindex="-1" role="dialog" aria-labelledby="filtroRelatorioProdutoLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -437,4 +439,4 @@
     });
 
 </script>
-@endcan
+@endif
