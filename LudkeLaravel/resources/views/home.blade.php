@@ -75,18 +75,36 @@
 
             {{-- Card 2 --}}
             {{-- Desabilitado --}}
+
+            @if(Auth::user()->can('view_gerenteAdmin', Auth::user()) == true)
             <div class="col-sm-4">
-                <div id="card" >
-                    <a id="link-card" href="{{route("cargos")}}">
-                        <div class="row justify-content-center">
-                            <img id="card-image" src="{{ asset("img/cargos.png")  }}" alt="">
-                        </div>
-                        <div class="row justify-content-center">
-                            <div id="card-text">Cargos</div>
-                        </div>
-                    </a>
+                    <div id="card" style="background: #636b6f">
+                        <a id="link-card" href="#" onclick="alert('Funcionalidade não disponível para esse usuário')">
+                            <div class="row justify-content-center">
+                                <img id="card-image" src="{{ asset("img/cargos.png")  }}" alt="" >
+                            </div>
+                            <div class="row justify-content-center">
+                                <div id="card-text">Cargos</div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div>
+
+            @else
+                <div class="col-sm-4">
+                    <div id="card">
+                        <a id="link-card" href="{{route('cargos')}}">
+                            <div class="row justify-content-center">
+                                <img id="card-image" src="{{ asset("img/cargos.png")  }}" alt="" >
+                            </div>
+                            <div class="row justify-content-center">
+                                <div id="card-text">Cargos</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            @endif
             {{-- Card 3 --}}
             {{-- Pedidos --}}
             <div class="col-sm-4">
