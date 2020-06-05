@@ -95,7 +95,7 @@
                             <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
                             <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
                             <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
-                            <a class="dropdown-item" href="{{route('cargos')}}">Cargos</a>
+                            {{--<a class="dropdown-item" href="{{route('cargos')}}">Cargos</a> --}}
                         </div>
                     </li>
                     {{-- Pedidos --}}
@@ -113,15 +113,6 @@
                         <a class="nav-link" href="{{route('listarPedidos')}}">Pedidos</a>
                     </li> --}}
                     {{-- Vendas --}}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Vendas
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{route('vendas')}}">Nova Venda</a>
-                            <a class="dropdown-item" href="{{route('listarVendas')}}">Listar Vendas</a>
-                        </div>
-                    </li>
                     {{-- Relatórios --}}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
