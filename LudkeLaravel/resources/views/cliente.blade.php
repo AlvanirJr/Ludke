@@ -415,7 +415,7 @@
 @endsection
 
 @section('javascript')
-<script>
+<script type="application/javascript">
 
     $(function(){
         $.ajaxSetup({

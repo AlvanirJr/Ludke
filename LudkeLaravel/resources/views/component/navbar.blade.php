@@ -355,32 +355,32 @@
                 @csrf
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="cliente">Nome do Cliente</label>
-                        <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nome do Cliente">
+                        <label for="filtroRelatorioNomeCliente">Nome do Cliente</label>
+                        <input type="text" class="form-control" id="filtroRelatorioNomeCliente" name="filtroRelatorioNomeCliente" placeholder="Nome do Cliente">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="cliente">Nome Reduzido</label>
-                        <input type="text" class="form-control" id="nomeReduzido" name="nomeReduzido" placeholder="Nome Reduzido">
+                        <label for="filtroRelatorioNomeReduzido">Nome Reduzido</label>
+                        <input type="text" class="form-control" id="filtroRelatorioNomeReduzido" name="filtroRelatorioNomeReduzido" placeholder="Nome Reduzido">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="dataEntregaInicial">Data de Entrega Inicial</label>
-                        <input type="date" class="form-control" id="dataEntregaInicial" name="dataEntregaInicial">
+                        <label for="filtroRelatorioDataEntregaInicial">Data de Entrega Inicial</label>
+                        <input type="date" class="form-control" id="filtroRelatorioDataEntregaInicial" name="filtroRelatorioDataEntregaInicial">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="dataEntregaFinal">Data de Entrega Final</label>
-                        <input type="date" class="form-control" id="dataEntregaFinal" name="dataEntregaFinal">
+                        <label for="filtroRelatorioDataEntregaFinal">Data de Entrega Final</label>
+                        <input type="date" class="form-control" id="filtroRelatorioDataEntregaFinal" name="filtroRelatorioDataEntregaFinal">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="status_id">Status</label>
-                        <select class="form-control" name="status_id" id="status_id">
+                        <label for="filtroRelatorioStatus_id">Status</label>
+                        <select class="form-control" name="filtroRelatorioStatus_id" id="filtroRelatorioStatus_id">
                             <option value="" disabled selected>-- STATUS --</option>
                             <option value="1">SOLICITADO</option>
                             <option value="2">PESADO</option>
@@ -390,8 +390,8 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="entregador">Entregador</label>
-                        <select class="form-control" name="entregador" id="entregador">
+                        <label for="filtroRelatorioEntregador">Entregador</label>
+                        <select class="form-control" name="filtroRelatorioEntregador" id="filtroRelatorioEntregador">
                             <option value="" disabled selected>-- ENTREGADOR --</option>
                         </select>
                     </div>
@@ -406,24 +406,24 @@
     </div>
   </div>
 
-<script>
+<script type="application/javascript">
 
     $(document).ready(function(){
 
-        $("#relatorioPedidos").click(function(){
+        $("#filtroRelatorioPedidos").on('show.bs.modal',function(){
             // Limpa Inputs modal
-            $("#cliente").val("");
-            $("#nomeReduzido").val("");
-            $("#dataEntregaInicial").val("YYYY-MM-DD");
-            $("#dataEntregaFinal").val("YYYY-MM-DD");
-            $("#status_id").val("");
-            $("#entregador").html('<option value="" disabled selected>-- STATUS --</option>');
+            $("#filtroRelatorioNomeCliente").val("");
+            $("#filtroRelatorioNomeReduzido").val("");
+            $("#filtroRelatorioDataEntregaInicial").val("YYYY-MM-DD");
+            $("#filtroRelatorioDataEntregaFinal").val("YYYY-MM-DD");
+            $("#filtroRelatorioStatus_id").val("");
+            $("#filtroRelatorioEntregador").html('<option value="" disabled selected>-- ENTREGADOR --</option>');
 
             // Busca todos os funcionários que podem entregar pedido
             $.getJSON('/getEntregadores', function(entregadores){
 
                 entregadores.forEach(entregador => {
-                    $("#entregador").append(`<option value="${entregador.id}">${entregador.user.name}</option>`)
+                    $("#filtroRelatorioEntregador").append(`<option value="${entregador.id}">${entregador.user.name}</option>`)
                 });
             });
         });
