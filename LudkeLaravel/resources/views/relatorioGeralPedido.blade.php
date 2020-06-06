@@ -2,11 +2,16 @@
 @section('content')
 @section('titulo','Relatório dos Pedidos')
 @extends('layouts.relatorios')
-
+<style>
+    thead{
+        background-color: #ccc;
+        color: black;
+    }
+</style>
 <div class="row justify-content-center">
     <div class="col-sm-12">
         <table id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw">
-            <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
+            <thead class="thead-primary">
             <tr style="height:20px">
                 <th>Código</th>
                 <th>Nome Cliente</th>
@@ -40,27 +45,20 @@
             @endforeach
             </tbody>
         </table>
-        <table  id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw">
-            <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
+        <table  id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw; margin-top: 20px">
+            <thead class="thead-primary">
             <tr style="height:20px">
                 <th>Número total de pedidos</th>
-            </tr>
-            </thead>
-            <tr align="center">
-                <td>{{$count}}</td>
-            </tr>
-        </table>
-        <table  id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw">
-            <thead class="thead-primary" style="background-color: #BF1A2C;color: white;">
-            <tr style="height:20px">
                 <th>Valor total dos Pedidos</th>
             </tr>
             </thead>
-            <tr align="center">
-                <td>{{$total = number_format($total, '2',',','.').' R$'}}</td>
-            </tr>
+            <tbody>
+                <tr align="center">
+                    <td>{{$count}}</td>
+                    <td>{{$total = number_format($total, '2',',','.').' R$'}}</td>
+                </tr>
+            </tbody>
         </table>
-
     </div>
 </div>
 

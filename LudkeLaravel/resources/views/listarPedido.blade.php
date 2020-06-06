@@ -140,18 +140,20 @@
                                         <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
                                     </a>
                                     {{-- Imprimir pedido --}}
-                                    <a  href={{route('pedido.relatorio',['id'=>$pedido->id])}}>
+
+                                    <a href={{route('pedido.relatorio',['id'=>$pedido->id])}} target="_blank">
                                         <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
                                     {{-- Excluir Pedido --}}
-                                    {{-- <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
-                                    </a> --}}
+
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}"  width="20" height="23">
+                                    </a>
                                 </td>
                             @else
                                 <td>
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}"  >
                                     </a>
                                 </td>
                             @endif

@@ -42,7 +42,7 @@
                         </div>
                     </li>
                     {{-- <li class="nav-item">
-                        
+
                         <a class="nav-link" href="{{route('listarPedidos')}}">Pedidos</a>
                     </li> --}}
                     {{-- Vendas --}}
@@ -64,7 +64,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
-                            <a class="dropdown-item" id="relatorioPedidos" href="#" target="_blank" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
                         </div>
 
 
@@ -87,22 +87,50 @@
                     </li>
                     {{-- Cruds --}}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Gerenciar
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
                             <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
-                            <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
                             <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
+                            <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
+                            {{--<a class="dropdown-item" href="{{route('cargos')}}">Cargos</a> --}}
                         </div>
                     </li>
-                    <li class="nav-item">
+                    {{-- Pedidos --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Pedidos
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('pedidos')}}">Novo Pedido</a>
+                            <a class="dropdown-item" href="{{route('listarPedidos')}}">Listar Pedidos</a>
+                        </div>
+                    </li>
+                    {{-- <li class="nav-item">
+
                         <a class="nav-link" href="{{route('listarPedidos')}}">Pedidos</a>
+                    </li> --}}
+                    {{-- Vendas --}}
+                    {{-- Relatórios --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Relatórios
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
+                            <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
+
+                        </div>
+
+
+
+
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Relatórios</a>
-                    </li>
+                    {{-- Ajuda --}}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Ajuda</a>
                     </li>
@@ -158,6 +186,75 @@
 
             @can('view_gerenteGeral', Auth::user())
                 <ul class="navbar-nav mr-auto">
+                    {{-- Inicio --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('home')}}">Início</a>
+                    </li>
+                    {{-- Cruds --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Gerenciar
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('produtos')}}">Produtos</a>
+                            <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
+                            <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
+                            <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
+                            <a class="dropdown-item" href="{{route('cargos')}}">Cargos</a>
+                        </div>
+                    </li>
+                    {{-- Pedidos --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Pedidos
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('pedidos')}}">Novo Pedido</a>
+                            <a class="dropdown-item" href="{{route('listarPedidos')}}">Listar Pedidos</a>
+                        </div>
+                    </li>
+                    {{-- <li class="nav-item">
+
+                        <a class="nav-link" href="{{route('listarPedidos')}}">Pedidos</a>
+                    </li> --}}
+                    {{-- Vendas --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Vendas
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('vendas')}}">Nova Venda</a>
+                            <a class="dropdown-item" href="{{route('listarVendas')}}">Listar Vendas</a>
+                        </div>
+                    </li>
+                    {{-- Relatórios --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Relatórios
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
+                            <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
+
+
+                        </div>
+
+
+
+
+                    </li>
+                    {{-- Ajuda --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Ajuda</a>
+                    </li>
+                </ul>
+             @endcan
+
+
+            @can('view_secretaria', Auth::user())
+                <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('home')}}">Início</a>
                     </li>
@@ -171,9 +268,28 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('listarPedidos')}}">Pedidos</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Vendas
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('vendas')}}">Nova Venda</a>
+                            <a class="dropdown-item" href="{{route('listarVendas')}}">Listar Vendas</a>
+                        </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Relatórios</a>
+                    {{-- Relatórios --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"  id="navbarDropdownGerenciar" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Relatórios
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
+                            <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank">Produtos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
+                        </div>
+
+
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Ajuda</a>
@@ -218,7 +334,9 @@
     </div>
 </nav>
 
-@can('view_admin', Auth::user())
+@if(Auth::user()->can('view_admin', Auth::user())
+|| Auth::user()->can('view_gerenteAdmin', Auth::user())
+|| Auth::user()->can('view_gerenteGeral', Auth::user()))
 {{-- Modal Filtro Relatório Produtos --}}
 <div class="modal fade" id="filtroRelatorioPedidos" tabindex="-1" role="dialog" aria-labelledby="filtroRelatorioProdutoLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -237,32 +355,32 @@
                 @csrf
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="cliente">Nome do Cliente</label>
-                        <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nome do Cliente">
+                        <label for="filtroRelatorioNomeCliente">Nome do Cliente</label>
+                        <input type="text" class="form-control" id="filtroRelatorioNomeCliente" name="filtroRelatorioNomeCliente" placeholder="Nome do Cliente">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="cliente">Nome Reduzido</label>
-                        <input type="text" class="form-control" id="nomeReduzido" name="nomeReduzido" placeholder="Nome Reduzido">
+                        <label for="filtroRelatorioNomeReduzido">Nome Reduzido</label>
+                        <input type="text" class="form-control" id="filtroRelatorioNomeReduzido" name="filtroRelatorioNomeReduzido" placeholder="Nome Reduzido">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="dataEntregaInicial">Data de Entrega Inicial</label>
-                        <input type="date" class="form-control" id="dataEntregaInicial" name="dataEntregaInicial">
+                        <label for="filtroRelatorioDataEntregaInicial">Data de Entrega Inicial</label>
+                        <input type="date" class="form-control" id="filtroRelatorioDataEntregaInicial" name="filtroRelatorioDataEntregaInicial">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="dataEntregaFinal">Data de Entrega Final</label>
-                        <input type="date" class="form-control" id="dataEntregaFinal" name="dataEntregaFinal">
+                        <label for="filtroRelatorioDataEntregaFinal">Data de Entrega Final</label>
+                        <input type="date" class="form-control" id="filtroRelatorioDataEntregaFinal" name="filtroRelatorioDataEntregaFinal">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="status_id">Status</label>
-                        <select class="form-control" name="status_id" id="status_id">
+                        <label for="filtroRelatorioStatus_id">Status</label>
+                        <select class="form-control" name="filtroRelatorioStatus_id" id="filtroRelatorioStatus_id">
                             <option value="" disabled selected>-- STATUS --</option>
                             <option value="1">SOLICITADO</option>
                             <option value="2">PESADO</option>
@@ -272,8 +390,8 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="entregador">Entregador</label>
-                        <select class="form-control" name="entregador" id="entregador">
+                        <label for="filtroRelatorioEntregador">Entregador</label>
+                        <select class="form-control" name="filtroRelatorioEntregador" id="filtroRelatorioEntregador">
                             <option value="" disabled selected>-- ENTREGADOR --</option>
                         </select>
                     </div>
@@ -288,28 +406,28 @@
     </div>
   </div>
 
-<script>
+<script type="application/javascript">
 
     $(document).ready(function(){
 
-        $("#relatorioPedidos").click(function(){
+        $("#filtroRelatorioPedidos").on('show.bs.modal',function(){
             // Limpa Inputs modal
-            $("#cliente").val("");
-            $("#nomeReduzido").val("");
-            $("#dataEntregaInicial").val("YYYY-MM-DD");
-            $("#dataEntregaFinal").val("YYYY-MM-DD");
-            $("#status_id").val("");
-            $("#entregador").html('<option value="" disabled selected>-- STATUS --</option>');
+            $("#filtroRelatorioNomeCliente").val("");
+            $("#filtroRelatorioNomeReduzido").val("");
+            $("#filtroRelatorioDataEntregaInicial").val("YYYY-MM-DD");
+            $("#filtroRelatorioDataEntregaFinal").val("YYYY-MM-DD");
+            $("#filtroRelatorioStatus_id").val("");
+            $("#filtroRelatorioEntregador").html('<option value="" disabled selected>-- ENTREGADOR --</option>');
 
             // Busca todos os funcionários que podem entregar pedido
             $.getJSON('/getEntregadores', function(entregadores){
-                
+
                 entregadores.forEach(entregador => {
-                    $("#entregador").append(`<option value="${entregador.id}">${entregador.user.name}</option>`)
+                    $("#filtroRelatorioEntregador").append(`<option value="${entregador.id}">${entregador.user.name}</option>`)
                 });
             });
         });
     });
 
 </script>
-@endcan
+@endif

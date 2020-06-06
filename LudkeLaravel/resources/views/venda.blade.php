@@ -17,11 +17,19 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-sm-12">
+                                            <div class="col-sm-8">
                                                 <input type="hidden" id="cliente_id">
-                                                <input id="buscaCliente" type="text" class="form-control" placeholder="Nome do Cliente" autofocus>
+                                                <input id="buscaCliente" type="text" class="form-control" placeholder="Digite o Nome" autofocus>
                                                 {{-- lista de clientes retornados da busca--}}
                                                 <ul id="resultadoBuscaCliente" class="list-group"></ul>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <select class="form-control" name="filtroBusca" id="filtroBusca">
+                                                        <option value="nome">Nome</option>
+                                                        <option value="nomeReduzido">Nome Reduzido</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             
                                         </div>
@@ -29,11 +37,11 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6" id="divNomeCliente">
                                     <label>Nome</label>
                                     <h4 id="nomeCliente"></h4>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6" id="divNomeReduzido" style="display: none">
                                     <label>Nome Reduzido</label>
                                     <h4 id="nomeReduzidoCliente"></h4>
                                 </div>
@@ -204,6 +212,27 @@
     }
     var cont = 1;
 
+    // Configura filtro do cliente
+    $(document).ready(function(){
+        $("#filtroBusca").change(function(){
+            let filtro = $("#filtroBusca").val();
+
+            if(filtro == "nome"){
+                $("#divNomeCliente").css("display","block");
+                $("#divNomeReduzido").css("display","none");
+                $("#nomeReduzido").html("");
+                $("#buscaCliente").attr({placeholder:"Digite o Nome"})
+            }else{
+                $("#divNomeReduzido").css("display","block");
+                $("#divNomeCliente").css("display","none");
+                $("#nome").html("");
+                $("#buscaCliente").attr({placeholder:"Digite o Nome Reduzido"})
+            }
+
+        });
+
+    });
+
     $(function(){
         // Configuração do ajax com token csrf
         $.ajaxSetup({
@@ -293,22 +322,35 @@
     });
     
     function getCliente(nomeCliente){
+        let filtro = $("#filtroBusca").val();
+
         $.ajax({
             type: "POST",
             url: "/pedidos/getCliente",
             context: this,
-            data: {nome: nomeCliente},
+            data: {nome: nomeCliente, filtro: filtro},
             success: function(data){
                 cliente = JSON.parse(data)
+                console.log(cliente)
                 // limpa os links da lista com os produtos retornados em tempo real
                 $('#resultadoBuscaCliente').children().remove();
-                for(let i = 0; i < cliente.length; i++){
-                    let linha = "<a "+"href="+"#"+">"+
-                                    "<li value="+cliente[i].cliente.id+" class="+"list-group-item itemLista"+"><strong>Nome: </strong>"+cliente[i].name+"; <strong>Nome Reduzido: </strong>"+cliente[i].cliente.nomeReduzido+"</li>"+
-                                "</a>";
-                    $('#resultadoBuscaCliente').append(linha);
-                }
-                
+                    for(let i = 0; i < cliente.length; i++){
+                        // Monta a linha de acordo com o filtro selecionado
+                        if(filtro == "nome"){
+                            let linha = "<a "+"href="+"#"+">"+
+                                            // "<li value="+cliente[i].cliente.id+" class="+"list-group-item itemLista"+"><strong>Nome: </strong>"+cliente[i].name+"; <strong>Nome Reduzido: </strong>"+cliente[i].cliente.nomeReduzido+"</li>"+
+                                            "<li value="+cliente[i].cliente.id+" class="+"list-group-item itemLista>"+cliente[i].name+"</li>"+
+                                        "</a>";
+                            $('#resultadoBuscaCliente').append(linha);
+                        }else{
+                            let linha = "<a "+"href="+"#"+">"+
+                                            // "<li value="+cliente[i].cliente.id+" class="+"list-group-item itemLista"+"><strong>Nome: </strong>"+cliente[i].name+"; <strong>Nome Reduzido: </strong>"+cliente[i].cliente.nomeReduzido+"</li>"+
+                                            "<li value="+cliente[i].id+" class="+"list-group-item itemLista>"+cliente[i].nomeReduzido+"</li>"+
+                                        "</a>";
+                            $('#resultadoBuscaCliente').append(linha);
+                        }
+
+                    }
                 // console.log("getCliente()",pedido);
                 // $('#cliente_id').val(cliente[0].id);
                 
@@ -320,17 +362,21 @@
         });
     }
     function buscaCliente(id){
+        let filtro = $("#filtroBusca").val();
         $.ajax({
             url:'/pedidos/buscaCliente/'+id,
             method:"POST",
             success: function(data){
                 cliente = JSON.parse(data);
-                console.log(cliente);
+                
                 // Adiciona ao objeto Pedido o id do cliente
                 pedido.cliente_id = cliente.id;
                 $("#nomeCliente").html(cliente.nome);
-                $("#nomeReduzidoCliente").html(cliente.nomeReduzido);
-                $("#buscaCliente").val(cliente.nome);
+                if(filtro == "nome"){
+                    $("#buscaCliente").val(cliente.nome);
+                }else{
+                    $("#nomeReduzidoCliente").html(cliente.nomeReduzido);
+                }
                 // console.log("buscaCliente()",pedido)
                 // limpa os links da lista com os produtos retornados em tempo real
                 $('#resultadoBuscaCliente').children().remove();

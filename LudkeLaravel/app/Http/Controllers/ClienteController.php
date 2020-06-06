@@ -22,8 +22,8 @@ class ClienteController extends Controller
     }
 
     public function buscarCliente(Request $request){
-        $c =  strtoupper($request->input('q'));
-        // dd($c);
+        /*$c =  strtoupper($request->input('q'));
+
 
         if(isset($c)){
             $users = User::where('name','LIKE','%'.$c.'%')->pluck('id');
@@ -40,7 +40,54 @@ class ClienteController extends Controller
             }else{
                 return view('cliente',['fun'=>$fun])->withMenssage("Desculpa, não foi possível encontrar este cliente.");
             }
+        }*/
+
+            $filtro = $request->all();
+            //dd('%'.strtoupper($filtro['nomeReduzido']));
+
+        if(isset($filtro['cliente'])){
+            $fun = Funcionario::with('user')->where('cargo_id',3)->get();
+            $user = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->first();
+                //dd($user->id);
+                if(isset($user)){
+                    $clientes = Cliente::where('user_id',$user->id)->get();
+
+                    //$pedidos = Pedido::where('cliente_id',$cliente->id)
+                    //->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+                    return view('cliente',['clientes'=>$clientes,'fun'=>$fun ,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+                    //return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+                }else{
+                    return view('cliente',['fun'=>$fun, 'filtro'=>$filtro,'achou'=> false,'tipoFiltro'=>"Nome do Cliente"])->withMenssage("Desculpa, não foi possível encontrar este cliente.");
+
+                    //return view('listarVendas',['pedidos'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+                }
+            }
+        else if(isset($filtro['nomeReduzido'])){
+            //dd('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%');
+            //dd($filtro['nomeReduzido']);
+            $fun = Funcionario::with('user')->where('cargo_id',3)->get();
+            $clientes = Cliente::where('nomeReduzido','ILIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->get();
+            //dd($clientes);
+            if(isset($clientes)){
+                //$pedidos = Pedido::where('cliente_id',$cliente->id)
+                //  ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+                return view('cliente',['clientes'=>$clientes,'fun'=>$fun ,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
+
+                //return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
+            }
+            else{
+                return view('cliente',['fun'=>$fun, 'filtro'=>$filtro,'achou'=> false,'tipoFiltro'=>"Nome do Cliente"])->withMenssage("Desculpa, não foi possível encontrar este cliente.");
+
+                //return view('listarVendas',['pedidos'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
+                }
+            }
+
+        else{
+            return $this->indexView();
         }
+
+
+
 
     }
     public function index()

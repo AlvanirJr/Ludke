@@ -8,30 +8,59 @@
 
 <div class="container">
     <div class="row justify-content-center">
-
         <div class="col-sm-12">
             <div class="titulo-pagina">
-                <div class="row">
-                    <div class="col-sm-6">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-sm-7">
                         <div class="titulo-pagina-nome">
                             <h2>Clientes</h2>
                         </div>
                     </div>
                     <div class="col-sm-2">
+                        {{-- <a href="#" data-toggle="modal" data-target="#dlgFiltro"class="btn btn-primary-ludke">Filtrar</a> --}}
+                        <button id="btnFiltrar" type="button" class="btn btn-primary-ludke" data-toggle="modal" data-target="#modalFiltro">
+                            Filtrar
+                        </button>
+                    </div>
+                    <div class="col-sm-2">
                         <button class="btn btn-primary-ludke" role="button" onclick="novoCliente()">Novo</button>
                     </div>
-                    <div class="col-md-4 input-group">
-                        {{-- <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar"> --}}
-                        <form action="{{route('buscarCliente')}}" method="POST">
-                            @csrf
-                            <div class="input-group mb-3">
-                                <input name="q" type="text" class="form-control" placeholder="Buscar Cliente" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                  <button class="btn btn-primary-ludke" type="submit">Buscar</button>
-                                </div>
-                              </div>
-                        </form>
 
+
+
+
+                    <div class="modal fade" id="modalFiltro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Filtrar Clientes</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="{{route('buscarCliente')}}" method="POST">
+                                    @csrf
+                                    <div class="modal-body">
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <label for="cliente">Nome do Cliente</label>
+                                                <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nome do Cliente">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <label for="cliente">Nome Reduzido</label>
+                                                <input type="text" class="form-control" id="cliente" name="nomeReduzido" placeholder="Nome Reduzido">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Filtrar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div><!-- end titulo-pagina -->
@@ -39,16 +68,38 @@
     </div><!-- end row-->
 
     {{-- botão listar Todos --}}
+    {{-- botão listar Todos --}}
     @if(isset($achou) && $achou == true)
-    <div class="row">
-        <div class="col-sm-12 limparBusca">
-            <a href="{{route('clientes')}}">
-                <button class="btn btn-outline-danger">Listar Todos</button>
-            </a>
-
+        <div class="row" style="margin-bottom:10px">
+            <div class="col-sm-12">
+                <span class="badge badge-light" style="padding:5px"><h4>Filtro: {{$tipoFiltro}}</h4></span>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-sm-12 limparBusca">
+                <a href="{{route('clientes')}}">
+                    <button class="btn btn-outline-danger">Listar Todos</button>
+                </a>
+            </div>
+        </div>
     @endif
+
+    @if(isset($achou) && $achou == false)
+        <div class="row" style="margin-bottom:10px">
+            <div class="col-sm-12">
+                <span class="badge badge-light" style="padding:5px"><h4>Nenhum cliente encontrado com esse filtro</h4></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 limparBusca">
+                <a href="{{route('clientes')}}">
+                    <button class="btn btn-outline-danger">Listar Todos</button>
+                </a>
+            </div>
+        </div>
+    @endif
+
+
 
     <div class="row justify-content-center">
         <div class="col-sm-12">
@@ -86,26 +137,6 @@
                 </tbody>
             </table> <!-- end table -->
 
-            <div class="row justify-content-center">
-                {{ $clientes->render() }}
-            </div>
-            @else
-            <div class="row">
-                <div class="col-sm-12 limparBusca">
-                    <a href="{{route('clientes')}}">
-                        <button class="btn btn-outline-danger">Listar Todos</button>
-                    </a>
-
-                </div>
-            </div>
-            {{-- Mensagem Alerta --}}
-            <div class="row justify-content-center">
-                <div class="col-sm-12">
-                    <div class="alert alert-danger" role="alert">
-                        {{$menssage}}
-                    </div>
-                </div>
-            </div>
 
             @endif
         </div><!-- end col-->
@@ -384,7 +415,7 @@
 @endsection
 
 @section('javascript')
-<script>
+<script type="application/javascript">
 
     $(function(){
         $.ajaxSetup({

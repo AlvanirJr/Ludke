@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- 
-    VIEW PESAGEM DO PEDIDO. NESSA TELA, É INFORMADO O PESO DE CADA ITEM INDIVIDUALMENTE    
+{{--
+    VIEW PESAGEM DO PEDIDO. NESSA TELA, É INFORMADO O PESO DE CADA ITEM INDIVIDUALMENTE
 --}}
 <div class="container">
     <div class="row justify-content-center">
@@ -19,7 +19,7 @@
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
-   
+
 
     <div class="row justify-content-center">
         <div class="col-sm-6">
@@ -30,7 +30,7 @@
                 </div>
               </div>
         </div>
-    
+
         <div class="col-sm-6">
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
@@ -49,9 +49,9 @@
                   <p class="card-text"><h3>{{$pedido->created_at->format('d/m/y')}}</h3></p>
                 </div>
               </div>
-            
+
         </div>
-    
+
         <div class="col-sm-4">
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
@@ -71,7 +71,7 @@
     </div>
 
 
-    <form method="POST" action="{{route('pedido.concluirPedidoPesoFinal')}}">    
+    <form method="POST" action="{{route('pedido.concluirPedidoPesoFinal')}}">
         @csrf
         <input type="hidden" name="pedido_id" value="{{$pedido->id}}">
         <div class="row justify-content-center">
@@ -102,7 +102,7 @@
                                     <td>{{money_format("%i",$item->valorReal)}}</td>
                                     <td>
                                         <input id="pesoFinal{{$item->id}}" oninput="atualizarValor({{$item->precoProduto}},{{$item->id}})" name="pesoFinal{{$item->id}}" step="0.01" type="number" class="form-control" placeholder="Peso Final" required>
-                                        
+
                                         @error('pesoFinal{{$item->id}}')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <?php //dd($pedido)?>
-                
+
             </div>
         </div>
 
@@ -137,7 +137,7 @@
 @section('javascript')
 
 <script type="text/javascript">
-    
+
     // Cria objeto Intl que será responsável por converter os valores para o formato da moeda brasileira
     let formatter = new Intl.NumberFormat([],{
         style: 'currency',
@@ -150,24 +150,24 @@
     // Valor final do pedido
     var valorDoPedido = 0.0;
     $("#valorDoPedido").html(formatter.format(valorDoPedido));
-    
+
     var valores = {};
 
     function atualizarValor(precoProduto,id){
         valor = 0.0;
-        
-        linhas = $('#tabelaItens>tbody>tr'); 
+
+        linhas = $('#tabelaItens>tbody>tr');
         linhas.filter(function(i,elemento){
-            
+
             valorInput = $('#pesoFinal'+elemento.cells[0].textContent).val();
             if(valorInput){
                 valor += parseFloat(valorInput) * parseFloat(elemento.cells[2].textContent);
             }
-            
+
         });
         $("#valorDoPedido").html(formatter.format(valor));
     }
 
     // console.log(e[0].cells[1].textContent)
-</script>    
+</script>
 @endsection
