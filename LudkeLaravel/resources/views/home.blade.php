@@ -143,7 +143,7 @@
             @endif
             {{-- CARGOOOO --}}
 
-            @if(Auth::user()->can('view_gerenteAdmin', Auth::user()) || Auth::user()->can('view_vendedor', Auth::user()) || Auth::user()->can('view_salsicheiro', Auth::user())== true)
+            @if(Auth::user()->can('view_gerenteAdmin', Auth::user()) || Auth::user()->can('view_vendedor', Auth::user()) || Auth::user()->can('view_salsicheiro', Auth::user()) || Auth::user()->can('view_secretaria', Auth::user())== true)
             <div class="col-sm-4">
                     <div id="card" style="background: #636b6f">
                         <a id="link-card" href="#" onclick="alert('Funcionalidade não disponível para esse usuário')">
