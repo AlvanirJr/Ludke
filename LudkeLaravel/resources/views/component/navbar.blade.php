@@ -258,7 +258,7 @@
                             <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
                             <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
                             <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
-                            <a class="dropdown-item" href="{{route('cargos')}}">Cargos</a>
+
                         </div>
                     </li>
                     {{-- Pedidos --}}
