@@ -446,25 +446,12 @@ class PedidoController extends Controller
 
     // retorna o cliente através do cpj ou cnpj
     public function getCliente(Request $request){
-        // $user = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')->get();
-        // dd($user);
-        // $cliente = [];
-        // for($i = 0; $i < count($user); $i++){
-        //     if($user[$i]->cliente != null){
-        //         array_push($cliente,[
-        //             "name"=>$user[$i]->name,"cliente_id"=>$user[$i]->cliente->id
-        //             ]);
-        //     }
-        // }
-        // if(isset($cliente)){
-            //     // dd($cliente);
-            //     return json_encode($cliente);
-            // }
-        $cliente = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')
-            // ->whereHas('cliente')
-            ->orWhereHas('cliente',function($q) use ($request){
-                $q->where('nomeReduzido','like','%'.$request->input('nome').'%');
-            })->get();
+        $filtro = $request['filtro'];
+        if($filtro == 'nome'){
+            $cliente = User::with(['cliente'])->where('name','like','%'.$request->input('nome').'%')->get();
+        }else{
+            $cliente = Cliente::where('nomeReduzido','like','%'.$request->input('nome').'%')->get();
+        }
 
         if(isset($cliente)){
             // dd($cliente);

@@ -64,7 +64,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
-                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank">Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
                         </div>
 
 
@@ -126,7 +126,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
-                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank" >Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
 
                         </div>
 
@@ -225,7 +225,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
-                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank" >Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
 
 
                         </div>
@@ -293,10 +293,11 @@
 
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
-                            <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
-                            <a class="dropdown-item" href="{{route('relatorioGeralPedidos')}}" target="_blank" >Pedidos</a>
 
 
+
+                            <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank">Produtos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
                         </div>
 
 
@@ -347,7 +348,12 @@
     </div>
 </nav>
 
-@can('view_admin', Auth::user())
+@if(Auth::user()->can('view_gerenteGeral', Auth::user())
+   || Auth::user()->can('view_gerenteAdmin', Auth::user())
+   || Auth::user()->can('view_vendedor', Auth::user())
+   || Auth::user()->can('view_secretaria', Auth::user())
+   || Auth::user()->can('view_salsicheiro', Auth::user())
+   )
 {{-- Modal Filtro Relatório Produtos --}}
 <div class="modal fade" id="filtroRelatorioPedidos" tabindex="-1" role="dialog" aria-labelledby="filtroRelatorioProdutoLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -366,32 +372,32 @@
                 @csrf
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="cliente">Nome do Cliente</label>
-                        <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nome do Cliente">
+                        <label for="filtroRelatorioNomeCliente">Nome do Cliente</label>
+                        <input type="text" class="form-control" id="filtroRelatorioNomeCliente" name="filtroRelatorioNomeCliente" placeholder="Nome do Cliente">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="cliente">Nome Reduzido</label>
-                        <input type="text" class="form-control" id="nomeReduzido" name="nomeReduzido" placeholder="Nome Reduzido">
+                        <label for="filtroRelatorioNomeReduzido">Nome Reduzido</label>
+                        <input type="text" class="form-control" id="filtroRelatorioNomeReduzido" name="filtroRelatorioNomeReduzido" placeholder="Nome Reduzido">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="dataEntregaInicial">Data de Entrega Inicial</label>
-                        <input type="date" class="form-control" id="dataEntregaInicial" name="dataEntregaInicial">
+                        <label for="filtroRelatorioDataEntregaInicial">Data de Entrega Inicial</label>
+                        <input type="date" class="form-control" id="filtroRelatorioDataEntregaInicial" name="filtroRelatorioDataEntregaInicial">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="dataEntregaFinal">Data de Entrega Final</label>
-                        <input type="date" class="form-control" id="dataEntregaFinal" name="dataEntregaFinal">
+                        <label for="filtroRelatorioDataEntregaFinal">Data de Entrega Final</label>
+                        <input type="date" class="form-control" id="filtroRelatorioDataEntregaFinal" name="filtroRelatorioDataEntregaFinal">
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="status_id">Status</label>
-                        <select class="form-control" name="status_id" id="status_id">
+                        <label for="filtroRelatorioStatus_id">Status</label>
+                        <select class="form-control" name="filtroRelatorioStatus_id" id="filtroRelatorioStatus_id">
                             <option value="" disabled selected>-- STATUS --</option>
                             <option value="1">SOLICITADO</option>
                             <option value="2">PESADO</option>
@@ -401,8 +407,8 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <label for="entregador">Entregador</label>
-                        <select class="form-control" name="entregador" id="entregador">
+                        <label for="filtroRelatorioEntregador">Entregador</label>
+                        <select class="form-control" name="filtroRelatorioEntregador" id="filtroRelatorioEntregador">
                             <option value="" disabled selected>-- ENTREGADOR --</option>
                         </select>
                     </div>
@@ -417,28 +423,28 @@
     </div>
   </div>
 
-<script>
+<script type="application/javascript">
 
     $(document).ready(function(){
 
-        $("#relatorioPedidos").click(function(){
+        $("#filtroRelatorioPedidos").on('show.bs.modal',function(){
             // Limpa Inputs modal
-            $("#cliente").val("");
-            $("#nomeReduzido").val("");
-            $("#dataEntregaInicial").val("YYYY-MM-DD");
-            $("#dataEntregaFinal").val("YYYY-MM-DD");
-            $("#status_id").val("");
-            $("#entregador").html('<option value="" disabled selected>-- STATUS --</option>');
+            $("#filtroRelatorioNomeCliente").val("");
+            $("#filtroRelatorioNomeReduzido").val("");
+            $("#filtroRelatorioDataEntregaInicial").val("YYYY-MM-DD");
+            $("#filtroRelatorioDataEntregaFinal").val("YYYY-MM-DD");
+            $("#filtroRelatorioStatus_id").val("");
+            $("#filtroRelatorioEntregador").html('<option value="" disabled selected>-- ENTREGADOR --</option>');
 
             // Busca todos os funcionários que podem entregar pedido
             $.getJSON('/getEntregadores', function(entregadores){
 
                 entregadores.forEach(entregador => {
-                    $("#entregador").append(`<option value="${entregador.id}">${entregador.user.name}</option>`)
+                    $("#filtroRelatorioEntregador").append(`<option value="${entregador.id}">${entregador.user.name}</option>`)
                 });
             });
         });
     });
 
 </script>
-@endcan
+@endif
