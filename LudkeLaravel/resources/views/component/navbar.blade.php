@@ -95,7 +95,7 @@
                             <a class="dropdown-item" href="{{route('categorias')}}">Categorias</a>
                             <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
                             <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
-                            {{--<a class="dropdown-item" href="{{route('cargos')}}">Cargos</a> --}}
+                            <a class="dropdown-item" href="{{route('cargos')}}">Cargos</a>
                         </div>
                     </li>
                     {{-- Pedidos --}}
@@ -226,13 +226,7 @@
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
-
-
                         </div>
-
-
-
-
                     </li>
                     {{-- Ajuda --}}
                     <li class="nav-item">
