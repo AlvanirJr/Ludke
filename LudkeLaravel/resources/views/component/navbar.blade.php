@@ -65,6 +65,7 @@
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioVendas">Vendas</a>
                         </div>
 
 
@@ -127,6 +128,7 @@
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioVendas">Vendas</a>
 
                         </div>
 
@@ -226,6 +228,7 @@
                             <a class="dropdown-item" href="{{route('relatorioCliente')}}" target="_blank">Clientes</a>
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank" >Produtos</a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioVendas">Vendas</a>
                         </div>
                     </li>
                     {{-- Ajuda --}}
@@ -292,6 +295,7 @@
 
                             <a class="dropdown-item" href="{{route('relatorioProdutos')}}" target="_blank">Produtos</a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioPedidos">Pedidos</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#filtroRelatorioVendas">Vendas</a>
                         </div>
 
 
@@ -417,10 +421,80 @@
     </div>
   </div>
 
+
+  {{-- Modal Filtro Relatório Vendas --}}
+<div class="modal fade" id="filtroRelatorioVendas" tabindex="-1" role="dialog" aria-labelledby="filtroRelatorioVendasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Gerar Relatório de vendas</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="relatorioGeralVendas" action="{{route('relatorioGeralVendas')}}" method="POST" target="_blanck">
+        <div class="modal-body">
+            <div class="alert alert-secondary" role="alert">
+                Para gerar o relatório com todas as informações, deixe o <strong>filtro</strong> em branco!
+              </div>
+                @csrf
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="filtroRelatorioVendasNomeCliente">Nome do Cliente</label>
+                        <input type="text" class="form-control" id="filtroRelatorioVendasNomeCliente" name="filtroRelatorioVendasNomeCliente" placeholder="Nome do Cliente">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="filtroRelatorioVendasNomeReduzido">Nome Reduzido</label>
+                        <input type="text" class="form-control" id="filtroRelatorioVendasNomeReduzido" name="filtroRelatorioVendasNomeReduzido" placeholder="Nome Reduzido">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="filtroRelatorioVendasDataEntregaInicial">Data de Entrega Inicial</label>
+                        <input type="date" class="form-control" id="filtroRelatorioVendasDataEntregaInicial" name="filtroRelatorioVendasDataEntregaInicial">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="filtroRelatorioVendasDataEntregaFinal">Data de Entrega Final</label>
+                        <input type="date" class="form-control" id="filtroRelatorioVendasDataEntregaFinal" name="filtroRelatorioVendasDataEntregaFinal">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="filtroRelatorioVendasStatus_id">Status</label>
+                        <select class="form-control" name="filtroRelatorioVendasStatus_id" id="filtroRelatorioVendasStatus_id">
+                            <option value="" disabled selected>-- STATUS --</option>
+                            <option value="1">SOLICITADO</option>
+                            <option value="2">PESADO</option>
+                            <option value="3">ENTREGUE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label for="filtroRelatorioVendasEntregador">Entregador</label>
+                        <select class="form-control" name="filtroRelatorioVendasEntregador" id="filtroRelatorioVendasEntregador">
+                            <option value="" disabled selected>-- ENTREGADOR --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-danger">Gerar Relatório</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 <script type="application/javascript">
 
     $(document).ready(function(){
-
+        // Relatório de Pedidos
         $("#filtroRelatorioPedidos").on('show.bs.modal',function(){
             // Limpa Inputs modal
             $("#filtroRelatorioNomeCliente").val("");
@@ -435,6 +509,25 @@
 
                 entregadores.forEach(entregador => {
                     $("#filtroRelatorioEntregador").append(`<option value="${entregador.id}">${entregador.user.name}</option>`)
+                });
+            });
+        });
+
+        // Relatório de vendas
+        $("#filtroRelatorioVendas").on('show.bs.modal',function(){
+            // Limpa Inputs modal
+            $("#filtroRelatorioVendasNomeCliente").val("");
+            $("#filtroRelatorioVendasNomeReduzido").val("");
+            $("#filtroRelatorioVendasDataEntregaInicial").val("YYYY-MM-DD");
+            $("#filtroRelatorioVendasDataEntregaFinal").val("YYYY-MM-DD");
+            $("#filtroRelatorioVendasStatus_id").val("");
+            $("#filtroRelatorioVendasEntregador").html('<option value="" disabled selected>-- ENTREGADOR --</option>');
+
+            // Busca todos os funcionários que podem entregar pedido
+            $.getJSON('/getEntregadores', function(entregadores){
+
+                entregadores.forEach(entregador => {
+                    $("#filtroRelatorioVendasEntregador").append(`<option value="${entregador.id}">${entregador.user.name}</option>`)
                 });
             });
         });

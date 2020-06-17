@@ -26,6 +26,7 @@ class VendaController extends Controller
     public function indexListarVendas()
     {
         $pedidos = Pedido::with(['status','pagamento'])->
+                            where('tipo','v')->
                             where('status_id',2)-> //PESADO
                             orwhere('status_id',3)-> //ENTREGUE
                             orderby('status_id')->
@@ -142,6 +143,10 @@ class VendaController extends Controller
             }
         }
         $pedido = new Pedido();
+
+        //Tipo do Pedido
+        $pedido->tipo = 'v';
+
         $status = Status::where('status','PESADO')->first(); // Solicitado
         $pedido->status_id = $status->id;
         // valcula o desconto no valor total
@@ -313,7 +318,7 @@ class VendaController extends Controller
         $filtro = $request->all();
         // dd($filtro);
         if(isset($filtro['status_id'])){
-            $pedidos = Pedido::where('status_id',intval($filtro['status_id']))
+            $pedidos = Pedido::where('tipo','v')->where('status_id',intval($filtro['status_id']))
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
             return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Status"]);
         }
@@ -321,7 +326,7 @@ class VendaController extends Controller
             $user = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->first();
             if(isset($user)){
                 $cliente = Cliente::where('user_id',$user->id)->first();
-                $pedidos = Pedido::where('cliente_id',$cliente->id)
+                $pedidos = Pedido::where('cliente_id',$cliente->id)->where('tipo','v')
                     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
                 return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
             }else{
@@ -332,7 +337,7 @@ class VendaController extends Controller
 
             $cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->first();
             if(isset($cliente)){
-                $pedidos = Pedido::where('cliente_id',$cliente->id)
+                $pedidos = Pedido::where('cliente_id',$cliente->id)->where('tipo','v')
                     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
                 return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
             }
@@ -341,17 +346,17 @@ class VendaController extends Controller
             }
         }
         else if(isset($filtro['dataEntregaInicial']) && !isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+            $pedidos = Pedido::where('tipo','v')->whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
             return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Maior ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))]);
         }
         else if(!isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
+            $pedidos = Pedido::where('tipo','v')->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
             return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Menor ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
         }
         else if(isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+            $pedidos = Pedido::where('tipo','v')->whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
                 ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
                 return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Intervalo Data Entrega: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))." e ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);

@@ -76,7 +76,7 @@ class RelatorioPedidosController extends Controller
         
         $pedidos = [];
         if(isset($filtro['filtroRelatorioStatus_id'])){
-            $pedidos = Pedido::where('status_id',intval($filtro['filtroRelatorioStatus_id']))
+            $pedidos = Pedido::where('tipo','p')->where('status_id',intval($filtro['filtroRelatorioStatus_id']))
                 ->orderBy('status_id')->orderBy('dataEntrega')->get();
             return $pedidos;
         }
@@ -84,7 +84,7 @@ class RelatorioPedidosController extends Controller
             $user = User::where('name','LIKE','%'.strtoupper($filtro['filtroRelatorioNomeCliente']).'%')->first();
             if(isset($user)){
                 $cliente = Cliente::where('user_id',$user->id)->first();
-                $pedidos = Pedido::where('cliente_id',$cliente->id)
+                $pedidos = Pedido::where('cliente_id',$cliente->id)->where('tipo','p')
                     ->orderBy('status_id')->orderBy('dataEntrega')->get();
                     return $pedidos;
             }else{
@@ -95,7 +95,7 @@ class RelatorioPedidosController extends Controller
 
             $cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['filtroRelatorioNomeReduzido']).'%')->first();
             if(isset($cliente)){
-                $pedidos = Pedido::where('cliente_id',$cliente->id)
+                $pedidos = Pedido::where('cliente_id',$cliente->id)->where('tipo','p')
                     ->orderBy('status_id')->orderBy('dataEntrega')->get();
                 return $pedidos;
             }
@@ -104,27 +104,27 @@ class RelatorioPedidosController extends Controller
             }
         }
         else if(isset($filtro['filtroRelatorioDataEntregaInicial']) && !isset($filtro['filtroRelatorioDataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['filtroRelatorioDataEntregaInicial'])
+            $pedidos = Pedido::where('tipo','p')->whereDate('dataEntrega','>=',$filtro['filtroRelatorioDataEntregaInicial'])
                 ->orderBy('status_id')->orderBy('dataEntrega')->get();
                 return $pedidos;
         }
         else if(!isset($filtro['filtroRelatorioDataEntregaInicial']) && isset($filtro['filtroRelatorioDataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['filtroRelatorioDataEntregaFinal'])
+            $pedidos = Pedido::where('tipo','p')->whereDate('dataEntrega','<=',$filtro['filtroRelatorioDataEntregaFinal'])
                 ->orderBy('status_id')->orderBy('dataEntrega')->get();
                 return $pedidos;
         }
         else if(isset($filtro['filtroRelatorioDataEntregaInicial']) && isset($filtro['filtroRelatorioDataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['filtroRelatorioDataEntregaInicial'])
+            $pedidos = Pedido::where('tipo','p')->whereDate('dataEntrega','>=',$filtro['filtroRelatorioDataEntregaInicial'])
                 ->whereDate('dataEntrega','<=',$filtro['filtroRelatorioDataEntregaFinal'])
                 ->orderBy('status_id')->orderBy('dataEntrega')->get();
                 return $pedidos;
         }
         else if(isset($filtro['filtroRelatorioEntregador'])){
-            $pedidos = Pedido::where('entregador_id',$filtro['filtroRelatorioEntregador'])->get();
+            $pedidos = Pedido::where('tipo','p')->where('entregador_id',$filtro['filtroRelatorioEntregador'])->get();
                 return $pedidos;
         }
         else{
-            $pedidos = Pedido::all();
+            $pedidos = Pedido::where('tipo','p')->get();
             return $pedidos;
         }
 
