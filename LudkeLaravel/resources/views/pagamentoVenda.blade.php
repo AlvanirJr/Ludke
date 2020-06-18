@@ -58,8 +58,8 @@
         <div class="col-sm-6">
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
-                  <h5 class="card-title">Data do Pedido</h5>
-                  <p class="card-text"><h3>{{$pedido->created_at->format('d/m/y')}}</h3></p>
+                  <h5 class="card-title">Data da Venda</h5>
+                  <p class="card-text"><h3>{{$pedido->created_at->format('d/m/Y')}}</h3></p>
                 </div>
               </div>
         </div>
@@ -80,10 +80,10 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                     @if($pedido->status->status == "PAGO PARCIALMENTE" && isset($pagamento->valorTotalPagamento))
-                        <h5 class="card-title">Valor Total do Pedido</h5>
+                        <h5 class="card-title">Valor Total da Venda</h5>
                         <p class="card-text"><h3 id="valorDoPedido">R$ {{money_format("%i",$pedido->valorTotal)}}</h3></p>
                     @else
-                        <h5 class="card-title">Valor Total do Pedido</h5>
+                        <h5 class="card-title">Valor Total da Venda</h5>
                         <p class="card-text"><h3 id="valorDoPedido">R$ {{money_format("%i",$pedido->valorTotal)}}</h3></p>
                     @endif
                 </div>
@@ -276,12 +276,12 @@
                     "<div class='row justify-content-center'>"+
                         "<div class='col-sm-6 form-group'>"+
                             "<label for='dataPagamento'>Data de Pagamento <span class='obrigatorio'>*</span></label>"+
-                            "<input type='date' class='form-control' id='dataPagamento' name='dataPagamento[]' required>"+
+                            "<input type='date' class='form-control' id='dataPagamento' name='dataPagamento[]'>"+
                             "<span style='color:red' id='spanDataPagamento'></span>"+
                         "</div>"+
                         "<div class='col-sm-6 form-group'>"+
                             "<label for='dataVencimento'>Data de Vencimento <span class='obrigatorio'>*</span></label>"+
-                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]' required>"+
+                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]'>"+
                             "<span style='color:red' id='spanDataVencimento'></span>"+
                         "</div>"+
                     "</div>"+

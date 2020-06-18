@@ -31,6 +31,7 @@ class PedidoController extends Controller
         // Busca os pedidos com status SOLICITADO e PESADO
         $pedidos = Pedido::with(['status'])->
                             where('tipo','p')->
+                            orderby('created_at','DESC')->
                             orderBy('status_id')->
                             orderBy('dataEntrega')->paginate(25);
         // dd($pedidos);

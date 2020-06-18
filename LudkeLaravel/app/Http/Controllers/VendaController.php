@@ -29,6 +29,7 @@ class VendaController extends Controller
                             where('tipo','v')->
                             where('status_id',2)-> //PESADO
                             orwhere('status_id',3)-> //ENTREGUE
+                            orderby('created_at','DESC')->
                             orderby('status_id')->
                             paginate(25);
 
