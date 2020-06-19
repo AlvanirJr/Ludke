@@ -3,7 +3,15 @@
 @section('content')
 
 <div id="conteudo-pedidos" class="container-fluid">
-        
+    <div class="row justify-content-center">
+        <div class="col-sm-12">
+            <div class="titulo-venda-pedido">
+                <div class="titulo-pagina-nome">
+                    <h2>Nova Venda</h2>
+                </div>
+            </div><!-- end titulo-pagina -->
+        </div>
+    </div>
     <div class="row justify-content-center">
         {{-- Coluna 1 --}}
         <div class="col-sm-6">
@@ -11,8 +19,8 @@
                 <div class="col-sm-12">
                     {{-- Card Cliente --}}
                     <div id="cardCliente" class="card card-pedidos">
-                        <div class="card-header">Cliente</div>
                         <div class="card-body">
+                            <h5 class="card-title">Cliente</h5>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
@@ -56,8 +64,8 @@
                 <div class="col-sm-12">
                     {{-- Card Produto --}}
                     <div id="cardProduto" class="card card-pedidos">
-                        <div class="card-header">Produto</div>
                         <div class="card-body">
+                            <h5 class="card-title">Produto</h5>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
@@ -99,12 +107,12 @@
                                     </div>  
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <label>Descrição</label>
-                                            <h5 id="descricaoProduto"></h5>
-                                        </div>
-                                        <div class="col-sm-6">
                                             <label>Categoria</label>
                                             <h5 id="categoriaProduto"></h5>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Descrição</label>
+                                            <h5 id="descricaoProduto"></h5>
                                         </div>
                                     </div>                                   
                                 </div>
@@ -113,15 +121,6 @@
                     </div>{{-- end Card Produto --}}
                 </div>
             </div>{{-- end Row Produto --}}
-
-            <div class="row">
-                <div class="col-sm-6">
-                    <a href="{{route('listarVendas')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Venda</a>
-                </div>
-                <div class="col-sm-6">
-                    <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Concluir Venda</a>
-                </div>
-            </div>
 
         </div>{{-- end Coluna 1 --}}
 
@@ -132,8 +131,8 @@
                 <div class="col-sm-12">
 
                     <div class="card card-pedidos">
-                        <div class="card-header">Pedido</div>
                         <div id="listaPedidos" class="card-body">
+                            <h5 class="card-title">Pedido</h5>
                             <table id="tabelaPedidos" class="table table-responsive-lg table-sm table-hover">
                                 <thead>
                                     <tr>
@@ -163,8 +162,8 @@
                 <div class="col-sm-12">
                     {{-- Card Venda --}}
                     <div id="card-venda" class="card card-pedidos">
-                        <div class="card-header">Venda</div>
                         <div class="card-body">
+                            <h5 class="card-title">Venda</h5>
                             {{-- informações do produto --}}
                             <div class="row">
                                 <div class="col-sm-12">
@@ -191,7 +190,14 @@
                     </div>{{-- end Card Venda --}}
                 </div>
             </div>{{-- Row Informações Venda --}}
-            
+            <div class="row">
+                <div class="col-sm-6">
+                    <a href="{{route('listarVendas')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Venda</a>
+                </div>
+                <div class="col-sm-6">
+                    <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Concluir Venda</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -314,7 +320,7 @@
         });
         // Finalizar Pedido
         $("#btnFinalizarPedido").click(function(){
-            confirma = confirm("Você deseja finalizar o pedido?");
+            confirma = confirm("Você deseja finalizar a venda?");
             if(confirma){      
                 montarPedido();
             }
@@ -620,10 +626,33 @@
         limparCamposProduto();
         $("#tabelaPedidos>tbody").html('');
     }
+    function validaDataEntrega(data){
+        // converte data de entrega em um array
+        let dataSplit = data.split('-');
+        // Pega o dia
+        let dia = dataSplit[2];
+        // Converte no formato Data
+        let dataEntrega = new Date(data);
+        // Seta o dia, pois ao converter ele possui um dia a menos
+        dataEntrega.setDate(dia);
+        // converte a data de entrega e a atual em string para tirar a hr, min e seg
+        dataEntrega = dataEntrega.toDateString();
+        let dataAtual = new Date().toDateString();
+        // converte a data em milisegundos
+        let dataEntregaTime = new Date(dataEntrega).getTime();
+        let dataAtualTime = new Date(dataAtual).getTime();
+        
+        // verifica se a data entrega é maior ou igual a data atual
+        if(dataEntregaTime >= dataAtualTime){
+            return true;
+        }else{
+            return false;
+        }
+    }
     // Monta o pedido e registra a venda
     function montarPedido(){
         
-        console.log(pedido);
+        
         pedido.desconto = parseFloat($("#inputDesconto").val());
 
         pedido.valorDesconto = parseFloat(calcularDesconto());
@@ -643,6 +672,10 @@
         }
         if(pedido.dataEntrega.length == 0){
             alert("Selecione uma data de entrega para concluir o pedido!");
+            return;
+        }
+        if(!validaDataEntrega(pedido.dataEntrega)){
+            alert('A data de entrega não pode ser menor do que a data atual!');
             return;
         }
         else{

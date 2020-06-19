@@ -84,6 +84,12 @@ input[type=number] {
 .titulo-pagina-nome{
     color: #BF1A2C;
 }
+.titulo-venda-pedido{
+    margin-top: 20px;
+    width: 100%;
+    border-bottom: 2px solid #BF1A2C;
+    
+}
 .thead-primary{
     background-color: #BF1A2C;
     color: white;
@@ -222,10 +228,10 @@ ul.listaImagem li{
     font-size: large;
 }
 #cardCliente{
-    height: 25vh;
+    height: 35vh;
 }
 #cardProduto{
-    height: 40vh;
+    height: 36vh;
 }
 /* #card-venda{
     height: 27vh;
