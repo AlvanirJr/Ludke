@@ -32,6 +32,8 @@ return array(
     'App\\Http\\Controllers\\PedidoController' => $baseDir . '/app/Http/Controllers/PedidoController.php',
     'App\\Http\\Controllers\\ProdutoController' => $baseDir . '/app/Http/Controllers/ProdutoController.php',
     'App\\Http\\Controllers\\RelatorioPedidosController' => $baseDir . '/app/Http/Controllers/RelatorioPedidosController.php',
+    'App\\Http\\Controllers\\RelatorioProdutosController' => $baseDir . '/app/Http/Controllers/RelatorioProdutosController.php',
+    'App\\Http\\Controllers\\RelatorioVendasController' => $baseDir . '/app/Http/Controllers/RelatorioVendasController.php',
     'App\\Http\\Controllers\\VendaController' => $baseDir . '/app/Http/Controllers/VendaController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',

@@ -43,7 +43,7 @@
         <div class="col-sm-4">
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
-                  <h5 class="card-title">Data do Pedido</h5>
+                  <h5 class="card-title">Data da Venda</h5>
                   <p class="card-text"><h3>{{$pedido->created_at->format('d/m/y')}}</h3></p>
                 </div>
               </div>

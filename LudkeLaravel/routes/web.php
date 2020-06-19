@@ -24,6 +24,7 @@ Route::get('/relatorio/{id}', 'RelatorioPedidosController@RelatorioPedidos')->na
 Route::get('/relatorioCliente', 'ClienteController@relatorioCliente')->name('relatorioCliente');
 Route::get('/relatorioProdutos', 'RelatorioProdutosController@relatorioProduto')->name('relatorioProdutos');
 Route::post('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
+Route::post('/relatorioGeralVendas', 'RelatorioVendasController@RelatorioGeral')->name('relatorioGeralVendas');
 // Route::get('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
 Route::get('/getEntregadores','RelatorioPedidosController@getEntregadores');
 

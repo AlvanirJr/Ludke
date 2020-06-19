@@ -483,6 +483,8 @@ class ComposerStaticInit84e6e277ce0e670ce14b0ead29cea9b4
         'App\\Http\\Controllers\\PedidoController' => __DIR__ . '/../..' . '/app/Http/Controllers/PedidoController.php',
         'App\\Http\\Controllers\\ProdutoController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProdutoController.php',
         'App\\Http\\Controllers\\RelatorioPedidosController' => __DIR__ . '/../..' . '/app/Http/Controllers/RelatorioPedidosController.php',
+        'App\\Http\\Controllers\\RelatorioProdutosController' => __DIR__ . '/../..' . '/app/Http/Controllers/RelatorioProdutosController.php',
+        'App\\Http\\Controllers\\RelatorioVendasController' => __DIR__ . '/../..' . '/app/Http/Controllers/RelatorioVendasController.php',
         'App\\Http\\Controllers\\VendaController' => __DIR__ . '/../..' . '/app/Http/Controllers/VendaController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
