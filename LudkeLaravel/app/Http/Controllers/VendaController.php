@@ -26,9 +26,14 @@ class VendaController extends Controller
     public function indexListarVendas()
     {
         $pedidos = Pedido::with(['status','pagamento'])->
-                            where('tipo','v')->
-                            where('status_id',2)-> //PESADO
-                            orwhere('status_id',3)-> //ENTREGUE
+                            where(function($query){
+                                $query->where('tipo','v')->
+                                        orWhere('tipo','vm');
+                            })->
+                            orWhere(function($query){
+                                $query->where('status_id',2)-> //PESADO
+                                        where('status_id',3); //ENTREGUE
+                            })->
                             orderby('created_at','DESC')->
                             orderby('status_id')->
                             paginate(25);
