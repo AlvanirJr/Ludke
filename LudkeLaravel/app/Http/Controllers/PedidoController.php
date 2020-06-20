@@ -605,30 +605,25 @@ class PedidoController extends Controller
 
         // dd($pedido);
         $pedido->save();
-
-        // Busca os pedidos com status SOLICITADO e PESADO
-        $pedidos = Pedido::with(['status'])->
-                                where('status_id',1)->
-                                orwhere('status_id',2)->
-                                orderBy('status_id')->
-                                orderBy('dataEntrega')->paginate(25);
-        return view('listarPedido',['pedidos'=>$pedidos]);
+        return redirect()->route('listarPedidos');
     }
 
 
     // Filtra Pedido
     public function filtrarPedido(Request $request, Pedido $pedido){
         $filtro = $request->all();
+        // dd($filtro);
+        
         if(isset($filtro['status_id'])){
             $pedidos = Pedido::where('tipo','p')->where('status_id',intval($filtro['status_id']))
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
             return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Status"]);
         }
         else if(isset($filtro['cliente'])){
-            $user = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->first();
-            if(isset($user)){
-                $cliente = Cliente::where('user_id',$user->id)->first();
-                $pedidos = Pedido::where('cliente_id',$cliente->id)->where('tipo','p')
+            $id_users = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->get('id');
+            if(isset($id_users)){
+                $id_clientes = Cliente::whereIn('user_id',$id_users)->get('id');
+                $pedidos = Pedido::whereIn('cliente_id',$id_clientes)->where('tipo','p')
                     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
                 return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
             }else{
@@ -637,9 +632,9 @@ class PedidoController extends Controller
         }
         else if(isset($filtro['nomeReduzido'])){
 
-            $cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->first();
-            if(isset($cliente)){
-                $pedidos = Pedido::where('cliente_id',$cliente->id)->where('tipo','p')
+            $id_cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->get('id');
+            if(isset($id_cliente)){
+                $pedidos = Pedido::whereIn('cliente_id',$id_cliente)->where('tipo','p')
                     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
                 return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
             }
@@ -648,17 +643,17 @@ class PedidoController extends Controller
             }
         }
         else if(isset($filtro['dataEntregaInicial']) && !isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::where('tipo','p')->whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where('tipo','p')
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
             return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Maior ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))]);
         }
         else if(!isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::where('tipo','p')->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
+            $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where('tipo','p')
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
             return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Menor ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
         }
         else if(isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::where('tipo','p')->whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where('tipo','p')
                 ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
             return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Intervalo Data Entrega: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))." e ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
