@@ -306,20 +306,20 @@
     }
     function isValid(){
         let isValid = true;
-        if($('#dataVencimento').val() == ""){
-            isValid = false;
-            $("#spanDataVencimento").html("Selecione a Data de Vencimento")
-        }
-        if($('#dataVencimento').val() != ""){
-            $("#spanDataVencimento").html("")
-        }
-        if($('#dataPagamento').val() == ""){
-            isValid = false;
-            $("#spanDataPagamento").html("Selecione a Data de Pagamento")
-        }
-        if($('#dataPagamento').val() != ""){
-            $("#spanDataPagamento").html("")
-        }
+        // if($('#dataVencimento').val() == ""){
+        //     isValid = false;
+        //     $("#spanDataVencimento").html("Selecione a Data de Vencimento")
+        // }
+        // if($('#dataVencimento').val() != ""){
+        //     $("#spanDataVencimento").html("")
+        // }
+        // if($('#dataPagamento').val() == ""){
+        //     isValid = false;
+        //     $("#spanDataPagamento").html("Selecione a Data de Pagamento")
+        // }
+        // if($('#dataPagamento').val() != ""){
+        //     $("#spanDataPagamento").html("")
+        // }
         if($('#formaPagamento').val() == null){
             isValid = false;
             $("#spanformaPagamento").html("Selecione o Tipo de Pagamento")
