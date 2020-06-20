@@ -179,7 +179,6 @@
     let countFormaPagamento = 0;
     //Formas de pagamento
     let formasPagamento = <?php echo json_encode($formasPagamento); ?>; 
-    console.log(formasPagamento)
     
     function montarForm(){
         
@@ -273,13 +272,13 @@
                     "</div>"+
                     "<div class='row justify-content-center'>"+
                         "<div class='col-sm-6 form-group'>"+
-                            "<label for='dataPagamento'>Data de Pagamento <span class='obrigatorio'>*</span></label>"+
-                            "<input type='date' class='form-control' id='dataPagamento' name='dataPagamento[]' required>"+
+                            "<label for='dataPagamento'>Data de Pagamento</label>"+
+                            "<input type='date' class='form-control' id='dataPagamento' name='dataPagamento[]'>"+
                             "<span style='color:red' id='spanDataPagamento'></span>"+
                         "</div>"+
                         "<div class='col-sm-6 form-group'>"+
-                            "<label for='dataVencimento'>Data de Vencimento <span class='obrigatorio'>*</span></label>"+
-                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]' required>"+
+                            "<label for='dataVencimento'>Data de Vencimento</label>"+
+                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]'>"+
                             "<span style='color:red' id='spanDataVencimento'></span>"+
                         "</div>"+
                     "</div>"+
@@ -304,20 +303,20 @@
     }
     function isValid(){
         let isValid = true;
-        if($('#dataVencimento').val() == ""){
-            isValid = false;
-            $("#spanDataVencimento").html("Selecione a Data de Vencimento")
-        }
-        if($('#dataVencimento').val() != ""){
-            $("#spanDataVencimento").html("")
-        }
-        if($('#dataPagamento').val() == ""){
-            isValid = false;
-            $("#spanDataPagamento").html("Selecione a Data de Pagamento")
-        }
-        if($('#dataPagamento').val() != ""){
-            $("#spanDataPagamento").html("")
-        }
+        // if($('#dataVencimento').val() == ""){
+        //     isValid = false;
+        //     $("#spanDataVencimento").html("Selecione a Data de Vencimento")
+        // }
+        // if($('#dataVencimento').val() != ""){
+        //     $("#spanDataVencimento").html("")
+        // }
+        // if($('#dataPagamento').val() == ""){
+        //     isValid = false;
+        //     $("#spanDataPagamento").html("Selecione a Data de Pagamento")
+        // }
+        // if($('#dataPagamento').val() != ""){
+        //     $("#spanDataPagamento").html("")
+        // }
         if($('#formaPagamento').val() == null){
             isValid = false;
             $("#spanformaPagamento").html("Selecione o Tipo de Pagamento")
