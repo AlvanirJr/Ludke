@@ -82,7 +82,7 @@ class RelatorioPedidosController extends Controller
         //dd($user);
 
         //dd($final[1][0]);
-        dd($final);
+        //dd($final);
         $count = count($pedidos);
 
         //dd($total);

@@ -15,7 +15,6 @@
             <tr style="height:20px">
                 <th>Código</th>
                 <th>Nome Cliente</th>
-                <th>Entregador</th>
                 <th>Func. Responsavel</th>
                 <th>Data de Entrega</th>
                 <th>Pedido</th>
@@ -28,7 +27,6 @@
                 <tr align="center">
                     <td>{{$pedido->id}}</td>
                     <td >{{$pedido->cliente->user->name}}</td>
-                    <td >{{$pedido->entregador_id}}</td>
                     <td>{{$pedido->funcionario->user->name}}</td>
                     <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
                     <td>
