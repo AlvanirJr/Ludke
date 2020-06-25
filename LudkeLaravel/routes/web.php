@@ -21,12 +21,14 @@ Auth::routes();
 #Route::post('/login/user', 'CustomLoginController@loginUser');
 #Route::get('/logout', 'CustomHomeController@logoutUser');
 Route::get('/relatorio/{id}', 'RelatorioPedidosController@RelatorioPedidos')->name('pedido.relatorio');
+Route::get('/relatorioVendas/{id}', 'RelatorioVendasController@RelatorioVendas')->name('venda.relatorio');
 Route::get('/relatorioCliente', 'ClienteController@relatorioCliente')->name('relatorioCliente');
 Route::get('/relatorioProdutos', 'RelatorioProdutosController@relatorioProduto')->name('relatorioProdutos');
 Route::post('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
 Route::post('/relatorioGeralVendas', 'RelatorioVendasController@RelatorioGeral')->name('relatorioGeralVendas');
 // Route::get('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
 Route::get('/getEntregadores','RelatorioPedidosController@getEntregadores');
+Route::delete('/removerItem/{id}', 'PedidoController@removerProdutoItem')->name('removerProduto.item');
 
 Route::get('/home', 'HomeController@index')->name('home');
 

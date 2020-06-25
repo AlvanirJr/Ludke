@@ -20,15 +20,10 @@
                             Filtrar
                           </button>
                     </div>
-                    @if(Auth::user()->can('view_admin', Auth::user())
-                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_gerenteGeral', Auth::user())
-                    || Auth::user()->can('view_vendedor', Auth::user()))
-                    {{-- NOVO PEDIDO --}}
                     <div class="col-sm-2">
                         <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Novo Pedido</a>
                     </div>
-                    @endif
+
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
@@ -63,11 +58,9 @@
                     <th>Status</th>
                     <th>Valor Total</th>
 
-                    @if(Auth::user()->can('view_admin', Auth::user())
-                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_gerenteGeral', Auth::user()))
+
                     <th>Ações</th>
-                    @endif
+
                 </tr>
                 </thead>
                 <tbody>
@@ -89,9 +82,6 @@
                             {{-- R$ {{$pedido->valorTotal}} --}}
                             R$ {{money_format('%i',$pedido->valorTotal)}}
                         </td>
-                        @if(Auth::user()->can('view_admin', Auth::user())
-                        || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                        || Auth::user()->can('view_gerenteGeral', Auth::user()))
                             {{-- Pedido com status SOLICITADO --}}
                             @if($pedido->status->status == "SOLICITADO")
                                 <td>
@@ -157,7 +147,6 @@
                                     </a>
                                 </td>
                             @endif
-                        @endif
                         </tr>
                     @endforeach
                 </tbody>

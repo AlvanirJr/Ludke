@@ -62,8 +62,11 @@ class VendaController extends Controller
         //------------DEBUG--------------------------
         // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
-        $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
-                                        orwhere('cargo_id',$entregador_id)->get();
+        //$entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
+          //
+        //
+        //                              orwhere('cargo_id',$entregador_id)->get();
+        $entregadores = Funcionario::all();
         $formasPagamento = FormaPagamento::all();
         return view('pagamentoVenda',
             [
@@ -80,7 +83,7 @@ class VendaController extends Controller
      * @return View registrarEntregaPedido
      */
     public function indexRegistrarEntregaPedido($id){
-        // dd($id);
+        dd($id);
         // Pedido
         $pedido = Pedido::with(['cliente'])->find($id);
 
@@ -105,6 +108,7 @@ class VendaController extends Controller
                                         orwhere('cargo_id',$entregador_id)->get();
        */
         $entregadores = Funcionario::all();
+        //dd($entregadores);
         return view('registrarEntregaPedido',
         [
             'pedido'=>$pedido,

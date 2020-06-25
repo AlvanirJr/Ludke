@@ -3,7 +3,7 @@
 @section('content')
 
 <div id="conteudo-pedidos" class="container-fluid">
-        
+
     <div class="row justify-content-center">
         {{-- Coluna 1 --}}
         <div class="col-sm-6">
@@ -26,17 +26,17 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label>Funcionário Responsável</label>
-                                    
+
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <h3>{{$pedido->nomeFuncionario}}</h3>
-                                    
+
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>{{-- end Card Cliente --}}
                 </div>
             </div>
@@ -85,7 +85,7 @@
                                             <label for="">Preço Estimado (R$)</label>
                                             <h4 id="precoEstimado"></h4>
                                         </div>
-                                    </div>  
+                                    </div>
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label>Descrição</label>
@@ -95,7 +95,7 @@
                                             <label>Categoria</label>
                                             <h5 id="categoriaProduto"></h5>
                                         </div>
-                                    </div>                                   
+                                    </div>
                                 </div>
                             </div>{{-- informações do produto --}}
                         </div>
@@ -141,10 +141,10 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                     </div>
                 </div>{{--  end lista produtos--}}
-                
+
             </div>
 
             {{-- Row Informações Venda --}}
@@ -152,7 +152,7 @@
                 <div class="col-sm-12">
                     {{-- Card Venda --}}
                     <div id="card-venda" class="card card-pedidos">
-                        <div class="card-header">Venda</div>
+                        <div class="card-header">Dados do Pedido</div>
                         <div class="card-body">
                             {{-- informações do produto --}}
                             <div class="row">
@@ -161,28 +161,28 @@
                                         <div class="col-sm-4">
                                             <label for="">Número de Itens</label>
                                             <h4 id="qtdItens"></h4>
-                                            
-                                            
+
+
 
                                               <label>Data de Entrega</label>
                                             <div class="input-group">
                                                 <input id="inputDataEntrega" value="{{$pedido->dataEntrega}}" type="date" class="form-control">
-                                                
+
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-5">
                                             <label for="">Total</label>
                                             <h1 id="valorTotal" value=""></h1>
                                         </div>
-                                    </div>                                     
+                                    </div>
                                 </div>
                             </div>{{-- informações do produto --}}
                         </div>
                     </div>{{-- end Card Venda --}}
                 </div>
             </div>{{-- Row Informações Venda --}}
-            
+
         </div>
     </div>
 </div>
@@ -196,7 +196,7 @@
         style: 'currency',
         currency: 'BRL'
     });
-    // Objeto contendo as informações do pedido 
+    // Objeto contendo as informações do pedido
     var pedido = <?php echo $pedido ?>;
     pedido.deletar = [];
     pedido.listaProdutos = [];
@@ -206,6 +206,7 @@
     function carregaProdutos(){
         // Carrega os produtos na tela
         for(let i = 0; i < pedido.itens_pedidos.length; i++){
+            console.log(pedido.itens_pedidos[i].id);
             linha = "<tr>"+
                         "<td><strong>"+(cont)+"</strong></td>"+
                         "<td value="+pedido.itens_pedidos[i].id+">"+pedido.itens_pedidos[i].id+"</td>"+
@@ -217,7 +218,7 @@
                             "<img id="+"iconeDelete"+" class="+"icone"+" src="+"{{asset('img/trash-alt-solid.svg')}}"+" style="+"width:18px"+">"+
                         "</a></td>"+
                     "</tr>";
-            
+
             // montarLinha(pedido.itens_pedidos[i],pedido.itens_pedidos[i].pesoSolicitado)
             $("#tabelaPedidos>tbody").append(linha);
             cont += 1;
@@ -225,7 +226,7 @@
         // Atualiza o numero de itens
         $("#qtdItens").html(pedido.itens_pedidos.length);
         // console.log(pedido.itens_pedidos.length);
-                            
+
         // Atualiza o valor total estimado do pedido
         // subtotal = calcularSubtotal();
         // $("#subtotal").html(subtotal);
@@ -233,7 +234,7 @@
         // Calcula o desconto
         // desconto = calcularDesconto();
         // $("#ValorDesconto").html(desconto);
-        
+
         // Calcula o total
         total = calcularTotal();
         pedido.total = total;
@@ -241,7 +242,7 @@
         $("#valorTotal").html(formatter.format(total));
         $("#valorTotal").val(total);
     }
-    
+
 
     $(function(){
         // Configuração do ajax com token csrf
@@ -308,7 +309,7 @@
         // Finalizar Pedido
         $("#btnFinalizarPedido").click(function(){
             confirma = confirm("Você deseja finalizar a edição do pedido?");
-            if(confirma){      
+            if(confirma){
                 montarPedido();
             }
         });
@@ -334,7 +335,7 @@
                                 "</a>";
                     $('#resultadoBuscaProduto').append(linha);
                 }
-                
+
             },
             error: function(error){
                 console.log(error);
@@ -374,7 +375,7 @@
         return valorProduto*peso;
     }
     function adicionarProduto(id){
-        
+
         pesoProduto = parseFloat($("#pesoProduto").val());
         if(pesoProduto && pesoProduto>0){
             $.getJSON('/produtos/'+id,function(data){
@@ -384,19 +385,19 @@
                         // Adiciona as informações do produto à lista de pedidos
                         // let itemPedido  = [];
                         // itemPedido.push({
-                        //     produto_id: produto.id, 
-                        //     peso:peso, 
+                        //     produto_id: produto.id,
+                        //     peso:peso,
                         //     valorTotalItem: calcularTotalItem(produto.preco,peso)
                         //     });
                         pedido.listaProdutos.push({
-                            produto_id: produto.id, 
-                            peso:pesoProduto, 
+                            produto_id: produto.id,
+                            peso:pesoProduto,
                             valorTotalItem: calcularTotalItem(produto.preco,pesoProduto)
                             });
                         console.log("LISTA PRODUTOS",pedido.listaProdutos)
                         // console.log("adicionarProduto()",pedido)
-                        
-                        
+
+
                         // Adiciona linha à tabela
                         linha = montarLinha(produto,pesoProduto);
                         $("#tabelaPedidos>tbody").append(linha);
@@ -404,7 +405,7 @@
 
                         // Atualiza o numero de itens
                         $("#qtdItens").html(pedido.listaProdutos.length);
-                   
+
                         // Calcula o total
                         total = calcularTotal();
                         console.log(total);
@@ -416,7 +417,7 @@
 
                         // console.log()
                         limparCamposProduto();
-                        
+
                 }
             });
         }else{
@@ -440,7 +441,7 @@
     function removerProduto(idLinha){
         console.log("Remover Produto: ",idLinha);
         linhas = $("#tabelaPedidos>tbody>tr");
-        e = linhas.filter(function(i,elemento){            
+        e = linhas.filter(function(i,elemento){
             return elemento.cells[0].textContent == idLinha;
         });
         if(e){
@@ -448,10 +449,10 @@
             idProduto = parseInt(e[0].cells[1].textContent);
             peso = parseFloat(e[0].cells[3].textContent);
             valorTotal = parseFloat(e[0].cells[5].textContent);
-            
+
             // Remove Pedidos vindo do banco
             for(var i = 0; i < pedido.itens_pedidos.length; i++){
-                
+
                 if( pedido.itens_pedidos[i].id == idProduto && pedido.itens_pedidos[i].pesoSolicitado == peso && pedido.itens_pedidos[i].valorReal == valorTotal){
                     var indice = pedido.itens_pedidos.indexOf(pedido.itens_pedidos[i]);
                     // Debita Valor do Pedido
@@ -463,7 +464,7 @@
 
                     // Atualiza o numero de itens
                     $("#qtdItens").html(pedido.itens_pedidos.length);
-                    
+
                     // Calcula o total
                     total = calcularTotal();
                     pedido.total = total;
@@ -485,7 +486,7 @@
 
                     // Atualiza o numero de itens
                     $("#qtdItens").html(pedido.listaProdutos.length);
-                    
+
                     // Calcula o total
                     total = calcularTotal();
                     pedido.total = total;
@@ -517,16 +518,16 @@
         // valor do desconto
         let desconto = 0;
         desconto = $("#inputDesconto").val()
-        
+
         // console.log("calcularDesconto()",desconto)
-        
+
         // subtotal = calcularSubtotal();
 
         // resultado = (subtotal * (desconto/100)).toPrecision();
-        
+
         $("#ValorDesconto").html(resultado);
         return resultado;
-        
+
     }
     function calcularTotal(){
         // percorre a lista de produtos calculando o subtotal
@@ -539,9 +540,9 @@
         for(i = 0; i < pedido.listaProdutos.length; i++){
             total += parseFloat(pedido.listaProdutos[i].valorTotalItem)
         }
-        
+
         return total;
-        
+
     }
     function calcularPrecoProduto(peso){
         if(peso>0){
@@ -549,14 +550,14 @@
             resultado = preco * peso;
             return resultado;
         }
-        
+
     }
     function limparTela(){
-        
+
     }
     function montarPedido(){
-        
-        
+
+
         pedido.desconto = 0;
 
         pedido.valorDesconto = 0;
@@ -575,7 +576,7 @@
             return;
         }
         else{
-            
+
             console.log(pedido)
             $.ajax({
                 url: '/pedidos/update/'+pedido.id,

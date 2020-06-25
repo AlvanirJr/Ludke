@@ -613,7 +613,7 @@ class PedidoController extends Controller
     public function filtrarPedido(Request $request, Pedido $pedido){
         $filtro = $request->all();
         // dd($filtro);
-        
+
         if(isset($filtro['status_id'])){
             $pedidos = Pedido::where('tipo','p')->where('status_id',intval($filtro['status_id']))
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
@@ -664,6 +664,14 @@ class PedidoController extends Controller
 
         // // $pedidos = $pedido->filtro($filtro,25);
         // return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
+
+    }
+
+
+    public function removerProdutoItem($id){
+        $item = ItensPedido::where('id', '=', $id)->get();
+        dd($item);
+        return view('editarPedido');;
 
     }
 }
