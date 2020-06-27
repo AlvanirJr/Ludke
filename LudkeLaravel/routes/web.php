@@ -129,6 +129,12 @@ Route::resource('/cargos', 'CargoController'); //cria todas as rotas para cargos
 Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
 Route::resource('/clientes', 'ClienteController');
 
+
+
+// ROTAS CONTAS A RECEBER
+Route::get('/contas/receber','ContasReceber@index')->name('contas.receber');
+Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visualizar');
+
 // Rotas para testar banco
 // use App\Produto;
 // use App\Categoria;

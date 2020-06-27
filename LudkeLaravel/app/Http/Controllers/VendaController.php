@@ -311,6 +311,7 @@ class VendaController extends Controller
             $pagamento->descontoPagamento = floatval($request['descontoPagamento'][$i]);//porcentagem do pagamento
             $pagamento->valorTotalPagamento = floatval($request['valorTotalPagamento'][$i]);//valor sem desconto aplicado
             $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
+            $pagamento->status = "aberto";
             $pagamento->formaPagamento_id = $request['formaPagamento'][$i];
 
             $pagamento->funcionario_id = Auth::user()->funcionario->id;

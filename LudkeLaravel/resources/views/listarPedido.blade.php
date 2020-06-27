@@ -126,7 +126,7 @@
                             @elseif($pedido->status->status == "ENTREGUE")
                                 <td>
                                     {{-- Contas a pagar --}}
-                                    <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                    <a href={{route('contas.visualizar',['id' => $pedido->id])}}>
                                         <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
                                     </a>
                                     {{-- Imprimir pedido --}}
