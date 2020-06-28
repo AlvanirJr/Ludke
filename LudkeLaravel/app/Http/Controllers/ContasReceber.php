@@ -9,68 +9,79 @@ use App\Pedido;
 
 class ContasReceber extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        // Pedidos que possuem pagamentos com status 'aberto'
-        $pedidos = Pedido::with(['pagamento'])->whereHas('pagamento', function($query){
-            return $query->where('status','aberto');
-        })->get();
-        $listaPagamento = array(); //array para exibir na view
-        foreach ($pedidos as $pedido) { //percorre os pedidos
-            // inicializa os dados em um array aux
-            $aux['idPedido'] = $pedido->id;
-            $aux['nomeCliente'] = $pedido->cliente->user->name;
-            $aux['valorTotal'] = $pedido->valorTotal;
-            
-            $totalPago = 0; //contador totalPago
-            $menorDataVencimento = $pedido->pagamento[0]->dataVencimento;//menor data de vencimento
+    public function index($idPedido = null){
+        if(isset($idPedido)){
+            $pagamentos = Pagamento::where('pedido_id',$idPedido)->orderBy('dataVencimento')->paginate(25);
+            $listarTodos = true;
+        }else{
+            $pagamentos = Pagamento::orderBy('dataVencimento')->paginate(25);
+            $listarTodos = false;
+        }
+        $infoMensal = self::infoMensal();
+        
+        return view('contasReceber',['pagamentos'=>$pagamentos,'infoMensal' => $infoMensal,'listarTodos' => $listarTodos]);
+    }
 
-            // percorre os pagamentos do pedido
-            foreach ($pedido->pagamento as $pagamento) {
-                $vencimento = date($pagamento->dataVencimento);//pega data de vencimento
-                $today = date('Y-m-d');
-                
-                // verifica se o pagamento ainda não foi pago
-                if($pagamento->status == 'aberto'){
+    public function infoMensal(){
+        
+        
+        $dataHoje = strtotime(date('Y-m-d'));
+        $inicioMes = date('Y-m-d',mktime(0,0,0, date('m'), 1, date('Y'))); // inicio do mês
+        $finalMes = date("Y-m-t"); // final do Mês 
 
-                    // verifica menor data de vencimento
-                    if($vencimento < $menorDataVencimento){
-                        $menorDataVencimento = $vencimento;
-                        $aux['dataVencimento'] = $menorDataVencimento;
-                    }else{
-                        $aux['menorDataVencimento'] = $vencimento;
-                    }
+        // retorna todos os pagamentos
+        //retorna 
+        $pagamentosMensal = Pagamento::whereDate('dataVencimento','>=',$inicioMes)
+            ->whereDate('dataVencimento','<=',$finalMes)->get();
 
-                }
-                else{
-                    $aux['dataVencimento'] = $vencimento; 
-                }
-                
-                if($pagamento->status == 'fechado')
-                    $totalPago += $pagamento->valorPago;
-                
+
+        $totalPagamentosAberto = 0;
+        $totalPagamentosFechados = 0;
+        $totalPagamentosVencidos = 0;
+        $totalPagamentosAguardando = 0;
+        
+        
+        $totalValorRecebido = 0;
+        $totalValorAguardandoPagamento = 0;
+
+        $contValorPago = 0;
+        $contValorAguardandoPagamento = 0;
+        foreach ($pagamentosMensal as $pagamento) {
+
+            $contValorPago += $pagamento->valorPago;
+            $contValorAguardandoPagamento += $pagamento->valorTotalPagamento - ($pagamento->descontoPagamento / 100);
+
+            // conta Pagamentos abertos e fechados
+            if($pagamento->status == 'aberto'){
+                $totalPagamentosAberto+=1;
             }
-            // dd($totalPago);
-            $aux['totalPago'] = $totalPago;
+            else{
+                $totalPagamentosFechados+=1;
+            }
 
-            if($pedido->tipo == 'p')
-                $aux['tipo'] = 'Pedido';
-            elseif($pedido->tipo == 'v')
-                $aux['tipo'] = 'Venda';
-            else
-                $aux['tipo'] = 'Venda Mobile';
-            
-            array_push($listaPagamento,$aux);
-            
+            // //Conta pagamentos vencidos e aguardando
+
+            // if(date('Y-m-d',strtotime($pagamento->dataVencimento)) < $dataHoje && $pagamento->valorPago == 0){
+            //     $totalPagamentosVencidos += 1;
+            // }
+            // if(date('Y-m-d',strtotime($pagamento->dataVencimento)) >= $dataHoje && $pagamento->valorPago == 0){
+                
+            //     $totalPagamentosAguardando += 1;
+            // }
+
         }
 
-        // dd($listaPagamento);
-        return view('contasReceber',['listaPagamento'=>$listaPagamento]);
+        // configura array infoGeral
+        $infoGeral['totalPagamentos'] = count($pagamentosMensal);
+        $infoGeral['valorTotalPago'] = $contValorPago ;
+        $infoGeral['valorTotalAguardando'] = $contValorAguardandoPagamento - $contValorPago;
+        $infoGeral['totalPagamentosPagos'] = $totalPagamentosFechados;
+        $infoGeral['totalPagamentosVencidos'] = $totalPagamentosVencidos ;
+        $infoGeral['totalPagamentosAguardando'] = $totalPagamentosAguardando ;
+
+
+        // dd($pagamentosMensal, $infoGeral,$inicioMes,$finalMes, $dataHoje);
+        return $infoGeral;
     }
 
     /**
@@ -92,6 +103,13 @@ class ContasReceber extends Controller
     public function store(Request $request)
     {
         //
+        $pagamento = Pagamento::find($request['formIdPagamento']);
+        $pagamento->valorPago = $request['formValorPago'];
+        $pagamento->dataPagamento = date('Y-m-d');
+        $pagamento->status = "fechado";
+        $pagamento->save();
+        // dd($request->all(),$pagamento);
+        return redirect()->route('contas.receber');
     }
 
     /**
@@ -102,9 +120,11 @@ class ContasReceber extends Controller
      */
     public function show($id)
     {
-        //
-        $pedido = Pedido::with(['pagamento'])->find($id);
-        return view('showContaReceber',['pedido'=>$pedido]);
+        $pagamento = Pagamento::find($id);
+        
+        $pagamento->pedido->cliente->user;//carrega as relações do pagamento        
+
+        return json_encode($pagamento);
     }
 
     /**

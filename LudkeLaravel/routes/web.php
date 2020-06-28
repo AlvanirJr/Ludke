@@ -132,8 +132,9 @@ Route::resource('/clientes', 'ClienteController');
 
 
 // ROTAS CONTAS A RECEBER
-Route::get('/contas/receber','ContasReceber@index')->name('contas.receber');
+Route::get('/contas/receber/{idPedido?}','ContasReceber@index')->name('contas.receber');
 Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visualizar');
+Route::post('/contas/registrarPagamento','ContasReceber@store')->name('contas.registrarPagamento');
 
 // Rotas para testar banco
 // use App\Produto;
