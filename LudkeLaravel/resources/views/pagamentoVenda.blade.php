@@ -254,7 +254,7 @@
                         "</div>"+
                     "</div>"+
                     "<div class='row justify-content-center'>"+
-                        "<div class='col-sm-4 form-group'>"+
+                        "<div class='col-sm-3 form-group'>"+
                             "<label for='formaPagamento'>Tipo de Pagamento <span class='obrigatorio'>*</span></label>"+
                             "<select name='formaPagamento[]' class='form-control' id='formaPagamento' required>"+
                                 "<option value='' disabled>-- Tipo de Pagamento --</option>"+
@@ -262,24 +262,17 @@
                             "</select>"+
                             "<span style='color:red' id='spanformaPagamento'></span>"+
                         "</div>"+
-                        "<div class='col-sm-4 form-group'>"+
+                        "<div class='col-sm-3 form-group'>"+
                             "<label for='valorTotalPagamento'>Valor (R$) <span class='obrigatorio'>*</span></label>"+
                             "<input type='number' id='valorTotalPagamento' min='0' step='0.01' onkeyup='validaValorPagamento()' class='form-control' name='valorTotalPagamento[]' required>"+
                             "<span style='color:red' id='spanValorPago'></span>"+
                         "</div>"+
-                        "<div class='col-sm-4 form-group'>"+
+                        "<div class='col-sm-3 form-group'>"+
                             "<label for='descontoPagamento'>Desconto %</label>"+
                             "<input id='descontoPagamento' type='number' class='form-control' value='0' min='0' max='100' name='descontoPagamento[]' required>"+
                             "<span style='color:red' id='spanDescontoPagamento'></span>"+
                         "</div>"+
-                    "</div>"+
-                    "<div class='row justify-content-center'>"+
-                        "<div class='col-sm-6 form-group'>"+
-                            "<label for='dataPagamento'>Data de Pagamento <span class='obrigatorio'>*</span></label>"+
-                            "<input type='date' class='form-control' id='dataPagamento' name='dataPagamento[]'>"+
-                            "<span style='color:red' id='spanDataPagamento'></span>"+
-                        "</div>"+
-                        "<div class='col-sm-6 form-group'>"+
+                        "<div class='col-sm-3 form-group'>"+
                             "<label for='dataVencimento'>Data de Vencimento <span class='obrigatorio'>*</span></label>"+
                             "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]'>"+
                             "<span style='color:red' id='spanDataVencimento'></span>"+
