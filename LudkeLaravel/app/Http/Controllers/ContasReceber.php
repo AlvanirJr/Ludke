@@ -11,15 +11,18 @@ class ContasReceber extends Controller
 {
     public function index($idPedido = null){
         if(isset($idPedido)){
-            $pagamentos = Pagamento::where('pedido_id',$idPedido)->orderBy('dataVencimento')->paginate(25);
+            $pagamentosAbertos = Pagamento::where('pedido_id',$idPedido)->where('status','aberto')->orderBy('dataVencimento')->paginate(25);
+            $pagamentosFechados = Pagamento::where('pedido_id',$idPedido)->where('status','fechado')->orderBy('dataVencimento')->paginate(25);
+
             $listarTodos = true;
         }else{
-            $pagamentos = Pagamento::orderBy('dataVencimento')->paginate(25);
+            $pagamentosAbertos = Pagamento::where('status','aberto')->orderBy('dataVencimento')->paginate(25);
+            $pagamentosFechados = Pagamento::where('status','fechado')->orderBy('dataVencimento')->paginate(25);
             $listarTodos = false;
         }
         $infoMensal = self::infoMensal();
         
-        return view('contasReceber',['pagamentos'=>$pagamentos,'infoMensal' => $infoMensal,'listarTodos' => $listarTodos]);
+        return view('contasReceber',['pagamentosAbertos'=>$pagamentosAbertos,'pagamentosFechados'=>$pagamentosFechados,'infoMensal' => $infoMensal,'listarTodos' => $listarTodos]);
     }
 
     public function infoMensal(){
