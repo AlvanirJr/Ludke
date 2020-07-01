@@ -21,12 +21,14 @@ Auth::routes();
 #Route::post('/login/user', 'CustomLoginController@loginUser');
 #Route::get('/logout', 'CustomHomeController@logoutUser');
 Route::get('/relatorio/{id}', 'RelatorioPedidosController@RelatorioPedidos')->name('pedido.relatorio');
+Route::get('/relatorioVendas/{id}', 'RelatorioVendasController@RelatorioVendas')->name('venda.relatorio');
 Route::get('/relatorioCliente', 'ClienteController@relatorioCliente')->name('relatorioCliente');
 Route::get('/relatorioProdutos', 'RelatorioProdutosController@relatorioProduto')->name('relatorioProdutos');
 Route::post('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
 Route::post('/relatorioGeralVendas', 'RelatorioVendasController@RelatorioGeral')->name('relatorioGeralVendas');
 // Route::get('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
 Route::get('/getEntregadores','RelatorioPedidosController@getEntregadores');
+Route::delete('/removerItem/{id}', 'PedidoController@removerProdutoItem')->name('removerProduto.item');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -126,6 +128,13 @@ Route::post('/produtos/{id}','ProdutoController@updateProdWithImage');
 Route::resource('/cargos', 'CargoController'); //cria todas as rotas para cargos
 Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
 Route::resource('/clientes', 'ClienteController');
+
+
+
+// ROTAS CONTAS A RECEBER
+Route::get('/contas/receber/{idPedido?}','ContasReceber@index')->name('contas.receber');
+Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visualizar');
+Route::post('/contas/registrarPagamento','ContasReceber@store')->name('contas.registrarPagamento');
 
 // Rotas para testar banco
 // use App\Produto;

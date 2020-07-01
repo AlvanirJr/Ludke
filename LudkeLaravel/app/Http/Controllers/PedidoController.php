@@ -429,11 +429,13 @@ class PedidoController extends Controller
         for($i = 0; $i < count($request['formaPagamento']); $i++){
             $pagamento = new Pagamento();
             $pagamento->dataVencimento = $request['dataVencimento'][$i];
-            $pagamento->dataPagamento = $request['dataPagamento'][$i];
+            // $pagamento->dataPagamento = $request['dataPagamento'][$i];
             $pagamento->obs = $request['obs'][$i];
             $pagamento->descontoPagamento = floatval($request['descontoPagamento'][$i]);//porcentagem do pagamento
             $pagamento->valorTotalPagamento = floatval($request['valorTotalPagamento'][$i]);//valor sem desconto aplicado
-            $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
+            // $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
+            $pagamento->valorPago = 0;
+            $pagamento->status = "aberto";
             $pagamento->formaPagamento_id = $request['formaPagamento'][$i];
 
             $pagamento->funcionario_id = Auth::user()->funcionario->id;
@@ -613,7 +615,7 @@ class PedidoController extends Controller
     public function filtrarPedido(Request $request, Pedido $pedido){
         $filtro = $request->all();
         // dd($filtro);
-        
+
         if(isset($filtro['status_id'])){
             $pedidos = Pedido::where('tipo','p')->where('status_id',intval($filtro['status_id']))
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
@@ -664,6 +666,14 @@ class PedidoController extends Controller
 
         // // $pedidos = $pedido->filtro($filtro,25);
         // return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
+
+    }
+
+
+    public function removerProdutoItem($id){
+        $item = ItensPedido::where('id', '=', $id)->get();
+        dd($item);
+        return view('editarPedido');;
 
     }
 }

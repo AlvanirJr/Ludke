@@ -20,15 +20,10 @@
                             Filtrar
                           </button>
                     </div>
-                    @if(Auth::user()->can('view_admin', Auth::user())
-                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_gerenteGeral', Auth::user())
-                    || Auth::user()->can('view_vendedor', Auth::user()))
-                    {{-- NOVO PEDIDO --}}
                     <div class="col-sm-2">
                         <a href="{{route('pedidos')}}" class="btn btn-primary-ludke">Novo Pedido</a>
                     </div>
-                    @endif
+
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
@@ -63,11 +58,9 @@
                     <th>Status</th>
                     <th>Valor Total</th>
 
-                    @if(Auth::user()->can('view_admin', Auth::user())
-                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_gerenteGeral', Auth::user()))
+
                     <th>Ações</th>
-                    @endif
+
                 </tr>
                 </thead>
                 <tbody>
@@ -89,22 +82,19 @@
                             {{-- R$ {{$pedido->valorTotal}} --}}
                             R$ {{money_format('%i',$pedido->valorTotal)}}
                         </td>
-                        @if(Auth::user()->can('view_admin', Auth::user())
-                        || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                        || Auth::user()->can('view_gerenteGeral', Auth::user()))
                             {{-- Pedido com status SOLICITADO --}}
                             @if($pedido->status->status == "SOLICITADO")
                                 <td>
                                     {{-- PESAR Pedido --}}
-                                    <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}">
+                                    <a href="{{route('pedido.pesarPedido',['id'=>$pedido->id])}}" title="Pesar Pedido">
                                         <img id="pesar" class="icone" src="{{asset('img/balanca.svg')}}" >
                                     </a>
                                    {{-- Editar Pedido --}}
-                                    <a href="/pedidos/edit/{{$pedido->id}}">
+                                    <a href="/pedidos/edit/{{$pedido->id}}" title="Editar Pedido">
                                         <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
                                     </a>
                                     {{-- Excluir Pedido --}}
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Pedido">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
@@ -112,23 +102,23 @@
                             @elseif($pedido->status->status == "PESADO")
                                 <td>
                                     {{-- Editar Pedido --}}
-                                    <a href="/pedidos/edit/{{$pedido->id}}">
+                                    <a href="/pedidos/edit/{{$pedido->id}}" title="Editar Pedido">
                                         <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
                                     </a>
                                     {{-- PESAR Pedido --}}
-                                    <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}">
+                                    <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}" title="Finalizar Pagamento">
                                         <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
                                     </a>
                                     {{-- Registrar Entrega do pedido --}}
-                                    <a href="{{route('pedido.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
+                                    <a href="{{route('pedido.indexRegistrarEntrega',['id'=>$pedido->id])}}" title="Registrar Entrega">
                                         <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
                                     </a>
                                     {{-- Imprimir pedido --}}
-                                    <a href={{route('pedido.relatorio',['id'=>$pedido->id])}}>
+                                    <a href={{route('pedido.relatorio',['id'=>$pedido->id])}} title="Imprimir Pedido">
                                         <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
                                     {{-- Excluir Pedido --}}
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Pedido">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
@@ -136,28 +126,27 @@
                             @elseif($pedido->status->status == "ENTREGUE")
                                 <td>
                                     {{-- Contas a pagar --}}
-                                    <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                    <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
                                         <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
                                     </a>
                                     {{-- Imprimir pedido --}}
 
-                                    <a href={{route('pedido.relatorio',['id'=>$pedido->id])}} target="_blank">
+                                    <a href={{route('pedido.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Pedido">
                                         <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
                                     {{-- Excluir Pedido --}}
 
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Pedido">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}"  width="20" height="23">
                                     </a>
                                 </td>
                             @else
                                 <td>
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Pedido">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}"  >
                                     </a>
                                 </td>
                             @endif
-                        @endif
                         </tr>
                     @endforeach
                 </tbody>

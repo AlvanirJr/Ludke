@@ -19,25 +19,21 @@
                             Filtrar
                           </button>
                     </div>
-                    @if(Auth::user()->can('view_admin', Auth::user())
-                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_gerenteGeral', Auth::user())
-                    || Auth::user()->can('view_vendedor', Auth::user()))
                     <div class="col-sm-2">
                         <a href="{{route('vendas')}}" class="btn btn-primary-ludke">Nova Venda</a>
                     </div>
-                    @endif
-                    
+
+
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
-    
+
     {{-- Caso uma venda seja realizada, o statusVenda é setado como success e uma
     mensagem é exibida para o usuário informando que a venda foi realizada --}}
     @if (isset($statusVenda))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Venda Realizada com sucesso!</strong> 
+            <strong>Venda Realizada com sucesso!</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -63,7 +59,7 @@
             </button>
         </div>
     @endif
-    
+
     {{-- Variável acho é setada caso encontre algum item no filtro --}}
     @if(isset($achou) && $achou == true)
     <div class="row" style="margin-bottom:10px">
@@ -92,12 +88,7 @@
                     <th>Pedido</th>
                     <th>Status</th>
                     <th>Valor Total</th>
-
-                    @if(Auth::user()->can('view_admin', Auth::user())
-                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_gerenteGeral', Auth::user()))
                     <th>Ações</th>
-                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -116,47 +107,44 @@
                         </td>
                         <td>{{$pedido->status->status}}</td>
                         <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>
-                        @if(Auth::user()->can('view_admin', Auth::user())
-                        || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                        || Auth::user()->can('view_gerenteGeral', Auth::user()))
                             {{-- Verifica se o status do pedido é SOLICITADO --}}
                             @if($pedido->status->status == "ENTREGUE")
-                            
+
                             <td>
                                 {{-- Contas a pagar --}}
-                                <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
                                     <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
-                                </a> 
+                                </a>
                                 {{-- Imprimir pedido --}}
-                                <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Pedido">
                                     <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                 </a>
                                 {{-- Excluir Pedido --}}
-                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
+                                <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Pedido">
                                     <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                 </a>
                             </td>
                             {{-- Verifica se o status do pedido é PESADO --}}
                             @elseif($pedido->status->status == "PESADO")
                                 <td>
-                                    <a href="{{route('concluirVenda',['id'=>$pedido->id])}}">
+                                    <a href="{{route('concluirVenda',['id'=>$pedido->id])}}" title="Concluir Venda">
                                         <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
-                                    </a>       
+                                    </a>
                                     {{-- Registrar Entrega do pedido --}}
-                                    <a href="{{route('venda.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
+                                    <a href="{{route('venda.indexRegistrarEntrega',['id'=>$pedido->id])}}" title="Registrar Entrega" >
                                         <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
-                                    </a>                     
+                                    </a>
                                     {{-- Imprimir pedido --}}
-                                    <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                    <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Pedido">
                                         <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                    {{-- Excluir Pedido --}}
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Pedido">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
-                            
+
                             @endif
-                        @endif
                     </tr>
                     @endforeach
                 </tbody>
@@ -168,7 +156,7 @@
         @if ($pedidos != [])
             @if (isset($filtro))
             {{ $pedidos->appends($filtro)->links() }}
-            
+
             @else
             {{ $pedidos->links() }}
             @endif
@@ -238,7 +226,7 @@
 @section('javascript')
 
 <script type="text/javascript">
-    
+
     $(function(){
 
         // Configuração do ajax com token csrf

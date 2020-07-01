@@ -62,8 +62,11 @@ class VendaController extends Controller
         //------------DEBUG--------------------------
         // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
-        $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
-                                        orwhere('cargo_id',$entregador_id)->get();
+        //$entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
+          //
+        //
+        //                              orwhere('cargo_id',$entregador_id)->get();
+        $entregadores = Funcionario::all();
         $formasPagamento = FormaPagamento::all();
         return view('pagamentoVenda',
             [
@@ -80,7 +83,7 @@ class VendaController extends Controller
      * @return View registrarEntregaPedido
      */
     public function indexRegistrarEntregaPedido($id){
-        // dd($id);
+        dd($id);
         // Pedido
         $pedido = Pedido::with(['cliente'])->find($id);
 
@@ -105,6 +108,7 @@ class VendaController extends Controller
                                         orwhere('cargo_id',$entregador_id)->get();
        */
         $entregadores = Funcionario::all();
+        //dd($entregadores);
         return view('registrarEntregaPedido',
         [
             'pedido'=>$pedido,
@@ -302,11 +306,13 @@ class VendaController extends Controller
         for($i = 0; $i < count($request['formaPagamento']); $i++){
             $pagamento = new Pagamento();
             $pagamento->dataVencimento = $request['dataVencimento'][$i];
-            $pagamento->dataPagamento = $request['dataPagamento'][$i];
+            // $pagamento->dataPagamento = $request['dataPagamento'][$i];
             $pagamento->obs = $request['obs'][$i];
             $pagamento->descontoPagamento = floatval($request['descontoPagamento'][$i]);//porcentagem do pagamento
             $pagamento->valorTotalPagamento = floatval($request['valorTotalPagamento'][$i]);//valor sem desconto aplicado
-            $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
+            // $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
+            $pagamento->valorPago = 0;
+            $pagamento->status = "aberto";
             $pagamento->formaPagamento_id = $request['formaPagamento'][$i];
 
             $pagamento->funcionario_id = Auth::user()->funcionario->id;
