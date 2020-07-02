@@ -30,12 +30,12 @@
     @endif
 
     {{-- Nav-tabs --}}
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <ul class="nav nav-tabs" id="myTabContas" role="tablist">
         <li class="nav-item" role="presentation">
-          <a class="nav-link active" id="aguardando-tab" data-toggle="tab" href="#aguardando" role="tab" aria-controls="aguardando" aria-selected="true"><h5>Aguardando Pagamento</h5></a>
+          <a class="nav-link nav-link-contas active" id="aguardando-tab" data-toggle="tab" href="#aguardando" role="tab" aria-controls="aguardando" aria-selected="true"><h5>Aguardando Pagamento</h5></a>
         </li>
         <li class="nav-item" role="presentation">
-          <a class="nav-link" id="pago-tab" data-toggle="tab" href="#pago" role="tab" aria-controls="pago" aria-selected="false"><h5>Pago</h5></a>
+          <a class="nav-link nav-link-contas" id="pago-tab" data-toggle="tab" href="#pago" role="tab" aria-controls="pago" aria-selected="false"><h5>Pago</h5></a>
         </li>
       </ul>
       {{-- Tab Content --}}

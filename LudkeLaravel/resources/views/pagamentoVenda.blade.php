@@ -181,11 +181,33 @@
     let formasPagamento = <?php echo json_encode($formasPagamento); ?>; 
     console.log(formasPagamento)
     
-    function montarForm(){
-        
+    function validPayment(contValorTotalPagamento, valorTotal){
+
+        if( contValorTotalPagamento < valorTotal){
+            return false;
+        }else{
+            return true;
+        }
+
     }
+    
     $(function(){
         $('#formPagamento').submit(function(event){
+            // Valor Total do pedido
+            let valorTotal = <?= $valorTotalDoPagamento ?>
+            // Contador para armazenar o valor adicionado em todas as formas de pagamento. 
+            let contValorTotalPagamento = 0;
+
+            // Mapeia todos os inputs do valor em cada forma de pagamento em um array
+            let arrayValorTotalPagamento = $('input[name="valorTotalPagamento[]"').map(function(){
+                return parseFloat(this.value);
+            }).get();
+
+            // Percore o array e soma todas as posições
+            arrayValorTotalPagamento.forEach(valor => {
+                contValorTotalPagamento += valor
+            });
+
             if(!isValid()){
                 // $("#formPagamento").submit();
                 event.preventDefault();
@@ -193,6 +215,24 @@
                 $("#divNovaFormaPagamento:not(:has(>div))").each(function(){
                     alert("Por favor, selecione uma forma de pagamento!");
                 });
+            }
+            if(validPayment(contValorTotalPagamento, valorTotal) == false){
+                // impede o envio do form
+                event.preventDefault(); 
+                //alerta de erro
+                alert("O valor informado é menor do que o valor total! Uma nova forma de pagamento será adicionada.")
+
+                // Adiciona nova forma de pagamento ao formulário
+                var linhaForm = addFormaDePagamento();
+                $("#divNovaFormaPagamento").append(linhaForm);
+
+                // Adiciona o valor restante em na ultima forma de pagamento adicionada
+                $('input[name="valorTotalPagamento[]"').last().val(valorTotal - contValorTotalPagamento);
+            }
+            if(contValorTotalPagamento > valorTotal){
+                // impede o envio do form
+                event.preventDefault(); 
+                alert("O valor informado é maior do que o valor total! Verifique os valores informados.");
             }
             
         });
