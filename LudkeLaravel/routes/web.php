@@ -135,8 +135,8 @@ Route::resource('/clientes', 'ClienteController');
 Route::get('/contas/receber/{idPedido?}','ContasReceber@index')->name('contas.receber');
 Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visualizar');
 Route::post('/contas/registrarPagamento','ContasReceber@store')->name('contas.registrarPagamento');
-Route::get('/contas/visualizar/pedido/{id}','PedidoController@index')->name('contas.visualizarPedido');
-Route::get('/contas/visualizar/venda/{id}','VendaController@index')->name('contas.visualizarVenda');
+Route::get('/contas/visualizar/pedido/{id}','PedidoController@show')->name('contas.visualizarPedido');
+Route::get('/contas/visualizar/venda/{id}','VendaController@show')->name('contas.visualizarVenda');
 // Rotas para testar banco
 // use App\Produto;
 // use App\Categoria;
