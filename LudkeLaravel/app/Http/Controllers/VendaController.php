@@ -19,8 +19,14 @@ use App\FormaPagamento;
 
 class VendaController extends Controller
 {
-    public function index(){
-        return view('venda');
+    public function index($id){
+        $pedidos = Pedido::with(['status'])->
+                        where('id',$id)->
+                        orderby('created_at','DESC')->
+                        orderBy('status_id')->
+                        orderBy('dataEntrega')->paginate(25);
+
+        return view('listarVendas',['pedidos'=>$pedidos,'listarVendaConta'=>true]);
     }
 
     public function indexListarVendas()

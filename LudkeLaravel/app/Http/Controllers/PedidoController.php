@@ -22,9 +22,16 @@ class PedidoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        return view('pedido');
+        $pedidos = Pedido::with(['status'])->
+                        where('id',$id)->
+                        orderby('created_at','DESC')->
+                        orderBy('status_id')->
+                        orderBy('dataEntrega')->paginate(25);
+            
+        return view('listarPedido',['pedidos'=>$pedidos,'listarPedidoConta'=>true]);
+        
     }
 
     public function indexListarPedidos(){

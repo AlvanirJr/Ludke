@@ -81,7 +81,7 @@ Route::post('/pedidos/registrarEntrega','PedidoController@registrarEntregaPedido
 Route::get('/pedidos/pagamento/{id}','PedidoController@indexPagamento')->name('pedido.indexPagamento');
 Route::post('/pedidos/pagamento','PedidoController@pagamento')->name('pedido.pagamento');
 
-Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("listarPedidos");
+Route::get('/pedidos/listar/{id?}','PedidoController@indexListarPedidos')->name("listarPedidos");
 Route::get('/getPedidos','PedidoController@getPedidos');
 Route::get('/pedidos/edit/{id}','PedidoController@edit')->name('pedido.editar'); //Editar Pedido
 Route::put('/pedidos/update/{id}','PedidoController@update');
@@ -135,7 +135,8 @@ Route::resource('/clientes', 'ClienteController');
 Route::get('/contas/receber/{idPedido?}','ContasReceber@index')->name('contas.receber');
 Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visualizar');
 Route::post('/contas/registrarPagamento','ContasReceber@store')->name('contas.registrarPagamento');
-
+Route::get('/contas/visualizar/pedido/{id}','PedidoController@index')->name('contas.visualizarPedido');
+Route::get('/contas/visualizar/venda/{id}','VendaController@index')->name('contas.visualizarVenda');
 // Rotas para testar banco
 // use App\Produto;
 // use App\Categoria;

@@ -98,6 +98,19 @@
                                             <img class="icone" src="{{asset('img/eye-solid.svg')}}" >
                                         </a>
                                         @endif
+
+                                        
+                                        {{-- Redirecionar para pedidos ou vendas --}}
+                                        @if ($pagamento->pedido->tipo == 'p')
+                                            <a id="visualizarPedido" title="Visualizar Pedido" href="{{route('contas.visualizarPedido',['id'=>$pagamento->pedido->id])}}" target="_blank">
+                                                <img id="vPedido" class="icone" style="width: 20px" src="{{asset('img/clipboard-list-solid.svg')}}" >
+                                            </a>
+                                        @else
+                                            <a id="visualizarVenda" title="Visualizar Venda" href="{{route('contas.visualizarVenda',['id'=>$pagamento->pedido->id])}}" target="_blank">
+                                                <img id="vVenda" class="icone" style="width: 20px" src="{{asset('img/clipboard-list-solid.svg')}}" >
+                                            </a>
+                                        @endif
+
                                     </td>
                                 </tr>
         

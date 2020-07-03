@@ -45,6 +45,19 @@
         </div>
 
     @endif
+    
+    {{-- Verifica se está listando o pedido visualizado em Contas a Receber --}}
+    @if (isset($listarPedidoConta) && $listarPedidoConta == true)
+        <div class="row">
+            <div class="col-sm-12 limparBusca">
+                <a href="{{route('listarPedidos')}}">
+                    <button class="btn btn-outline-danger">Listar Todos</button>
+                </a>
+
+            </div>
+        </div>
+    @endif
+    
     <div class="row justify-content-center">
         <div class="col-sm-12">
             <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
