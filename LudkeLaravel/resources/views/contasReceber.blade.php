@@ -166,30 +166,14 @@
                                         {{$pagamento->funcionario->user->name}}
                                     </td>
                                     <td>
-                                        {{-- Pagamento Vencido --}}
-                                        @if(date($pagamento->dataVencimento) < date('Y-m-d') && $pagamento->valorPago == 0)
-                                            <div class="statusVencido" title="Pagamento Vencido"></div>
-                                        {{-- Aguardando Pagamento --}}
-                                        @elseif(date($pagamento->dataVencimento) >= date('Y-m-d') && $pagamento->valorPago == 0)
-                                            <div class="statusAguardando" title="Aguardando Pagamento"></div>
-                                        @else
                                         {{-- Pago --}}
-                                            <div class="statusPago" title="Pago"></div>
-                                        @endif
-        
+                                        <div class="statusPago" title="Pago"></div>
                                     </td>
                                     <td>
-                                        @if ($pagamento->valorPago == 0)
-                                        {{-- Pagamento --}}
-                                        <a id="registrarPagamento" title="Registrar pagamento" onclick="registrarPagamento({{$pagamento->id}})">
-                                            <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
-                                        </a>
-                                        @else
                                         {{-- Visualizar --}}
                                         <a id="visualizarPagamento" title="Visualizar pagamento" onclick="exibir({{$pagamento->id}})">
                                             <img class="icone" src="{{asset('img/eye-solid.svg')}}" >
                                         </a>
-                                        @endif
                                     </td>
                                 </tr>
         
@@ -409,14 +393,16 @@ function exibir(idPagamento){
             pagamento = JSON.parse(pagamento);
             // seta id Pagamento
             
-            console.log(pagamento)
             // Nome do Cliente
             $("#nomeClienteVizualizar").html(pagamento.pedido.cliente.user.name);
 
             // Data de vencimento
-            let arrayDataVencimento = pagamento.dataVencimento.split('-');
-            let dataVencimento = arrayDataVencimento[2] + "/" + arrayDataVencimento[1] + "/" +arrayDataVencimento[0];
-            $("#dataVencimentoVizualizar").html(dataVencimento);
+            if(pagamento.dataVencimento != null){
+                let arrayDataVencimento = pagamento.dataVencimento.split('-');
+                let dataVencimento = arrayDataVencimento[2] + "/" + arrayDataVencimento[1] + "/" +arrayDataVencimento[0];
+                $("#dataVencimentoVizualizar").html(dataVencimento);
+
+            }
             
             
             // Tipo de Pedido
@@ -450,7 +436,7 @@ function exibir(idPagamento){
 
             // Valor Com Desconto
             let valorComDesconto = valorTotal - desconto;
-            console.log(valorComDesconto)
+            // console.log(valorComDesconto)
             $("#valorComDescontoVizualizar").html(formatter.format(valorComDesconto));
 
             // Seta valor pago no form
