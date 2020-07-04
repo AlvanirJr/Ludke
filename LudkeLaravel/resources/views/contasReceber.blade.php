@@ -99,6 +99,10 @@
                                         </a>
                                         @endif
 
+                                        {{-- Editar Pagamento --}}
+                                        <a id="editarPagamento" title="Editar Pagamento" href="{{route('contas.editarPagamento',['id'=>$pagamento->id])}}">
+                                            <img id="vPedido" class="icone" style="width: 20px" src="{{asset('img/edit-solid.svg')}}" >
+                                        </a>
                                         
                                         {{-- Redirecionar para pedidos ou vendas --}}
                                         @if ($pagamento->pedido->tipo == 'p')

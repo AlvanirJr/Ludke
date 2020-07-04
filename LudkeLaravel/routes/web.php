@@ -137,20 +137,5 @@ Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visuali
 Route::post('/contas/registrarPagamento','ContasReceber@store')->name('contas.registrarPagamento');
 Route::get('/contas/visualizar/pedido/{id}','PedidoController@show')->name('contas.visualizarPedido');
 Route::get('/contas/visualizar/venda/{id}','VendaController@show')->name('contas.visualizarVenda');
-// Rotas para testar banco
-// use App\Produto;
-// use App\Categoria;
-// use App\Cliente;
-// use App\User;
-// use App\Pedido;
-// Route::get('/teste',function(){
-//     $users = User::with('cliente')->get();
-//     $cliente = Cliente::with('user')->get();
-//     $produtos = Produto::with('categoria')->find(1);
-//     $categoria = Categoria::with('produtos')->get();
-//     $pedidos = Pedido::with(['itensPedidos','status'])->get();
-
-//     return json_encode($pedidos);
-
-//     // return $pedidos;
-// });
+Route::get('/contas/editar/pagamento/{id}','ContasReceber@editarPagamentoContasReceber')->name('contas.editarPagamento');
+Route::post('/contas/editar/pagamento/{id}','ContasReceber@updatePagamentoContasReceber')->name('contas.updatePagamento');
