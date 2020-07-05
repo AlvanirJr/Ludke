@@ -67,7 +67,17 @@
                     @foreach ($pedidos as $pedido)
                     <tr id="{{$pedido->id}}">
                         <td>{{$pedido->id}}</td>
-                        <td>{{$pedido->cliente->user->name}}</td>
+                        <td>
+                            @if(isset($pedido->cliente->user))
+                                {{$pedido->cliente->user->name}}
+                            @else
+                               <?php $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
+                                     $cliente->user_id;
+                                     $user = \App\User::withTrashed()->find($cliente->user_id);
+                                ?>
+                                {{$user->name}}
+                            @endif
+                        </td>
                         <td>{{$pedido->funcionario->user->name}}</td>
                         <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
                         <td>
@@ -92,6 +102,10 @@
                                    {{-- Editar Pedido --}}
                                     <a href="/pedidos/edit/{{$pedido->id}}" title="Editar Pedido">
                                         <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
+                                    </a>
+                                    {{-- Imprimir pedido solicitado --}}
+                                    <a href={{route('pedido.solicitado',['id'=>$pedido->id])}}  target="_blank" title="Pedido Solicitado">
+                                        <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
                                     {{-- Excluir Pedido --}}
                                     <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Pedido">

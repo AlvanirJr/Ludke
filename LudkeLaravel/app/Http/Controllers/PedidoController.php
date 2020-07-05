@@ -59,6 +59,7 @@ class PedidoController extends Controller
         $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
                                         orwhere('cargo_id',$entregador_id)->get();
         $formasPagamento = FormaPagamento::all();
+
         return view('pagamento',
             [
                 'pedido'=>$pedido,

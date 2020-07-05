@@ -20,6 +20,7 @@ Auth::routes();
 
 #Route::post('/login/user', 'CustomLoginController@loginUser');
 #Route::get('/logout', 'CustomHomeController@logoutUser');
+Route::get('/relatorioSolicitado/{id}', 'RelatorioPedidosController@RelatorioSolicitado')->name('pedido.solicitado');
 Route::get('/relatorio/{id}', 'RelatorioPedidosController@RelatorioPedidos')->name('pedido.relatorio');
 Route::get('/relatorioVendas/{id}', 'RelatorioVendasController@RelatorioVendas')->name('venda.relatorio');
 Route::get('/relatorioCliente', 'ClienteController@relatorioCliente')->name('relatorioCliente');

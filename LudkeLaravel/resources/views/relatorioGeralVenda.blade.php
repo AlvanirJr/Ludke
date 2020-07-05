@@ -26,7 +26,15 @@
             @foreach($vendas as $venda)
                 <tr align="center">
                     <td>{{$venda->id}}</td>
-                    <td >{{$venda->cliente->user->name}}</td>
+                    <td >   @if(isset($venda->cliente->user))
+                            {{$venda->cliente->user->name}}
+                        @else
+                            <?php $cliente = \App\Cliente::withTrashed()->find($venda->cliente_id);
+                            $cliente->user_id;
+                            $user = \App\User::withTrashed()->find($cliente->user_id);
+                            ?>
+                            {{$user->name}}
+                        @endif</td>
                     <td>{{$venda->funcionario->user->name}}</td>
                     <td>{{date('d/m/Y',strtotime($venda->dataEntrega))}}</td>
                     <td>

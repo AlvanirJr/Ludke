@@ -14,6 +14,32 @@ class RelatorioPedidosController extends Controller
 {
     //
 
+    public function RelatorioSolicitado($id){
+
+        $view = 'relatorioSolicitado';
+        $pedido = Pedido::find($id);
+        $itens = ItensPedido::where('pedido_id', '=', $pedido->id)->get();
+        $clientes = Cliente::where('id', '=', $pedido->cliente_id)->get();
+
+        $count = count($itens);
+
+        //dd($count);
+
+        //dd($pedido);
+
+
+        $date = date('d/m/Y');
+        $view = \View::make($view, compact('itens', 'clientes', 'pedido','count' ,'date'))->render();
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view)->setPaper('a6', 'landscape');
+
+        $filename = 'relatorioSolicitado'.$date;
+
+
+        return $pdf->stream($filename.'.pdf');
+
+    }
+
     public function RelatorioPedidos($id){
         $view = 'relatorioPedido';
         $pedido = Pedido::find($id);
@@ -26,10 +52,11 @@ class RelatorioPedidosController extends Controller
 
         #####Soma
 
+        $count = count($itens);
 
 
         $date = date('d/m/Y');
-		$view = \View::make($view, compact('itens', 'clientes','soma',  'date'))->render();
+		$view = \View::make($view, compact('itens', 'clientes','soma', 'pedido','count', 'date'))->render();
 		$pdf = \App::make('dompdf.wrapper');
 		$pdf->loadHTML($view)->setPaper('a6', 'landscape');
 

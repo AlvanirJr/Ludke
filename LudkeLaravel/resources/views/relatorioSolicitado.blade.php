@@ -2,6 +2,7 @@
 @section('content')
 @section('titulo','Relatório de Pedido')
 @extends('layouts.relatorios')
+
 <style>
     thead{
         background-color: #ccc;
@@ -12,12 +13,9 @@
     <div>
         @foreach($clientes as $cliente)
             <p style="line-height: 0.1">Cliente: {{$cliente->nomeReduzido}}</p>
-            <p style="line-height: 0.3">CPF/CNPJ: {{$cliente->cpfCnpj}}</p>
-            <p style="line-height: -0.1">Endereço: {{$cliente->user->endereco->cidade . ' - '.
-                                                    $cliente->user->endereco->rua . ' - Num: '.
-                                                    $cliente->user->endereco->numero
-                                                                                    }}</p>
-            <p style="line-height: 1.4">Data Entrega: {{date('d/m/Y', strtotime($pedido->dataEntrega))}}</p>
+            <p style="line-height: 0.0">Data Pedido: {{date('d/m/Y', strtotime($pedido->created_at))}}</p>
+            <p style="line-height: 1.6">Data de Entrega: {{date('d/m/Y', strtotime($pedido->dataEntrega))}}</p>
+            <p style="line-height: 0.0">Responsável: {{$pedido->funcionario->user->name}}</p>
 
         @endforeach
     </div>
@@ -26,18 +24,16 @@
             <thead class="thead-primary">
             <tr style="height:20px">
                 <th>Produto</th>
-                <th>Peso</th>
-                <th>Preço KG</th>
-                <th>Valor</th>
+                <th>Quantidade</th>
+                <th>Quantidade Final</th>
             </tr>
             </thead>
             <tbody>
             @foreach($itens as $item)
                 <tr align="center">
                     <td>{{$item->nomeProduto}}</td>
-                    <td>{{$item->pesoFinal. ' KG'}}</td>
-                    <td>{{$item->produto->preco  = number_format($item->produto->preco, '2',',','.').' R$'}}</td>
-                    <td>{{$item->valorReal = number_format($item->valorReal, '2',',','.').' R$'}}</td>
+                    <td>{{$item->pesoSolicitado}}</td>
+                    <td>{{$item->pesoFinal}}</td>
                 </tr>
             @endforeach
             </tbody>
