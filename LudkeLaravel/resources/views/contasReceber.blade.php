@@ -260,6 +260,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+            <form action="{{route('contas.registrarPagamento')}}" method="POST">
             <div class="modal-body">
               <div class="row">
                   <div class="col-sm-12">
@@ -298,7 +299,6 @@
                     </div>
                 </div>
             </div>
-            <form action="{{route('contas.registrarPagamento')}}" method="POST">
                 @csrf
                 <input type="hidden" id="formIdPagamento" name="formIdPagamento">
                 <input type="hidden" id="formValorPago" name="formValorPago">

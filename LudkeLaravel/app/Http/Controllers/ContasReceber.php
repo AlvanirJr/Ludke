@@ -108,6 +108,7 @@ class ContasReceber extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request->all());
         $pagamento = Pagamento::find($request['formIdPagamento']);
         $pagamento->valorPago = $request['formValorPago'];
         $pagamento->dataPagamento = date('Y-m-d');
