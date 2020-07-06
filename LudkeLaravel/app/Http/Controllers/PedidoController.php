@@ -37,7 +37,19 @@ class PedidoController extends Controller
         // dd($pedidos);
         return view('listarPedido',['pedidos'=>$pedidos]);
     }
+    /**
+     * Redireciona para tela de listar pedidos com o pedido
+     * @param $id pedido
+     */
+    function show($id){
+        $pedidos = Pedido::with(['status'])->
+                            where('id',$id)->
+                            orderby('created_at','DESC')->
+                            orderBy('status_id')->
+                            orderBy('dataEntrega')->paginate(25);
 
+        return view('listarPedido',['pedidos'=>$pedidos,'listarPedidoConta'=>true]);
+    }
     public function indexPagamento($id){
         // Pedido
         $pedido = Pedido::with(['cliente'])->find($id);
@@ -147,17 +159,6 @@ class PedidoController extends Controller
     public function store(Request $request)
     {
         //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-
     }
 
     /**

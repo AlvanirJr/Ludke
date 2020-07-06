@@ -28,6 +28,20 @@ body{
 }
 /* =========================================================*/
 
+/* ------------------ NAV TABS ------------------ */
+
+.nav-link-contas{
+    color: #404040 
+}
+.nav-link-contas:hover{
+    color: #700f1b !important;
+}
+.nav-link-contas.active{
+    
+    color: #990000 !important;
+}
+/* -------------- END NAV TABS ------------------ */
+
 .limparBusca{
     margin-bottom: 15px;
 }

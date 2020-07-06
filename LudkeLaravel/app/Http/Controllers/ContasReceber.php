@@ -6,20 +6,25 @@ use Illuminate\Http\Request;
 use App\Cliente;
 use App\Pagamento;
 use App\Pedido;
+use App\FormaPagamento;
+use Illuminate\Support\Facades\Auth;
 
 class ContasReceber extends Controller
 {
     public function index($idPedido = null){
         if(isset($idPedido)){
-            $pagamentos = Pagamento::where('pedido_id',$idPedido)->orderBy('dataVencimento')->paginate(25);
+            $pagamentosAbertos = Pagamento::where('pedido_id',$idPedido)->where('status','aberto')->orderBy('dataVencimento')->paginate(25);
+            $pagamentosFechados = Pagamento::where('pedido_id',$idPedido)->where('status','fechado')->orderBy('dataVencimento')->paginate(25);
+
             $listarTodos = true;
         }else{
-            $pagamentos = Pagamento::orderBy('dataVencimento')->paginate(25);
+            $pagamentosAbertos = Pagamento::where('status','aberto')->orderBy('dataVencimento')->paginate(25);
+            $pagamentosFechados = Pagamento::where('status','fechado')->orderBy('dataVencimento')->paginate(25);
             $listarTodos = false;
         }
         $infoMensal = self::infoMensal();
         
-        return view('contasReceber',['pagamentos'=>$pagamentos,'infoMensal' => $infoMensal,'listarTodos' => $listarTodos]);
+        return view('contasReceber',['pagamentosAbertos'=>$pagamentosAbertos,'pagamentosFechados'=>$pagamentosFechados,'infoMensal' => $infoMensal,'listarTodos' => $listarTodos]);
     }
 
     public function infoMensal(){
@@ -103,6 +108,7 @@ class ContasReceber extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request->all());
         $pagamento = Pagamento::find($request['formIdPagamento']);
         $pagamento->valorPago = $request['formValorPago'];
         $pagamento->dataPagamento = date('Y-m-d');
@@ -145,9 +151,45 @@ class ContasReceber extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function editarPagamentoContasReceber($id)
     {
-        //
+        
+        $pagamento = Pagamento::find($id);
+        $formasPagamento = FormaPagamento::all();
+        
+        return view('editarPagamentoContas',['pagamento'=>$pagamento,'formasPagamento'=>$formasPagamento]);
+
+    }
+    public function updatePagamentoContasReceber(Request $request, $id){
+        // Atualiza o pagamento antigo
+        $pagamento = Pagamento::find($id);
+        $pagamento->formaPagamento_id = $request['updateFormaPagamento'];
+        $pagamento->valorTotalPagamento = $request['updateValorTotalPagamento'];
+        $pagamento->descontoPagamento = $request['updateDescontoPagamento'];
+        $pagamento->dataVencimento = $request['updateDataVencimento'];
+        $pagamento->obs = $request['updateObs'];
+        $pagamento->save();
+        
+        
+        // Salva as novas formas de pagamento
+        if(isset($request['valorTotalPagamento'])){
+            for($i = 0; $i < sizeof($request['valorTotalPagamento']); $i++){
+                $newPagamento = new Pagamento();
+                $newPagamento->obs = $request['obs'][$i];
+                $newPagamento->descontoPagamento = $request['descontoPagamento'][$i];
+                $newPagamento->dataVencimento = $request['dataVencimento'][$i];
+                $newPagamento->valorTotalPagamento = $request['valorTotalPagamento'][$i];
+                $newPagamento->status = 'aberto';
+                $newPagamento->funcionario_id = auth()->user()->funcionario->id;
+                $newPagamento->pedido_id = $request['idPedido'];
+                $newPagamento->formaPagamento_id = $request['formaPagamento'][$i];
+                
+                $newPagamento->save();
+            }
+        }
+
+        return redirect()->route('contas.receber');
+
     }
 
     /**

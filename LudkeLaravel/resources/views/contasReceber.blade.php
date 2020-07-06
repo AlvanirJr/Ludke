@@ -29,86 +29,180 @@
         </div>
     @endif
 
-    <div class="row justify-content-center">
-        <div class="col-sm-12">
-            <table id="tabelaCargos" class="table table-hover table-responsive-md">
-                <thead class="thead-primary">
-                <tr>
-                    <th>ID</th>
-                    <th>Cliente</th>
-                    <th>Valor Total</th>
-                    <th>Valor Pago</th>
-                    <th>Data Vencimento</th>
-                    <th>Tipo</th>
-                    <th>Situação</th>                        
-                    <th>Ações</th>
-                </tr>
-                </thead>
-                <tbody>
-                    @foreach ($pagamentos as $pagamento)
+    {{-- Nav-tabs --}}
+    <ul class="nav nav-tabs" id="myTabContas" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link-contas active" id="aguardando-tab" data-toggle="tab" href="#aguardando" role="tab" aria-controls="aguardando" aria-selected="true"><h5>Aguardando Pagamento</h5></a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link-contas" id="pago-tab" data-toggle="tab" href="#pago" role="tab" aria-controls="pago" aria-selected="false"><h5>Pago</h5></a>
+        </li>
+      </ul>
+      {{-- Tab Content --}}
+      <div class="tab-content" id="myTabContent">
+          {{-- Aguardando Pagamento --}}
+        <div class="tab-pane fade show active" id="aguardando" role="tabpanel" aria-labelledby="aguardando-tab">
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <table id="tabelaCargos" class="table table-hover table-responsive-md">
+                        <thead class="thead-primary">
                         <tr>
-                            <td>{{$pagamento->id}}</td>
-                            <td>{{$pagamento->pedido->cliente->user->name}}</td>
-                            <td>R$ {{money_format('%i',$pagamento->valorTotalPagamento - ($pagamento->descontoPagamento/100))}}</td>
-                            {{-- Calcula o total pago somando o pagamento dos pedidos que possui status fechado --}}
-                            <td>R$ {{money_format('%i',$pagamento->valorPago)}}</td>
-                            <td> 
-                                {{date('d/m/Y',strtotime($pagamento->dataVencimento))}}
-                            </td>
-                            <td>
-                                @if($pagamento->pedido->tipo == 'p')
-                                    Pedido
-                                @elseif($pagamento->pedido->tipo == 'v')
-                                    Venda
-                                @else
-                                    Venda Mobile
-                                @endif
-                            </td>
-                            <td>
-                                {{-- Pagamento Vencido --}}
-                                @if(date($pagamento->dataVencimento) < date('Y-m-d') && $pagamento->valorPago == 0)
-                                    <div class="statusVencido" title="Pagamento Vencido"></div>
-                                {{-- Aguardando Pagamento --}}
-                                @elseif(date($pagamento->dataVencimento) >= date('Y-m-d') && $pagamento->valorPago == 0)
-                                    <div class="statusAguardando" title="Aguardando Pagamento"></div>
-                                @else
-                                {{-- Pago --}}
-                                    <div class="statusPago" title="Pago"></div>
-                                @endif
-
-                            </td>
-                            <td>
-                                @if ($pagamento->valorPago == 0)
-                                {{-- Pagamento --}}
-                                <a id="registrarPagamento" title="Registrar pagamento" onclick="registrarPagamento({{$pagamento->id}})">
-                                    <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
-                                </a>
-                                @else
-                                {{-- Visualizar --}}
-                                <a id="visualizarPagamento" title="Visualizar pagamento" onclick="exibir({{$pagamento->id}})">
-                                    <img class="icone" src="{{asset('img/eye-solid.svg')}}" >
-                                </a>
-                                @endif
-                            </td>
+                            <th>#PAG.</th>
+                            <th>#PED.</th>
+                            <th>Cliente</th>
+                            <th>Valor Total</th>
+                            <th>Valor Pago</th>
+                            <th>Data Vencimento</th>
+                            <th>Funcrionário</th>
+                            <th>Situação</th>                        
+                            <th>Ações</th>
                         </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($pagamentosAbertos as $pagamento)
+                                <tr>
+                                    <td>{{$pagamento->id}}</td>
+                                    <td>{{$pagamento->pedido->id}}</td>
+                                    <td>{{$pagamento->pedido->cliente->user->name}}</td>
+                                    <td>R$ {{money_format('%i',$pagamento->valorTotalPagamento - ($pagamento->descontoPagamento/100))}}</td>
+                                    {{-- Calcula o total pago somando o pagamento dos pedidos que possui status fechado --}}
+                                    <td>R$ {{money_format('%i',$pagamento->valorPago)}}</td>
+                                    <td> 
+                                        {{date('d/m/Y',strtotime($pagamento->dataVencimento))}}
+                                    </td>
+                                    <td>
+                                        {{$pagamento->funcionario->user->name}}
+                                    </td>
+                                    <td>
+                                        {{-- Pagamento Vencido --}}
+                                        @if(date($pagamento->dataVencimento) < date('Y-m-d') && $pagamento->valorPago == 0)
+                                            <div class="statusVencido" title="Pagamento Vencido"></div>
+                                        {{-- Aguardando Pagamento --}}
+                                        @elseif(date($pagamento->dataVencimento) >= date('Y-m-d') && $pagamento->valorPago == 0)
+                                            <div class="statusAguardando" title="Aguardando Pagamento"></div>
+                                        @else
+                                        {{-- Pago --}}
+                                            <div class="statusPago" title="Pago"></div>
+                                        @endif
+        
+                                    </td>
+                                    <td>
+                                        @if ($pagamento->valorPago == 0)
+                                        {{-- Pagamento --}}
+                                        <a id="registrarPagamento" title="Registrar pagamento" onclick="registrarPagamento({{$pagamento->id}})">
+                                            <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
+                                        </a>
+                                        @else
+                                        {{-- Visualizar --}}
+                                        <a id="visualizarPagamento" title="Visualizar pagamento" onclick="exibir({{$pagamento->id}})">
+                                            <img class="icone" src="{{asset('img/eye-solid.svg')}}" >
+                                        </a>
+                                        @endif
 
-                    @endforeach
-                </tbody>
-            </table>
+                                        {{-- Editar Pagamento --}}
+                                        <a id="editarPagamento" title="Editar Pagamento" href="{{route('contas.editarPagamento',['id'=>$pagamento->id])}}">
+                                            <img id="vPedido" class="icone" style="width: 20px" src="{{asset('img/edit-solid.svg')}}" >
+                                        </a>
+                                        
+                                        {{-- Redirecionar para pedidos ou vendas --}}
+                                        @if ($pagamento->pedido->tipo == 'p')
+                                            <a id="visualizarPedido" title="Visualizar Pedido" href="{{route('contas.visualizarPedido',['id'=>$pagamento->pedido->id])}}" target="_blank">
+                                                <img id="vPedido" class="icone" style="width: 20px" src="{{asset('img/clipboard-list-solid.svg')}}" >
+                                            </a>
+                                        @else
+                                            <a id="visualizarVenda" title="Visualizar Venda" href="{{route('contas.visualizarVenda',['id'=>$pagamento->pedido->id])}}" target="_blank">
+                                                <img id="vVenda" class="icone" style="width: 20px" src="{{asset('img/clipboard-list-solid.svg')}}" >
+                                            </a>
+                                        @endif
+
+                                    </td>
+                                </tr>
+        
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+            {{-- Paginate --}}
+            <div class="row justify-content-center">
+                @if ($pagamentosAbertos != [])
+                    @if (isset($filtro))
+                    {{ $pagamentosAbertos->appends($filtro)->links() }}
+        
+                    @else
+                    {{ $pagamentosAbertos->links() }}
+                    @endif
+                @endif
+            </div>
         </div>
-    </div>
-
-    {{-- Paginate --}}
-    <div class="row justify-content-center">
-        @if ($pagamentos != [])
-            @if (isset($filtro))
-            {{ $pagamentos->appends($filtro)->links() }}
-
-            @else
-            {{ $pagamentos->links() }}
-            @endif
-        @endif
-    </div>
+        {{-- Pago --}}
+        <div class="tab-pane fade" id="pago" role="tabpanel" aria-labelledby="pago-tab">
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <table id="tabelaCargos" class="table table-hover table-responsive-md">
+                        <thead class="thead-primary">
+                        <tr>
+                            <th>#PAG.</th>
+                            <th>#PED.</th>
+                            <th>Cliente</th>
+                            <th>Valor Total</th>
+                            <th>Valor Pago</th>
+                            <th>Data Vencimento</th>
+                            <th>Funcrionário</th>
+                            <th>Situação</th>                        
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($pagamentosFechados as $pagamento)
+                                <tr>
+                                    <td>{{$pagamento->id}}</td>
+                                    <td>{{$pagamento->pedido->id}}</td>
+                                    <td>{{$pagamento->pedido->cliente->user->name}}</td>
+                                    <td>R$ {{money_format('%i',$pagamento->valorTotalPagamento - ($pagamento->descontoPagamento/100))}}</td>
+                                    {{-- Calcula o total pago somando o pagamento dos pedidos que possui status fechado --}}
+                                    <td>R$ {{money_format('%i',$pagamento->valorPago)}}</td>
+                                    <td> 
+                                        {{date('d/m/Y',strtotime($pagamento->dataVencimento))}}
+                                    </td>
+                                    <td>
+                                        {{$pagamento->funcionario->user->name}}
+                                    </td>
+                                    <td>
+                                        {{-- Pago --}}
+                                        <div class="statusPago" title="Pago"></div>
+                                    </td>
+                                    <td>
+                                        {{-- Visualizar --}}
+                                        <a id="visualizarPagamento" title="Visualizar pagamento" onclick="exibir({{$pagamento->id}})">
+                                            <img class="icone" src="{{asset('img/eye-solid.svg')}}" >
+                                        </a>
+                                    </td>
+                                </tr>
+        
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+            {{-- Paginate --}}
+            <div class="row justify-content-center">
+                @if ($pagamentosFechados != [])
+                    @if (isset($filtro))
+                    {{ $pagamentosFechados->appends($filtro)->links() }}
+        
+                    @else
+                    {{ $pagamentosFechados->links() }}
+                    @endif
+                @endif
+            </div>
+        </div>
+        
+      </div>
+    
+    
 
 
     {{-- Titulo --}}
@@ -116,9 +210,9 @@
         <div class="col-md-12">
             <div class="titulo-pagina">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="titulo-pagina-nome">
-                            <h2>Resumo Mensal</h2>
+                            <h2>Resumo Mensal - {{date('d/m/Y',mktime(0,0,0, date('m'), 1, date('Y')))}} à {{date('t/m/Y')}}</h2>
                         </div>
                     </div>
                 </div>
@@ -166,6 +260,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+            <form action="{{route('contas.registrarPagamento')}}" method="POST">
             <div class="modal-body">
               <div class="row">
                   <div class="col-sm-12">
@@ -204,13 +299,12 @@
                     </div>
                 </div>
             </div>
-            <form action="{{route('contas.registrarPagamento')}}" method="POST">
                 @csrf
                 <input type="hidden" id="formIdPagamento" name="formIdPagamento">
                 <input type="hidden" id="formValorPago" name="formValorPago">
                 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Salvar</button>
+                    <button type="submit" class="btn btn-danger">Registrar Pagamento</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                 </div>
             </form>
@@ -303,14 +397,16 @@ function exibir(idPagamento){
             pagamento = JSON.parse(pagamento);
             // seta id Pagamento
             
-            console.log(pagamento)
             // Nome do Cliente
             $("#nomeClienteVizualizar").html(pagamento.pedido.cliente.user.name);
 
             // Data de vencimento
-            let arrayDataVencimento = pagamento.dataVencimento.split('-');
-            let dataVencimento = arrayDataVencimento[2] + "/" + arrayDataVencimento[1] + "/" +arrayDataVencimento[0];
-            $("#dataVencimentoVizualizar").html(dataVencimento);
+            if(pagamento.dataVencimento != null){
+                let arrayDataVencimento = pagamento.dataVencimento.split('-');
+                let dataVencimento = arrayDataVencimento[2] + "/" + arrayDataVencimento[1] + "/" +arrayDataVencimento[0];
+                $("#dataVencimentoVizualizar").html(dataVencimento);
+
+            }
             
             
             // Tipo de Pedido
@@ -344,7 +440,7 @@ function exibir(idPagamento){
 
             // Valor Com Desconto
             let valorComDesconto = valorTotal - desconto;
-            console.log(valorComDesconto)
+            // console.log(valorComDesconto)
             $("#valorComDescontoVizualizar").html(formatter.format(valorComDesconto));
 
             // Seta valor pago no form

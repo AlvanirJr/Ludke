@@ -82,7 +82,7 @@ Route::post('/pedidos/registrarEntrega','PedidoController@registrarEntregaPedido
 Route::get('/pedidos/pagamento/{id}','PedidoController@indexPagamento')->name('pedido.indexPagamento');
 Route::post('/pedidos/pagamento','PedidoController@pagamento')->name('pedido.pagamento');
 
-Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("listarPedidos");
+Route::get('/pedidos/listar/{id?}','PedidoController@indexListarPedidos')->name("listarPedidos");
 Route::get('/getPedidos','PedidoController@getPedidos');
 Route::get('/pedidos/edit/{id}','PedidoController@edit')->name('pedido.editar'); //Editar Pedido
 Route::put('/pedidos/update/{id}','PedidoController@update');
@@ -136,21 +136,7 @@ Route::resource('/clientes', 'ClienteController');
 Route::get('/contas/receber/{idPedido?}','ContasReceber@index')->name('contas.receber');
 Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visualizar');
 Route::post('/contas/registrarPagamento','ContasReceber@store')->name('contas.registrarPagamento');
-
-// Rotas para testar banco
-// use App\Produto;
-// use App\Categoria;
-// use App\Cliente;
-// use App\User;
-// use App\Pedido;
-// Route::get('/teste',function(){
-//     $users = User::with('cliente')->get();
-//     $cliente = Cliente::with('user')->get();
-//     $produtos = Produto::with('categoria')->find(1);
-//     $categoria = Categoria::with('produtos')->get();
-//     $pedidos = Pedido::with(['itensPedidos','status'])->get();
-
-//     return json_encode($pedidos);
-
-//     // return $pedidos;
-// });
+Route::get('/contas/visualizar/pedido/{id}','PedidoController@show')->name('contas.visualizarPedido');
+Route::get('/contas/visualizar/venda/{id}','VendaController@show')->name('contas.visualizarVenda');
+Route::get('/contas/editar/pagamento/{id}','ContasReceber@editarPagamentoContasReceber')->name('contas.editarPagamento');
+Route::post('/contas/editar/pagamento/{id}','ContasReceber@updatePagamentoContasReceber')->name('contas.updatePagamento');

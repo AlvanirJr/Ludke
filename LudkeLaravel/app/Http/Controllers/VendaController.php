@@ -40,6 +40,19 @@ class VendaController extends Controller
 
         return view('listarVendas',['pedidos'=>$pedidos]);
     }
+    /**
+     * Redireciona para tela de listar vendas com a venda selecionada
+     * @param $id pedido
+     */
+    function show($id){
+        $pedidos = Pedido::with(['status'])->
+                            where('id',$id)->
+                            orderby('created_at','DESC')->
+                            orderBy('status_id')->
+                            orderBy('dataEntrega')->paginate(25);
+
+        return view('listarVendas',['pedidos'=>$pedidos,'listarVendaConta'=>true]);
+    }
 
     /**
      * Função que redireciona para tela de pagamento da venda
