@@ -52,8 +52,8 @@
                             <th>Cliente</th>
                             <th>Valor Total</th>
                             <th>Valor Pago</th>
-                            <th>Data Vencimento</th>
-                            <th>Funcrionário</th>
+                            <th>Data de Vencimento</th>
+                            <th>Funcionário</th>
                             <th>Situação</th>                        
                             <th>Ações</th>
                         </tr>
@@ -87,7 +87,7 @@
         
                                     </td>
                                     <td>
-                                        @if ($pagamento->valorPago == 0)
+                                        @if ($pagamento->valorPago == 0 || $pagamento->valorPago == null)
                                         {{-- Pagamento --}}
                                         <a id="registrarPagamento" title="Registrar pagamento" onclick="registrarPagamento({{$pagamento->id}})">
                                             <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
@@ -148,8 +148,9 @@
                             <th>Cliente</th>
                             <th>Valor Total</th>
                             <th>Valor Pago</th>
-                            <th>Data Vencimento</th>
-                            <th>Funcrionário</th>
+                            <th>Data de Vencimento</th>
+                            <th>Data de Pagamento</th>
+                            <th>Funcionário</th>
                             <th>Situação</th>                        
                             <th>Ações</th>
                         </tr>
@@ -165,6 +166,9 @@
                                     <td>R$ {{money_format('%i',$pagamento->valorPago)}}</td>
                                     <td> 
                                         {{date('d/m/Y',strtotime($pagamento->dataVencimento))}}
+                                    </td>
+                                    <td> 
+                                        {{date('d/m/Y',strtotime($pagamento->dataPagamento))}}
                                     </td>
                                     <td>
                                         {{$pagamento->funcionario->user->name}}
@@ -260,57 +264,64 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form action="{{route('contas.registrarPagamento')}}" method="POST">
-            <div class="modal-body">
-              <div class="row">
-                  <div class="col-sm-12">
-                      <label for="">Cliente</label>
-                      <h4 id="nomeCliente"></h4>
-                  </div>
-              </div>
-    
-              <div class="row">
-                  <div class="col-sm-4">
-                    <label for="">Data de Vencimento</label>
-                    <h4 id="dataVencimento"></h4>
-                  </div>
-                  <div class="col-sm-4">
-                    <label for="">Tipo</label>
-                    <h4 id="tipo"></h4>
-                  </div>
-                  <div class="col-sm-4">
-                    <label for="">Situação</label>
-                    <h4 id="situacao"></h4>
-                  </div>
-              </div>
-    
-                <div class="row">
-                    <div class="col-sm-4">
-                    <label for="">Valor Total</label>
-                    <h4 id="valorTotal"></h4>
-                    </div>
-                    <div class="col-sm-4">
-                    <label for="">Desconto</label>
-                    <h4 id="desconto"></h4>
-                    </div>
-                    <div class="col-sm-4">
-                    <label for="">Valor com Desconto</label>
-                    <h4 id="valorComDesconto"></h4>
-                    </div>
-                </div>
-            </div>
+            <form id="formRegistrarPagamento" action="{{route('contas.registrarPagamento')}}" method="POST">
                 @csrf
                 <input type="hidden" id="formIdPagamento" name="formIdPagamento">
-                <input type="hidden" id="formValorPago" name="formValorPago">
-                
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Registrar Pagamento</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <input type="hidden" id="formIdPedido" name="formIdPedido">
+                <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="">Cliente</label>
+                        <h4 id="nomeCliente"></h4>
+                    </div>
                 </div>
-            </form>
-          </div>
+        
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="">Data de Vencimento</label>
+                        <h4 id="dataVencimento"></h4>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="">Tipo</label>
+                        <h4 id="tipo"></h4>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="">Situação</label>
+                        <h4 id="situacao"></h4>
+                    </div>
+                </div>
+        
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="">Desconto</label>
+                        <h4 id="desconto"></h4>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="">Valor com Desconto</label>
+                        <h4 id="valorComDesconto"></h4>
+                    </div>
+                    <div class="col-sm-4">
+                        {{-- <h4 id="valorTotal"></h4> --}}
+                        <div class="form-group">
+                            <label for="">Valor Total (R$)</label>
+                            <input type="number" step="0.01" class="form-control" id="formValorPago" name="formValorPago" required>    
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="vencimentoNovoPagamento"></div>
+            </div>
+            
+            <input type="hidden" id="valorTotalPagamento" name="valorTotalPagamento">
+            
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">Registrar Pagamento</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </form>
         </div>
-      </div>
+    </div>
+    </div>
 
       <!-- Modal Visualizar Pagamento -->
     <div class="modal fade" id="modalVisualizarPagamento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -379,6 +390,43 @@
 @section('javascript')
 <script type="text/javascript">
 
+$(document).ready(function(){
+    // Validação ao submeter o formulário de pagamento
+    $("#formRegistrarPagamento").submit(function(event){
+        // Valor total do pagamento 
+        let valorTotalPagamento = $("#valorTotalPagamento").val();
+        // Valor informado no input
+        let formValorPago = $("#formValorPago").val();
+        
+        if(formValorPago > valorTotalPagamento){
+            event.preventDefault();
+            alert("O valor informado é maior do que o valor do pagamento. Informe o valor corretamente.");
+        }
+        /** 
+            Verifica se o valor informado é menor do que o valor do pedido. Caso seja, insere um input
+            de data para o usuário informar a data de vencimento do próximo pagamento
+        */
+        else if(formValorPago < valorTotalPagamento && $("#vencimentoNovoPagamento").html() == ""){
+            event.preventDefault();
+            inputDate = `<div class="row">
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger" role="alert">
+                                O valor informado é menor do que o valor do pagamento. Devido a isso, um novo pagamento será criado
+                                com o valor restante. <strong>Por favor, informe a data de vencimento do novo pagamento.</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="">Data de Vencimento</label>
+                            <input type="date" class="form-control" id="dataVencimentoNovoPagamento" name="dataVencimentoNovoPagamento" min="{{Date('Y-m-d')}}" required>    
+                        </div>
+                    </div>`;
+            $("#vencimentoNovoPagamento").html(inputDate)
+        }
+    });
+
+});
 function exibir(idPagamento){
     // Cria objeto Intl que será responsável por converter os valores para o formato da moeda brasileira
     let formatter = new Intl.NumberFormat([],{
@@ -419,6 +467,7 @@ function exibir(idPagamento){
             
             // Situação
             let estaVencido = new Date(pagamento.dataVencimento).getTime() < new Date().getTime();
+            
             // vencido
             if(estaVencido && pagamento.valorPago == 0)
                 $("#situacaoVizualizar").html("Pagamento Vencido");
@@ -460,9 +509,12 @@ function limpaModalRegistroPagamento(){
     $("#desconto").html("");
     $("#valorComDesconto").html("");
     $("#valorPago").html("");
+    $("#vencimentoNovoPagamento").html("");
     // limpa id
     $("#formIdPagamento").val("");
+    $("#formIdPedido").val("");
     $("#formValorPago").val("");
+    
 }
 
 function limpaModalVisualizarPagamento(){
@@ -495,9 +547,13 @@ function registrarPagamento(idPagamento){
             pagamento = JSON.parse(pagamento);
             // seta id Pagamento
             $("#formIdPagamento").val(pagamento.id);
-            console.log(pagamento)
+            
+            // Seta id do Pedido
+            $("#formIdPedido").val(pagamento.pedido.id);
+
             // Nome do Cliente
             $("#nomeCliente").html(pagamento.pedido.cliente.user.name);
+            
 
             // Data de vencimento
             let arrayDataVencimento = pagamento.dataVencimento.split('-');
@@ -513,17 +569,22 @@ function registrarPagamento(idPagamento){
             else
             $("#tipo").html("Venda Mobile");
             
-            // Situação
+            // Situação. Retorna true se o pagamento está vencido e false caso não esteja
             let estaVencido = new Date(pagamento.dataVencimento).getTime() < new Date().getTime();
+
             // vencido
-            if(estaVencido && pagamento.valorPago == 0)
-                $("#situacao").html("Pagamento Vencido");
-            // aguardando pagamento
-            else if(!estaVencido && pagamento.valorPago == 0)
-                $("#situacao").html("Aguardando Pagamento");
+            if(pagamento.valorPago == null || pagamento.valorPago == 0){
+                if(estaVencido == true)
+                    $("#situacao").html("Pagamento Vencido");
+                // aguardando pagamento
+                else if(estaVencido == false)
+                    $("#situacao").html("Aguardando Pagamento");
+
+            }else{
             // pago
-            else
                 $("#situacao").html("Pago");
+
+            }
 
             
             // Valor Total
@@ -536,11 +597,14 @@ function registrarPagamento(idPagamento){
 
             // Valor Com Desconto
             let valorComDesconto = valorTotal - desconto;
-            console.log(valorComDesconto)
+            
             $("#valorComDesconto").html(formatter.format(valorComDesconto));
 
             // Seta valor pago no form
             $("#formValorPago").val(valorComDesconto);
+
+            // Valor total do pagamento que será usado na validação do form
+            $("#valorTotalPagamento").val(valorComDesconto);
         }
     });
     $("#modalRegistrarPagamento").modal('show');
