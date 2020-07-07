@@ -109,11 +109,35 @@ class ContasReceber extends Controller
     {
         //
         // dd($request->all());
-        $pagamento = Pagamento::find($request['formIdPagamento']);
-        $pagamento->valorPago = $request['formValorPago'];
-        $pagamento->dataPagamento = date('Y-m-d');
-        $pagamento->status = "fechado";
-        $pagamento->save();
+        if($request['dataVencimentoNovoPagamento']){
+
+            // Cria novo pagamento
+            $newPagamento = new Pagamento();
+            $newPagamento->dataVencimento = $request['dataVencimentoNovoPagamento'];
+            $newPagamento->descontoPagamento = 0;
+            $newPagamento->valorTotalPagamento = $request['valorTotalPagamento'] - $request['formValorPago']; //
+            $newPagamento->valorPago = 0;
+            $newPagamento->status = "aberto";
+            $newPagamento->funcionario_id = auth()->user()->funcionario->id;
+            $newPagamento->pedido_id = $request['formIdPedido'];
+            $newPagamento->formaPagamento_id = 1;
+            $newPagamento->save();
+
+            // Salva o pagamento existente
+
+            $pagamento = Pagamento::find($request['formIdPagamento']);
+            $pagamento->valorTotalPagamento = $request['formValorPago'];//o valor total agora será o valor pago
+            $pagamento->valorPago = $request['formValorPago'];
+            $pagamento->dataPagamento = date('Y-m-d');
+            $pagamento->status = "fechado";
+            $pagamento->save();
+        }else{
+            $pagamento = Pagamento::find($request['formIdPagamento']);
+            $pagamento->valorPago = $request['formValorPago'];
+            $pagamento->dataPagamento = date('Y-m-d');
+            $pagamento->status = "fechado";
+            $pagamento->save();
+        }
         // dd($request->all(),$pagamento);
         return redirect()->route('contas.receber');
     }
