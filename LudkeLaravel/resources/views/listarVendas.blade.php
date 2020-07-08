@@ -123,6 +123,10 @@
                             @if($pedido->status->status == "ENTREGUE")
 
                             <td>
+                                {{-- Editar Pagamento--}}
+                                <a href={{route('contas.editarPagamentoPedidoVenda',['id' => $pedido->id])}} title="Editar Pagamento">
+                                    <img id="pagar" class="icone" src="{{asset('img/hand-holding-usd-solid.svg')}}" >
+                                </a>
                                 {{-- Contas a pagar --}}
                                 <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
                                     <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >

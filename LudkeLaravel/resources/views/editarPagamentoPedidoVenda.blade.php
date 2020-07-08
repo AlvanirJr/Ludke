@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="titulo-pagina-nome">
-                            <h2>Editar Pagamento</h2>
+                            <h2>Editar Pagamento - Pedido {{$pedido->id}}</h2>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                     <h5 class="card-title">Cliente</h5>
-                    <p class="card-text"><h3>{{$pagamento->pedido->cliente->user->name}}</h3></p>
+                    <p class="card-text"><h3>{{$pedido->cliente->user->name}}</h3></p>
                 </div>
               </div>
         </div>
@@ -47,82 +47,81 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                   <h5 class="card-title">Funcionário Responsável pelo Pagamento</h5>
-                  <p class="card-text"><h3>{{$pagamento->pedido->funcionario->user->name}}</h3></p>
+                  <p class="card-text"><h3>{{$pedido->funcionario->user->name}}</h3></p>
                 </div>
               </div>
         </div>
     </div> 
-    <div class="row justify-content-center">
+    <div class="row">
         {{-- Valor Total do Pagamento --}}
         <div class="col-sm-6">
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                     <h5 class="card-title">Valor Total</h5>
-                    <p class="card-text"><h3>R${{money_format("%i",$pagamento->valorTotalPagamento)}}</h3></p>
-                </div>
-              </div>
-        </div>
-        
-        {{-- Data de Vencimento --}}
-        <div class="col-sm-6">
-            <div class="card cardFinalizarPedidos">
-                <div class="card-body">
-                  <h5 class="card-title">Data de Vencimento</h5>
-                  <p class="card-text"><h3>{{date('d/m/Y', strtotime($pagamento->dataVencimento))}}</h3></p>
+                    <p class="card-text"><h3>R${{money_format("%i",$pedido->valorTotal)}}</h3></p>
                 </div>
               </div>
         </div>
     </div> 
     
     {{-- FORMULÁRIO --}}
-    <form id="formPagamento" action="{{route('contas.updatePagamento',['id'=>$pagamento->id])}}" method="POST">    
+    {{-- {{route('contas.updatePagamento',['id'=>$pagamento->id])}} --}}
+    <form id="formPagamento" action="{{route('contas.updatePagamentoPedidoVenda',['id'=>$pedido->id])}}" method="POST">    
         @csrf
-        <div id='formaPagamento'>
-            <input type="hidden" name="idPedido" value="{{$pagamento->pedido->id}}">
-            <div class='row informacoes'>
-                <div class='col-sm-10'>
-                    <h3>Informações do Pagamento</h3>
-                </div>
-                
-            </div>
-            <div class='row justify-content-center'>
-                <div class='col-sm-3 form-group'>
-                    <label for='updateFormaPagamento'>Tipo de Pagamento <span class='obrigatorio'>*</span></label>
-                    <select name='updateFormaPagamento' class='form-control' id='updateFormaPagamento' required>
-                        <option value='' disabled>-- Tipo de Pagamento --</option>
-                        @foreach ($formasPagamento as $fp)
-                            @if($fp == $pagamento->formaPagamento)
-                                <option value='{{$fp->id}}' selected>{{$fp->nome}}</option>
+        @foreach ($pedido->pagamento as $pagamento)
+            <div id='formaPagamento'>
+                <input type="hidden" name="idPagamento[]" value="{{$pagamento->id}}" @if($pagamento->status == 'fechado') disabled @else required @endif>
+                <div class='row informacoes'>
+                    <div class='col-sm-10'>
+                        <h3>Informações do Pagamento
+                            @if($pagamento->status == 'fechado')
+                                <span class="badge badge-success">Pago</span>
                             @else
-                                <option value='{{$fp->id}}'>{{$fp->nome}}</option>
+                                <span class="badge badge-warning">Aguardando Pagamento</span>
                             @endif
-                        @endforeach
-                    </select>
-                    <span style='color:red' id='spanformaPagamento'></span>
+                        </h3>
+                    </div>
+                    
                 </div>
-                <div class='col-sm-3 form-group'>
-                    <label for='updateValorTotalPagamento'>Valor (R$) <span class='obrigatorio'>*</span></label>
-                    <input type='number' value="{{$pagamento->valorTotalPagamento}}" id='updateValorTotalPagamento' min='0' step='0.01' onkeyup='validaValorPagamento()' class='form-control' name='updateValorTotalPagamento' required>
-                    <span style='color:red' id='spanValorPago'></span>
-                </div>
-                <div class='col-sm-3 form-group'>
-                    <label for='updateDescontoPagamento'>Desconto %</label>
-                    <input id='updateDescontoPagamento' value="{{$pagamento->descontoPagamento}}" type='number' class='form-control' value='0' min='0' max='100' name='updateDescontoPagamento' required>
-                    <span style='color:red' id='spanDescontoPagamento'></span>
-                </div>
-                <div class='col-sm-3 form-group'>
-                    <label for='updateDataVencimento'>Data de Vencimento</label>
-                    <input type='date' class='form-control' value="{{$pagamento->dataVencimento}}" id='updateDataVencimento' name='updateDataVencimento'>
-                    <span style='color:red' id='spanDataVencimento'></span>
-                </div>
-            </div>                  
-            <div class='row justify-content-center'>
-                <div class='col-sm-12 form-group'>
-                    <label for='updateObs'>Observações</label>
-                    <textarea class='form-control' value="{{$pagamento->obs}}" name='updateObs' id='' rows='5'></textarea>
+                <div class='row justify-content-center'>
+                    <div class='col-sm-3 form-group'>
+                        <label for='updateFormaPagamento'>Tipo de Pagamento <span class='obrigatorio'>*</span></label>
+                        <select name='updateFormaPagamento[]' class='form-control' id='updateFormaPagamento' @if($pagamento->status == 'fechado') disabled @else required @endif>
+                            <option value='' disabled>-- Tipo de Pagamento --</option>
+                            @foreach ($formasPagamento as $fp)
+                                @if($fp == $pagamento->formaPagamento)
+                                    <option value='{{$fp->id}}' selected>{{$fp->nome}}</option>
+                                @else
+                                    <option value='{{$fp->id}}'>{{$fp->nome}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <span style='color:red' id='spanformaPagamento'></span>
+                    </div>
+                    <div class='col-sm-3 form-group'>
+                        <label for='updateValorTotalPagamento'>Valor (R$) <span class='obrigatorio'>*</span></label>
+                        <input type='number' value="{{$pagamento->valorTotalPagamento}}" id='updateValorTotalPagamento' min='0' step='0.01' onkeyup='validaValorPagamento()' class='form-control' name='updateValorTotalPagamento[]' @if($pagamento->status == 'fechado') disabled @else required @endif>
+                        <span style='color:red' id='spanValorPago'></span>
+                    </div>
+                    <div class='col-sm-3 form-group'>
+                        <label for='updateDescontoPagamento'>Desconto %</label>
+                        <input id='updateDescontoPagamento' value="{{$pagamento->descontoPagamento}}" type='number' class='form-control' value='0' min='0' max='100' name='updateDescontoPagamento[]' @if($pagamento->status == 'fechado') disabled @else required @endif>
+                        <span style='color:red' id='spanDescontoPagamento'></span>
+                    </div>
+                    <div class='col-sm-3 form-group'>
+                        <label for='updateDataVencimento'>Data de Vencimento</label>
+                        <input type='date' class='form-control' value="{{$pagamento->dataVencimento}}" id='updateDataVencimento' name='updateDataVencimento[]' @if($pagamento->status == 'fechado') disabled @else required @endif>
+                        <span style='color:red' id='spanDataVencimento'></span>
+                    </div>
+                </div>                  
+                <div class='row justify-content-center'>
+                    <div class='col-sm-12 form-group'>
+                        <label for='updateObs'>Observações</label>
+                        <textarea class='form-control' value="{{$pagamento->obs}}" name='updateObs[]' id='' rows='5' @if($pagamento->status == 'fechado') disabled @endif></textarea>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endforeach
         
 
         
@@ -139,7 +138,7 @@
 
         <div class="row justify-content-center" style="margin:30px 0 30px 0;">
             <div class="col-sm-6" style="heigth:100px">
-                <a href="{{route('contas.receber')}}" class="btn btn-secondary-ludke btn-pedido" >Voltar</a>
+                <a href="{{ url()->previous() }}" class="btn btn-secondary-ludke btn-pedido" >Voltar</a>
             </div>
             <div class="col-sm-6">
                 <button type="submit" class="btn btn-primary-ludke btn-pedido">Finalizar Pagamento</button>
@@ -156,7 +155,7 @@
 
     let countFormaPagamento = 0;
     //Formas de pagamento
-    let formasPagamento = <?php echo json_encode($formasPagamento); ?>; 
+    let formasPagamento = <?php echo json_encode($formasPagamento ?? ''); ?>; 
     
     function validPayment(contValorTotalPagamento, valorTotal){
 
@@ -171,7 +170,8 @@
     $(function(){
         $('#formPagamento').submit(function(event){
             // Valor Total do pagamento
-            const valorTotal = <?php echo $pagamento->valorTotalPagamento ?>
+            const valorTotal = <?php echo $pedido->valorTotal ?>;
+            console.log(valorTotal);
             // Contador para armazenar o valor adicionado em todas as formas de pagamento. 
             let contValorTotalPagamento = 0 ;
 
@@ -180,7 +180,10 @@
                 return parseFloat(this.value);
             }).get();
 
-            arrayValorTotalPagamento.push(parseFloat($("#updateValorTotalPagamento").val()))
+            $('input[name="updateValorTotalPagamento[]"').map(function(){
+                
+                arrayValorTotalPagamento.push(parseFloat(this.value))
+            });
             // Percore o array e soma todas as posições
             arrayValorTotalPagamento.forEach(valor => {
                 contValorTotalPagamento += valor
@@ -234,7 +237,7 @@
     //pedido ao submeter o form.
     function validaValorPagamento(){
         // Valor Total do pedido
-        let valorTotal = <?php echo $pagamento->valorTotalPagamento ?>
+        let valorTotal = <?php echo $pedido->valorTotal ?>;
         // Contador para armazenar o valor adicionado em todas as formas de pagamento. 
         let contValorTotalPagamento = 0;
         
@@ -244,7 +247,9 @@
         }).get();
 
         // Adiciona ao array o valor que será atualizado
-        arrayValorTotalPagamento.push(parseFloat($("#updateValorTotalPagamento").val()))
+        $('input[name="updateValorTotalPagamento[]"').map(function(){
+            arrayValorTotalPagamento.push(parseFloat(this.value))
+        });
 
         // Percore o array e soma todas as posições
         arrayValorTotalPagamento.forEach(valor => {
@@ -293,7 +298,7 @@
                         "</div>"+
                         "<div class='col-sm-3 form-group'>"+
                             "<label for='dataVencimento'>Data de Vencimento</label>"+
-                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]'>"+
+                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]' required>"+
                             "<span style='color:red' id='spanDataVencimento'></span>"+
                         "</div>"+
                     "</div>"+                    

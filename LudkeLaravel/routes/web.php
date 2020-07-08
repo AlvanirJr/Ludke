@@ -138,5 +138,11 @@ Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visuali
 Route::post('/contas/registrarPagamento','ContasReceber@store')->name('contas.registrarPagamento');
 Route::get('/contas/visualizar/pedido/{id}','PedidoController@show')->name('contas.visualizarPedido');
 Route::get('/contas/visualizar/venda/{id}','VendaController@show')->name('contas.visualizarVenda');
+// Editar Pagamento CaR
 Route::get('/contas/editar/pagamento/{id}','ContasReceber@editarPagamentoContasReceber')->name('contas.editarPagamento');
 Route::post('/contas/editar/pagamento/{id}','ContasReceber@updatePagamentoContasReceber')->name('contas.updatePagamento');
+
+// Editar Pagamento Pedido/Venda
+Route::get('/contas/editar/pagamento/pedido_venda/{id}','ContasReceber@editarPagamentoPedidoVenda')->name('contas.editarPagamentoPedidoVenda');
+Route::post('/contas/editar/pagamento/pedido_venda/{id}','ContasReceber@updatePagamentoPedidoVenda')->name('contas.updatePagamentoPedidoVenda');
+

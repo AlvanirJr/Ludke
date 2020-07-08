@@ -186,6 +186,7 @@ class ContasReceber extends Controller
     }
     public function updatePagamentoContasReceber(Request $request, $id){
         // Atualiza o pagamento antigo
+        // dd($request->all());
         $pagamento = Pagamento::find($id);
         $pagamento->formaPagamento_id = $request['updateFormaPagamento'];
         $pagamento->valorTotalPagamento = $request['updateValorTotalPagamento'];
@@ -216,6 +217,67 @@ class ContasReceber extends Controller
 
     }
 
+    /**
+     * Redireciona para tela de editar os pagamentos do pedido e venda
+     */
+    public function editarPagamentoPedidoVenda($id){
+        $pedido = Pedido::with(['pagamento'])->where('id',$id)->first();
+        $formasPagamento = FormaPagamento::all();
+        // dd($pedido->id);
+        return view('editarPagamentoPedidoVenda',['pedido'=>$pedido,'formasPagamento'=>$formasPagamento]);
+    }
+
+    /**
+     * Edita as formas de pagamento dos pedidos e vendas
+     */
+    public function updatePagamentoPedidoVenda(Request $request, $id){
+        // Busca o pedido
+        $pedido = Pedido::find($id);
+        
+        // Atualiza os pagamentos referente ao pedido
+        if(isset($request['idPagamento'])){
+            // Percorre os arrays passados no input
+            for($i = 0; $i < sizeof($request['idPagamento']); $i++){
+                // busca o pagamento pelo id
+                $updatePagamento = Pagamento::find($request['idPagamento'][$i]);
+                // se achar o pagamento, atualiza os valores e salva
+                if(isset($updatePagamento)){
+                    $updatePagamento->obs = $request['updateObs'][$i];
+                    $updatePagamento->descontoPagamento = $request['updateDescontoPagamento'][$i];
+                    $updatePagamento->valorTotalPagamento = $request['updateValorTotalPagamento'][$i];
+                    $updatePagamento->status = 'aberto';
+                    $updatePagamento->funcionario_id = auth()->user()->funcionario->id;
+                    $updatePagamento->pedido_id = $id;
+                    $updatePagamento->formaPagamento_id = $request['updateFormaPagamento'][$i];
+                    $updatePagamento->save();
+                }
+            }
+        }
+
+        // Salva as novas formas de pagamento
+        if(isset($request['valorTotalPagamento'])){
+            for($i = 0; $i < sizeof($request['valorTotalPagamento']); $i++){
+                $newPagamento = new Pagamento();
+                $newPagamento->obs = $request['obs'][$i];
+                $newPagamento->descontoPagamento = $request['descontoPagamento'][$i];
+                $newPagamento->dataVencimento = $request['dataVencimento'][$i];
+                $newPagamento->valorTotalPagamento = $request['valorTotalPagamento'][$i];
+                $newPagamento->status = 'aberto';
+                $newPagamento->funcionario_id = auth()->user()->funcionario->id;
+                $newPagamento->pedido_id = $id;
+                $newPagamento->formaPagamento_id = $request['formaPagamento'][$i];
+                
+                $newPagamento->save();
+            }
+        }
+        
+        // redireciona de acordo com o tipo do pedido 11
+        if($pedido->tipo == "p"){
+            return redirect()->route('listarPedidos');
+        }else{
+            return redirect()->route('listarVendas');
+        }
+    }
     /**
      * Remove the specified resource from storage.
      *

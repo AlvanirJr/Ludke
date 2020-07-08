@@ -310,7 +310,7 @@
                         "</div>"+
                         "<div class='col-sm-3 form-group'>"+
                             "<label for='dataVencimento'>Data de Vencimento</label>"+
-                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]'>"+
+                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]' required>"+
                             "<span style='color:red' id='spanDataVencimento'></span>"+
                         "</div>"+
                     "</div>"+                    
