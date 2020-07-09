@@ -179,7 +179,9 @@ class PedidoController extends Controller
             $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
 
             // $pedido["valorProduto"]= $produto->preco;
-            $pedido["nomeCliente"] = $cliente->user->name;
+            $cliente = \App\Cliente::withTrashed()->find($pedido->id);
+            $user = \App\User::withTrashed()->find($cliente->user_id);
+            $pedido["nomeCliente"] = $user->name;
             $pedido["nomeFuncionario"] = $funcionario->user->name;
 
 
@@ -673,9 +675,14 @@ class PedidoController extends Controller
 
 
     public function removerProdutoItem($id){
+
+        dd($id);
         $item = ItensPedido::where('id', '=', $id)->get();
         dd($item);
         return view('editarPedido');;
 
     }
+
+
+
 }
