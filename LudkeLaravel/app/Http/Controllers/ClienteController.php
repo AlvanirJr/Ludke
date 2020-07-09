@@ -148,7 +148,7 @@ class ClienteController extends Controller
 
         $validation = $this->validate($request,[
                 'nome'=> 'required|string|min:5|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
+                'email' => 'nullable|string|email|max:255|unique:users',
                 'nomeReduzido' => 'nullable|string|max:255',
                 'nomeResponsavel' => 'nullable|string|max:255',
                 'cpfCnpj' => 'required|unique:clientes',
@@ -188,7 +188,13 @@ class ClienteController extends Controller
         $senhaAutomatica = bcrypt('123456');
         $user->name = strtoupper($request->input('nome'));
         $user->tipo = 'cliente';
-        $user->email= $request->input('email');
+        if($user->email == null){
+            $id = mt_rand();
+            $user->email = $user->name.$id."@gmail.com";
+        }
+        else{
+            $user->email= $request->input('email');
+        }
         $user->password = $senhaAutomatica;
         $user->endereco_id = $endereco->id;
         $user->telefone_id = $telefone->id;

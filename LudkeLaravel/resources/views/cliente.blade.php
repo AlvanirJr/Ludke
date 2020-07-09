@@ -294,7 +294,7 @@
                         {{-- email do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="emailCliente" class="control-label">E-mail do Cliente <span class="obrigatorio">*</span></label>
+                                <label for="emailCliente" class="control-label">E-mail do Cliente</label>
                                 <div class="input-group">
                                     <input type="email" class="form-control" id="emailCliente" placeholder="E-mail do Cliente">
                                 </div>
