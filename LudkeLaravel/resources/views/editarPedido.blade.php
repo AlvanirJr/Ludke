@@ -441,6 +441,7 @@
     function removerProduto(idLinha){
         console.log("Remover Produto: ",idLinha);
         linhas = $("#tabelaPedidos>tbody>tr");
+        // retorna a linha do produto a ser removido
         e = linhas.filter(function(i,elemento){
             return elemento.cells[0].textContent == idLinha;
         });
@@ -448,12 +449,13 @@
             // console.log(e.length)
             idProduto = parseInt(e[0].cells[1].textContent);
             peso = parseFloat(e[0].cells[3].textContent);
-            valorTotal = parseFloat(e[0].cells[5].textContent);
-
+            valorTotal = (e[0].cells[5].textContent);
+            
             // Remove Pedidos vindo do banco
             for(var i = 0; i < pedido.itens_pedidos.length; i++){
-
-                if( pedido.itens_pedidos[i].id == idProduto && pedido.itens_pedidos[i].pesoSolicitado == peso && pedido.itens_pedidos[i].valorReal == valorTotal){
+                // Verifica se o id do produto, o peso solicitado e o valor total é igual à linha que estou tententando remover
+                if( pedido.itens_pedidos[i].id == idProduto && pedido.itens_pedidos[i].pesoSolicitado == peso && formatter.format(pedido.itens_pedidos[i].valorReal) == valorTotal){
+                    
                     var indice = pedido.itens_pedidos.indexOf(pedido.itens_pedidos[i]);
                     // Debita Valor do Pedido
                     pedido.valorTotal = debitarValor(pedido.itens_pedidos[i].valorReal);
@@ -475,7 +477,8 @@
             }
             // Remove pedidos adicionados durante a edição
             for(var i = 0; i < pedido.listaProdutos.length; i++){
-                if( pedido.listaProdutos[i].produto_id == idProduto && pedido.listaProdutos[i].peso == peso && pedido.listaProdutos[i].valorTotalItem == valorTotal){
+                // verifica se o id do produto, peso e valor é igual a linha que desejo remover
+                if( pedido.listaProdutos[i].produto_id == idProduto && pedido.listaProdutos[i].peso == peso && formatter.format(pedido.listaProdutos[i].valorTotalItem) == valorTotal){
                     console.log(pedido.listaProdutos[i].produto_id, pedido.listaProdutos[i].peso, pedido.listaProdutos[i].valorTotalItem)
                     var indice = pedido.listaProdutos.indexOf(pedido.listaProdutos[i]);
                     // Debita Valor do Pedido
