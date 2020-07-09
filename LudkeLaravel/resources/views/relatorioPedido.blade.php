@@ -13,8 +13,8 @@
         @foreach($clientes as $cliente)
             <p style="line-height: 0.1">Cliente: {{$cliente->nomeReduzido}}</p>
             <p style="line-height: 0.3">CPF/CNPJ: {{$cliente->cpfCnpj}}</p>
-            <p style="line-height: -0.1">Endereço: {{$cliente->user->endereco->cidade . ' - '.
-                                                    $cliente->user->endereco->rua . ' - Num: '.
+            <p style="line-height: -0.1">Endereço: {{$cliente->user->endereco->cidade . '-'.
+                                                    $cliente->user->endereco->rua . '-Num:'.
                                                     $cliente->user->endereco->numero
                                                                                     }}</p>
             <p style="line-height: 1.4">Data Entrega: {{date('d/m/Y', strtotime($pedido->dataEntrega))}}</p>
