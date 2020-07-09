@@ -32,8 +32,8 @@
             @foreach($itens as $item)
                 <tr align="center">
                     <td>{{$item->nomeProduto}}</td>
-                    <td>{{$item->pesoSolicitado}}</td>
-                    <td>{{$item->pesoFinal}}</td>
+                    <td>{{$item->pesoSolicitado."KG"}}</td>
+                    <td>{{$item->pesoFinal."KG"}}</td>
                 </tr>
             @endforeach
             </tbody>
