@@ -141,7 +141,7 @@
                                         <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
                                     </a>
                                     {{-- Imprimir pedido --}}
-                                    <a href={{route('pedido.relatorio',['id'=>$pedido->id])}} title="Imprimir Pedido">
+                                    <a href={{route('pedido.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Pedido">
                                         <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
                                     {{-- Excluir Pedido --}}
@@ -288,7 +288,7 @@
                 url: "/pedidos/excluir/"+id,
                 context:this,
                 success: function(){
-                    
+
                     console.log("deletou");
                     linhas = $("#tabelaPedidos>tbody>tr");
                     e = linhas.filter(function(i,elemento){
