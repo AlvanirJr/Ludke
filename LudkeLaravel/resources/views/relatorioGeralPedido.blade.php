@@ -29,7 +29,7 @@
                     <td >   @if(isset($pedido->cliente->user))
                             {{$pedido->cliente->user->name}}
                         @else
-                            <?php $cliente = \App\Cliente::withTrashed()->find(1);
+                            <?php $cliente = \App\Cliente::withTrashed()->find($pedido->id);
                             $cliente->user_id;
                             $user = \App\User::withTrashed()->find($cliente->user_id);
                             ?>

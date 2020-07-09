@@ -45,7 +45,7 @@
         </div>
 
     @endif
-    
+
     {{-- Verifica se está listando o pedido visualizado em Contas a Receber --}}
     @if (isset($listarPedidoConta) && $listarPedidoConta == true)
         <div class="row">
@@ -57,7 +57,7 @@
             </div>
         </div>
     @endif
-    
+
     <div class="row justify-content-center">
         <div class="col-sm-12">
             <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
@@ -288,6 +288,7 @@
                 url: "/pedidos/excluir/"+id,
                 context:this,
                 success: function(){
+                    
                     console.log("deletou");
                     linhas = $("#tabelaPedidos>tbody>tr");
                     e = linhas.filter(function(i,elemento){
