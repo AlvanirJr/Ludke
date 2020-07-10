@@ -29,10 +29,9 @@
                     <td >   @if(isset($pedido->cliente->user))
                             {{$pedido->cliente->user->name}}
                         @else
-                            <?php $cliente = \App\Cliente::withTrashed()->find($pedido->id);
-                            $id = $cliente->user_id;
-                            //dd($id);
-                            $user = \App\User::withTrashed()->find($id);
+                            <?php $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
+
+                            $user = \App\User::withTrashed()->find($cliente->user_id);
                             ?>
                             {{$user->name}}
                         @endif</td>
