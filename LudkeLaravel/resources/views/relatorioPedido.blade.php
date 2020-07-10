@@ -44,15 +44,19 @@
         </table>
         <div class="row" style="margin-top: 20px">
             <div class="col-sm-6">
-                <table  id="tabelaClientes" class="table table-borderless table-striped" style="width: 150px">
+                <table  id="tabelaClientes" class="table table-borderless table-striped" style="width: 100vw; margin-top: 20px">
                     <thead class="thead-primary">
                     <tr style="height:20px">
-                        <th>Total de Produtos</th>
+                        <th>Número total de Produtos</th>
+                        <th>Valor total do Pedido</th>
                     </tr>
                     </thead>
+                    <tbody>
                     <tr align="center">
                         <td>{{$count}}</td>
+                        <td>{{$soma = number_format($soma, '2',',','.').' R$'}}</td>
                     </tr>
+                    </tbody>
                 </table>
             </div>
 

@@ -132,11 +132,11 @@
                                     <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
                                 </a>
                                 {{-- Imprimir pedido --}}
-                                <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Pedido">
+                                <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Venda">
                                     <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                 </a>
                                 {{-- Excluir Pedido --}}
-                                <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Pedido">
+                                <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Venda">
                                     <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                 </a>
                             </td>
@@ -151,11 +151,11 @@
                                         <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
                                     </a>
                                     {{-- Imprimir pedido --}}
-                                    <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Pedido">
+                                    <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Venda">
                                         <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
                                     {{-- Excluir Pedido --}}
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Pedido">
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Venda">
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>

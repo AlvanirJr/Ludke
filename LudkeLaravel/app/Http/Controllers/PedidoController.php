@@ -319,8 +319,14 @@ class PedidoController extends Controller
             $cliente = Cliente::with('user')->find($pedido->cliente_id);
             $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
 
-            // $pedido["valorProduto"]= $produto->preco;
-            $pedido["nomeCliente"] = $cliente->user->name;
+            if(isset($cliente->user->name)){
+                $pedido["nomeCliente"] = $cliente->user->name;
+            }
+            else{
+                $cliente = \App\Cliente::withTrashed()->find($pedido->id);
+                $user = \App\User::withTrashed()->find($cliente->user_id);
+                $pedido["nomeCliente"] = $user->name;
+            }
             $pedido["nomeFuncionario"] = $funcionario->user->name;
             // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
 
