@@ -30,8 +30,9 @@
                             {{$pedido->cliente->user->name}}
                         @else
                             <?php $cliente = \App\Cliente::withTrashed()->find($pedido->id);
-                            $cliente->user_id;
-                            $user = \App\User::withTrashed()->find($cliente->user_id);
+                            $id = $cliente->user_id;
+                            //dd($id);
+                            $user = \App\User::withTrashed()->find($id);
                             ?>
                             {{$user->name}}
                         @endif</td>
