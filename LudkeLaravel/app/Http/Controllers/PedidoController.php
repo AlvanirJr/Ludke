@@ -183,7 +183,7 @@ class PedidoController extends Controller
                $pedido["nomeCliente"] = $cliente->user->name;
             }
             else{
-                $cliente = \App\Cliente::withTrashed()->find($pedido->id);
+                $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
                 $user = \App\User::withTrashed()->find($cliente->user_id);
                 $pedido["nomeCliente"] = $user->name;
             }
@@ -323,7 +323,7 @@ class PedidoController extends Controller
                 $pedido["nomeCliente"] = $cliente->user->name;
             }
             else{
-                $cliente = \App\Cliente::withTrashed()->find($pedido->id);
+                $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
                 $user = \App\User::withTrashed()->find($cliente->user_id);
                 $pedido["nomeCliente"] = $user->name;
             }

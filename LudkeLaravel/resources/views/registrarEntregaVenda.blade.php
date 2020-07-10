@@ -58,8 +58,7 @@
                             {{$pedido->cliente->user->endereco->cidade}} /
                             {{$pedido->cliente->user->endereco->uf}}.
                         @else
-                            <?php $cliente = \App\Cliente::withTrashed()->find($pedido->id);
-                            $cliente->user_id;
+                            <?php $cliente = \App\Cliente::withTrashed()->find($pedido->ciente_id);
                             $user = \App\User::withTrashed()->find($cliente->user_id);
                             $endereco = \App\Endereco::withTrashed()->find($user->endereco_id);
 

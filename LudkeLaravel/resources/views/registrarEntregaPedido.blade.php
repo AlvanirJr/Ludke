@@ -34,7 +34,7 @@
                   <p class="card-text"><h3> @if(isset($pedido->cliente->user))
                             {{$pedido->cliente->user->name}}
                         @else
-                            <?php $cliente = \App\Cliente::withTrashed()->find($pedido->id);
+                            <?php $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
                             $cliente->user_id;
                             $user = \App\User::withTrashed()->find($cliente->user_id);
                             ?>
