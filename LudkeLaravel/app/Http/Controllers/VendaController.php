@@ -96,7 +96,7 @@ class VendaController extends Controller
      * @return View registrarEntregaPedido
      */
     public function indexRegistrarEntregaPedido($id){
-        dd($id);
+
         // Pedido
         $pedido = Pedido::with(['cliente'])->find($id);
 
@@ -122,7 +122,7 @@ class VendaController extends Controller
        */
         $entregadores = Funcionario::all();
         //dd($entregadores);
-        return view('registrarEntregaPedido',
+        return view('registrarEntregaVenda',
         [
             'pedido'=>$pedido,
             'valorTotalDoPagamento'=>$valorTotalDoPagamento,
