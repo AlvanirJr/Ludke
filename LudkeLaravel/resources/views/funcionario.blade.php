@@ -88,7 +88,7 @@
                     <a href="{{route('funcionarios')}}">
                         <button class="btn btn-outline-danger">Listar Todos</button>
                     </a>
-    
+
                 </div>
             </div>
             {{-- Mensagem Alerta --}}
@@ -99,7 +99,7 @@
                     </div>
                 </div>
             </div>
-            
+
             @endif
         </div><!-- end col-->
     </div><!-- end row-->
@@ -331,7 +331,7 @@
         $.getJSON('/funcionarios',function(funcionarios){
             // console.log(funcionarios);
             for(i=0; i<funcionarios.length;i++){
-                
+
                 linha = montarLinha(funcionarios[i]);
                 $('#tabelaFuncionarios>tbody').append(linha);
             }
@@ -472,7 +472,7 @@
     function editarFuncionario(id){
         console.log("editar Funcionario");
         $.getJSON("/funcionarios/"+id, function(data){
-            
+
             $('#id').val(data.id);
             $('#emailFuncionario').val(data.email),
             $('#nomeFuncionario').val(data.nome),
@@ -537,7 +537,7 @@
             numero: $('#numero').val(),
             complemento: $('#complemento').val()
         }
-        
+
 
         $.ajax({
             type: "POST",

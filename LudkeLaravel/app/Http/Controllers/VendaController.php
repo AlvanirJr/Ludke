@@ -180,8 +180,10 @@ class VendaController extends Controller
         $pedido->dataEntrega = $request->input('dataEntrega');
 
         $pedido->cliente_id = $cliente->id;
-        $funcionario = Funcionario::find(Auth::user()->id);
-        $pedido->funcionario_id = $funcionario->id; //salvando o user_id do funcionario que está logado
+        $user = User::find(Auth::user()->id);
+        $funcionario = Funcionario::where('user_id','=', $user->id)->get();
+       // dd($funcionario[0]->id);
+        $pedido->funcionario_id = $funcionario[0]->id; //salvando o user_id do funcionario que está logado
 
         // dd($pedido);
         $pedido->save(); // salva o pedido
