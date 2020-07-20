@@ -309,7 +309,7 @@
                         "</div>"+
                         "<div class='col-sm-3 form-group'>"+
                             "<label for='descontoPagamento'>Desconto %</label>"+
-                            "<input id='descontoPagamento' type='number' class='form-control' value='0' min='0' max='100' name='descontoPagamento[]' required>"+
+                            "<input id='descontoPagamento' type='number' class='form-control' value='0' min='0' max='100' name='descontoPagamento[]' disabled>"+
                             "<span style='color:red' id='spanDescontoPagamento'></span>"+
                         "</div>"+
                         "<div class='col-sm-3 form-group'>"+

@@ -105,7 +105,7 @@
                     </div>
                     <div class='col-sm-3 form-group'>
                         <label for='updateDescontoPagamento'>Desconto %</label>
-                        <input id='updateDescontoPagamento' value="{{$pagamento->descontoPagamento}}" type='number' class='form-control' value='0' min='0' max='100' name='updateDescontoPagamento[]' @if($pagamento->status == 'fechado') disabled @else required @endif>
+                        <input id='updateDescontoPagamento' value="{{$pagamento->descontoPagamento}}" type='number' class='form-control' value='0' min='0' max='100' name='updateDescontoPagamento[]' disabled>
                         <span style='color:red' id='spanDescontoPagamento'></span>
                     </div>
                     <div class='col-sm-3 form-group'>
@@ -293,7 +293,7 @@
                         "</div>"+
                         "<div class='col-sm-3 form-group'>"+
                             "<label for='descontoPagamento'>Desconto %</label>"+
-                            "<input id='descontoPagamento' type='number' class='form-control' value='0' min='0' max='100' name='descontoPagamento[]' required>"+
+                            "<input id='descontoPagamento' type='number' class='form-control' value='0' min='0' max='100' name='descontoPagamento[]' disabled>"+
                             "<span style='color:red' id='spanDescontoPagamento'></span>"+
                         "</div>"+
                         "<div class='col-sm-3 form-group'>"+
