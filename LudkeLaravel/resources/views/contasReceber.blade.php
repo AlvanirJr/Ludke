@@ -173,7 +173,16 @@
                                 <tr>
                                     <td>{{$pagamento->id}}</td>
                                     <td>{{$pagamento->pedido->id}}</td>
-                                    <td>{{$pagamento->pedido->cliente->user->name}}</td>
+                                    <td>
+                                        @if(isset($pagamento->pedido->cliente->user))
+                                            {{$pagamento->pedido->cliente->user->name}}
+                                        @else
+                                            <?php $cliente = \App\Cliente::withTrashed()->find($pagamento->pedido->cliente_id);
+                                            $cliente->user_id;
+                                            $user = \App\User::withTrashed()->find($cliente->user_id);
+                                            ?>
+                                            {{$user->name}}
+                                        @endif</td>
                                     <td>R$ {{money_format('%i',$pagamento->valorTotalPagamento - ($pagamento->descontoPagamento/100))}}</td>
                                     {{-- Calcula o total pago somando o pagamento dos pedidos que possui status fechado --}}
                                     <td>R$ {{money_format('%i',$pagamento->valorPago)}}</td>
