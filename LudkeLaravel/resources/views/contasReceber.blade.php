@@ -37,7 +37,7 @@
         <li class="nav-item" role="presentation">
           <a class="nav-link nav-link-contas" id="pago-tab" data-toggle="tab" href="#pago" role="tab" aria-controls="pago" aria-selected="false"><h5>Pago</h5></a>
         </li>
-      </ul>
+    </ul>
       {{-- Tab Content --}}
       <div class="tab-content" id="myTabContent">
           {{-- Aguardando Pagamento --}}

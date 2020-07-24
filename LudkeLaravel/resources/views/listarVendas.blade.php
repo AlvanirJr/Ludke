@@ -88,6 +88,30 @@
             </div>
         </div>
     @endif
+
+    {{-- Nav-tabs --}}
+    <ul class="nav nav-tabs" id="myTabContas" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link-contas active" id="solicitado_pesado-tab" data-toggle="tab" href="#solicitado_pesado" role="tab" aria-controls="solicitado_pesado" aria-selected="true"><h5>Solicitado/Pesado</h5></a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link-contas" id="entregue-tab" data-toggle="tab" href="#entregue" role="tab" aria-controls="entregue" aria-selected="false"><h5>Entregue</h5></a>
+        </li>
+    </ul>
+
+    {{-- Tab Content --}}
+    <div class="tab-content" id="myTabContent">
+        {{-- Aguardando Pagamento --}}
+        <div class="tab-pane fade show active" id="solicitado_pesado" role="tabpanel" aria-labelledby="solicitado_pesado-tab">
+            Solicitado/Pesado
+        </div>
+
+        {{-- Pago --}}
+        <div class="tab-pane fade" id="entregue" role="tabpanel" aria-labelledby="entregue-tab">
+            Entregue
+        </div>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-sm-12">
             <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
