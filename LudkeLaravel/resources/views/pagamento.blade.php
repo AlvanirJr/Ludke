@@ -180,6 +180,8 @@
     //Formas de pagamento
     let formasPagamento = <?php echo json_encode($formasPagamento); ?>; 
     
+    
+
     function validPayment(contValorTotalPagamento, valorTotal){
 
         if( contValorTotalPagamento < valorTotal){
@@ -244,7 +246,27 @@
 
         
     });
-
+    //Função que desabilita data de vencimento quando o tipo de pagamento for "à vista"
+    function disableDataVencimento(select){
+        // Caso o pagamento seja 'a vista'
+        let rowForm = select.parentElement.parentElement;
+        let colDate = rowForm.childNodes[3];
+        let inputDate = colDate.childNodes[1];
+        
+        if(select.value == 1){
+            inputDate.required = false;
+            colDate.style.display = "none";
+            let date = new Date();
+            let now = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString().padStart(2, 0) + '-' + date.getDate().toString().padStart(2, 0);
+            inputDate.value = now;
+            
+        }else{
+            inputDate.required = true;
+            inputDate.value = '';
+            colDate.style.display = "block";
+            
+        }
+    }
     // Ao clicar no botão excluir, retira os inputs referente à forma de pagamento
     function excluirFormaPagamento(id){
         id = "formaPagamento"+id;
@@ -276,6 +298,7 @@
 
         }
     }
+    
     // Cria a linha com os inputs da nova forma de pagamento
     function addFormaDePagamento(){
         
@@ -289,10 +312,10 @@
                             "<button class='btn btn-secondary-ludke' onclick='excluirFormaPagamento("+countFormaPagamento+")'>Excluir</button>"+
                         "</div>"+
                     "</div>"+
-                    "<div class='row justify-content-center'>"+
+                    "<div class='row justify-content'>"+
                         "<div class='col-sm-3 form-group'>"+
                             "<label for='formaPagamento'>Tipo de Pagamento <span class='obrigatorio'>*</span></label>"+
-                            "<select name='formaPagamento[]' class='form-control' id='formaPagamento' required>"+
+                            "<select name='formaPagamento[]' class='form-control' id='formaPagamento' onChange='disableDataVencimento(this)' required>"+
                                 "<option value='' disabled>-- Tipo de Pagamento --</option>"+
                                 optionsFormaPagamento()+
                             "</select>"+
@@ -308,9 +331,9 @@
                             "<input id='descontoPagamento' type='number' class='form-control' value='0' min='0' max='100' name='descontoPagamento[]' disabled>"+
                             "<span style='color:red' id='spanDescontoPagamento'></span>"+
                         "</div>"+
-                        "<div class='col-sm-3 form-group'>"+
+                        "<div class='col-sm-3 form-group' style='display: none'>"+
                             "<label for='dataVencimento'>Data de Vencimento</label>"+
-                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]' required>"+
+                            "<input type='date' class='form-control' id='dataVencimento' name='dataVencimento[]' value='<?php date_default_timezone_set('America/Sao_Paulo'); echo date('Y-m-d');?>'>"+
                             "<span style='color:red' id='spanDataVencimento'></span>"+
                         "</div>"+
                     "</div>"+                    

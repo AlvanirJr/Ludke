@@ -30,15 +30,20 @@ class VendaController extends Controller
                                 $query->where('tipo','v')->
                                         orWhere('tipo','vm');
                             })->
-                            orWhere(function($query){
-                                $query->where('status_id',2)-> //PESADO
-                                        where('status_id',3); //ENTREGUE
-                            })->
-                            orderby('created_at','DESC')->
-                            orderby('status_id')->
+                            where('status_id',2)-> //PESADO
+                            orderby('dataEntrega')->
                             paginate(25);
 
-        return view('listarVendas',['pedidos'=>$pedidos]);
+        $pedidosEntregues = Pedido::with(['status','pagamento'])->
+                            where(function($query){
+                                $query->where('tipo','v')->
+                                        orWhere('tipo','vm');
+                            })->
+                            where('status_id',3)-> //ENTREGUE
+
+                            orderby('dataEntrega')->
+                            paginate(25);
+        return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues]);
     }
     /**
      * Redireciona para tela de listar vendas com a venda selecionada
@@ -48,10 +53,16 @@ class VendaController extends Controller
         $pedidos = Pedido::with(['status'])->
                             where('id',$id)->
                             orderby('created_at','DESC')->
-                            orderBy('status_id')->
+                            where('status_id',2)->
+                            orderBy('dataEntrega')->paginate(25);
+        
+        $pedidosEntregues = Pedido::with(['status'])->
+                            where('id',$id)->
+                            orderby('created_at','DESC')->
+                            where('status_id',3)->
                             orderBy('dataEntrega')->paginate(25);
 
-        return view('listarVendas',['pedidos'=>$pedidos,'listarVendaConta'=>true]);
+        return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'listarVendaConta'=>true]);
     }
 
     /**
@@ -347,8 +358,12 @@ class VendaController extends Controller
         if(isset($filtro['status_id'])){
             $pedidos = Pedido::where('status_id',intval($filtro['status_id']))->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
-            })->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-            return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Status"]);
+            })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
+
+            $pedidosEntregues = Pedido::where('status_id',intval($filtro['status_id']))->where(function($query){
+                $query->where('tipo','v')->orWhere('tipo','vm');
+            })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
+            return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Status"]);
         }
         else if(isset($filtro['cliente'])){
             $id_user = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->get('id');
@@ -356,10 +371,14 @@ class VendaController extends Controller
                 $id_cliente = Cliente::whereIn('user_id',$id_user)->get('id');
                 $pedidos = Pedido::whereIn('cliente_id',$id_cliente)->where(function($query){
                     $query->where('tipo','v')->orWhere('tipo','vm');
-                })->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-                return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+                })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
+
+                $pedidosEntregues = Pedido::whereIn('cliente_id',$id_cliente)->where(function($query){
+                    $query->where('tipo','v')->orWhere('tipo','vm');
+                })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
+                return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
             }else{
-                return view('listarVendas',['pedidos'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+                return view('listarVendas',['pedidos'=>[],'pedidosEntregues'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
             }
         }
         else if(isset($filtro['nomeReduzido'])){
@@ -368,32 +387,52 @@ class VendaController extends Controller
             if(isset($id_clientes)){
                 $pedidos = Pedido::whereIn('cliente_id',$id_clientes)->where(function($query){
                     $query->where('tipo','v')->orWhere('tipo','vm');
-                })->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-                return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
+                })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
+
+                $pedidosEntregues = Pedido::whereIn('cliente_id',$id_clientes)->where(function($query){
+                    $query->where('tipo','v')->orWhere('tipo','vm');
+                })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
+                return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
             }
             else{
-                return view('listarVendas',['pedidos'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
+                return view('listarVendas',['pedidos'=>[],'pedidosEntregues'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
             }
         }
         else if(isset($filtro['dataEntregaInicial']) && !isset($filtro['dataEntregaFinal'])){
             $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
-            })->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-            return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Maior ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))]);
+            })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
+
+            $pedidosEntregues = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where(function($query){
+                $query->where('tipo','v')->orWhere('tipo','vm');
+            })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
+
+            return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Maior ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))]);
         }
         else if(!isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
             $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
-            })->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-            return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Menor ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
+            })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
+
+            $pedidosEntregues = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
+                $query->where('tipo','v')->orWhere('tipo','vm');
+            })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
+
+            return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Menor ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
         }
         else if(isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
             $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
                 ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
                     $query->where('tipo','v')->orWhere('tipo','vm');
                 })
-                ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-                return view('listarVendas',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Intervalo Data Entrega: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))." e ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
+                ->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
+
+            $pedidosEntregues = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+            ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
+                $query->where('tipo','v')->orWhere('tipo','vm');
+            })
+            ->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
+                return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Intervalo Data Entrega: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))." e ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
         }
         else{
             return redirect()->route("listarVendas");

@@ -35,17 +35,16 @@ class PedidoController extends Controller
                                 $query->where('status_id',1)->//SOLICITADO
                                         orWhere('status_id',2);//PESADO
                             })->
-                            orderby('created_at','DESC')->
                             orderBy('status_id')->
-                            orderBy('dataEntrega')->paginate(25);
+                            orderBy('dataEntrega')->
+                            paginate(25);
 
         // Busca Pedidos com status ENTREGUE
         $pedidosEntregues = Pedido::with(['status'])->
                                 where('tipo','p')->
                                 where('status_id',3)->//ENTREGUE
-                                orderby('created_at','DESC')->
-                                orderBy('status_id')->
-                                orderBy('dataEntrega')->paginate(25);
+                                orderBy('dataEntrega')->
+                                paginate(25);
 
         return view('listarPedido',['pedidos'=>$pedidos, 'pedidosEntregues'=>$pedidosEntregues]);
     }
@@ -56,11 +55,18 @@ class PedidoController extends Controller
     function show($id){
         $pedidos = Pedido::with(['status'])->
                             where('id',$id)->
-                            orderby('created_at','DESC')->
+                            where(function($query){
+                                $query->where('status_id',1)->//SOLICITADO
+                                        orWhere('status_id',2);//PESADO
+                            })->
                             orderBy('status_id')->
                             orderBy('dataEntrega')->paginate(25);
 
-        return view('listarPedido',['pedidos'=>$pedidos,'listarPedidoConta'=>true]);
+        $pedidosEntregues = Pedido::with(['status'])->
+                            where('id',$id)->
+                            where('status_id',3)->
+                            orderBy('dataEntrega')->paginate(25);
+        return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'listarPedidoConta'=>true]);
     }
     public function indexPagamento($id){
         // Pedido
@@ -443,6 +449,7 @@ class PedidoController extends Controller
      * @return void
      */
     public function pagamento(Request $request){
+        
         $pedido = Pedido::find($request['pedido_id']);
 
         // -------------DEBUG----------------
@@ -652,7 +659,6 @@ class PedidoController extends Controller
             $pedidosEntregues = Pedido::with(['status'])->
                 where('tipo','p')->
                 where('status_id',3)->//ENTREGUE
-                orderby('created_at','DESC')->
                 orderBy('status_id')->
                 orderBy('dataEntrega')->paginate(25);
 
@@ -672,7 +678,6 @@ class PedidoController extends Controller
                         $query->where('status_id',1)->//SOLICITADO
                                 orWhere('status_id',2);//PESADO
                     })->
-                    orderby('created_at','DESC')->
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 
@@ -680,7 +685,6 @@ class PedidoController extends Controller
                     whereIn('cliente_id',$id_clientes)->
                     where('tipo','p')->
                     where('status_id',3)->//ENTREGUE
-                    orderby('created_at','DESC')->
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
@@ -701,7 +705,6 @@ class PedidoController extends Controller
                         $query->where('status_id',1)->//SOLICITADO
                                 orWhere('status_id',2);//PESADO
                     })->
-                    orderby('created_at','DESC')->
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 
@@ -709,7 +712,6 @@ class PedidoController extends Controller
                     whereIn('cliente_id',$id_cliente)->
                     where('tipo','p')->
                     where('status_id',3)->//ENTREGUE
-                    orderby('created_at','DESC')->
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
@@ -728,7 +730,6 @@ class PedidoController extends Controller
                         $query->where('status_id',1)->//SOLICITADO
                                 orWhere('status_id',2);//PESADO
                     })->
-                    orderby('created_at','DESC')->
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 
@@ -736,7 +737,6 @@ class PedidoController extends Controller
                     whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->
                     where('tipo','p')->
                     where('status_id',3)->//ENTREGUE
-                    orderby('created_at','DESC')->
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
             return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Maior ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))]);
@@ -751,7 +751,6 @@ class PedidoController extends Controller
                         $query->where('status_id',1)->//SOLICITADO
                                 orWhere('status_id',2);//PESADO
                     })->
-                    orderby('created_at','DESC')->
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 
@@ -759,7 +758,6 @@ class PedidoController extends Controller
                     whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
                     where('tipo','p')->
                     where('status_id',3)->//ENTREGUE
-                    orderby('created_at','DESC')->
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
             return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Menor ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
@@ -776,7 +774,6 @@ class PedidoController extends Controller
                         $query->where('status_id',1)->//SOLICITADO
                                 orWhere('status_id',2);//PESADO
                     })->
-                    orderby('created_at','DESC')->
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
             
@@ -784,7 +781,6 @@ class PedidoController extends Controller
                         whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where('tipo','p')
                         ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
                         where('status_id',3)->//ENTREGUE
-                        orderby('created_at','DESC')->
                         orderBy('status_id')->
                         orderBy('dataEntrega')->paginate(25);
             return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Intervalo Data Entrega: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))." e ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
