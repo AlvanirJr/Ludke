@@ -449,7 +449,7 @@ class PedidoController extends Controller
      * @return void
      */
     public function pagamento(Request $request){
-        dd($request->all());
+        // dd($request->all());
         $pedido = Pedido::find($request['pedido_id']);
 
         // -------------DEBUG----------------
