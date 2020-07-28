@@ -188,9 +188,11 @@ class ClienteController extends Controller
         $senhaAutomatica = bcrypt('123456');
         $user->name = strtoupper($request->input('nome'));
         $user->tipo = 'cliente';
+        $user->email = strtoupper($request->input('email'));
         if($user->email == null){
             $id = mt_rand();
-            $user->email = $user->name.$id."@gmail.com";
+            $name = str_replace(' ',"",$user->name);
+            $user->email = $name.$id."@gmail.com";
         }
         else{
             $user->email= $request->input('email');

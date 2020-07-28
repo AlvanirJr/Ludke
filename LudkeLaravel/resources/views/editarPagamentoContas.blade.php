@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        
+
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row">
@@ -37,11 +37,24 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                     <h5 class="card-title">Cliente</h5>
-                    <p class="card-text"><h3>{{$pagamento->pedido->cliente->user->name}}</h3></p>
+                    <p class="card-text"><h3>
+                            @if(isset($pagamento->pedido->cliente->user))
+                                {{$pagamento->pedido->cliente->user->name}}
+                            @else
+                                <?php $cliente = \App\Cliente::withTrashed()->find($pagamento->pedido->cliente_id);
+                                $cliente->user_id;
+                                $user = \App\User::withTrashed()->find($cliente->user_id);
+                                ?>
+                                {{$user->name}}
+                            @endif
+
+
+
+                        </h3></p>
                 </div>
               </div>
         </div>
-        
+
         {{-- Funcionário responsável pelo pagamento --}}
         <div class="col-sm-6">
             <div class="card cardFinalizarPedidos">
@@ -51,7 +64,7 @@
                 </div>
               </div>
         </div>
-    </div> 
+    </div>
     <div class="row justify-content-center">
         {{-- Valor Total do Pagamento --}}
         <div class="col-sm-6">
@@ -62,7 +75,7 @@
                 </div>
               </div>
         </div>
-        
+
         {{-- Data de Vencimento --}}
         <div class="col-sm-6">
             <div class="card cardFinalizarPedidos">
@@ -72,10 +85,10 @@
                 </div>
               </div>
         </div>
-    </div> 
-    
+    </div>
+
     {{-- FORMULÁRIO --}}
-    <form id="formPagamento" action="{{route('contas.updatePagamento',['id'=>$pagamento->id])}}" method="POST">    
+    <form id="formPagamento" action="{{route('contas.updatePagamento',['id'=>$pagamento->id])}}" method="POST">
         @csrf
         <div id='formaPagamento'>
             <input type="hidden" name="idPedido" value="{{$pagamento->pedido->id}}">
@@ -83,7 +96,7 @@
                 <div class='col-sm-10'>
                     <h3>Informações do Pagamento</h3>
                 </div>
-                
+
             </div>
             <div class='row justify-content-center'>
                 <div class='col-sm-3 form-group'>
@@ -115,7 +128,7 @@
                     <input type='date' class='form-control' value="{{$pagamento->dataVencimento}}" id='updateDataVencimento' name='updateDataVencimento'>
                     <span style='color:red' id='spanDataVencimento'></span>
                 </div>
-            </div>                  
+            </div>
             <div class='row justify-content-center'>
                 <div class='col-sm-12 form-group'>
                     <label for='updateObs'>Observações</label>
@@ -123,9 +136,9 @@
                 </div>
             </div>
         </div>
-        
 
-        
+
+
         <div id='divNovaFormaPagamento'></div>
 
         {{-- Botão Adicionar Forma de Pagamento --}}
@@ -165,7 +178,7 @@
         $('#formPagamento').submit(function(event){
             // Valor Total do pagamento
             const valorTotal = <?php echo $pagamento->valorTotalPagamento ?>
-            // Contador para armazenar o valor adicionado em todas as formas de pagamento. 
+            // Contador para armazenar o valor adicionado em todas as formas de pagamento.
             let contValorTotalPagamento = 0 ;
 
             // Mapeia todos os inputs do valor em cada forma de pagamento em um array
@@ -190,7 +203,7 @@
                 }
                 if(validPayment(contValorTotalPagamento, valorTotal) == false){
                     // impede o envio do form
-                    event.preventDefault(); 
+                    event.preventDefault();
                     //alerta de erro
                     alert("O valor informado é menor do que o valor total! Uma nova forma de pagamento será adicionada.")
 
@@ -203,7 +216,7 @@
                 }
                 if(contValorTotalPagamento > valorTotal){
                     // impede o envio do form
-                    event.preventDefault(); 
+                    event.preventDefault();
                     alert("O valor informado é maior do que o valor total! Verifique os valores informados.");
                 }
         });
@@ -215,7 +228,7 @@
             $("#divNovaFormaPagamento").append(linhaForm);
         });
 
-        
+
     });
 
     // Função que percorre os valores de entrada nos pagamentos e verifica se é maior que o valor do 
@@ -223,9 +236,9 @@
     function validaValorPagamento(){
         // Valor Total do pedido
         let valorTotal = <?php echo $pagamento->valorTotalPagamento ?>
-        // Contador para armazenar o valor adicionado em todas as formas de pagamento. 
+        // Contador para armazenar o valor adicionado em todas as formas de pagamento.
         let contValorTotalPagamento = 0;
-        
+
         // Mapeia todos os inputs do valor em cada forma de pagamento em um array
         let arrayValorTotalPagamento = $('input[name="valorTotalPagamento[]"').map(function(){
             return parseFloat(this.value);
@@ -238,7 +251,7 @@
         arrayValorTotalPagamento.forEach(valor => {
             contValorTotalPagamento += valor
         });
-        
+
         if(contValorTotalPagamento > valorTotal){
             alert("O valor total informado no pagamento é maior do que o valor total do pedido! Por favor, informe novamente os valores.");
             $('input[name="valorTotalPagamento[]"').val('');
@@ -311,7 +324,7 @@
 
     // atualiza o valor do desconto ao inserir o desconto
     function atualizarValorDesconto(valorTotal,valorDoDescontoNoPedido){
-        
+
         let valorDesconto = calcularDesconto(valorTotal,valorDoDescontoNoPedido);
         let inputDesconto = $('#descontoPagamento').val();
 
@@ -329,7 +342,7 @@
     // atualiza o valor pago no pedido PARCIALMENTE PAGO
     function atualizaValorParcialmentePago(valorTotal, valorPagoPedido){
         let valorPago = $('#valorPago').val();
-        
+
         if(valorPago > valorTotal ){
             alert(`Você não pode inserir um valor maior do que o valor do pedido: R$ ${valorTotal}`);
             $('#valorPago').val('');
@@ -351,5 +364,5 @@
             $('#valorTotalPago').html(valorPago);
         }
     }
-</script>    
+</script>
 @endsection
