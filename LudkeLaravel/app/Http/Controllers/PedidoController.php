@@ -29,23 +29,24 @@ class PedidoController extends Controller
 
     public function indexListarPedidos(){
         // Busca os pedidos com status SOLICITADO e PESADO
-        $pedidos = Pedido::with(['status'])->
-                            where('tipo','p')->
-                            where(function($query){
-                                $query->where('status_id',1)->//SOLICITADO
-                                        orWhere('status_id',2);//PESADO
-                            })->
-                            orderBy('status_id')->
-                            orderBy('dataEntrega')->
-                            paginate(25);
+        $pedidos = Pedido::with(['status','pagamento'])->
+            where('tipo','p')->
+            where(function($query){
+                $query->where('status_id',1)->//SOLICITADO
+                        orWhere('status_id',2);//PESADO
+            })->
+            orderBy('status_id')->
+            orderBy('dataEntrega')->
+            paginate(25);
 
         // Busca Pedidos com status ENTREGUE
-        $pedidosEntregues = Pedido::with(['status'])->
-                                where('tipo','p')->
-                                where('status_id',3)->//ENTREGUE
-                                orderBy('dataEntrega')->
-                                paginate(25);
-
+        $pedidosEntregues = Pedido::with(['status','pagamento'])->
+            where('tipo','p')->
+            where('status_id',3)->//ENTREGUE
+            orderBy('dataEntrega')->
+            paginate(25);
+                            
+        // dd($pedidosEntregues[0]->pagamento);
         return view('listarPedido',['pedidos'=>$pedidos, 'pedidosEntregues'=>$pedidosEntregues]);
     }
     /**
@@ -53,7 +54,7 @@ class PedidoController extends Controller
      * @param $id pedido
      */
     function show($id){
-        $pedidos = Pedido::with(['status'])->
+        $pedidos = Pedido::with(['status','pagamento'])->
                             where('id',$id)->
                             where(function($query){
                                 $query->where('status_id',1)->//SOLICITADO
@@ -62,7 +63,7 @@ class PedidoController extends Controller
                             orderBy('status_id')->
                             orderBy('dataEntrega')->paginate(25);
 
-        $pedidosEntregues = Pedido::with(['status'])->
+        $pedidosEntregues = Pedido::with(['status','pagamento'])->
                             where('id',$id)->
                             where('status_id',3)->
                             orderBy('dataEntrega')->paginate(25);
@@ -79,8 +80,12 @@ class PedidoController extends Controller
         $valorDoDesconto = 0;
 
         foreach ($itensPedido as $item) {
-            $valorTotalDoPagamento += floatval($item->valorComDesconto);
-            $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
+            if(isset($item->valorComDesconto)){
+                $valorTotalDoPagamento += floatval($item->valorComDesconto);
+                $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
+            }else{
+                $valorTotalDoPagamento += floatval($item->valorReal);
+            }
         }
 
         //------------DEBUG--------------------------
@@ -118,7 +123,7 @@ class PedidoController extends Controller
             $valorTotalDoPagamento += floatval($item->valorComDesconto);
             $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
         }
-
+        
         //------------DEBUG--------------------------
         // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
@@ -396,7 +401,7 @@ class PedidoController extends Controller
      * @return view pagamentos
      */
     public function concluirPedidoComDescontoNosItens(Request $request){
-
+        // dd($request->all());
         // pedido
         $pedido = Pedido::find($request['pedido_id']);
         // array com a porcentagem dos descontos referente aos itens
@@ -413,11 +418,13 @@ class PedidoController extends Controller
              * Percorre $itensPedido, $descontos e $itensComDesconto
              * e salva o descontoPorcentagem e valorComDesconto
              */
-            if(count($itensPedido) === count($itensComDesconto)){
-                for($i = 0; $i <= count($itensPedido) - 1; $i++ ){
-                    $itensPedido[$i]->descontoPorcentagem = floatval($descontos[$i]);
-                    $itensPedido[$i]->valorComDesconto = floatval($itensComDesconto[$i]);
-                    $itensPedido[$i]->save();
+            if(isset($descontos)){
+                if(count($itensPedido) === count($itensComDesconto)){
+                    for($i = 0; $i <= count($itensPedido) - 1; $i++ ){
+                        $itensPedido[$i]->descontoPorcentagem = floatval($descontos[$i]);
+                        $itensPedido[$i]->valorComDesconto = floatval($itensComDesconto[$i]);
+                        $itensPedido[$i]->save();
+                    }
                 }
             }
             $pedido->save();
@@ -653,10 +660,10 @@ class PedidoController extends Controller
 
         if(isset($filtro['status_id'])){
             
-            $pedidos = Pedido::where('tipo','p')->where('status_id',intval($filtro['status_id']))
+            $pedidos = Pedido::with(['status','pagamento'])->where('tipo','p')->where('status_id',intval($filtro['status_id']))
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
             
-            $pedidosEntregues = Pedido::with(['status'])->
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->
                 where('tipo','p')->
                 where('status_id',3)->//ENTREGUE
                 orderBy('status_id')->
@@ -671,7 +678,7 @@ class PedidoController extends Controller
                 // $pedidos = Pedido::where('tipo','p')
                 //     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
 
-                $pedidos = Pedido::with(['status'])->
+                $pedidos = Pedido::with(['status','pagamento'])->
                     whereIn('cliente_id',$id_clientes)->
                     where('tipo','p')->
                     where(function($query){
@@ -681,7 +688,7 @@ class PedidoController extends Controller
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 
-                $pedidosEntregues = Pedido::with(['status'])->
+                $pedidosEntregues = Pedido::with(['status','pagamento'])->
                     whereIn('cliente_id',$id_clientes)->
                     where('tipo','p')->
                     where('status_id',3)->//ENTREGUE
@@ -698,7 +705,7 @@ class PedidoController extends Controller
             if(isset($id_cliente)){
                 // $pedidos = Pedido::whereIn('cliente_id',$id_cliente)->where('tipo','p')
                 //     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-                $pedidos = Pedido::with(['status'])->
+                $pedidos = Pedido::with(['status','pagamento'])->
                     whereIn('cliente_id',$id_cliente)->
                     where('tipo','p')->
                     where(function($query){
@@ -708,7 +715,7 @@ class PedidoController extends Controller
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 
-                $pedidosEntregues = Pedido::with(['status'])->
+                $pedidosEntregues = Pedido::with(['status','pagamento'])->
                     whereIn('cliente_id',$id_cliente)->
                     where('tipo','p')->
                     where('status_id',3)->//ENTREGUE
@@ -723,7 +730,7 @@ class PedidoController extends Controller
         else if(isset($filtro['dataEntregaInicial']) && !isset($filtro['dataEntregaFinal'])){
             // $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
             //                     ->where('tipo','p')->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-            $pedidos = Pedido::with(['status'])->
+            $pedidos = Pedido::with(['status','pagamento'])->
                     whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->
                     where('tipo','p')->
                     where(function($query){
@@ -733,7 +740,7 @@ class PedidoController extends Controller
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 
-            $pedidosEntregues = Pedido::with(['status'])->
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->
                     whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->
                     where('tipo','p')->
                     where('status_id',3)->//ENTREGUE
@@ -744,7 +751,7 @@ class PedidoController extends Controller
         else if(!isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
             // $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where('tipo','p')
             //     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-            $pedidos = Pedido::with(['status'])->
+            $pedidos = Pedido::with(['status','pagamento'])->
                     whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
                     where('tipo','p')->
                     where(function($query){
@@ -754,7 +761,7 @@ class PedidoController extends Controller
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
                 
-            $pedidosEntregues = Pedido::with(['status'])->
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->
                     whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
                     where('tipo','p')->
                     where('status_id',3)->//ENTREGUE
@@ -767,7 +774,7 @@ class PedidoController extends Controller
                 ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
 
-            $pedidos = Pedido::with(['status'])->
+            $pedidos = Pedido::with(['status','pagamento'])->
                     whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where('tipo','p')
                     ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
                     where(function($query){
@@ -777,7 +784,7 @@ class PedidoController extends Controller
                     orderBy('status_id')->
                     orderBy('dataEntrega')->paginate(25);
             
-            $pedidosEntregues = Pedido::with(['status'])->
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->
                         whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where('tipo','p')
                         ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
                         where('status_id',3)->//ENTREGUE

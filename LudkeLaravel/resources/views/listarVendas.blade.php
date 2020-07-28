@@ -225,14 +225,22 @@
                                     <td>{{$pedido->status->status}}</td>
                                     <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>            
                                     <td>
-                                        {{-- Editar Pagamento--}}
-                                        <a href={{route('contas.editarPagamentoPedidoVenda',['id' => $pedido->id])}} title="Editar Pagamento">
-                                            <img id="pagar" class="icone" src="{{asset('img/hand-holding-usd-solid.svg')}}" >
-                                        </a>
-                                        {{-- Contas a pagar --}}
-                                        <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
-                                            <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
-                                        </a>
+                                        {{-- Se o pedido não possui pagamento, exibe icone de editar e pagar --}}
+                                        @if(count($pedido->pagamento) == 0)
+                                            <a href="{{route('concluirVenda',['id'=>$pedido->id])}}" title="Concluir Venda">
+                                                <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
+                                            </a>
+                                        {{-- Caso o pedido possua pagamento, exibe icone de editar pagamento e contas a receber --}}
+                                        @else
+                                            {{-- Editar Pagamento--}}
+                                            <a href={{route('contas.editarPagamentoPedidoVenda',['id' => $pedido->id])}} title="Editar Pagamento">
+                                                <img id="pagar" class="icone" src="{{asset('img/hand-holding-usd-solid.svg')}}" >
+                                            </a>
+                                            {{-- Contas a pagar --}}
+                                            <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
+                                                <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
+                                            </a>
+                                        @endif
                                         {{-- Imprimir pedido --}}
                                         <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Venda">
                                             <img id="" class="icone" src="{{asset('img/print.svg')}}" >

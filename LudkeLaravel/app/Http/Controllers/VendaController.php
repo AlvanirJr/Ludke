@@ -50,13 +50,13 @@ class VendaController extends Controller
      * @param $id pedido
      */
     function show($id){
-        $pedidos = Pedido::with(['status'])->
+        $pedidos = Pedido::with(['status','pagamento'])->
                             where('id',$id)->
                             orderby('created_at','DESC')->
                             where('status_id',2)->
                             orderBy('dataEntrega')->paginate(25);
         
-        $pedidosEntregues = Pedido::with(['status'])->
+        $pedidosEntregues = Pedido::with(['status','pagamento'])->
                             where('id',$id)->
                             orderby('created_at','DESC')->
                             where('status_id',3)->
@@ -79,8 +79,12 @@ class VendaController extends Controller
         $valorDoDesconto = 0;
 
         foreach ($itensPedido as $item) {
-            $valorTotalDoPagamento += floatval($item->valorComDesconto);
-            $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
+            if(isset($item->valorComDesconto)){
+                $valorTotalDoPagamento += floatval($item->valorComDesconto);
+                $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
+            }else{
+                $valorTotalDoPagamento += floatval($item->valorReal);
+            }
         }
         // dd($valorTotalDoPagamento,$valorDoDesconto);
         //------------DEBUG--------------------------
@@ -356,11 +360,11 @@ class VendaController extends Controller
         $filtro = $request->all();
         // dd($filtro);
         if(isset($filtro['status_id'])){
-            $pedidos = Pedido::where('status_id',intval($filtro['status_id']))->where(function($query){
+            $pedidos = Pedido::with(['status','pagamento'])->where('status_id',intval($filtro['status_id']))->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
             })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
 
-            $pedidosEntregues = Pedido::where('status_id',intval($filtro['status_id']))->where(function($query){
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->where('status_id',intval($filtro['status_id']))->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
             })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
             return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Status"]);
@@ -369,11 +373,11 @@ class VendaController extends Controller
             $id_user = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->get('id');
             if(isset($id_user)){
                 $id_cliente = Cliente::whereIn('user_id',$id_user)->get('id');
-                $pedidos = Pedido::whereIn('cliente_id',$id_cliente)->where(function($query){
+                $pedidos = Pedido::with(['status','pagamento'])->whereIn('cliente_id',$id_cliente)->where(function($query){
                     $query->where('tipo','v')->orWhere('tipo','vm');
                 })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
 
-                $pedidosEntregues = Pedido::whereIn('cliente_id',$id_cliente)->where(function($query){
+                $pedidosEntregues = Pedido::with(['status','pagamento'])->whereIn('cliente_id',$id_cliente)->where(function($query){
                     $query->where('tipo','v')->orWhere('tipo','vm');
                 })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
                 return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
@@ -385,11 +389,11 @@ class VendaController extends Controller
 
             $id_clientes = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->get('id');
             if(isset($id_clientes)){
-                $pedidos = Pedido::whereIn('cliente_id',$id_clientes)->where(function($query){
+                $pedidos = Pedido::with(['status','pagamento'])->whereIn('cliente_id',$id_clientes)->where(function($query){
                     $query->where('tipo','v')->orWhere('tipo','vm');
                 })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
 
-                $pedidosEntregues = Pedido::whereIn('cliente_id',$id_clientes)->where(function($query){
+                $pedidosEntregues = Pedido::with(['status','pagamento'])->whereIn('cliente_id',$id_clientes)->where(function($query){
                     $query->where('tipo','v')->orWhere('tipo','vm');
                 })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
                 return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
@@ -399,35 +403,35 @@ class VendaController extends Controller
             }
         }
         else if(isset($filtro['dataEntregaInicial']) && !isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where(function($query){
+            $pedidos = Pedido::with(['status','pagamento'])->whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
             })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
 
-            $pedidosEntregues = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where(function($query){
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
             })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
 
             return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Maior ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))]);
         }
         else if(!isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
+            $pedidos = Pedido::with(['status','pagamento'])->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
             })->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
 
-            $pedidosEntregues = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
             })->where('status_id',3)->orderBy('dataEntrega')->paginate(25);
 
             return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Menor ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
         }
         else if(isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+            $pedidos = Pedido::with(['status','pagamento'])->whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
                 ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
                     $query->where('tipo','v')->orWhere('tipo','vm');
                 })
                 ->where('status_id',2)->orderBy('dataEntrega')->paginate(25);
 
-            $pedidosEntregues = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
             ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where(function($query){
                 $query->where('tipo','v')->orWhere('tipo','vm');
             })

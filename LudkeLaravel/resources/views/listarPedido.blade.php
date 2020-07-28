@@ -146,7 +146,7 @@
                                             <a href="/pedidos/edit/{{$pedido->id}}" title="Editar Pedido">
                                                 <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
                                             </a>
-                                            {{-- PESAR Pedido --}}
+                                            {{-- Finalizar Pagamento --}}
                                             <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}" title="Finalizar Pagamento">
                                                 <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
                                             </a>
@@ -242,14 +242,28 @@
                                     </td>
                                         
                                     <td>
-                                        {{-- Editar Pagamento--}}
-                                        <a href={{route('contas.editarPagamentoPedidoVenda',['id' => $pedido->id])}} title="Editar Pagamento">
-                                            <img id="pagar" class="icone" src="{{asset('img/hand-holding-usd-solid.svg')}}" >
-                                        </a>
-                                        {{-- Contas a pagar --}}
-                                        <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
-                                            <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
-                                        </a>
+                                        {{-- Se o pedido não possui pagamento, exibe icone de editar e pagar --}}
+                                        @if(count($pedido->pagamento) == 0)
+                                            {{-- Editar Pedido --}}
+                                            <a href="/pedidos/edit/{{$pedido->id}}" title="Editar Pedido">
+                                                <img id="editar" class="icone" src="{{asset('img/edit-solid.svg')}}" >
+                                            </a>
+                                            {{-- Finalizar Pagamento --}}
+                                            <a href="{{route('pedido.concluirPedido',['id'=>$pedido->id])}}" title="Finalizar Pagamento">
+                                                <img id="pagar" class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" >
+                                            </a>
+                                            
+                                        {{-- Caso o pedido possua pagamento, exibe icone de editar pagamento e contas a receber --}}
+                                        @else
+                                            {{-- Editar Pagamento--}}
+                                            <a href={{route('contas.editarPagamentoPedidoVenda',['id' => $pedido->id])}} title="Editar Pagamento">
+                                                <img id="pagar" class="icone" src="{{asset('img/hand-holding-usd-solid.svg')}}" >
+                                            </a>
+                                            {{-- Contas a pagar --}}
+                                            <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
+                                                <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
+                                            </a>
+                                        @endif
                                         {{-- Imprimir pedido --}}
     
                                         <a href={{route('pedido.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Pedido">
