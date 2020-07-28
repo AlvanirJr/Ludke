@@ -88,70 +88,62 @@
             </div>
         </div>
     @endif
-    <div class="row justify-content-center">
-        <div class="col-sm-12">
-            <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
-                <thead class="thead-primary">
-                <tr>
-                    <th>#</th>
-                    <th>Cliente</th>
-                    <th>Funcionário</th>
-                    <th>Data da Entrega</th>
-                    <th>Pedido</th>
-                    <th>Status</th>
-                    <th>Valor Total</th>
-                    <th>Ações</th>
-                </tr>
-                </thead>
-                <tbody>
-                    @foreach ($pedidos as $pedido)
-                    <tr id="{{$pedido->id}}">
-                        <td>{{$pedido->id}}</td>
-                        <td>
-                            @if(isset($pedido->cliente->user))
-                                {{$pedido->cliente->user->name}}
-                            @else
-                                <?php $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
-                                $cliente->user_id;
-                                $user = \App\User::withTrashed()->find($cliente->user_id);
-                                ?>
-                                {{$user->name}}
-                            @endif
-                        </td>
-                        <td>{{$pedido->funcionario->user->name}}</td>
-                        <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
-                        <td>
-                            <ul>
-                                @foreach ($pedido->itensPedidos as $itens)
-                                <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
-                                @endforeach
-                            </ul>
-                        </td>
-                        <td>{{$pedido->status->status}}</td>
-                        <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>
-                            {{-- Verifica se o status do pedido é SOLICITADO --}}
-                            @if($pedido->status->status == "ENTREGUE")
 
-                            <td>
-                                {{-- Editar Pagamento--}}
-                                <a href={{route('contas.editarPagamentoPedidoVenda',['id' => $pedido->id])}} title="Editar Pagamento">
-                                    <img id="pagar" class="icone" src="{{asset('img/hand-holding-usd-solid.svg')}}" >
-                                </a>
-                                {{-- Contas a pagar --}}
-                                <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
-                                    <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
-                                </a>
-                                {{-- Imprimir pedido --}}
-                                <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Venda">
-                                    <img id="" class="icone" src="{{asset('img/print.svg')}}" >
-                                </a>
-                                {{-- Excluir Pedido --}}
-                                <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Venda">
-                                    <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
-                                </a>
-                            </td>
-                            {{-- Verifica se o status do pedido é PESADO --}}
-                            @elseif($pedido->status->status == "PESADO")
+    {{-- Nav-tabs --}}
+    <ul class="nav nav-tabs" id="myTabContas" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link-contas active" id="solicitado_pesado-tab" data-toggle="tab" href="#solicitado_pesado" role="tab" aria-controls="solicitado_pesado" aria-selected="true"><h5>Pesado</h5></a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link-contas" id="entregue-tab" data-toggle="tab" href="#entregue" role="tab" aria-controls="entregue" aria-selected="false"><h5>Entregue</h5></a>
+        </li>
+    </ul>
+
+    {{-- Tab Content --}}
+    <div class="tab-content" id="myTabContent">
+        {{-- Pesado --}}
+        <div class="tab-pane fade show active" id="solicitado_pesado" role="tabpanel" aria-labelledby="solicitado_pesado-tab">
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
+                        <thead class="thead-primary">
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Funcionário</th>
+                            <th>Data da Entrega</th>
+                            <th>Pedido</th>
+                            <th>Status</th>
+                            <th>Valor Total</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($pedidos as $pedido)
+                            <tr id="{{$pedido->id}}">
+                                <td>{{$pedido->id}}</td>
+                                <td>
+                                    @if(isset($pedido->cliente->user))
+                                        {{$pedido->cliente->user->name}}
+                                    @else
+                                        <?php $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
+                                        $cliente->user_id;
+                                        $user = \App\User::withTrashed()->find($cliente->user_id);
+                                        ?>
+                                        {{$user->name}}
+                                    @endif
+                                </td>
+                                <td>{{$pedido->funcionario->user->name}}</td>
+                                <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
+                                <td>
+                                    <ul>
+                                        @foreach ($pedido->itensPedidos as $itens)
+                                        <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
+                                        @endforeach
+                                    </ul>
+                                </td>
+                                <td>{{$pedido->status->status}}</td>
+                                <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>
                                 <td>
                                     <a href="{{route('concluirVenda',['id'=>$pedido->id])}}" title="Concluir Venda">
                                         <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
@@ -169,25 +161,116 @@
                                         <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table> <!-- end table -->
+                </div><!-- end col-->
+            </div><!-- end row-->
+        
+            <div class="row justify-content-center">
+                @if ($pedidos != [])
+                    @if (isset($filtro))
+                    {{ $pedidos->appends($filtro)->links() }}
+        
+                    @else
+                    {{ $pedidos->links() }}
+                    @endif
+                @endif
+            </div>
+        </div>
 
-                            @endif
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table> <!-- end table -->
-        </div><!-- end col-->
-    </div><!-- end row-->
-
-    <div class="row justify-content-center">
-        @if ($pedidos != [])
-            @if (isset($filtro))
-            {{ $pedidos->appends($filtro)->links() }}
-
-            @else
-            {{ $pedidos->links() }}
-            @endif
-        @endif
+        {{-- Entregue --}}
+        <div class="tab-pane fade" id="entregue" role="tabpanel" aria-labelledby="entregue-tab">
+            <div class="tab-pane fade show active" id="solicitado_pesado" role="tabpanel" aria-labelledby="solicitado_pesado-tab">
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
+                            <thead class="thead-primary">
+                            <tr>
+                                <th>#</th>
+                                <th>Cliente</th>
+                                <th>Funcionário</th>
+                                <th>Data da Entrega</th>
+                                <th>Pedido</th>
+                                <th>Status</th>
+                                <th>Valor Total</th>
+                                <th>Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pedidosEntregues as $pedido)
+                                <tr id="{{$pedido->id}}">
+                                    <td>{{$pedido->id}}</td>
+                                    <td>
+                                        @if(isset($pedido->cliente->user))
+                                            {{$pedido->cliente->user->name}}
+                                        @else
+                                            <?php $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
+                                            $cliente->user_id;
+                                            $user = \App\User::withTrashed()->find($cliente->user_id);
+                                            ?>
+                                            {{$user->name}}
+                                        @endif
+                                    </td>
+                                    <td>{{$pedido->funcionario->user->name}}</td>
+                                    <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
+                                    <td>
+                                        <ul>
+                                            @foreach ($pedido->itensPedidos as $itens)
+                                            <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>{{$pedido->status->status}}</td>
+                                    <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>            
+                                    <td>
+                                        {{-- Se o pedido não possui pagamento, exibe icone de editar e pagar --}}
+                                        @if(count($pedido->pagamento) == 0)
+                                            <a href="{{route('concluirVenda',['id'=>$pedido->id])}}" title="Concluir Venda">
+                                                <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
+                                            </a>
+                                        {{-- Caso o pedido possua pagamento, exibe icone de editar pagamento e contas a receber --}}
+                                        @else
+                                            {{-- Editar Pagamento--}}
+                                            <a href={{route('contas.editarPagamentoPedidoVenda',['id' => $pedido->id])}} title="Editar Pagamento">
+                                                <img id="pagar" class="icone" src="{{asset('img/hand-holding-usd-solid.svg')}}" >
+                                            </a>
+                                            {{-- Contas a pagar --}}
+                                            <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
+                                                <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
+                                            </a>
+                                        @endif
+                                        {{-- Imprimir pedido --}}
+                                        <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Venda">
+                                            <img id="" class="icone" src="{{asset('img/print.svg')}}" >
+                                        </a>
+                                        {{-- Excluir Pedido --}}
+                                        <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Venda">
+                                            <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table> <!-- end table -->
+                    </div><!-- end col-->
+                </div><!-- end row-->
+            
+                <div class="row justify-content-center">
+                    @if ($pedidosEntregues != [])
+                        @if (isset($filtro))
+                        {{ $pedidosEntregues->appends($filtro)->links() }}
+            
+                        @else
+                        {{ $pedidosEntregues->links() }}
+                        @endif
+                    @endif
+                </div>
+        </div>
     </div>
+
+    
 
 </div>
 <!-- Modal -->
