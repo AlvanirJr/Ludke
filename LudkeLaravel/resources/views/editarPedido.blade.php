@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-sm-10">
                                 <div class="titulo-pagina-nome">
-                                    <h2>Editar Pedido</h2>
+                                <h2>Editar Pedido {{'#'.$pedido->id}}</h2>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                 <div class="col-sm-12">
 
                     <div class="card card-pedidos">
-                        <div class="card-header">Pedido</div>
+                        <div class="card-header">Pedido </div>
                         <div id="listaPedidos" class="card-body">
                             <table id="tabelaPedidos" class="table table-responsive-lg table-sm table-hover">
                                 <thead>

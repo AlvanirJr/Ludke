@@ -5,7 +5,6 @@
 
 
 
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-sm-12">
@@ -207,10 +206,12 @@
 
                         {{-- cpf/cnpj --}}
                         <div class="col-sm-6">
-                            <div class="form-group">
+                            
+                            <div class="form-group" >
                                 <label for="cpfCnpj" class="control-label">CPF/CNPJ <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="cpfCnpj" placeholder="CPF/CNPJ">
+                                    <input type="text" class="form-control" name="cpfCnpj" id="cpfCnpj" placeholder="CPF/CNPJ"/>
+                                
                                 </div>
                                 <div id="validationCpfCnpj"></div>
                             </div>
@@ -417,6 +418,9 @@
 @section('javascript')
 <script type="application/javascript">
 
+
+
+
     $(function(){
         $.ajaxSetup({
             headers:{
@@ -432,7 +436,9 @@
             $(this).find('[autofocus]').focus();
         });
     });
+    
 
+    
     function carregarClientes(){
         // console.log('clientes');
         $.getJSON('/clientes',function(clientes){
@@ -775,5 +781,29 @@
             // $('#dlgClientes').modal('hide');
         });
     });
+
+
+
+    $(document).ready(function($){ 
+        try{
+            $("#cpfCnpj").unmask();
+            $("#cpfCnpj").keypress(function(){      
+                var tamanho = $('#cpfCnpj').val().length;
+                if(tamanho < 14){
+                    $('#cpfCnpj').mask('999.999.999-99');
+
+                }
+            else if(tamanho >= 14){    
+                    $('#cpfCnpj').mask('00.000.000/0000-00');
+
+                }
+                
+            });
+        }catch(e){
+
+        }    
+    });
+                                    
+
 </script>
 @endsection

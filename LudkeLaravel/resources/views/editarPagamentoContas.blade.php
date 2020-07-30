@@ -155,7 +155,7 @@
                 <a href="{{route('contas.receber')}}" class="btn btn-secondary-ludke btn-pedido" >Voltar</a>
             </div>
             <div class="col-sm-6">
-                <button type="submit" class="btn btn-primary-ludke btn-pedido">Finalizar Pagamento</button>
+                <button type="submit" class="btn btn-primary-ludke btn-pedido">Salvar Edição</button>
             </div>
         </div>
     </form>

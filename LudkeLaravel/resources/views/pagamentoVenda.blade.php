@@ -37,7 +37,17 @@
             <div class="card cardFinalizarPedidos">
                 <div class="card-body">
                   <h5 class="card-title">Cliente</h5>
-                  <p class="card-text"><h3>{{$pedido->cliente->user->name}}</h3></p>
+                  <p class="card-text"><h3>
+                    @if(isset($pedido->cliente->user))
+                        {{$pedido->cliente->user->name}}
+                    @else
+                       <?php $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
+                             $cliente->user_id;
+                             $user = \App\User::withTrashed()->find($cliente->user_id);
+                        ?>
+                        {{$user->name}}
+                    @endif
+                </h3></p>
                 </div>
               </div>
         </div>

@@ -61,6 +61,7 @@
                 <tbody>
                     @foreach ($funcionarios as $func)
                     <tr>
+                       
                         <td>{{$func->id}}</td>
                         <td>{{$func->user->name}}</td>
                         <td>{{$func->cargo->nome}}</td>
