@@ -75,7 +75,7 @@
 
     {{-- FORMULÁRIO --}}
     {{-- {{route('contas.updatePagamento',['id'=>$pagamento->id])}} --}}
-    <form id="formPagamento" action="{{route('contas.updatePagamentoPedidoVenda',['id'=>$pedido->id])}}" method="POST">
+    <form id="formEditarPagamentoPedidoVenda" action="{{route('contas.updatePagamentoPedidoVenda',['id'=>$pedido->id])}}" method="POST">
         @csrf
         @foreach ($pedido->pagamento as $pagamento)
             <div id='formaPagamento'>
@@ -109,7 +109,7 @@
                     </div>
                     <div class='col-sm-3 form-group'>
                         <label for='updateValorTotalPagamento'>Valor (R$) <span class='obrigatorio'>*</span></label>
-                        <input type='number' value="{{$pagamento->valorTotalPagamento}}" id='updateValorTotalPagamento' min='0' step='0.01' onkeyup='validaValorPagamento()' class='form-control' name='updateValorTotalPagamento[]' @if($pagamento->status == 'fechado') disabled @else required @endif>
+                        <input type='number' value="{{$pagamento->valorTotalPagamento}}" id='updateValorTotalPagamento' min='0' step='0.01' onkeyup='validaValorEditarPagamento()' class='form-control' name='updateValorTotalPagamento[]' @if($pagamento->status == 'fechado') disabled @else required @endif>
                         <span style='color:red' id='spanValorPago'></span>
                     </div>
                     <div class='col-sm-3 form-group'>
@@ -165,15 +165,14 @@
 <script type="text/javascript">
 
     const today = "<?php date_default_timezone_set('America/Sao_Paulo'); echo date('Y-m-d');?>";
-
+    // Valor Total do pagamento
+    const valorTotal = <?php echo $pedido->valorTotal ?>;
     //Formas de pagamento
-    let formasPagamento = <?php echo json_encode($formasPagamento ?? ''); ?>; 
+    const formasPagamento = <?php echo json_encode($formasPagamento ?? ''); ?>; 
 
     $(function(){
-        $('#formPagamento').submit(function(event){
-            // Valor Total do pagamento
-            const valorTotal = <?php echo $pedido->valorTotal ?>;
-            console.log(valorTotal);
+        $('#formEditarPagamentoPedidoVenda').submit(function(event){
+            
             // Contador para armazenar o valor adicionado em todas as formas de pagamento.
             let contValorTotalPagamento = 0 ;
 
@@ -193,7 +192,7 @@
 
             console.log(contValorTotalPagamento)
             if(!isValid()){
-                // $("#formPagamento").submit();
+                // $("#formEditarPagamentoPedidoVenda").submit();
                 event.preventDefault();
 
                 $("#divNovaFormaPagamento:not(:has(>div))").each(function(){
@@ -219,22 +218,13 @@
                     alert("O valor informado é maior do que o valor total! Verifique os valores informados.");
                 }
         });
-
-        // Ao clicar no botão "Adicionar Forma de Pagamento" Adiciona na tela os inputs da nova forma de pagamento
-        $('#bntNovaFormaPagamento').click(function(){
-            // alert('Adicionar Forma de pagamento')
-            var linhaForm = addFormaDePagamento(today);
-            $("#divNovaFormaPagamento").append(linhaForm);
-        });
-
-
     });
 
     // Função que percorre os valores de entrada nos pagamentos e verifica se é maior que o valor do 
     //pedido ao submeter o form.
-    function validaValorPagamento(){
+    function validaValorEditarPagamento(){
         // Valor Total do pedido
-        let valorTotal = <?php echo $pedido->valorTotal ?>;
+        // let valorTotal = <?php echo $pedido->valorTotal ?>;
         // Contador para armazenar o valor adicionado em todas as formas de pagamento.
         let contValorTotalPagamento = 0;
 
@@ -259,110 +249,6 @@
         }else{
             console.log(`Pagamento: ${contValorTotalPagamento} | Valor Total: ${valorTotal}`);
 
-        }
-    }
-    
-    // monta as linhas dos <option> com as formas de pagamento para serem exibidas no select
-    function optionsFormaPagamento(){
-        let options = "";
-        formasPagamento.forEach(element => {
-            options+= `<option value="${element.id}">${element.nome}</option>`;
-        });
-        return options;
-    }
-    function isValid(){
-        let isValid = true;
-        // if($('#dataVencimento').val() == ""){
-        //     isValid = false;
-        //     $("#spanDataVencimento").html("Selecione a Data de Vencimento")
-        // }
-        // if($('#dataVencimento').val() != ""){
-        //     $("#spanDataVencimento").html("")
-        // }
-        // if($('#dataPagamento').val() == ""){
-        //     isValid = false;
-        //     $("#spanDataPagamento").html("Selecione a Data de Pagamento")
-        // }
-        // if($('#dataPagamento').val() != ""){
-        //     $("#spanDataPagamento").html("")
-        // }
-        if($('#formaPagamento').val() == null){
-            isValid = false;
-            $("#spanformaPagamento").html("Selecione o Tipo de Pagamento")
-        }
-        if($('#formaPagamento').val() != null){
-            $("#spanformaPagamento").html("")
-        }
-        if($('#valorPago').val() == ""){
-            isValid = false;
-            $("#spanValorPago").html("Preencha o Valor do Pagamento")
-        }
-        if($('#valorPago').val() != ""){
-            $("#spanValorPago").html("")
-        }
-        if($('#descontoPagamento').val() == ""){
-            isValid = false;
-            $("#spanDescontoPagamento").html("Preencha o Desconto do Pagamento")
-        }
-        if($('#descontoPagamento').val() != ""){
-            $("#spanDescontoPagamento").html("")
-        }
-
-        return isValid;
-    }
-
-    // calcula o desconto
-    function calcularDesconto(valorTotal,valorDoDescontoNoPedido){
-        let desconto = $('#descontoPagamento').val();
-        if(desconto > 100){
-            alert('Não é possível aplicar um desconto maior do que 100%');
-            return null;
-        }else{
-            return (valorTotal * (desconto/100)) + valorDoDescontoNoPedido;
-
-        }
-    }
-
-    // atualiza o valor do desconto ao inserir o desconto
-    function atualizarValorDesconto(valorTotal,valorDoDescontoNoPedido){
-
-        let valorDesconto = calcularDesconto(valorTotal,valorDoDescontoNoPedido);
-        let inputDesconto = $('#descontoPagamento').val();
-
-        if(valorDesconto != null){
-            // valorDesconto = valorDesconto + valorDoDescontoNoPedido;
-            // Atualiza na tela o valor do desconto
-            $('#valorDesconto').html(valorDesconto);
-        }else{
-            $('#descontoPagamento').val(0);
-            $('#valorDesconto').html(valorDoDescontoNoPedido);
-        }
-    }
-
-    // atualizaValorParcialmentePago
-    // atualiza o valor pago no pedido PARCIALMENTE PAGO
-    function atualizaValorParcialmentePago(valorTotal, valorPagoPedido){
-        let valorPago = $('#valorPago').val();
-
-        if(valorPago > valorTotal ){
-            alert(`Você não pode inserir um valor maior do que o valor do pedido: R$ ${valorTotal}`);
-            $('#valorPago').val('');
-            $('#valorTotalPago').html(valorPagoPedido);
-        }else{
-            $('#valorTotalPago').html(valorPago);
-        }
-    }
-
-    // atualiza o valor pago
-    function atualizaValorPago(valorTotal){
-        let valorPago = $('#valorPago').val();
-        let valorComDesconto = valorTotal - calcularDesconto(valorTotal)
-        if(valorPago > valorComDesconto ){
-            alert(`Você não pode inserir um valor maior do que o valor do pedido: R$ ${valorComDesconto}`);
-            $('#valorPago').val('');
-            $('#valorTotalPago').html(0);
-        }else{
-            $('#valorTotalPago').html(valorPago);
         }
     }
 </script>
