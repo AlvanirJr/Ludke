@@ -7,10 +7,7 @@
 
 <div class="container">
     <div class="row justify-content-center">
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row d-flex justify-content-between">
@@ -28,7 +25,6 @@
                     <div class="col-sm-2">
                         <button class="btn btn-primary-ludke" role="button" onclick="novoCliente()">Novo</button>
                     </div>
-<<<<<<< Updated upstream
 
 
 
@@ -65,10 +61,6 @@
                                 </form>
                             </div>
                         </div>
-=======
-                    <div class="col-sm-3">
-                        <input id="inputBusca" class="form-control input-ludke" type="text" placeholder="Pesquisar" name="pesquisar">
->>>>>>> Stashed changes
                     </div>
                 </div>
             </div><!-- end titulo-pagina -->
@@ -119,12 +111,7 @@
                         <th>Nome</th>
                         <th>Nome Reduzido</th>
                         <th>CPF/CNPJ</th>
-<<<<<<< Updated upstream
                         <th>Cidade</th>
-=======
-                        <th>Telefone Residêncial</th>
-                        <th>Celular</th>
->>>>>>> Stashed changes
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -231,7 +218,6 @@
                             </div>
                         </div>
 
-<<<<<<< Updated upstream
 
                     {{-- Associar vendedor  --}}
                     <div class="col-sm-6">
@@ -243,20 +229,6 @@
                                     <option value="pessoaFisica">PESSOA FÍSICA</option>
                                     <option value="pessoaJuridica">PESSOA JURÍDICA</option>
                                 </select>
-=======
-                        {{-- tipo do cliente --}}
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="cargoFuncionario" class="control-label">Tipo</label>
-                                <div class="input-group">
-                                    <select class="form-control" id="tipo">
-                                        <option value="" disabled selected hidden>-- Tipo --</option>
-                                        <option value="pessoaFisica">Pessoa Física</option>
-                                        <option value="pessoaJuridica">Pessoa Jurídica</option>
-                                    </select>
-                                </div>
-                                <div id="validationTipo"></div>
->>>>>>> Stashed changes
                             </div>
                             <div id="validationTipo"></div>
                         </div>
@@ -511,14 +483,8 @@
             $('#cpfCnpj').val(data.cpfCnpj);
             $('#tipo').val(data.tipo);
             $('#inscricaoEstadual').val(data.inscricaoEstadual);
-<<<<<<< Updated upstream
             $('#funcionario_id').val(data.funcionario_id),
-
-                $('#residencial').val(data.residencial);
-=======
-
             $('#residencial').val(data.residencial);
->>>>>>> Stashed changes
             $('#celular').val(data.celular);
             $('#cep').val(data.cep);
             $('#rua').val(data.rua);
@@ -584,11 +550,9 @@
         $('#cpfCnpj').val('');
         $('#tipo').val('');
         $('#inscricaoEstadual').val('');
-<<<<<<< Updated upstream
         $('#funcionario_id').val('0');
-=======
 
->>>>>>> Stashed changes
+
         $('#residencial').val('');
         $('#celular').val('');
         $('#cep').val('');
@@ -614,18 +578,10 @@
             nomeReduzido: $('#nomeReduzido').val(),
             nomeResponsavel: $('#nomeResponsavel').val(),
             cpfCnpj: $('#cpfCnpj').val(),
-<<<<<<< Updated upstream
-            tipo: $('#tipo').val(),
-            inscricaoEstadual: $('#inscricaoEstadual').val(),
             funcionario_id:$('#funcionario_id').val(),
-
-            residencial: $('#residencial').val(),
-=======
             tipo: $('#tipo').val().toUpperCase(),
             inscricaoEstadual: $('#inscricaoEstadual').val().toUpperCase(),
-
             residencial: $('#residencial').val().toUpperCase(),
->>>>>>> Stashed changes
             celular: $('#celular').val(),
             cep: $('#cep').val(),
             rua: $('#rua').val(),
@@ -642,10 +598,8 @@
             context: this,
             data: cliente,
             success: function(data){
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
+
                 cli = JSON.parse(data);
                 alert("Cliente "+cli.nome+" salvo com sucesso!")
                 window.location.href="/indexClientes";
@@ -682,14 +636,12 @@
             nomeReduzido: $('#nomeReduzido').val(),
             nomeResponsavel: $('#nomeResponsavel').val(),
             cpfCnpj: $('#cpfCnpj').val(),
-<<<<<<< Updated upstream
-            tipo: $('#tipo').val(),
-            inscricaoEstadual: $('#inscricaoEstadual').val(),
+
             funcionario_id:$('#funcionario_id').val(),
-=======
+
             tipo: $('#tipo').val().toUpperCase(),
             inscricaoEstadual: $('#inscricaoEstadual').val().toUpperCase(),
->>>>>>> Stashed changes
+
 
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
@@ -699,14 +651,11 @@
             cidade: $('#cidade').val(),
             uf: $('#uf').val(),
             numero: $('#numero').val(),
-<<<<<<< Updated upstream
-            complemento: $('#complemento').val()
-        };
-=======
+
             complemento: $('#complemento').val().toUpperCase()
         }
         console.log('511');
->>>>>>> Stashed changes
+
 
         //#console.log(cliente);
         $.ajax({
@@ -715,23 +664,11 @@
                 context: this,
                 data: cliente,
                 success: function(data){
-<<<<<<< Updated upstream
-                    //console.log(cliente);
-                    cliente = (data);
-
-                    alert("Cliente cadastrado com sucesso!");
-                    window.location.href="\indexClientes";
-                    // cliente = JSON.parse(data);
-                    // linha = montarLinha(cliente);
-                    // $('#tabelaClientes>tbody').append(linha);
-                    // $('#dlgClientes').modal('hide');
-=======
                     console.log("teste");
                     cliente = JSON.parse(data);
                     linha = montarLinha(cliente);
                     $('#tabelaClientes>tbody').append(linha);
                     $('#dlgClientes').modal('hide');
->>>>>>> Stashed changes
                 },
                 error: function(error){
                     retorno = JSON.parse(error.responseText);
