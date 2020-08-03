@@ -29,4 +29,7 @@ class Cliente extends Model
     function pedidos(){
         return $this->hasMany('App\Pedido','cliente_id');
     }
+    public static $rules = [
+    	'cpfCnpj' => 'required|min:14'
+    ];
 }
