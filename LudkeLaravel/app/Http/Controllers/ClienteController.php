@@ -13,7 +13,8 @@ class ClienteController extends Controller
     // Retorna a view dos funcionarios
     public function indexView()
     {
-        $clientes = Cliente::paginate(10);
+        
+        $clientes = Cliente::paginate(999);
         #$fun = \App\Funcionario::where('cargo_id', '=', 3)
          #   ->join('users', 'funcionarios.user_id', '=', 'users.id')->get();
         $fun = Funcionario::with('user')->get();
@@ -119,6 +120,7 @@ class ClienteController extends Controller
                 'numero' => $endereco->numero,
                 'complemento' => $endereco->complemento,
             ];
+            
 
             array_push($arrayClientes,$cli);
         }
@@ -468,7 +470,7 @@ class ClienteController extends Controller
             $endereco->delete();
             return response('OK',200);
         }
-        return resonse('Cliente não encontrado', 404);
+        return response('Cliente não encontrado', 404);
     }
 
 
