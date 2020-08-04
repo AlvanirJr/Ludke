@@ -14,7 +14,7 @@ class ClienteController extends Controller
     public function indexView()
     {
         
-        $clientes = Cliente::paginate(999);
+        $clientes = Cliente::paginate(99);
         #$fun = \App\Funcionario::where('cargo_id', '=', 3)
          #   ->join('users', 'funcionarios.user_id', '=', 'users.id')->get();
         $fun = Funcionario::with('user')->get();
