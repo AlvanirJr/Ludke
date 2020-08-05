@@ -9,7 +9,15 @@
         <div class="col-sm-6">
             <div class="row justify-content-center">
                 <div class="col-sm-12">
-                    {{-- Card Cliente --}}
+                    <div class="titulo-pagina">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <div class="titulo-pagina-nome">
+                                <h2>Editar Pedido {{'#'.$pedido->id}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div id="cardCliente" class="card card-pedidos">
                         {{-- <div class="card-header">Cliente</div> --}}
                         <div class="card-body">
@@ -103,14 +111,14 @@
                 </div>
             </div>{{-- end Row Produto --}}
 
-            <div class="row">
+           {{-- <div class="row">
                 <div class="col-sm-6">
                     <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Edição</a>
                 </div>
                 <div class="col-sm-6">
                     <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Finalizar Edição</a>
                 </div>
-            </div>
+            </div>--}}
 
         </div>{{-- end Coluna 1 --}}
 
@@ -121,7 +129,7 @@
                 <div class="col-sm-12">
 
                     <div class="card card-pedidos">
-                        <div class="card-header">Pedido</div>
+                        <div class="card-header">Pedido </div>
                         <div id="listaPedidos" class="card-body">
                             <table id="tabelaPedidos" class="table table-responsive-lg table-sm table-hover">
                                 <thead>
@@ -182,7 +190,14 @@
                     </div>{{-- end Card Venda --}}
                 </div>
             </div>{{-- Row Informações Venda --}}
-
+            <div class="row">
+                <div class="col-sm-6">
+                    <a href="{{route('listarPedidos')}}" class="btn btn-secondary-ludke btn-pedido">Cancelar Edição</a>
+                </div>
+                <div class="col-sm-6">
+                    <a href="#" id="btnFinalizarPedido" class="btn btn-primary-ludke btn-pedido">Finalizar Edição</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -450,12 +465,12 @@
             idProduto = parseInt(e[0].cells[1].textContent);
             peso = parseFloat(e[0].cells[3].textContent);
             valorTotal = (e[0].cells[5].textContent);
-            
+
             // Remove Pedidos vindo do banco
             for(var i = 0; i < pedido.itens_pedidos.length; i++){
                 // Verifica se o id do produto, o peso solicitado e o valor total é igual à linha que estou tententando remover
                 if( pedido.itens_pedidos[i].id == idProduto && pedido.itens_pedidos[i].pesoSolicitado == peso && formatter.format(pedido.itens_pedidos[i].valorReal) == valorTotal){
-                    
+
                     var indice = pedido.itens_pedidos.indexOf(pedido.itens_pedidos[i]);
                     // Debita Valor do Pedido
                     pedido.valorTotal = debitarValor(pedido.itens_pedidos[i].valorReal);

@@ -13,7 +13,11 @@ class ClienteController extends Controller
     // Retorna a view dos funcionarios
     public function indexView()
     {
-        $clientes = Cliente::paginate(10);
+        
+        $clientes = Cliente::paginate(99);
+        $user = User::all();
+        $clientes = Cliente::orderBy('nomeReduzido', 'ASC')->get();
+        //dd($clientes);
         #$fun = \App\Funcionario::where('cargo_id', '=', 3)
          #   ->join('users', 'funcionarios.user_id', '=', 'users.id')->get();
         $fun = Funcionario::with('user')->get();
@@ -119,6 +123,7 @@ class ClienteController extends Controller
                 'numero' => $endereco->numero,
                 'complemento' => $endereco->complemento,
             ];
+            
 
             array_push($arrayClientes,$cli);
         }
@@ -188,9 +193,11 @@ class ClienteController extends Controller
         $senhaAutomatica = bcrypt('123456');
         $user->name = strtoupper($request->input('nome'));
         $user->tipo = 'cliente';
+        $user->email = strtoupper($request->input('email'));
         if($user->email == null){
             $id = mt_rand();
-            $user->email = $user->name.$id."@gmail.com";
+            $name = str_replace(' ',"",$user->name);
+            $user->email = $name.$id."@gmail.com";
         }
         else{
             $user->email= $request->input('email');
@@ -466,7 +473,7 @@ class ClienteController extends Controller
             $endereco->delete();
             return response('OK',200);
         }
-        return resonse('Cliente não encontrado', 404);
+        return response('Cliente não encontrado', 404);
     }
 
 

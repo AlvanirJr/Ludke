@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/LudkeLaravel/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/LudkeLaravel/app" isTestSource="false" packagePrefix="App\" />
+      <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/barryvdh/laravel-dompdf" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/defuse/php-encryption" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/dnoegel/php-xdg-base-dir" />
@@ -15,8 +16,10 @@
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/doctrine/inflector" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/doctrine/lexer" />
+      <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/dompdf/dompdf" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/dragonmantank/cron-expression" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/egulias/email-validator" />
+      <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/erusev/parsedown" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/facade/flare-client-php" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/facade/ignition" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/facade/ignition-contracts" />
@@ -37,7 +40,6 @@
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/laravel/tinker" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/laravel/ui" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/lcobucci/jwt" />
-      <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/league/commonmark" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/league/event" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/league/flysystem" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/league/oauth2-server" />
@@ -52,6 +54,8 @@
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/phar-io/version" />
+      <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/phenx/php-font-lib" />
+      <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/phenx/php-svg-lib" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/php-http/message-factory" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/phpdocumentor/reflection-common" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/phpdocumentor/reflection-docblock" />
@@ -73,6 +77,7 @@
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/psy/psysh" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/ramsey/uuid" />
+      <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/sabberworm/php-css-parser" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/scrivo/highlight.php" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/sebastian/code-unit-reverse-lookup" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/sebastian/comparator" />
@@ -114,6 +119,7 @@
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/tijsverkoyen/css-to-inline-styles" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/LudkeLaravel/vendor/yajra/laravel-datatables-oracle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
