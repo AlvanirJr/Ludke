@@ -15,6 +15,9 @@ class ClienteController extends Controller
     {
         
         $clientes = Cliente::paginate(99);
+        $user = User::all();
+        $clientes = Cliente::orderBy('nomeReduzido', 'ASC')->get();
+        //dd($clientes);
         #$fun = \App\Funcionario::where('cargo_id', '=', 3)
          #   ->join('users', 'funcionarios.user_id', '=', 'users.id')->get();
         $fun = Funcionario::with('user')->get();

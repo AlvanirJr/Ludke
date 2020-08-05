@@ -654,7 +654,7 @@
 
             complemento: $('#complemento').val().toUpperCase()
         }
-        console.log('511');
+        //console.log('511');
 
 
         //#console.log(cliente);
@@ -663,12 +663,14 @@
                 url: "/clientes",
                 context: this,
                 data: cliente,
-                success: function(data){
-                    console.log("teste");
-                    cliente = JSON.parse(data);
-                    linha = montarLinha(cliente);
-                    $('#tabelaClientes>tbody').append(linha);
-                    $('#dlgClientes').modal('hide');
+                success: function(data ){
+                    // console.log("teste");
+                    cliente = JSON.parse(data || "[]");
+                    alert("Cliente "+cliente.nomeReduzido+" cadastrado com sucesso!");
+                    window.location.href="\indexClientes";
+                    //linha = montarLinha(cliente);
+                    //$('#tabelaClientes>tbody').append(linha);
+                    //$('#dlgClientes').modal('hide');
                 },
                 error: function(error){
                     retorno = JSON.parse(error.responseText);
