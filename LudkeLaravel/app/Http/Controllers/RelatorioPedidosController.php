@@ -129,6 +129,7 @@ class RelatorioPedidosController extends Controller
 
     // Filtra Pedido
     public function filtrarPedido($filtro){
+        //dd($filtro);
 
         $pedidos = [];
         if(isset($filtro['filtroRelatorioStatus_id'])){

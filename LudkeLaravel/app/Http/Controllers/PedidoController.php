@@ -43,9 +43,9 @@ class PedidoController extends Controller
         $pedidosEntregues = Pedido::with(['status','pagamento'])->
             where('tipo','p')->
             where('status_id',3)->//ENTREGUE
-            orderBy('dataEntrega')->
+            orderBy('dataEntrega','DESC')->
             paginate(25);
-                            
+        #dd($pedidosEntregues);    
         // dd($pedidosEntregues[0]->pagamento);
         return view('listarPedido',['pedidos'=>$pedidos, 'pedidosEntregues'=>$pedidosEntregues]);
     }
