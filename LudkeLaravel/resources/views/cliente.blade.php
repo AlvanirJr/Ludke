@@ -601,7 +601,7 @@
 
 
                 cli = JSON.parse(data);
-                alert("Cliente "+cli.nome+" salvo com sucesso!")
+                alert("Cliente salvo com sucesso!")
                 window.location.href="/indexClientes";
                 // cli = JSON.parse(data);
                 // linhas = $('#tabelaClientes>tbody>tr');
@@ -666,7 +666,7 @@
                 success: function(data ){
                     // console.log("teste");
                     cliente = JSON.parse(data || "[]");
-                    alert("Cliente "+cliente.nomeReduzido+" cadastrado com sucesso!");
+                    alert("Cliente cadastrado com sucesso!");
                     window.location.href="\indexClientes";
                     //linha = montarLinha(cliente);
                     //$('#tabelaClientes>tbody').append(linha);
