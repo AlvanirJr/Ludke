@@ -33,8 +33,10 @@ function disableDataVencimento(select) {
  * @param {Float} valorTotal 
  */
 function validPayment(contValorTotalPagamento, valorTotal) {
+    //console.log(validaValorPagamento);
+    console.log(valorTotal);
 
-    if (contValorTotalPagamento <= valorTotal) {
+    if (contValorTotalPagamento > valorTotal) {
         return false;
     } else {
         return true;
