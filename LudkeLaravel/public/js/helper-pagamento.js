@@ -34,8 +34,8 @@ function disableDataVencimento(select) {
  */
 function validPayment(contValorTotalPagamento, valorTotal) {
     //console.log(validaValorPagamento);
+    valorTotal = Math.round(valorTotal * 100) / 100
     console.log(valorTotal);
-
     if (contValorTotalPagamento > valorTotal) {
         return false;
     } else {
