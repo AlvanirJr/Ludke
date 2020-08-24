@@ -128,7 +128,13 @@ $(function() {
                 alert("Por favor, selecione uma forma de pagamento!");
             });
         }
+        // Verifica se contValorTotalPagamento é maior que valorTotal
         if (validPayment(contValorTotalPagamento, valorTotal) == false) {
+            // impede o envio do form
+            event.preventDefault();
+            alert("O valor informado é maior do que o valor total! Verifique os valores informados.");
+        }
+        if (contValorTotalPagamento < valorTotal) {
             // impede o envio do form
             event.preventDefault();
             //alerta de erro
@@ -139,12 +145,8 @@ $(function() {
             $("#divNovaFormaPagamento").append(linhaForm);
 
             // Adiciona o valor restante em na ultima forma de pagamento adicionada
-            $('input[name="valorTotalPagamento[]"').last().val(valorTotal - contValorTotalPagamento);
-        }
-        if (contValorTotalPagamento > valorTotal) {
-            // impede o envio do form
-            event.preventDefault();
-            alert("O valor informado é maior do que o valor total! Verifique os valores informados.");
+            var correcaoValor = valorTotal - contValorTotalPagamento;
+            $('input[name="valorTotalPagamento[]"').last().val(parseFloat(correcaoValor.toFixed(2)));
         }
     });
 
