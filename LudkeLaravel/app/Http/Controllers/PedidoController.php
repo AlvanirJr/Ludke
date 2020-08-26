@@ -93,7 +93,7 @@ class PedidoController extends Controller
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
         $entregadores = Funcionario::all();
         $formasPagamento = FormaPagamento::all();
-
+        //dd('AQUIIII');
         return view('pagamento',
             [
                 'pedido'=>$pedido,

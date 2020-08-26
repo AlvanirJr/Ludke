@@ -96,6 +96,8 @@ class VendaController extends Controller
         //                              orwhere('cargo_id',$entregador_id)->get();
         $entregadores = Funcionario::all();
         $formasPagamento = FormaPagamento::all();
+        $valorTotalDoPagamento = round($valorTotalDoPagamento, 2);
+        //dd($valorTotalDoPagamento);
         return view('pagamentoVenda',
             [
                 'pedido'=>$pedido,
