@@ -14,4 +14,8 @@ class Telefone extends Model
     public function user(){
         return $this->hasOne('App\User','telefone_id');
     }
+
+    public function telefone(){
+        return $this->hasOne('App\Telefone','telefone_id');
+    }
 }

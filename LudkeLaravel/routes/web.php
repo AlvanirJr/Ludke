@@ -55,6 +55,11 @@ Route::post('/buscarCliente','ClienteController@buscarCliente')->name('buscarCli
 // Cargos
 Route::get('/indexCargos', 'CargoController@indexView')->name('cargos');
 Route::post('/buscarCargo','CargoController@buscarCargo')->name('buscarCargo');
+// Fornecedores
+Route::get('/indexFornecedores','FornecedorController@index')->name('fornecedores');
+Route::resource('/fornecedor','FornecedorController');
+Route::post('/buscarFornecedor','FornecedorController@buscarFornecedor')->name('buscarFornecedor');
+
 
 // ROTAS PARA O PEDIDO
 Route::get('/pedidos','PedidoController@index')->name('pedidos');

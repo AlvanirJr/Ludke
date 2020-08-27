@@ -29,6 +29,7 @@
                             <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
                             <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
                             <a class="dropdown-item" href="{{route('cargos')}}">Cargos</a>
+                            <a class="dropdown-item" href="{{route('fornecedores')}}">Fornecedores</a>
                         </div>
                     </li>
                     {{-- Pedidos --}}
