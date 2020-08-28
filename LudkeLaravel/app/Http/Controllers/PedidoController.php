@@ -36,7 +36,7 @@ class PedidoController extends Controller
                         orWhere('status_id',2);//PESADO
             })->
             orderBy('status_id')->
-            orderBy('dataEntrega')->
+            orderBy('dataEntrega', 'DESC')->
             paginate(25);
 
         // Busca Pedidos com status ENTREGUE
@@ -61,12 +61,12 @@ class PedidoController extends Controller
                                         orWhere('status_id',2);//PESADO
                             })->
                             orderBy('status_id')->
-                            orderBy('dataEntrega')->paginate(25);
+                            orderBy('dataEntrega', 'DESC')->paginate(25);
 
         $pedidosEntregues = Pedido::with(['status','pagamento'])->
                             where('id',$id)->
                             where('status_id',3)->
-                            orderBy('dataEntrega')->paginate(25);
+                            orderBy('dataEntrega','DESC')->paginate(25);
         return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'listarPedidoConta'=>true]);
     }
     public function indexPagamento($id){
