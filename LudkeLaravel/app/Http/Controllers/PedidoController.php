@@ -35,7 +35,7 @@ class PedidoController extends Controller
                 $query->where('status_id',1)->//SOLICITADO
                         orWhere('status_id',2);//PESADO
             })->
-            orderBy('status_id')->
+            //orderBy('status_id')->
             orderBy('dataEntrega', 'DESC')->
             paginate(25);
 
@@ -504,7 +504,7 @@ class PedidoController extends Controller
             return json_encode($cliente);
         }
         else{
-            return resonse('Cliente não encontrado', 404);
+            return response('Cliente não encontrado', 404);
         }
     }
 
