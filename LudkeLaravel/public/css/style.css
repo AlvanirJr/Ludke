@@ -132,7 +132,7 @@ input[type=number] {
 .btn-primary-ludke{
     border-radius: 0;
     background-color: #BF1A2C;
-    color: white;
+    color: white !important;
     width: 100%;
     transition: 0.2s;
 }
@@ -145,7 +145,7 @@ input[type=number] {
 .btn-secondary-ludke{
     border-radius: 0;
     background-color: gray;
-    color: white;
+    color: white !important;
     width: 100%;
     transition: 0.2s;
 }
