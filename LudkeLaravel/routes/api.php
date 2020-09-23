@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 
-
+*/
 // Rota chamada pelo ajax para pegar categorias
 // Route::get('/categorias','CategoriaController@indexJson');//para retornar o json com as categorias
 
