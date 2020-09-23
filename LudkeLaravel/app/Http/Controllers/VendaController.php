@@ -31,7 +31,7 @@ class VendaController extends Controller
                                         orWhere('tipo','vm');
                             })->
                             where('status_id',2)-> //PESADO
-                            orderby('dataEntrega')->
+                            orderby('dataEntrega', 'DESC')->
                             paginate(25);
 
         $pedidosEntregues = Pedido::with(['status','pagamento'])->
@@ -41,7 +41,7 @@ class VendaController extends Controller
                             })->
                             where('status_id',3)-> //ENTREGUE
 
-                            orderby('dataEntrega')->
+                            orderby('dataEntrega', 'DESC')->
                             paginate(25);
         return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues]);
     }
@@ -54,13 +54,13 @@ class VendaController extends Controller
                             where('id',$id)->
                             orderby('created_at','DESC')->
                             where('status_id',2)->
-                            orderBy('dataEntrega')->paginate(25);
+                            orderBy('dataEntrega', 'DESC')->paginate(25);
         
         $pedidosEntregues = Pedido::with(['status','pagamento'])->
                             where('id',$id)->
                             orderby('created_at','DESC')->
                             where('status_id',3)->
-                            orderBy('dataEntrega')->paginate(25);
+                            orderBy('dataEntrega', 'DESC')->paginate(25);
 
         return view('listarVendas',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'listarVendaConta'=>true]);
     }
@@ -97,6 +97,8 @@ class VendaController extends Controller
         $entregadores = Funcionario::all();
         $formasPagamento = FormaPagamento::all();
         $valorTotalDoPagamento = round($valorTotalDoPagamento, 2);
+
+        
         //dd($valorTotalDoPagamento);
         return view('pagamentoVenda',
             [
@@ -358,8 +360,13 @@ class VendaController extends Controller
             $pagamento->funcionario_id = Auth::user()->funcionario->id;
             $pagamento->pedido_id = $pedido->id;
             $pagamento->save();
-        }
 
+            
+        }
+        if($pagamento->formaPagamento_id == 1){
+            return redirect()->route('contas.receber');
+
+        }            
         return redirect()->route('listarVendas');
 
     }

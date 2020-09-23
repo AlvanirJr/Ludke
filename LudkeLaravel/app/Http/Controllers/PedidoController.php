@@ -35,8 +35,8 @@ class PedidoController extends Controller
                 $query->where('status_id',1)->//SOLICITADO
                         orWhere('status_id',2);//PESADO
             })->
-            orderBy('status_id')->
-            orderBy('dataEntrega')->
+            //orderBy('status_id')->
+            orderBy('dataEntrega', 'DESC')->
             paginate(25);
 
         // Busca Pedidos com status ENTREGUE
@@ -61,12 +61,12 @@ class PedidoController extends Controller
                                         orWhere('status_id',2);//PESADO
                             })->
                             orderBy('status_id')->
-                            orderBy('dataEntrega')->paginate(25);
+                            orderBy('dataEntrega', 'DESC')->paginate(25);
 
         $pedidosEntregues = Pedido::with(['status','pagamento'])->
                             where('id',$id)->
                             where('status_id',3)->
-                            orderBy('dataEntrega')->paginate(25);
+                            orderBy('dataEntrega','DESC')->paginate(25);
         return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'listarPedidoConta'=>true]);
     }
     public function indexPagamento($id){
@@ -93,6 +93,10 @@ class PedidoController extends Controller
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
         $entregadores = Funcionario::all();
         $formasPagamento = FormaPagamento::all();
+        $valorTotalDoPagamento = round($valorTotalDoPagamento, 2);
+        //dd($valorTotalDoPagamento);
+
+
         //dd('AQUIIII');
         return view('pagamento',
             [
@@ -504,7 +508,7 @@ class PedidoController extends Controller
             return json_encode($cliente);
         }
         else{
-            return resonse('Cliente não encontrado', 404);
+            return response('Cliente não encontrado', 404);
         }
     }
 

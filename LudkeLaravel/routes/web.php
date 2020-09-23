@@ -55,6 +55,19 @@ Route::post('/buscarCliente','ClienteController@buscarCliente')->name('buscarCli
 // Cargos
 Route::get('/indexCargos', 'CargoController@indexView')->name('cargos');
 Route::post('/buscarCargo','CargoController@buscarCargo')->name('buscarCargo');
+// Fornecedores
+Route::get('/indexFornecedores','FornecedorController@index')->name('fornecedores');
+Route::resource('/fornecedor','FornecedorController');
+Route::post('/buscarFornecedor','FornecedorController@buscarFornecedor')->name('buscarFornecedor');
+// Centro de Custo
+Route::get('/indexCentroCusto','CentroCustoController@index')->name('centroCusto');
+Route::resource('/centroCusto','CentroCustoController');
+Route::post('/buscarCentroCusto','CentroCustoController@buscarCentroCusto')->name('buscarCentroCusto');
+// Fonte de Pagamento
+Route::get('/indexFontePagamento','FontePagamentoController@index')->name('fontePagamento');
+Route::resource('/fontePagamento','FontePagamentoController');
+Route::post('/buscarFontePagamento','FontePagamentoController@buscarFontePagamento')->name('buscarFontePagamento');
+
 
 // ROTAS PARA O PEDIDO
 Route::get('/pedidos','PedidoController@index')->name('pedidos');
@@ -138,6 +151,8 @@ Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visuali
 Route::post('/contas/registrarPagamento','ContasReceber@store')->name('contas.registrarPagamento');
 Route::get('/contas/visualizar/pedido/{id}','PedidoController@show')->name('contas.visualizarPedido');
 Route::get('/contas/visualizar/venda/{id}','VendaController@show')->name('contas.visualizarVenda');
+
+
 // Editar Pagamento CaR
 Route::get('/contas/editar/pagamento/{id}','ContasReceber@editarPagamentoContasReceber')->name('contas.editarPagamento');
 Route::post('/contas/editar/pagamento/{id}','ContasReceber@updatePagamentoContasReceber')->name('contas.updatePagamento');
@@ -145,4 +160,12 @@ Route::post('/contas/editar/pagamento/{id}','ContasReceber@updatePagamentoContas
 // Editar Pagamento Pedido/Venda
 Route::get('/contas/editar/pagamento/pedido_venda/{id}','ContasReceber@editarPagamentoPedidoVenda')->name('contas.editarPagamentoPedidoVenda');
 Route::post('/contas/editar/pagamento/pedido_venda/{id}','ContasReceber@updatePagamentoPedidoVenda')->name('contas.updatePagamentoPedidoVenda');
+
+// ROTAS CONTAS A PAGAR
+Route::get('/contas/pagar/{idPedido?}','ContasPagarController@index')->name('contas.pagar');
+Route::post('/contas/pagar/cadastrar','ContasPagarController@store')->name('contas.pagar.cadastrar');
+Route::delete('/contas/pagar/deletar/{id}','ContasPagarController@destroy')->name('contas.pagar.deletar');
+Route::get('/contas/pagar/show/{id}','ContasPagarController@show')->name('contas.pagar.show');
+Route::post('/contas/pagar/atualizar/{id}','ContasPagarController@update')->name('contas.pagar.update');
+Route::post('/contas/pagar/registrarPagamento','ContasPagarController@registrarPagamento')->name('contas.pagar.registrarPagamento');
 

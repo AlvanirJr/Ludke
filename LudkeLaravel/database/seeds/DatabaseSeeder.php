@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ProdutoSeeder::class);
         $this->call(StatusSeeder::class);
         $this->call(TipoPagamentoSeeder::class);
+        $this->call(FornecedorSeeder::class);
         
     }
 }

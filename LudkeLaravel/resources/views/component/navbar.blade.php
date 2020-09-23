@@ -29,6 +29,9 @@
                             <a class="dropdown-item" href="{{route('clientes')}}">Clientes</a>
                             <a class="dropdown-item" href="{{route('funcionarios')}}">Funcionários</a>
                             <a class="dropdown-item" href="{{route('cargos')}}">Cargos</a>
+                            <a class="dropdown-item" href="{{route('fornecedores')}}">Fornecedores</a>
+                            <a class="dropdown-item" href="{{route('centroCusto')}}">Centro de Custo</a>
+                            <a class="dropdown-item" href="{{route('fontePagamento')}}">Fonte de Pagamento</a>
                         </div>
                     </li>
                     {{-- Pedidos --}}
@@ -76,6 +79,7 @@
 
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{route('contas.receber')}}">Contas a receber</a>
+                            <a class="dropdown-item" href="{{route('contas.pagar')}}">Contas a pagar</a>
                         </div>
                     </li>
                     {{-- Ajuda --}}
