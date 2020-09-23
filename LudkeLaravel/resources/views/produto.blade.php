@@ -152,7 +152,7 @@
                     <div class="form-group">
                         <label for="precoProduto" class="control-label">Preço do Produto (por Kg) <span class="obrigatorio">*</span></label>
                         <div class="input-group">
-                            <input type="number" step="0.01" class="form-control" id="precoProduto" placeholder="Preço do Produto">
+                            <input type="text" step="0.01" class="form-control" id="precoProduto" placeholder="Preço do Produto">
                         </div>
                         <div id="validationPreco"></div>
                     </div>
@@ -297,7 +297,7 @@
             }
     }
     function editarProduto(id){
-        console.log("Editar");
+        //console.log("Editar");
 
         // Limpa o input de imagens, caso alguma imagem tenha sido carregada anteriormente
         $("#imagensProduto").val('');
@@ -407,7 +407,7 @@
     // Exibe imagens que foram carregadas na tela
     function carregarImagens(){
         $("#imagensProduto").change(function(){
-            console.log('carregou imagem');
+            //console.log('carregou imagem');
             $(".listaImagem").html("");
             var totalImagens = document.getElementById("imagensProduto").files.length; // número de fotos carregadas no input
             for(i=0;i<totalImagens;i++){
@@ -622,8 +622,13 @@
             // $("#dlgProdutos").modal('hide'); //esconde o modal após fazer a requisição
         });
     });
-
-
+/*    
+  $(document).ready(function($){
+    $("#precoProduto").keypress(function(){
+        $("#precoProduto").maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', 
+        decimal:'.', affixesStay: false});
+    });
+  });*/
 </script>
 
 @endsection

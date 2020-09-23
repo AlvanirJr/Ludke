@@ -97,6 +97,8 @@ class VendaController extends Controller
         $entregadores = Funcionario::all();
         $formasPagamento = FormaPagamento::all();
         $valorTotalDoPagamento = round($valorTotalDoPagamento, 2);
+
+        
         //dd($valorTotalDoPagamento);
         return view('pagamentoVenda',
             [
@@ -358,8 +360,13 @@ class VendaController extends Controller
             $pagamento->funcionario_id = Auth::user()->funcionario->id;
             $pagamento->pedido_id = $pedido->id;
             $pagamento->save();
-        }
 
+            
+        }
+        if($pagamento->formaPagamento_id == 1){
+            return redirect()->route('contas.receber');
+
+        }            
         return redirect()->route('listarVendas');
 
     }

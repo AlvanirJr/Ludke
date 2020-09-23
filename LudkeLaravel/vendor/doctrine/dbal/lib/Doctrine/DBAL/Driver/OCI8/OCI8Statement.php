@@ -9,19 +9,7 @@ use Doctrine\DBAL\ParameterType;
 use InvalidArgumentException;
 use IteratorAggregate;
 use PDO;
-use const OCI_ASSOC;
-use const OCI_B_BIN;
-use const OCI_B_BLOB;
-use const OCI_BOTH;
-use const OCI_D_LOB;
-use const OCI_FETCHSTATEMENT_BY_COLUMN;
-use const OCI_FETCHSTATEMENT_BY_ROW;
-use const OCI_NUM;
-use const OCI_RETURN_LOBS;
-use const OCI_RETURN_NULLS;
-use const OCI_TEMP_BLOB;
-use const PREG_OFFSET_CAPTURE;
-use const SQLT_CHR;
+
 use function array_key_exists;
 use function assert;
 use function count;
@@ -43,6 +31,20 @@ use function preg_match;
 use function preg_quote;
 use function sprintf;
 use function substr;
+
+use const OCI_ASSOC;
+use const OCI_B_BIN;
+use const OCI_B_BLOB;
+use const OCI_BOTH;
+use const OCI_D_LOB;
+use const OCI_FETCHSTATEMENT_BY_COLUMN;
+use const OCI_FETCHSTATEMENT_BY_ROW;
+use const OCI_NUM;
+use const OCI_RETURN_LOBS;
+use const OCI_RETURN_NULLS;
+use const OCI_TEMP_BLOB;
+use const PREG_OFFSET_CAPTURE;
+use const SQLT_CHR;
 
 /**
  * The OCI8 implementation of the Statement interface.
@@ -175,10 +177,12 @@ class OCI8Statement implements IteratorAggregate, Statement
      * @param string             $statement               The SQL statement to parse
      * @param string             $tokenOffset             The offset to start searching from
      * @param int                $fragmentOffset          The offset to build the next fragment from
-     * @param string[]           $fragments               Fragments of the original statement not containing placeholders
+     * @param string[]           $fragments               Fragments of the original statement
+     *                                                    not containing placeholders
      * @param string|null        $currentLiteralDelimiter The delimiter of the current string literal
      *                                                    or NULL if not currently in a literal
-     * @param array<int, string> $paramMap                Mapping of the original parameter positions to their named replacements
+     * @param array<int, string> $paramMap                Mapping of the original parameter positions
+     *                                                    to their named replacements
      *
      * @return bool Whether the token was found
      */
@@ -276,9 +280,17 @@ class OCI8Statement implements IteratorAggregate, Statement
     /**
      * {@inheritdoc}
      */
-    public function bindParam($column, &$variable, $type = ParameterType::STRING, $length = null)
+    public function bindParam($param, &$variable, $type = ParameterType::STRING, $length = null)
     {
-        $column = $this->_paramMap[$column];
+        if (is_int($param)) {
+            if (! isset($this->_paramMap[$param])) {
+                throw new OCI8Exception(
+                    sprintf('Could not find variable mapping with index %d, in the SQL statement', $param)
+                );
+            }
+
+            $param = $this->_paramMap[$param];
+        }
 
         if ($type === ParameterType::LARGE_OBJECT) {
             $lob = oci_new_descriptor($this->_dbh, OCI_D_LOB);
@@ -291,11 +303,11 @@ class OCI8Statement implements IteratorAggregate, Statement
             $variable =& $lob;
         }
 
-        $this->boundValues[$column] =& $variable;
+        $this->boundValues[$param] =& $variable;
 
         return oci_bind_by_name(
             $this->_sth,
-            $column,
+            $param,
             $variable,
             $length ?? -1,
             $this->convertParameterType($type)
@@ -305,7 +317,7 @@ class OCI8Statement implements IteratorAggregate, Statement
     /**
      * Converts DBAL parameter type to oci8 parameter type
      */
-    private function convertParameterType(int $type) : int
+    private function convertParameterType(int $type): int
     {
         switch ($type) {
             case ParameterType::BINARY:

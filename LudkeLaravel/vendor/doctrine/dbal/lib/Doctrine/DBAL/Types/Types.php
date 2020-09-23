@@ -34,9 +34,12 @@ final class Types
     public const TIME_MUTABLE         = 'time';
     public const TIME_IMMUTABLE       = 'time_immutable';
 
-    /** @deprecated json_array type is deprecated, use {@see DefaultTypes::JSON} instead. */
+    /** @deprecated json_array type is deprecated, use {@see self::JSON} instead. */
     public const JSON_ARRAY = 'json_array';
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct()
     {
     }

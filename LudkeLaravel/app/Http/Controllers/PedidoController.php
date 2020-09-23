@@ -93,6 +93,10 @@ class PedidoController extends Controller
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
         $entregadores = Funcionario::all();
         $formasPagamento = FormaPagamento::all();
+        $valorTotalDoPagamento = round($valorTotalDoPagamento, 2);
+        //dd($valorTotalDoPagamento);
+
+
         //dd('AQUIIII');
         return view('pagamento',
             [
