@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use function assert;
 use function is_numeric;
 use function is_string;
@@ -22,7 +21,9 @@ use function stripos;
  */
 class RunSqlCommand extends Command
 {
-    /** @return void */
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this

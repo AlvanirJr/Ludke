@@ -10,7 +10,6 @@ use Doctrine\DBAL\FetchMode;
 use InvalidArgumentException;
 use IteratorAggregate;
 use PDO;
-
 use function array_merge;
 use function array_values;
 use function assert;
@@ -87,7 +86,6 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement
         if (! $data) {
             $data = [];
         }
-
         $data[$this->realKey] = $this->data;
 
         $this->resultCache->save($this->cacheKey, $data, $this->lifetime);

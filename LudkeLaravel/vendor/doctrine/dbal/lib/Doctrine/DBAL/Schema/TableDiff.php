@@ -16,21 +16,21 @@ class TableDiff
     public $newName = false;
 
     /**
-     * All added columns
+     * All added fields.
      *
      * @var Column[]
      */
     public $addedColumns;
 
     /**
-     * All changed columns
+     * All changed fields.
      *
      * @var ColumnDiff[]
      */
     public $changedColumns = [];
 
     /**
-     * All removed columns
+     * All removed fields.
      *
      * @var Column[]
      */

@@ -36,11 +36,9 @@ class Driver extends AbstractDB2Driver
         if (isset($params['host'])) {
             $dsn .= 'HOSTNAME=' . $params['host'] . ';';
         }
-
         if (isset($params['port'])) {
             $dsn .= 'PORT=' . $params['port'] . ';';
         }
-
         $dsn .= 'PROTOCOL=TCPIP;';
         if (isset($params['dbname'])) {
             $dsn .= 'DATABASE=' . $params['dbname'] . ';';

@@ -13,8 +13,7 @@
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.0",
-        "laravel/tinker": "^1.0",
-        "symfony/translation": "4.3.8"
+        "laravel/tinker": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

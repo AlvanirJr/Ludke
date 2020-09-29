@@ -77,7 +77,7 @@ trait AsPivot
 
         $instance->timestamps = $instance->hasTimestampAttributes($attributes);
 
-        $instance->setRawAttributes($attributes, $exists);
+        $instance->setRawAttributes($attributes, true);
 
         return $instance;
     }
@@ -300,18 +300,5 @@ trait AsPivot
         }
 
         return $query;
-    }
-
-    /**
-     * Unset all the loaded relations for the instance.
-     *
-     * @return $this
-     */
-    public function unsetRelations()
-    {
-        $this->pivotParent = null;
-        $this->relations = [];
-
-        return $this;
     }
 }

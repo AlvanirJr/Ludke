@@ -13,11 +13,7 @@ class ClienteController extends Controller
     // Retorna a view dos funcionarios
     public function indexView()
     {
-        
-        $clientes = Cliente::paginate(99);
-        $user = User::all();
-        $clientes = Cliente::orderBy('nomeReduzido', 'ASC')->get();
-        //dd($clientes);
+        $clientes = Cliente::paginate(10);
         #$fun = \App\Funcionario::where('cargo_id', '=', 3)
          #   ->join('users', 'funcionarios.user_id', '=', 'users.id')->get();
         $fun = Funcionario::with('user')->get();
@@ -123,7 +119,6 @@ class ClienteController extends Controller
                 'numero' => $endereco->numero,
                 'complemento' => $endereco->complemento,
             ];
-            
 
             array_push($arrayClientes,$cli);
         }
@@ -153,7 +148,7 @@ class ClienteController extends Controller
 
         $validation = $this->validate($request,[
                 'nome'=> 'required|string|min:5|max:255',
-                'email' => 'nullable|string|email|max:255|unique:users',
+                'email' => 'required|string|email|max:255|unique:users',
                 'nomeReduzido' => 'nullable|string|max:255',
                 'nomeResponsavel' => 'nullable|string|max:255',
                 'cpfCnpj' => 'required|unique:clientes',
@@ -193,15 +188,7 @@ class ClienteController extends Controller
         $senhaAutomatica = bcrypt('123456');
         $user->name = strtoupper($request->input('nome'));
         $user->tipo = 'cliente';
-        $user->email = strtoupper($request->input('email'));
-        if($user->email == null){
-            $id = mt_rand();
-            $name = str_replace(' ',"",$user->name);
-            $user->email = $name.$id."@gmail.com";
-        }
-        else{
-            $user->email= $request->input('email');
-        }
+        $user->email= $request->input('email');
         $user->password = $senhaAutomatica;
         $user->endereco_id = $endereco->id;
         $user->telefone_id = $telefone->id;
@@ -473,17 +460,16 @@ class ClienteController extends Controller
             $endereco->delete();
             return response('OK',200);
         }
-        return response('Cliente não encontrado', 404);
+        return resonse('Cliente não encontrado', 404);
     }
 
 
     public function relatorioCliente(){
         $view = 'relatorioCliente';
-;
+
         // Clientes
         $clientes = Cliente::with('user')->get();
         // dd($clientes);
-
 
         $count = count($clientes);
 

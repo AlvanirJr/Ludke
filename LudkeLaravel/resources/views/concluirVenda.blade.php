@@ -103,7 +103,7 @@
                                             exibe um input para o usuário colocar os valores dos descontos em cada item 
                                         --}}
                                         
-                                        <input id="pesoFinal{{$item->id}}" name="desconto[]" value='0' oninput="atualizarValor({{$pedido->valorTotal}})"  step="0.01" type="number" class="form-control" placeholder="Peso Final" disabled>
+                                        <input id="pesoFinal{{$item->id}}" name="desconto[]" value='0' oninput="atualizarValor({{$pedido->valorTotal}})"  step="0.01" type="number" class="form-control" placeholder="Peso Final" required>
                                         
                                         @error('pesoFinal{{$item->id}}')
                                         <span class="invalid-feedback" role="alert">

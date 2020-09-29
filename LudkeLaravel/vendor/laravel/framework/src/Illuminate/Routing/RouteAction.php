@@ -54,8 +54,6 @@ class RouteAction
      *
      * @param  string  $uri
      * @return array
-     *
-     * @throws \LogicException
      */
     protected static function missingAction($uri)
     {

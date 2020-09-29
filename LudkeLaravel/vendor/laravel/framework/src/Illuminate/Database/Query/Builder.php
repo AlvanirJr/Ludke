@@ -54,13 +54,12 @@ class Builder
      */
     public $bindings = [
         'select' => [],
-        'from' => [],
-        'join' => [],
-        'where' => [],
-        'groupBy' => [],
+        'from'   => [],
+        'join'   => [],
+        'where'  => [],
         'having' => [],
-        'order' => [],
-        'union' => [],
+        'order'  => [],
+        'union'  => [],
         'unionOrder' => [],
     ];
 
@@ -242,7 +241,7 @@ class Builder
     /**
      * Add a subselect expression to the query.
      *
-     * @param  \Closure|$this|string  $query
+     * @param  \Closure|\Illuminate\Database\Query\Builder|string  $query
      * @param  string  $as
      * @return \Illuminate\Database\Query\Builder|static
      *
@@ -1473,8 +1472,6 @@ class Builder
      * @param  array  $values
      * @param  string  $boolean
      * @return $this
-     *
-     * @throws \InvalidArgumentException
      */
     public function whereRowValues($columns, $operator, $values, $boolean = 'and')
     {
@@ -1687,22 +1684,6 @@ class Builder
     }
 
     /**
-     * Add a raw groupBy clause to the query.
-     *
-     * @param  string  $sql
-     * @param  array  $bindings
-     * @return $this
-     */
-    public function groupByRaw($sql, array $bindings = [])
-    {
-        $this->groups[] = new Expression($sql);
-
-        $this->addBinding($bindings, 'groupBy');
-
-        return $this;
-    }
-
-    /**
      * Add a "having" clause to the query.
      *
      * @param  string  $column
@@ -1809,7 +1790,7 @@ class Builder
     /**
      * Add an "order by" clause to the query.
      *
-     * @param  \Closure|\Illuminate\Database\Query\Builder|\Illuminate\Database\Query\Expression|string  $column
+     * @param  \Closure|\Illuminate\Database\Query\Builder|string  $column
      * @param  string  $direction
      * @return $this
      *
@@ -1964,7 +1945,7 @@ class Builder
      */
     public function forPage($page, $perPage = 15)
     {
-        return $this->offset(($page - 1) * $perPage)->limit($perPage);
+        return $this->skip(($page - 1) * $perPage)->take($perPage);
     }
 
     /**
@@ -1984,7 +1965,7 @@ class Builder
         }
 
         return $this->orderBy($column, 'desc')
-                    ->limit($perPage);
+                    ->take($perPage);
     }
 
     /**
@@ -2004,7 +1985,7 @@ class Builder
         }
 
         return $this->orderBy($column, 'asc')
-                    ->limit($perPage);
+                    ->take($perPage);
     }
 
     /**
@@ -2188,7 +2169,7 @@ class Builder
     {
         $page = $page ?: Paginator::resolveCurrentPage($pageName);
 
-        $this->offset(($page - 1) * $perPage)->limit($perPage + 1);
+        $this->skip(($page - 1) * $perPage)->take($perPage + 1);
 
         return $this->simplePaginator($this->get($columns), $perPage, $page, [
             'path' => Paginator::resolveCurrentPath(),
@@ -2327,13 +2308,7 @@ class Builder
      */
     protected function stripTableForPluck($column)
     {
-        if (is_null($column)) {
-            return $column;
-        }
-
-        $separator = strpos(strtolower($column), ' as ') !== false ? ' as ' : '\.';
-
-        return last(preg_split('~'.$separator.'~i', $column));
+        return is_null($column) ? $column : last(preg_split('~\.| ~', $column));
     }
 
     /**
@@ -2744,7 +2719,7 @@ class Builder
             return true;
         }
 
-        return (bool) $this->limit(1)->update($values);
+        return (bool) $this->take(1)->update($values);
     }
 
     /**
@@ -2754,8 +2729,6 @@ class Builder
      * @param  float|int  $amount
      * @param  array  $extra
      * @return int
-     *
-     * @throws \InvalidArgumentException
      */
     public function increment($column, $amount = 1, array $extra = [])
     {
@@ -2777,8 +2750,6 @@ class Builder
      * @param  float|int  $amount
      * @param  array  $extra
      * @return int
-     *
-     * @throws \InvalidArgumentException
      */
     public function decrement($column, $amount = 1, array $extra = [])
     {

@@ -68,16 +68,9 @@ class ProdutoController extends Controller
         //dd($prod->validade);
         // $prod->quantidade = $request->input('quantidade');
         $prod->preco = $request->input('preco');
-        #dd($prod->preco);
-        
-        #$novo_preco = number_format($prod->preco, 2, '.', '');
-        #dd($novo_preco);
         //$prod->descricao = strtoupper($request->input('descricao'));
         $prod->categoria_id = $request->input('categoriaProduto');
 
-
-
-        #dd($prod->preco);
 
         $prod->save();
 

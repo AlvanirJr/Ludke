@@ -40,7 +40,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-
+                                            
                                         </div>
                                         </div>
                                 </div>
@@ -56,7 +56,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                     </div>{{-- end Card Cliente --}}
                 </div>
             </div>
@@ -105,7 +105,7 @@
                                             <label for="">Preço Estimado (R$)</label>
                                             <h4 id="precoEstimado"></h4>
                                         </div>
-                                    </div>
+                                    </div>  
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label>Categoria</label>
@@ -115,7 +115,7 @@
                                             <label>Descrição</label>
                                             <h5 id="descricaoProduto"></h5>
                                         </div>
-                                    </div>
+                                    </div>                                   
                                 </div>
                             </div>{{-- informações do produto --}}
                         </div>
@@ -133,7 +133,7 @@
 
                     <div class="card card-pedidos">
                         <div id="listaPedidos" class="card-body">
-                            <h5 class="card-title">Pedido</h5>
+                            <h5 class="card-title">Pedido</h5> 
                             <table id="tabelaPedidos" class="table table-responsive-lg table-sm table-hover">
                                 <thead>
                                     <tr>
@@ -152,10 +152,10 @@
                                 </tbody>
                             </table>
                         </div>
-
+                        
                     </div>
                 </div>{{--  end lista produtos--}}
-
+                
             </div>
 
             {{-- Row Informações Venda --}}
@@ -164,7 +164,7 @@
                     {{-- Card Venda --}}
                     <div id="card-venda" class="card card-pedidos">
                         <div class="card-body">
-                            <h5 class="card-title">Dados do Pedido</h5>
+                            <h5 class="card-title">Venda</h5>
                             {{-- informações do produto --}}
                             <div class="row">
                                 <div class="col-sm-12">
@@ -176,15 +176,15 @@
                                             <label>Data de Entrega</label>
                                             <div class="input-group">
                                             <input id="inputDataEntrega" type="date" class="form-control">
-
+                                            
                                             </div>
                                         </div>
-
+                                        
                                         <div class="col-sm-5">
                                             <label for="">Total</label>
                                             <h1 id="valorTotal" value=""></h1>
                                         </div>
-                                    </div>
+                                    </div>                                     
                                 </div>
                             </div>{{-- informações do produto --}}
                         </div>
@@ -200,7 +200,7 @@
                     </div>
                 </div>
             </div>{{-- Row Informações Venda --}}
-
+            
         </div>
     </div>
 </div>
@@ -216,7 +216,7 @@
         currency: 'BRL'
     });
 
-    // Objeto contendo as informações do pedido
+    // Objeto contendo as informações do pedido 
     var pedido = {
         listaProdutos : [],
     }
@@ -250,7 +250,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
+        
         // Valor Total e num itens
         // $("#valorTotal").html("{{money_format('R$ %i',0.0)}}");
         $("#valorTotal").html(formatter.format(0));
@@ -326,12 +326,12 @@
         // Finalizar Pedido
         $("#btnFinalizarPedido").click(function(){
             confirma = confirm("Você deseja finalizar o pedido?");
-            if(confirma){
+            if(confirma){      
                 montarPedido();
             }
         });
     });
-
+    
     function getCliente(nomeCliente){
         let filtro = $("#filtroBusca").val();
 
@@ -364,8 +364,8 @@
                     }
                 // console.log("getCliente()",pedido);
                 // $('#cliente_id').val(cliente[0].id);
-
-
+                
+                
             },
             error: function(error){
                 console.log(error);
@@ -379,7 +379,7 @@
             method:"POST",
             success: function(data){
                 cliente = JSON.parse(data);
-
+                
                 // Adiciona ao objeto Pedido o id do cliente
                 pedido.cliente_id = cliente.id;
                 $("#nomeCliente").html(cliente.nome);
@@ -418,7 +418,7 @@
                                 "</a>";
                     $('#resultadoBuscaProduto').append(linha);
                 }
-
+                
             },
             error: function(error){
                 console.log(error);
@@ -458,7 +458,7 @@
         return valorProduto*peso;
     }
     function adicionarProduto(id){
-
+        
         peso = parseFloat($("#pesoProduto").val());
         if(peso && peso>0){
             $.getJSON('/produtos/'+id,function(data){
@@ -468,14 +468,14 @@
                         // Adiciona as informações do produto à lista de pedidos
                         let itemPedido  = [];
                         itemPedido.push({
-                            produto_id: produto.id,
-                            peso:peso,
+                            produto_id: produto.id, 
+                            peso:peso, 
                             valorTotalItem: calcularTotalItem(produto.preco,peso)
                             });
                         pedido.listaProdutos.push(itemPedido);
                         // console.log("adicionarProduto()",pedido)
-
-
+                        
+                        
                         // Adiciona linha à tabela
                         linha = montarLinha(produto,peso);
                         $("#tabelaPedidos>tbody").append(linha);
@@ -483,8 +483,8 @@
 
                         // Atualiza o numero de itens
                         $("#qtdItens").html(pedido.listaProdutos.length);
-
-
+                        
+                        
                         // Calcula o total
                         total = calcularTotal();
                         pedido.total = total;
@@ -503,7 +503,7 @@
         }
     }
     function montarLinha(produto,peso){
-
+        
         linha = "<tr>"+
                     "<td><strong>"+(cont)+"</strong></td>"+
                     "<td value="+produto.id+">"+produto.id+"</td>"+
@@ -520,7 +520,7 @@
     function removerProduto(idLinha){
         // console.log("Remover Produto: ",idLinha);
         linhas = $("#tabelaPedidos>tbody>tr");
-        e = linhas.filter(function(i,elemento){
+        e = linhas.filter(function(i,elemento){            
             return elemento.cells[0].textContent == idLinha;
         });
         if(e){
@@ -539,7 +539,7 @@
 
                     // Atualiza o numero de itens
                     $("#qtdItens").html(pedido.listaProdutos.length);
-
+                        
                     // Atualiza o valor total estimado do pedido
                     subtotal = calcularSubtotal();
                     $("#subtotal").html(subtotal);
@@ -547,7 +547,7 @@
                     // Calcula o desconto
                     desconto = calcularDesconto();
                     $("#ValorDesconto").html(desconto);
-
+                    
                     // Calcula o total
                     total = calcularTotal();
                     pedido.total = total;
@@ -580,22 +580,22 @@
             subtotal += listaProdutos[i][0].valorTotalItem;
         }
         return subtotal;
-
+        
     }
     function calcularDesconto(){
         // valor do desconto
         let desconto = 0;
         desconto = $("#inputDesconto").val()
-
+        
         // console.log("calcularDesconto()",desconto)
-
+        
         subtotal = calcularSubtotal();
 
         resultado = (subtotal * (desconto/100)).toPrecision();
-
+        
         $("#ValorDesconto").html(resultado);
         return resultado;
-
+        
     }
     function calcularTotal(){
         var total = 0;
@@ -611,7 +611,7 @@
             resultado = preco * peso;
             return resultado;
         }
-
+        
     }
     function limparTela(){
         $("#cliente_id").val(0);
@@ -646,7 +646,7 @@
         // converte a data em milisegundos
         let dataEntregaTime = new Date(dataEntrega).getTime();
         let dataAtualTime = new Date(dataAtual).getTime();
-
+        
         // verifica se a data entrega é maior ou igual a data atual
         if(dataEntregaTime >= dataAtualTime){
             return true;
@@ -655,11 +655,11 @@
         }
     }
     function montarPedido(){
-
+        
         pedido.desconto = parseFloat($("#inputDesconto").val()),
         pedido.valorDesconto = parseFloat(calcularDesconto()),
         pedido.dataEntrega = $("#inputDataEntrega").val()
-
+        
         if(!pedido.cliente_id){
             alert("Selecione o cliente para concluir o pedido!");
             return;
@@ -677,7 +677,7 @@
             return;
         }
         else{
-
+            
             console.log(pedido)
             $.ajax({
                 url: '/pedidos/finalizar',

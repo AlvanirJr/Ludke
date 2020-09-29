@@ -181,11 +181,7 @@ class LineFormatter extends NormalizerFormatter
             }
 
             if (isset($e->detail)) {
-                if (is_string($e->detail)) {
-                    $str .= ' detail: ' . $e->detail;
-                } elseif (is_object($e->detail) || is_array($e->detail)) {
-                    $str .= ' detail: ' . $this->toJson($e->detail, true);
-                }
+                $str .= ' detail: ' . $e->detail;
             }
         }
         $str .= '): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . ')';

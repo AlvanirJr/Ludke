@@ -20,16 +20,13 @@ Auth::routes();
 
 #Route::post('/login/user', 'CustomLoginController@loginUser');
 #Route::get('/logout', 'CustomHomeController@logoutUser');
-Route::get('/relatorioSolicitado/{id}', 'RelatorioPedidosController@RelatorioSolicitado')->name('pedido.solicitado');
 Route::get('/relatorio/{id}', 'RelatorioPedidosController@RelatorioPedidos')->name('pedido.relatorio');
-Route::get('/relatorioVendas/{id}', 'RelatorioVendasController@RelatorioVendas')->name('venda.relatorio');
 Route::get('/relatorioCliente', 'ClienteController@relatorioCliente')->name('relatorioCliente');
 Route::get('/relatorioProdutos', 'RelatorioProdutosController@relatorioProduto')->name('relatorioProdutos');
 Route::post('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
 Route::post('/relatorioGeralVendas', 'RelatorioVendasController@RelatorioGeral')->name('relatorioGeralVendas');
 // Route::get('/relatorioGeralPedidos', 'RelatorioPedidosController@RelatorioGeral')->name('relatorioGeralPedidos');
 Route::get('/getEntregadores','RelatorioPedidosController@getEntregadores');
-Route::delete('/removerItem/{id}', 'PedidoController@removerProdutoItem')->name('removerProduto.item');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -55,19 +52,6 @@ Route::post('/buscarCliente','ClienteController@buscarCliente')->name('buscarCli
 // Cargos
 Route::get('/indexCargos', 'CargoController@indexView')->name('cargos');
 Route::post('/buscarCargo','CargoController@buscarCargo')->name('buscarCargo');
-// Fornecedores
-Route::get('/indexFornecedores','FornecedorController@index')->name('fornecedores');
-Route::resource('/fornecedor','FornecedorController');
-Route::post('/buscarFornecedor','FornecedorController@buscarFornecedor')->name('buscarFornecedor');
-// Centro de Custo
-Route::get('/indexCentroCusto','CentroCustoController@index')->name('centroCusto');
-Route::resource('/centroCusto','CentroCustoController');
-Route::post('/buscarCentroCusto','CentroCustoController@buscarCentroCusto')->name('buscarCentroCusto');
-// Fonte de Pagamento
-Route::get('/indexFontePagamento','FontePagamentoController@index')->name('fontePagamento');
-Route::resource('/fontePagamento','FontePagamentoController');
-Route::post('/buscarFontePagamento','FontePagamentoController@buscarFontePagamento')->name('buscarFontePagamento');
-
 
 // ROTAS PARA O PEDIDO
 Route::get('/pedidos','PedidoController@index')->name('pedidos');
@@ -95,7 +79,7 @@ Route::post('/pedidos/registrarEntrega','PedidoController@registrarEntregaPedido
 Route::get('/pedidos/pagamento/{id}','PedidoController@indexPagamento')->name('pedido.indexPagamento');
 Route::post('/pedidos/pagamento','PedidoController@pagamento')->name('pedido.pagamento');
 
-Route::get('/pedidos/listar/{id?}','PedidoController@indexListarPedidos')->name("listarPedidos");
+Route::get('/pedidos/listar','PedidoController@indexListarPedidos')->name("listarPedidos");
 Route::get('/getPedidos','PedidoController@getPedidos');
 Route::get('/pedidos/edit/{id}','PedidoController@edit')->name('pedido.editar'); //Editar Pedido
 Route::put('/pedidos/update/{id}','PedidoController@update');
@@ -143,29 +127,20 @@ Route::resource('/cargos', 'CargoController'); //cria todas as rotas para cargos
 Route::resource('/funcionarios', 'FuncionarioController'); //cria todas as rotas para funcionarios
 Route::resource('/clientes', 'ClienteController');
 
+// Rotas para testar banco
+// use App\Produto;
+// use App\Categoria;
+// use App\Cliente;
+// use App\User;
+// use App\Pedido;
+// Route::get('/teste',function(){
+//     $users = User::with('cliente')->get();
+//     $cliente = Cliente::with('user')->get();
+//     $produtos = Produto::with('categoria')->find(1);
+//     $categoria = Categoria::with('produtos')->get();
+//     $pedidos = Pedido::with(['itensPedidos','status'])->get();
 
+//     return json_encode($pedidos);
 
-// ROTAS CONTAS A RECEBER
-Route::get('/contas/receber/{idPedido?}','ContasReceber@index')->name('contas.receber');
-Route::get('/contas/visualizar/{id}','ContasReceber@show')->name('contas.visualizar');
-Route::post('/contas/registrarPagamento','ContasReceber@store')->name('contas.registrarPagamento');
-Route::get('/contas/visualizar/pedido/{id}','PedidoController@show')->name('contas.visualizarPedido');
-Route::get('/contas/visualizar/venda/{id}','VendaController@show')->name('contas.visualizarVenda');
-
-
-// Editar Pagamento CaR
-Route::get('/contas/editar/pagamento/{id}','ContasReceber@editarPagamentoContasReceber')->name('contas.editarPagamento');
-Route::post('/contas/editar/pagamento/{id}','ContasReceber@updatePagamentoContasReceber')->name('contas.updatePagamento');
-
-// Editar Pagamento Pedido/Venda
-Route::get('/contas/editar/pagamento/pedido_venda/{id}','ContasReceber@editarPagamentoPedidoVenda')->name('contas.editarPagamentoPedidoVenda');
-Route::post('/contas/editar/pagamento/pedido_venda/{id}','ContasReceber@updatePagamentoPedidoVenda')->name('contas.updatePagamentoPedidoVenda');
-
-// ROTAS CONTAS A PAGAR
-Route::get('/contas/pagar/{idPedido?}','ContasPagarController@index')->name('contas.pagar');
-Route::post('/contas/pagar/cadastrar','ContasPagarController@store')->name('contas.pagar.cadastrar');
-Route::delete('/contas/pagar/deletar/{id}','ContasPagarController@destroy')->name('contas.pagar.deletar');
-Route::get('/contas/pagar/show/{id}','ContasPagarController@show')->name('contas.pagar.show');
-Route::post('/contas/pagar/atualizar/{id}','ContasPagarController@update')->name('contas.pagar.update');
-Route::post('/contas/pagar/registrarPagamento','ContasPagarController@registrarPagamento')->name('contas.pagar.registrarPagamento');
-
+//     // return $pedidos;
+// });

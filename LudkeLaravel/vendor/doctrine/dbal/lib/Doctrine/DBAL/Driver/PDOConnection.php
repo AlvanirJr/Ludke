@@ -2,8 +2,8 @@
 
 namespace Doctrine\DBAL\Driver;
 
+use Doctrine\DBAL\ParameterType;
 use PDO;
-
 use function assert;
 use function func_get_args;
 
@@ -35,13 +35,10 @@ class PDOConnection extends PDO implements Connection, ServerInfoAwareConnection
     /**
      * {@inheritdoc}
      */
-    public function exec($sql)
+    public function exec($statement)
     {
         try {
-            $result = parent::exec($sql);
-            assert($result !== false);
-
-            return $result;
+            return parent::exec($statement);
         } catch (\PDOException $exception) {
             throw new PDOException($exception);
         }
@@ -56,18 +53,12 @@ class PDOConnection extends PDO implements Connection, ServerInfoAwareConnection
     }
 
     /**
-     * @param string          $sql
-     * @param array<int, int> $driverOptions
-     *
-     * @return \PDOStatement
+     * {@inheritdoc}
      */
-    public function prepare($sql, $driverOptions = [])
+    public function prepare($prepareString, $driverOptions = [])
     {
         try {
-            $statement = parent::prepare($sql, $driverOptions);
-            assert($statement instanceof \PDOStatement);
-
-            return $statement;
+            return parent::prepare($prepareString, $driverOptions);
         } catch (\PDOException $exception) {
             throw new PDOException($exception);
         }
@@ -75,8 +66,6 @@ class PDOConnection extends PDO implements Connection, ServerInfoAwareConnection
 
     /**
      * {@inheritdoc}
-     *
-     * @return \PDOStatement
      */
     public function query()
     {
@@ -90,6 +79,14 @@ class PDOConnection extends PDO implements Connection, ServerInfoAwareConnection
         } catch (\PDOException $exception) {
             throw new PDOException($exception);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function quote($input, $type = ParameterType::STRING)
+    {
+        return parent::quote($input, $type);
     }
 
     /**

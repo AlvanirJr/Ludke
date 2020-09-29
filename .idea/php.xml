@@ -109,13 +109,7 @@
       <path value="$PROJECT_DIR$/LudkeLaravel/vendor/laminas/laminas-zendframework-bridge" />
       <path value="$PROJECT_DIR$/LudkeLaravel/vendor/laminas/laminas-diactoros" />
       <path value="$PROJECT_DIR$/LudkeLaravel/vendor/defuse/php-encryption" />
-      <path value="$PROJECT_DIR$/LudkeLaravel/vendor/phenx/php-font-lib" />
-      <path value="$PROJECT_DIR$/LudkeLaravel/vendor/dompdf/dompdf" />
-      <path value="$PROJECT_DIR$/LudkeLaravel/vendor/phenx/php-svg-lib" />
-      <path value="$PROJECT_DIR$/LudkeLaravel/vendor/sabberworm/php-css-parser" />
-      <path value="$PROJECT_DIR$/LudkeLaravel/vendor/barryvdh/laravel-dompdf" />
-      <path value="$PROJECT_DIR$/LudkeLaravel/vendor/yajra/laravel-datatables-oracle" />
-      <path value="$PROJECT_DIR$/LudkeLaravel/vendor/erusev/parsedown" />
+      <path value="$PROJECT_DIR$/LudkeLaravel/vendor/league/commonmark" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

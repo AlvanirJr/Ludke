@@ -3,7 +3,6 @@
 namespace Doctrine\DBAL\Schema;
 
 use Doctrine\DBAL\Types;
-
 use function array_intersect_key;
 use function array_key_exists;
 use function array_keys;
@@ -68,11 +67,7 @@ class Comparator
             if (! $fromSchema->hasTable($tableName)) {
                 $diff->newTables[$tableName] = $toSchema->getTable($tableName);
             } else {
-                $tableDifferences = $this->diffTable(
-                    $fromSchema->getTable($tableName),
-                    $toSchema->getTable($tableName)
-                );
-
+                $tableDifferences = $this->diffTable($fromSchema->getTable($tableName), $toSchema->getTable($tableName));
                 if ($tableDifferences !== false) {
                     $diff->changedTables[$tableName] = $tableDifferences;
                 }
@@ -94,7 +89,6 @@ class Comparator
                 if (! isset($foreignKeysToTable[$foreignTable])) {
                     $foreignKeysToTable[$foreignTable] = [];
                 }
-
                 $foreignKeysToTable[$foreignTable][] = $foreignKey;
             }
         }
@@ -122,7 +116,6 @@ class Comparator
                     if ($tableName !== strtolower($removedForeignKey->getForeignTableName())) {
                         continue;
                     }
-
                     unset($diff->changedTables[$localTableName]->removedForeignKeys[$key]);
                 }
             }
@@ -203,7 +196,7 @@ class Comparator
         $table1Columns = $table1->getColumns();
         $table2Columns = $table2->getColumns();
 
-        /* See if all the columns in table 1 exist in table 2 */
+        /* See if all the fields in table 1 exist in table 2 */
         foreach ($table2Columns as $columnName => $column) {
             if ($table1->hasColumn($columnName)) {
                 continue;
@@ -212,8 +205,7 @@ class Comparator
             $tableDifferences->addedColumns[$columnName] = $column;
             $changes++;
         }
-
-        /* See if there are any removed columns in table 2 */
+        /* See if there are any removed fields in table 2 */
         foreach ($table1Columns as $columnName => $column) {
             // See if column is removed in table 2.
             if (! $table2->hasColumn($columnName)) {
@@ -229,8 +221,7 @@ class Comparator
                 continue;
             }
 
-            $columnDiff = new ColumnDiff($column->getName(), $table2->getColumn($columnName), $changedProperties);
-
+            $columnDiff                                           = new ColumnDiff($column->getName(), $table2->getColumn($columnName), $changedProperties);
             $columnDiff->fromColumn                               = $column;
             $tableDifferences->changedColumns[$column->getName()] = $columnDiff;
             $changes++;
@@ -250,12 +241,10 @@ class Comparator
             $tableDifferences->addedIndexes[$indexName] = $index;
             $changes++;
         }
-
         /* See if there are any removed indexes in table 2 */
         foreach ($table1Indexes as $indexName => $index) {
             // See if index is removed in table 2.
-            if (
-                ($index->isPrimary() && ! $table2->hasPrimaryKey()) ||
+            if (($index->isPrimary() && ! $table2->hasPrimaryKey()) ||
                 ! $index->isPrimary() && ! $table2->hasIndex($indexName)
             ) {
                 $tableDifferences->removedIndexes[$indexName] = $index;
@@ -399,17 +388,11 @@ class Comparator
      */
     public function diffForeignKey(ForeignKeyConstraint $key1, ForeignKeyConstraint $key2)
     {
-        if (
-            array_map('strtolower', $key1->getUnquotedLocalColumns())
-            !== array_map('strtolower', $key2->getUnquotedLocalColumns())
-        ) {
+        if (array_map('strtolower', $key1->getUnquotedLocalColumns()) !== array_map('strtolower', $key2->getUnquotedLocalColumns())) {
             return true;
         }
 
-        if (
-            array_map('strtolower', $key1->getUnquotedForeignColumns())
-            !== array_map('strtolower', $key2->getUnquotedForeignColumns())
-        ) {
+        if (array_map('strtolower', $key1->getUnquotedForeignColumns()) !== array_map('strtolower', $key2->getUnquotedForeignColumns())) {
             return true;
         }
 
@@ -425,7 +408,7 @@ class Comparator
     }
 
     /**
-     * Returns the difference between the columns
+     * Returns the difference between the fields $field1 and $field2.
      *
      * If there are differences this method returns $field2, otherwise the
      * boolean false.
@@ -451,8 +434,7 @@ class Comparator
             $changedProperties[] = $property;
         }
 
-        // This is a very nasty hack to make comparator work with the legacy json_array type,
-        // which should be killed in v3
+        // This is a very nasty hack to make comparator work with the legacy json_array type, which should be killed in v3
         if ($this->isALegacyJsonComparison($properties1['type'], $properties2['type'])) {
             array_shift($changedProperties);
 
@@ -461,15 +443,12 @@ class Comparator
 
         // Null values need to be checked additionally as they tell whether to create or drop a default value.
         // null != 0, null != false, null != '' etc. This affects platform's table alteration SQL generation.
-        if (
-            ($properties1['default'] === null) !== ($properties2['default'] === null)
-            || $properties1['default'] != $properties2['default']
-        ) {
+        if (($properties1['default'] === null) !== ($properties2['default'] === null)
+            || $properties1['default'] != $properties2['default']) {
             $changedProperties[] = 'default';
         }
 
-        if (
-            ($properties1['type'] instanceof Types\StringType && ! $properties1['type'] instanceof Types\GuidType) ||
+        if (($properties1['type'] instanceof Types\StringType && ! $properties1['type'] instanceof Types\GuidType) ||
             $properties1['type'] instanceof Types\BinaryType
         ) {
             // check if value of length is set at all, default value assumed otherwise.
@@ -486,15 +465,13 @@ class Comparator
             if (($properties1['precision'] ?: 10) !== ($properties2['precision'] ?: 10)) {
                 $changedProperties[] = 'precision';
             }
-
             if ($properties1['scale'] !== $properties2['scale']) {
                 $changedProperties[] = 'scale';
             }
         }
 
         // A null value and an empty string are actually equal for a comment so they should not trigger a change.
-        if (
-            $properties1['comment'] !== $properties2['comment'] &&
+        if ($properties1['comment'] !== $properties2['comment'] &&
             ! ($properties1['comment'] === null && $properties2['comment'] === '') &&
             ! ($properties2['comment'] === null && $properties1['comment'] === '')
         ) {
@@ -531,14 +508,14 @@ class Comparator
      *
      * @deprecated
      */
-    private function isALegacyJsonComparison(Types\Type $one, Types\Type $other): bool
+    private function isALegacyJsonComparison(Types\Type $one, Types\Type $other) : bool
     {
         if (! $one instanceof Types\JsonType || ! $other instanceof Types\JsonType) {
             return false;
         }
 
-        return (! $one instanceof Types\JsonArrayType && $other instanceof Types\JsonArrayType)
-            || (! $other instanceof Types\JsonArrayType && $one instanceof Types\JsonArrayType);
+        return ( ! $one instanceof Types\JsonArrayType && $other instanceof Types\JsonArrayType)
+            || ( ! $other instanceof Types\JsonArrayType && $one instanceof Types\JsonArrayType);
     }
 
     /**

@@ -17,10 +17,10 @@ class RelatorioVendasController extends Controller
     public function RelatorioGeral(Request $request){
         // Set variável filtro
         $filtro = $request->all();
-
+        
         // filtra as vendas
         $vendas = self::filtrarVenda($filtro);
-
+        
         $view = 'relatorioGeralVenda';
         // $vendas = Pedido::all();
         $total = 0;
@@ -108,37 +108,4 @@ class RelatorioVendasController extends Controller
         }
 
     }
-
-
-
-
-    public function RelatorioVendas($id){
-        $view = 'relatorioVenda';
-        $pedido = Pedido::find($id);
-        $itens = ItensPedido::where('pedido_id', '=', $pedido->id)->get();
-        $clientes = Cliente::where('id', '=', $pedido->cliente_id)->get();
-        $soma = 0;
-        foreach ($itens as $iten){
-            $soma += $iten->valorReal;
-        }
-
-        #####Soma
-        $count = count($itens);
-
-        #dd($soma);
-
-
-
-
-        $date = date('d/m/Y');
-        $view = \View::make($view, compact('itens', 'clientes','soma', 'count', 'date'))->render();
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->setPaper('a6', 'landscape');
-
-        $filename = 'relatorioVenda'.$date;
-
-
-        return $pdf->stream($filename.'.pdf');
-    }
-
 }

@@ -7,7 +7,7 @@ use Doctrine\DBAL\Driver\DriverException;
 use Doctrine\DBAL\Platforms\OraclePlatform;
 use Doctrine\DBAL\Types\Type;
 use Throwable;
-
+use const CASE_LOWER;
 use function array_change_key_case;
 use function array_values;
 use function assert;
@@ -18,8 +18,6 @@ use function strpos;
 use function strtolower;
 use function strtoupper;
 use function trim;
-
-use const CASE_LOWER;
 
 /**
  * Oracle Schema Manager.
@@ -109,7 +107,6 @@ class OracleSchemaManager extends AbstractSchemaManager
                 $buffer['primary']    = false;
                 $buffer['non_unique'] = ! $tableIndex['is_unique'];
             }
-
             $buffer['key_name']    = $keyName;
             $buffer['column_name'] = $this->getQuotedIdentifierName($tableIndex['column_name']);
             $indexBuffer[]         = $buffer;
@@ -179,14 +176,12 @@ class OracleSchemaManager extends AbstractSchemaManager
                 }
 
                 break;
-
             case 'varchar':
             case 'varchar2':
             case 'nvarchar2':
                 $length = $tableColumn['char_length'];
                 $fixed  = false;
                 break;
-
             case 'char':
             case 'nchar':
                 $length = $tableColumn['char_length'];
@@ -292,8 +287,6 @@ class OracleSchemaManager extends AbstractSchemaManager
     /**
      * {@inheritdoc}
      *
-     * @param string|null $database
-     *
      * Calling this method without an argument or by passing NULL is deprecated.
      */
     public function createDatabase($database = null)
@@ -397,22 +390,16 @@ SQL;
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function listTableDetails($name): Table
+    public function listTableDetails($tableName) : Table
     {
-        $table = parent::listTableDetails($name);
+        $table = parent::listTableDetails($tableName);
 
+        /** @var OraclePlatform $platform */
         $platform = $this->_platform;
-        assert($platform instanceof OraclePlatform);
-        $sql = $platform->getListTableCommentsSQL($name);
+        $sql      = $platform->getListTableCommentsSQL($tableName);
 
         $tableOptions = $this->_conn->fetchAssoc($sql);
-
-        if ($tableOptions !== false) {
-            $table->addOption('comment', $tableOptions['COMMENTS']);
-        }
+        $table->addOption('comment', $tableOptions['COMMENTS']);
 
         return $table;
     }

@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -11,7 +10,6 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -21,7 +19,6 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
-    protected $dates = ['deleted_at'];
 
     public function endereco(){
         return $this->belongsTo('App\Endereco');

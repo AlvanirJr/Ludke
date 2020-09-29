@@ -42,7 +42,4 @@ class RelatorioProdutosController extends Controller
 
         return $pdf->stream($filename.'.pdf');
     }
-
-
-
 }

@@ -146,7 +146,7 @@ class RedisQueue extends Queue implements QueueContract
      * @param  string  $job
      * @param  string  $queue
      * @param  mixed  $data
-     * @return array
+     * @return string
      */
     protected function createPayloadArray($job, $queue, $data = '')
     {
@@ -293,7 +293,7 @@ class RedisQueue extends Queue implements QueueContract
      *
      * @return \Illuminate\Redis\Connections\Connection
      */
-    public function getConnection()
+    protected function getConnection()
     {
         return $this->redis->connection($this->connection);
     }
