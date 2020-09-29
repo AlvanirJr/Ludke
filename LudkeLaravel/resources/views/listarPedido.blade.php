@@ -110,7 +110,7 @@
                                 <td>
                                     <ul>
                                         @foreach ($pedido->itensPedidos as $itens)
-                                        <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
+                                        <li>{{$itens->nomeProduto}} | {{$itens->pesoFinal}} KG</li>
                                         @endforeach
                                     </ul>
                                 </td>
