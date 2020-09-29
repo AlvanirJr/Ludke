@@ -29,15 +29,46 @@ class PedidoController extends Controller
 
     public function indexListarPedidos(){
         // Busca os pedidos com status SOLICITADO e PESADO
-        $pedidos = Pedido::with(['status'])->
-                            where('tipo','p')->
-                            orderby('created_at','DESC')->
-                            orderBy('status_id')->
-                            orderBy('dataEntrega')->paginate(25);
-        // dd($pedidos);
-        return view('listarPedido',['pedidos'=>$pedidos]);
-    }
+        $pedidos = Pedido::with(['status','pagamento'])->
+            where('tipo','p')->
+            where(function($query){
+                $query->where('status_id',1)->//SOLICITADO
+                        orWhere('status_id',2);//PESADO
+            })->
+            //orderBy('status_id')->
+            orderBy('dataEntrega', 'DESC')->
+            paginate(25);
 
+        // Busca Pedidos com status ENTREGUE
+        $pedidosEntregues = Pedido::with(['status','pagamento'])->
+            where('tipo','p')->
+            where('status_id',3)->//ENTREGUE
+            orderBy('dataEntrega','DESC')->
+            paginate(25);
+        #dd($pedidosEntregues);    
+        // dd($pedidosEntregues[0]->pagamento);
+        return view('listarPedido',['pedidos'=>$pedidos, 'pedidosEntregues'=>$pedidosEntregues]);
+    }
+    /**
+     * Redireciona para tela de listar pedidos com o pedido
+     * @param $id pedido
+     */
+    function show($id){
+        $pedidos = Pedido::with(['status','pagamento'])->
+                            where('id',$id)->
+                            where(function($query){
+                                $query->where('status_id',1)->//SOLICITADO
+                                        orWhere('status_id',2);//PESADO
+                            })->
+                            orderBy('status_id')->
+                            orderBy('dataEntrega', 'DESC')->paginate(25);
+
+        $pedidosEntregues = Pedido::with(['status','pagamento'])->
+                            where('id',$id)->
+                            where('status_id',3)->
+                            orderBy('dataEntrega','DESC')->paginate(25);
+        return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'listarPedidoConta'=>true]);
+    }
     public function indexPagamento($id){
         // Pedido
         $pedido = Pedido::with(['cliente'])->find($id);
@@ -49,16 +80,24 @@ class PedidoController extends Controller
         $valorDoDesconto = 0;
 
         foreach ($itensPedido as $item) {
-            $valorTotalDoPagamento += floatval($item->valorComDesconto);
-            $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
+            if(isset($item->valorComDesconto)){
+                $valorTotalDoPagamento += floatval($item->valorComDesconto);
+                $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
+            }else{
+                $valorTotalDoPagamento += floatval($item->valorReal);
+            }
         }
 
         //------------DEBUG--------------------------
         // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
-        $entregadores = Funcionario::with(['user'])->where('id',$pedido->funcionario_id)->
-                                        orwhere('cargo_id',$entregador_id)->get();
+        $entregadores = Funcionario::all();
         $formasPagamento = FormaPagamento::all();
+        $valorTotalDoPagamento = round($valorTotalDoPagamento, 2);
+        //dd($valorTotalDoPagamento);
+
+
+        //dd('AQUIIII');
         return view('pagamento',
             [
                 'pedido'=>$pedido,
@@ -88,7 +127,7 @@ class PedidoController extends Controller
             $valorTotalDoPagamento += floatval($item->valorComDesconto);
             $valorDoDesconto += floatval($item->valorReal) - floatval($item->valorComDesconto);
         }
-
+        
         //------------DEBUG--------------------------
         // dd($pedido,$itensPedido, $valorTotalDoPagamento,$valorDoDesconto);
         $entregador_id = Cargo::where('nome','ENTREGADOR')->pluck('id')->first();
@@ -149,17 +188,6 @@ class PedidoController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -176,8 +204,17 @@ class PedidoController extends Controller
             $cliente = Cliente::with('user')->find($pedido->cliente_id);
             $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
 
+
+            if(isset($cliente->user->name)){
+               $pedido["nomeCliente"] = $cliente->user->name;
+            }
+            else{
+                $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
+                $user = \App\User::withTrashed()->find($cliente->user_id);
+                $pedido["nomeCliente"] = $user->name;
+            }
             // $pedido["valorProduto"]= $produto->preco;
-            $pedido["nomeCliente"] = $cliente->user->name;
+
             $pedido["nomeFuncionario"] = $funcionario->user->name;
 
 
@@ -308,8 +345,14 @@ class PedidoController extends Controller
             $cliente = Cliente::with('user')->find($pedido->cliente_id);
             $funcionario = Funcionario::with('user')->find($pedido->funcionario_id);
 
-            // $pedido["valorProduto"]= $produto->preco;
-            $pedido["nomeCliente"] = $cliente->user->name;
+            if(isset($cliente->user->name)){
+                $pedido["nomeCliente"] = $cliente->user->name;
+            }
+            else{
+                $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
+                $user = \App\User::withTrashed()->find($cliente->user_id);
+                $pedido["nomeCliente"] = $user->name;
+            }
             $pedido["nomeFuncionario"] = $funcionario->user->name;
             // $pedido["dataEntrega"] = new DateTime($pedido->dataEntrega);
 
@@ -362,7 +405,7 @@ class PedidoController extends Controller
      * @return view pagamentos
      */
     public function concluirPedidoComDescontoNosItens(Request $request){
-
+        // dd($request->all());
         // pedido
         $pedido = Pedido::find($request['pedido_id']);
         // array com a porcentagem dos descontos referente aos itens
@@ -379,11 +422,13 @@ class PedidoController extends Controller
              * Percorre $itensPedido, $descontos e $itensComDesconto
              * e salva o descontoPorcentagem e valorComDesconto
              */
-            if(count($itensPedido) === count($itensComDesconto)){
-                for($i = 0; $i <= count($itensPedido) - 1; $i++ ){
-                    $itensPedido[$i]->descontoPorcentagem = floatval($descontos[$i]);
-                    $itensPedido[$i]->valorComDesconto = floatval($itensComDesconto[$i]);
-                    $itensPedido[$i]->save();
+            if(isset($descontos)){
+                if(count($itensPedido) === count($itensComDesconto)){
+                    for($i = 0; $i <= count($itensPedido) - 1; $i++ ){
+                        $itensPedido[$i]->descontoPorcentagem = floatval($descontos[$i]);
+                        $itensPedido[$i]->valorComDesconto = floatval($itensComDesconto[$i]);
+                        $itensPedido[$i]->save();
+                    }
                 }
             }
             $pedido->save();
@@ -415,6 +460,7 @@ class PedidoController extends Controller
      * @return void
      */
     public function pagamento(Request $request){
+        // dd($request->all());
         $pedido = Pedido::find($request['pedido_id']);
 
         // -------------DEBUG----------------
@@ -429,11 +475,13 @@ class PedidoController extends Controller
         for($i = 0; $i < count($request['formaPagamento']); $i++){
             $pagamento = new Pagamento();
             $pagamento->dataVencimento = $request['dataVencimento'][$i];
-            $pagamento->dataPagamento = $request['dataPagamento'][$i];
+            // $pagamento->dataPagamento = $request['dataPagamento'][$i];
             $pagamento->obs = $request['obs'][$i];
             $pagamento->descontoPagamento = floatval($request['descontoPagamento'][$i]);//porcentagem do pagamento
             $pagamento->valorTotalPagamento = floatval($request['valorTotalPagamento'][$i]);//valor sem desconto aplicado
-            $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
+            // $pagamento->valorPago = self::descontoFormaPagamento(floatval($request['valorTotalPagamento'][$i]),floatval($request['descontoPagamento'][$i])); // valor com desconto aplicado
+            $pagamento->valorPago = 0;
+            $pagamento->status = "aberto";
             $pagamento->formaPagamento_id = $request['formaPagamento'][$i];
 
             $pagamento->funcionario_id = Auth::user()->funcionario->id;
@@ -460,7 +508,7 @@ class PedidoController extends Controller
             return json_encode($cliente);
         }
         else{
-            return resonse('Cliente não encontrado', 404);
+            return response('Cliente não encontrado', 404);
         }
     }
 
@@ -613,49 +661,139 @@ class PedidoController extends Controller
     public function filtrarPedido(Request $request, Pedido $pedido){
         $filtro = $request->all();
         // dd($filtro);
-        
+
         if(isset($filtro['status_id'])){
-            $pedidos = Pedido::where('tipo','p')->where('status_id',intval($filtro['status_id']))
+            
+            $pedidos = Pedido::with(['status','pagamento'])->where('tipo','p')->where('status_id',intval($filtro['status_id']))
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-            return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Status"]);
+            
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->
+                where('tipo','p')->
+                where('status_id',3)->//ENTREGUE
+                orderBy('status_id')->
+                orderBy('dataEntrega')->paginate(25);
+
+            return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Status"]);
         }
         else if(isset($filtro['cliente'])){
             $id_users = User::where('name','LIKE','%'.strtoupper($filtro['cliente']).'%')->get('id');
             if(isset($id_users)){
                 $id_clientes = Cliente::whereIn('user_id',$id_users)->get('id');
-                $pedidos = Pedido::whereIn('cliente_id',$id_clientes)->where('tipo','p')
-                    ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-                return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+                // $pedidos = Pedido::where('tipo','p')
+                //     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+
+                $pedidos = Pedido::with(['status','pagamento'])->
+                    whereIn('cliente_id',$id_clientes)->
+                    where('tipo','p')->
+                    where(function($query){
+                        $query->where('status_id',1)->//SOLICITADO
+                                orWhere('status_id',2);//PESADO
+                    })->
+                    orderBy('status_id')->
+                    orderBy('dataEntrega')->paginate(25);
+                
+                $pedidosEntregues = Pedido::with(['status','pagamento'])->
+                    whereIn('cliente_id',$id_clientes)->
+                    where('tipo','p')->
+                    where('status_id',3)->//ENTREGUE
+                    orderBy('status_id')->
+                    orderBy('dataEntrega')->paginate(25);
+                return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
             }else{
-                return view('listarPedido',['pedidos'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
+                return view('listarPedido',['pedidos'=>[],'pedidosEntregues'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome do Cliente"]);
             }
         }
         else if(isset($filtro['nomeReduzido'])){
 
             $id_cliente = Cliente::where('nomeReduzido','LIKE','%'.strtoupper($filtro['nomeReduzido']).'%')->get('id');
             if(isset($id_cliente)){
-                $pedidos = Pedido::whereIn('cliente_id',$id_cliente)->where('tipo','p')
-                    ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-                return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
+                // $pedidos = Pedido::whereIn('cliente_id',$id_cliente)->where('tipo','p')
+                //     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+                $pedidos = Pedido::with(['status','pagamento'])->
+                    whereIn('cliente_id',$id_cliente)->
+                    where('tipo','p')->
+                    where(function($query){
+                        $query->where('status_id',1)->//SOLICITADO
+                                orWhere('status_id',2);//PESADO
+                    })->
+                    orderBy('status_id')->
+                    orderBy('dataEntrega')->paginate(25);
+                
+                $pedidosEntregues = Pedido::with(['status','pagamento'])->
+                    whereIn('cliente_id',$id_cliente)->
+                    where('tipo','p')->
+                    where('status_id',3)->//ENTREGUE
+                    orderBy('status_id')->
+                    orderBy('dataEntrega')->paginate(25);
+                return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
             }
             else{
-                return view('listarPedido',['pedidos'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
+                return view('listarPedido',['pedidos'=>[],'pedidosEntregues'=>[],'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Nome Reduzido"]);
             }
         }
         else if(isset($filtro['dataEntregaInicial']) && !isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where('tipo','p')
-                ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-            return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Maior ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))]);
+            // $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])
+            //                     ->where('tipo','p')->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+            $pedidos = Pedido::with(['status','pagamento'])->
+                    whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->
+                    where('tipo','p')->
+                    where(function($query){
+                        $query->where('status_id',1)->//SOLICITADO
+                                orWhere('status_id',2);//PESADO
+                    })->
+                    orderBy('status_id')->
+                    orderBy('dataEntrega')->paginate(25);
+                
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->
+                    whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->
+                    where('tipo','p')->
+                    where('status_id',3)->//ENTREGUE
+                    orderBy('status_id')->
+                    orderBy('dataEntrega')->paginate(25);
+            return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Maior ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))]);
         }
         else if(!isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
-            $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where('tipo','p')
-                ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
-            return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Menor ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
+            // $pedidos = Pedido::whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->where('tipo','p')
+            //     ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+            $pedidos = Pedido::with(['status','pagamento'])->
+                    whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
+                    where('tipo','p')->
+                    where(function($query){
+                        $query->where('status_id',1)->//SOLICITADO
+                                orWhere('status_id',2);//PESADO
+                    })->
+                    orderBy('status_id')->
+                    orderBy('dataEntrega')->paginate(25);
+                
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->
+                    whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
+                    where('tipo','p')->
+                    where('status_id',3)->//ENTREGUE
+                    orderBy('status_id')->
+                    orderBy('dataEntrega')->paginate(25);
+            return view('listarPedido',['pedidos'=>$pedidos,'pedidosEntregues'=>$pedidosEntregues,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Data Entrega Menor ou Igual à: ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
         }
         else if(isset($filtro['dataEntregaInicial']) && isset($filtro['dataEntregaFinal'])){
             $pedidos = Pedido::whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where('tipo','p')
                 ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])
                 ->orderBy('status_id')->orderBy('dataEntrega')->paginate(25);
+
+            $pedidos = Pedido::with(['status','pagamento'])->
+                    whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where('tipo','p')
+                    ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
+                    where(function($query){
+                        $query->where('status_id',1)->//SOLICITADO
+                                orWhere('status_id',2);//PESADO
+                    })->
+                    orderBy('status_id')->
+                    orderBy('dataEntrega')->paginate(25);
+            
+            $pedidosEntregues = Pedido::with(['status','pagamento'])->
+                        whereDate('dataEntrega','>=',$filtro['dataEntregaInicial'])->where('tipo','p')
+                        ->whereDate('dataEntrega','<=',$filtro['dataEntregaFinal'])->
+                        where('status_id',3)->//ENTREGUE
+                        orderBy('status_id')->
+                        orderBy('dataEntrega')->paginate(25);
             return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true,'tipoFiltro'=>"Intervalo Data Entrega: ".date('d/m/Y',strtotime($filtro['dataEntregaInicial']))." e ".date('d/m/Y',strtotime($filtro['dataEntregaFinal']))]);
         }
         else{
@@ -666,4 +804,17 @@ class PedidoController extends Controller
         // return view('listarPedido',['pedidos'=>$pedidos,'filtro'=>$filtro,'achou'=> true]);
 
     }
+
+
+    public function removerProdutoItem($id){
+
+        dd($id);
+        $item = ItensPedido::where('id', '=', $id)->get();
+        dd($item);
+        return view('editarPedido');;
+
+    }
+
+
+
 }

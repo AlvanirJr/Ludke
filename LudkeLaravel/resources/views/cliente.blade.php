@@ -5,9 +5,9 @@
 
 
 
-
 <div class="container">
     <div class="row justify-content-center">
+
         <div class="col-sm-12">
             <div class="titulo-pagina">
                 <div class="row d-flex justify-content-between">
@@ -207,10 +207,12 @@
 
                         {{-- cpf/cnpj --}}
                         <div class="col-sm-6">
-                            <div class="form-group">
+                            
+                            <div class="form-group" >
                                 <label for="cpfCnpj" class="control-label">CPF/CNPJ <span class="obrigatorio">*</span></label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="cpfCnpj" placeholder="CPF/CNPJ">
+                                    <input type="text" class="form-control" name="cpfCnpj" id="cpfCnpj" placeholder="CPF/CNPJ"/>
+                                
                                 </div>
                                 <div id="validationCpfCnpj"></div>
                             </div>
@@ -294,7 +296,7 @@
                         {{-- email do funcionário --}}
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="emailCliente" class="control-label">E-mail do Cliente <span class="obrigatorio">*</span></label>
+                                <label for="emailCliente" class="control-label">E-mail do Cliente</label>
                                 <div class="input-group">
                                     <input type="email" class="form-control" id="emailCliente" placeholder="E-mail do Cliente">
                                 </div>
@@ -417,6 +419,9 @@
 @section('javascript')
 <script type="application/javascript">
 
+
+
+
     $(function(){
         $.ajaxSetup({
             headers:{
@@ -432,7 +437,9 @@
             $(this).find('[autofocus]').focus();
         });
     });
+    
 
+    
     function carregarClientes(){
         // console.log('clientes');
         $.getJSON('/clientes',function(clientes){
@@ -477,8 +484,7 @@
             $('#tipo').val(data.tipo);
             $('#inscricaoEstadual').val(data.inscricaoEstadual);
             $('#funcionario_id').val(data.funcionario_id),
-
-                $('#residencial').val(data.residencial);
+            $('#residencial').val(data.residencial);
             $('#celular').val(data.celular);
             $('#cep').val(data.cep);
             $('#rua').val(data.rua);
@@ -545,6 +551,8 @@
         $('#tipo').val('');
         $('#inscricaoEstadual').val('');
         $('#funcionario_id').val('0');
+
+
         $('#residencial').val('');
         $('#celular').val('');
         $('#cep').val('');
@@ -570,11 +578,10 @@
             nomeReduzido: $('#nomeReduzido').val(),
             nomeResponsavel: $('#nomeResponsavel').val(),
             cpfCnpj: $('#cpfCnpj').val(),
-            tipo: $('#tipo').val(),
-            inscricaoEstadual: $('#inscricaoEstadual').val(),
             funcionario_id:$('#funcionario_id').val(),
-
-            residencial: $('#residencial').val(),
+            tipo: $('#tipo').val().toUpperCase(),
+            inscricaoEstadual: $('#inscricaoEstadual').val().toUpperCase(),
+            residencial: $('#residencial').val().toUpperCase(),
             celular: $('#celular').val(),
             cep: $('#cep').val(),
             rua: $('#rua').val(),
@@ -591,8 +598,10 @@
             context: this,
             data: cliente,
             success: function(data){
+
+
                 cli = JSON.parse(data);
-                alert("Cliente "+cli.nome+" salvo com sucesso!")
+                alert("Cliente salvo com sucesso!")
                 window.location.href="/indexClientes";
                 // cli = JSON.parse(data);
                 // linhas = $('#tabelaClientes>tbody>tr');
@@ -627,9 +636,12 @@
             nomeReduzido: $('#nomeReduzido').val(),
             nomeResponsavel: $('#nomeResponsavel').val(),
             cpfCnpj: $('#cpfCnpj').val(),
-            tipo: $('#tipo').val(),
-            inscricaoEstadual: $('#inscricaoEstadual').val(),
+
             funcionario_id:$('#funcionario_id').val(),
+
+            tipo: $('#tipo').val().toUpperCase(),
+            inscricaoEstadual: $('#inscricaoEstadual').val().toUpperCase(),
+
 
             residencial: $('#residencial').val(),
             celular: $('#celular').val(),
@@ -639,8 +651,11 @@
             cidade: $('#cidade').val(),
             uf: $('#uf').val(),
             numero: $('#numero').val(),
-            complemento: $('#complemento').val()
-        };
+
+            complemento: $('#complemento').val().toUpperCase()
+        }
+        //console.log('511');
+
 
         //#console.log(cliente);
         $.ajax({
@@ -648,16 +663,14 @@
                 url: "/clientes",
                 context: this,
                 data: cliente,
-                success: function(data){
-                    //console.log(cliente);
-                    cliente = (data);
-
+                success: function(data ){
+                    // console.log("teste");
+                    cliente = JSON.parse(data || "[]");
                     alert("Cliente cadastrado com sucesso!");
                     window.location.href="\indexClientes";
-                    // cliente = JSON.parse(data);
-                    // linha = montarLinha(cliente);
-                    // $('#tabelaClientes>tbody').append(linha);
-                    // $('#dlgClientes').modal('hide');
+                    //linha = montarLinha(cliente);
+                    //$('#tabelaClientes>tbody').append(linha);
+                    //$('#dlgClientes').modal('hide');
                 },
                 error: function(error){
                     retorno = JSON.parse(error.responseText);
@@ -775,5 +788,29 @@
             // $('#dlgClientes').modal('hide');
         });
     });
+
+
+
+    $(document).ready(function($){ 
+        try{
+            $("#cpfCnpj").unmask();
+            $("#cpfCnpj").keypress(function(){      
+                var tamanho = $('#cpfCnpj').val().length;
+                if(tamanho < 14){
+                    $('#cpfCnpj').mask('999.999.999-99');
+
+                }
+            else if(tamanho >= 14){    
+                    $('#cpfCnpj').mask('00.000.000/0000-00');
+
+                }
+                
+            });
+        }catch(e){
+
+        }    
+    });
+                                    
+
 </script>
 @endsection

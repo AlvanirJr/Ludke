@@ -15,7 +15,6 @@
             <tr style="height:20px">
                 <th>Código</th>
                 <th>Nome Cliente</th>
-                <th>Nome Reduzido</th>
                 <th>Vendedor</th>
                 <th>Data de Entrega</th>
                 <th>Pedido</th>
@@ -27,15 +26,24 @@
             @foreach($vendas as $venda)
                 <tr align="center">
                     <td>{{$venda->id}}</td>
-                    <td >{{$venda->cliente->user->name}}</td>
-                    <td >{{$venda->cliente->nomeReduzido}}</td>
+                    <td >   @if(isset($venda->cliente->user))
+                            {{$venda->cliente->user->name}}
+                        @else
+                            <?php $cliente = \App\Cliente::withTrashed()->find($venda->cliente_id);
+                            $cliente->user_id;
+                            $user = \App\User::withTrashed()->find($cliente->user_id);
+                            ?>
+                            {{$user->name}}
+                        @endif</td>
                     <td>{{$venda->funcionario->user->name}}</td>
                     <td>{{date('d/m/Y',strtotime($venda->dataEntrega))}}</td>
                     <td>
                         <ul>
-                            @foreach ($venda->itensPedidos as $itens)
-                            <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
-                            @endforeach
+                            <li>
+                                @foreach ($venda->itensPedidos as $itens)
+                                    {{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG,
+                                @endforeach
+                            </li>
                         </ul>
                     </td>
                     <td>{{$venda->status->status}}</td>

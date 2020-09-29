@@ -104,13 +104,25 @@
                                         --}}
                                         @if($pedido->status->status == "PESADO")
                                             {{-- <input id="pesoFinal{{$item->id}}" value='0' oninput="atualizarValor({{$item->precoProduto}},{{$item->id}})" name="pesoFinal{{$item->id}}" step="0.01" type="number" class="form-control" placeholder="Peso Final" required> --}}
-                                            <input id="pesoFinal{{$item->id}}" name="desconto[]" value='0' oninput="atualizarValor({{$pedido->valorTotal}})"  step="0.01" type="number" class="form-control" placeholder="Peso Final" required>
+                                            <input id="pesoFinal{{$item->id}}" name="desconto[]" value='0' oninput="atualizarValor({{$pedido->valorTotal}})"  step="0.01" type="number" class="form-control" placeholder="Peso Final" disabled>
                                             
                                             @error('pesoFinal{{$item->id}}')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                             @enderror
+                                        {{-- Pedido possui status entregue --}}
+                                        @elseif($pedido->status->status == "ENTREGUE")
+
+                                            {{-- <input id="pesoFinal{{$item->id}}" value='0' oninput="atualizarValor({{$item->precoProduto}},{{$item->id}})" name="pesoFinal{{$item->id}}" step="0.01" type="number" class="form-control" placeholder="Peso Final" required> --}}
+                                            <input id="pesoFinal{{$item->id}}" name="desconto[]" value='0' oninput="atualizarValor({{$pedido->valorTotal}})"  step="0.01" type="number" class="form-control" placeholder="Peso Final" disabled>
+                                            
+                                            @error('pesoFinal{{$item->id}}')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+
                                         {{-- 
                                             Caso, o pedido tenha o status PAGO PARCIALMENTE,
                                             Exibe um input desabilitado e salva os valores em um array no input hidden    

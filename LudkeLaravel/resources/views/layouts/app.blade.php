@@ -21,7 +21,11 @@
     <script src="{{ asset('js/jquery-3.4.1.min.js')}}"></script>
     <script src="{{ asset('js/pagination.min.js')}}"></script>
     
-    
+    <script src="{{asset('js/jquery.mask.min.js')}}"></script>
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+    -->
+        <script src="{{asset('js/jquery.maskMoney.min.js')}}"></script>
 
    
 </head>

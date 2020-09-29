@@ -19,25 +19,21 @@
                             Filtrar
                           </button>
                     </div>
-                    @if(Auth::user()->can('view_admin', Auth::user())
-                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_gerenteGeral', Auth::user())
-                    || Auth::user()->can('view_vendedor', Auth::user()))
                     <div class="col-sm-2">
                         <a href="{{route('vendas')}}" class="btn btn-primary-ludke">Nova Venda</a>
                     </div>
-                    @endif
-                    
+
+
                 </div>
             </div><!-- end titulo-pagina -->
         </div><!-- end col-->
     </div><!-- end row-->
-    
+
     {{-- Caso uma venda seja realizada, o statusVenda é setado como success e uma
     mensagem é exibida para o usuário informando que a venda foi realizada --}}
     @if (isset($statusVenda))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Venda Realizada com sucesso!</strong> 
+            <strong>Venda Realizada com sucesso!</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -63,7 +59,7 @@
             </button>
         </div>
     @endif
-    
+
     {{-- Variável acho é setada caso encontre algum item no filtro --}}
     @if(isset($achou) && $achou == true)
     <div class="row" style="margin-bottom:10px">
@@ -80,100 +76,201 @@
         </div>
     </div>
     @endif
-    <div class="row justify-content-center">
-        <div class="col-sm-12">
-            <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
-                <thead class="thead-primary">
-                <tr>
-                    <th>#</th>
-                    <th>Cliente</th>
-                    <th>Funcionário</th>
-                    <th>Data da Entrega</th>
-                    <th>Pedido</th>
-                    <th>Status</th>
-                    <th>Valor Total</th>
 
-                    @if(Auth::user()->can('view_admin', Auth::user())
-                    || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                    || Auth::user()->can('view_gerenteGeral', Auth::user()))
-                    <th>Ações</th>
-                    @endif
-                </tr>
-                </thead>
-                <tbody>
-                    @foreach ($pedidos as $pedido)
-                    <tr id="{{$pedido->id}}">
-                        <td>{{$pedido->id}}</td>
-                        <td>{{$pedido->cliente->user->name}}</td>
-                        <td>{{$pedido->funcionario->user->name}}</td>
-                        <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
-                        <td>
-                            <ul>
-                                @foreach ($pedido->itensPedidos as $itens)
-                                <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
-                                @endforeach
-                            </ul>
-                        </td>
-                        <td>{{$pedido->status->status}}</td>
-                        <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>
-                        @if(Auth::user()->can('view_admin', Auth::user())
-                        || Auth::user()->can('view_gerenteAdmin', Auth::user())
-                        || Auth::user()->can('view_gerenteGeral', Auth::user()))
-                            {{-- Verifica se o status do pedido é SOLICITADO --}}
-                            @if($pedido->status->status == "ENTREGUE")
-                            
-                            <td>
-                                {{-- Contas a pagar --}}
-                                <a href="#" onclick="alert('A funcionalidade de CONTAS A RECEBER está sendo desenvolvida. Logo estará disponível para utilização!')">
-                                    <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
-                                </a> 
-                                {{-- Imprimir pedido --}}
-                                <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
-                                    <img id="" class="icone" src="{{asset('img/print.svg')}}" >
-                                </a>
-                                {{-- Excluir Pedido --}}
-                                <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                    <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
-                                </a>
-                            </td>
-                            {{-- Verifica se o status do pedido é PESADO --}}
-                            @elseif($pedido->status->status == "PESADO")
+    {{-- Verifica se está listando o pedido visualizado em Contas a Receber --}}
+    @if (isset($listarVendaConta) && $listarVendaConta == true)
+        <div class="row">
+            <div class="col-sm-12 limparBusca">
+                <a href="{{route('listarVendas')}}">
+                    <button class="btn btn-outline-danger">Listar Todos</button>
+                </a>
+
+            </div>
+        </div>
+    @endif
+
+    {{-- Nav-tabs --}}
+    <ul class="nav nav-tabs" id="myTabContas" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link-contas active" id="solicitado_pesado-tab" data-toggle="tab" href="#solicitado_pesado" role="tab" aria-controls="solicitado_pesado" aria-selected="true"><h5>Pesado</h5></a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link-contas" id="entregue-tab" data-toggle="tab" href="#entregue" role="tab" aria-controls="entregue" aria-selected="false"><h5>Entregue</h5></a>
+        </li>
+    </ul>
+
+    {{-- Tab Content --}}
+    <div class="tab-content" id="myTabContent">
+        {{-- Pesado --}}
+        <div class="tab-pane fade show active" id="solicitado_pesado" role="tabpanel" aria-labelledby="solicitado_pesado-tab">
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
+                        <thead class="thead-primary">
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Funcionário</th>
+                            <th>Data da Entrega</th>
+                            <th>Pedido</th>
+                            <th>Status</th>
+                            <th>Valor Total</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($pedidos as $pedido)
+                            <tr id="{{$pedido->id}}">
+                                <td>{{$pedido->id}}</td>
                                 <td>
-                                    <a href="{{route('concluirVenda',['id'=>$pedido->id])}}">
+                                    @if(isset($pedido->cliente->user))
+                                        {{$pedido->cliente->user->name}}
+                                    @else
+                                        <?php $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
+                                        $cliente->user_id;
+                                        $user = \App\User::withTrashed()->find($cliente->user_id);
+                                        ?>
+                                        {{$user->name}}
+                                    @endif
+                                </td>
+                                <td>{{$pedido->funcionario->user->name}}</td>
+                                <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
+                                <td>
+                                    <ul>
+                                        @foreach ($pedido->itensPedidos as $itens)
+                                        <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
+                                        @endforeach
+                                    </ul>
+                                </td>
+                                <td>{{$pedido->status->status}}</td>
+                                <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>
+                                <td>
+                                    <a href="{{route('concluirVenda',['id'=>$pedido->id])}}" title="Concluir Venda">
                                         <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
-                                    </a>       
+                                    </a>
                                     {{-- Registrar Entrega do pedido --}}
-                                    <a href="{{route('venda.indexRegistrarEntrega',['id'=>$pedido->id])}}" >
+                                    <a href="{{route('venda.indexRegistrarEntrega',['id'=>$pedido->id])}}" title="Registrar Entrega" >
                                         <img id="" class="icone" src="{{asset('img/truck-solid.svg')}}" >
-                                    </a>                     
+                                    </a>
                                     {{-- Imprimir pedido --}}
-                                    <a href="#" onclick="alert('A funcionalidade de IMPRIMIR PEDIDO está sendo desenvolvida. Logo estará disponível para utilização!')">
+                                    <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Venda">
                                         <img id="" class="icone" src="{{asset('img/print.svg')}}" >
                                     </a>
-                                    <a href="#" onclick="excluirPedido({{$pedido->id}})">
-                                        <img id="iconeDelete" class="icone" src="{{asset('img/trash-alt-solid.svg')}}">
+                                    {{-- Excluir Pedido --}}
+                                    <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Venda">
+                                        <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
                                     </a>
                                 </td>
-                            
-                            @endif
-                        @endif
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table> <!-- end table -->
-        </div><!-- end col-->
-    </div><!-- end row-->
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table> <!-- end table -->
+                </div><!-- end col-->
+            </div><!-- end row-->
+        
+            <div class="row justify-content-center">
+                @if ($pedidos != [])
+                    @if (isset($filtro))
+                    {{ $pedidos->appends($filtro)->links() }}
+        
+                    @else
+                    {{ $pedidos->links() }}
+                    @endif
+                @endif
+            </div>
+        </div>
 
-    <div class="row justify-content-center">
-        @if ($pedidos != [])
-            @if (isset($filtro))
-            {{ $pedidos->appends($filtro)->links() }}
+        {{-- Entregue --}}
+        <div class="tab-pane fade" id="entregue" role="tabpanel" aria-labelledby="entregue-tab">
+            <div class="tab-pane fade show active" id="solicitado_pesado" role="tabpanel" aria-labelledby="solicitado_pesado-tab">
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <table id="tabelaPedidos" class="table table-hover table-responsive-sm">
+                            <thead class="thead-primary">
+                            <tr>
+                                <th>#</th>
+                                <th>Cliente</th>
+                                <th>Funcionário</th>
+                                <th>Data da Entrega</th>
+                                <th>Pedido</th>
+                                <th>Status</th>
+                                <th>Valor Total</th>
+                                <th>Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pedidosEntregues as $pedido)
+                                <tr id="{{$pedido->id}}">
+                                    <td>{{$pedido->id}}</td>
+                                    <td>
+                                        @if(isset($pedido->cliente->user))
+                                            {{$pedido->cliente->user->name}}
+                                        @else
+                                            <?php $cliente = \App\Cliente::withTrashed()->find($pedido->cliente_id);
+                                            $cliente->user_id;
+                                            $user = \App\User::withTrashed()->find($cliente->user_id);
+                                            ?>
+                                            {{$user->name}}
+                                        @endif
+                                    </td>
+                                    <td>{{$pedido->funcionario->user->name}}</td>
+                                    <td>{{date('d/m/Y',strtotime($pedido->dataEntrega))}}</td>
+                                    <td>
+                                        <ul>
+                                            @foreach ($pedido->itensPedidos as $itens)
+                                            <li>{{$itens->nomeProduto}} | {{$itens->pesoSolicitado}} KG</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>{{$pedido->status->status}}</td>
+                                    <td>R$ {{money_format('%i',$pedido->valorTotal)}}</td>            
+                                    <td>
+                                        {{-- Se o pedido não possui pagamento, exibe icone de editar e pagar --}}
+                                        @if(count($pedido->pagamento) == 0)
+                                            <a href="{{route('concluirVenda',['id'=>$pedido->id])}}" title="Concluir Venda">
+                                                <img class="icone" src="{{asset('img/cash-register-solid-black.svg')}}" style="width:20px">
+                                            </a>
+                                        {{-- Caso o pedido possua pagamento, exibe icone de editar pagamento e contas a receber --}}
+                                        @else
+                                            {{-- Editar Pagamento--}}
+                                            <a href={{route('contas.editarPagamentoPedidoVenda',['id' => $pedido->id])}} title="Editar Pagamento">
+                                                <img id="pagar" class="icone" src="{{asset('img/hand-holding-usd-solid.svg')}}" >
+                                            </a>
+                                            {{-- Contas a pagar --}}
+                                            <a href={{route('contas.receber',['idPedido' => $pedido->id])}} title="Contas a receber">
+                                                <img id="pagar" class="icone" src="{{asset('img/money-bill-wave-solid.svg')}}" >
+                                            </a>
+                                        @endif
+                                        {{-- Imprimir pedido --}}
+                                        <a href={{route('venda.relatorio',['id'=>$pedido->id])}} target="_blank" title="Imprimir Venda">
+                                            <img id="" class="icone" src="{{asset('img/print.svg')}}" >
+                                        </a>
+                                        {{-- Excluir Pedido --}}
+                                        <a href="#" onclick="excluirPedido({{$pedido->id}})" title="Excluir Venda">
+                                            <img id="deletar" class="icone" src="{{asset('img/trash-alt-solid.svg')}}" >
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table> <!-- end table -->
+                    </div><!-- end col-->
+                </div><!-- end row-->
             
-            @else
-            {{ $pedidos->links() }}
-            @endif
-        @endif
+                <div class="row justify-content-center">
+                    @if ($pedidosEntregues != [])
+                        @if (isset($filtro))
+                        {{ $pedidosEntregues->appends($filtro)->links() }}
+            
+                        @else
+                        {{ $pedidosEntregues->links() }}
+                        @endif
+                    @endif
+                </div>
+        </div>
     </div>
+
+    
 
 </div>
 <!-- Modal -->
@@ -238,7 +335,7 @@
 @section('javascript')
 
 <script type="text/javascript">
-    
+
     $(function(){
 
         // Configuração do ajax com token csrf
